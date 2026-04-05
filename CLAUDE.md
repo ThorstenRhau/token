@@ -18,6 +18,9 @@ token/
 │           ├── treesitter.lua  # Treesitter capture groups
 │           ├── lsp.lua         # LSP semantic tokens (@lsp.type.*, @lsp.mod.*)
 │           └── plugins.lua     # Plugin-specific highlights (~15 plugins)
+├── scripts/
+│   └── gen_contrib.lua        # Generates contrib/ theme files (plain LuaJIT)
+├── contrib/                   # Auto-generated theme files for external tools
 ├── README.md
 └── LICENSE
 ```
@@ -36,6 +39,7 @@ token/
 - **Add a highlight group**: add it to the appropriate `groups/*.lua` file
 - **Add a palette color**: add it to both dark and light tables in `palette.lua`
 - **Add plugin support**: add groups to `groups/plugins.lua` under a new comment section
+- **Regenerate contrib themes**: `make contrib` (after changing `palette.lua`)
 - Prefer `{ link = 'GroupName' }` over duplicating color values
 
 ## Validation
