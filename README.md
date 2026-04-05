@@ -20,13 +20,6 @@ vim.cmd.colorscheme('token')
 
 Respects `vim.o.background`. Set `dark` or `light` before loading the colorscheme, or change it at runtime to switch variants.
 
-## Configuration
-
-```lua
--- Optional, call before loading the colorscheme
-require('token').setup({})
-```
-
 ## Structure
 
 ```

@@ -10,7 +10,7 @@ token/
 │   └── token.lua              # Entry point (calls require('token').load())
 ├── lua/
 │   └── token/
-│       ├── init.lua            # Public API: setup(opts), load()
+│       ├── init.lua            # Public API: load()
 │       ├── palette.lua         # Returns color table for 'dark' or 'light' background
 │       ├── terminal.lua        # Sets g:terminal_color_0..15
 │       └── groups/             # Highlight group definitions (each returns fn(palette))

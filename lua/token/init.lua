@@ -1,10 +1,4 @@
 local M = {}
-local config = {}
-
----@param opts? table
-function M.setup(opts)
-  config = vim.tbl_extend('force', config, opts or {})
-end
 
 function M.load()
   vim.cmd('hi clear')

@@ -34,6 +34,8 @@ local function base(p)
 
     StatusLine = { fg = p.fg1, bg = p.bg1 },
     StatusLineNC = { fg = p.fg3, bg = p.bg1 },
+    StatusLineTerm = { fg = p.fg1, bg = p.bg1 },
+    StatusLineTermNC = { fg = p.fg3, bg = p.bg1 },
     WinBar = { fg = p.fg1, bg = p.bg3 },
     WinBarNC = { fg = p.fg3, bg = p.bg2 },
 
