@@ -19,14 +19,14 @@
 	line-numbers-minus-style = bold "#C67777"
 	line-numbers-plus-style = bold "#7DA47A"
 	line-numbers-zero-style = "#938e87"
-	minus-style = syntax "#2d2526"
-	minus-non-emph-style = syntax "#2d2526"
-	minus-emph-style = bold syntax "#4a2c2e"
-	minus-empty-line-marker-style = syntax "#2d2526"
-	plus-style = syntax "#272b25"
-	plus-non-emph-style = syntax "#272b25"
-	plus-emph-style = bold syntax "#354a2f"
-	plus-empty-line-marker-style = syntax "#272b25"
+	minus-style = syntax "#421a1e"
+	minus-non-emph-style = syntax "#421a1e"
+	minus-emph-style = bold syntax "#6e1c22"
+	minus-empty-line-marker-style = syntax "#421a1e"
+	plus-style = syntax "#23331c"
+	plus-non-emph-style = syntax "#23331c"
+	plus-emph-style = bold syntax "#2a5c1f"
+	plus-empty-line-marker-style = syntax "#23331c"
 
 [delta "token-light"]
 	light = true
