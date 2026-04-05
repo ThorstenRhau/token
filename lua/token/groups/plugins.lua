@@ -357,6 +357,12 @@ local function plugins(p)
     FzfLuaTabMarker = { fg = p.accent2 },
     FzfLuaDirIcon = { fg = p.blue },
     FzfLuaLiveSym = { fg = p.accent2 },
+    FzfLuaLivePrompt = { fg = p.accent },
+    FzfLuaFzfPrompt = { fg = p.accent },
+    FzfLuaFzfQuery = { fg = p.fg0 },
+    FzfLuaFzfMatch = { fg = p.accent, bold = true },
+    FzfLuaFzfPointer = { fg = p.accent },
+    FzfLuaFzfInfo = { fg = p.fg3 },
 
     -- claudecode.nvim
     ClaudeCodeDiffAdd = { bg = p.diff_add },
