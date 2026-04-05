@@ -1,0 +1,6 @@
+std = "neovim+selene_mini"
+
+[rules]
+global_usage     = "allow"
+lowercase_global = "allow"
+mixed_table      = "allow"

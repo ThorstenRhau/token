@@ -1,0 +1,11 @@
+# Tasks directory
+tasks/
+
+# macOS files created by Finder.app
+**/.DS_Store
+
+# spell files
+spell/
+
+# vim.pack lock file
+nvim-pack-lock.json
