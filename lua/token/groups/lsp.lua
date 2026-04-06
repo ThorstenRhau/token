@@ -30,14 +30,12 @@ local function lsp(_p)
     -- LSP semantic token modifier overrides
     ['@lsp.mod.deprecated'] = { strikethrough = true },
     ['@lsp.mod.readonly'] = { link = '@constant' },
-    ['@lsp.mod.defaultLibrary'] = { bold = true },
     ['@lsp.mod.async'] = { italic = true },
     ['@lsp.mod.static'] = { italic = true },
     ['@lsp.mod.abstract'] = { italic = true },
     ['@lsp.mod.declaration'] = { bold = true },
     ['@lsp.mod.definition'] = { bold = true },
     ['@lsp.mod.documentation'] = { italic = true },
-    ['@lsp.mod.modification'] = { bold = true },
   }
 end
 

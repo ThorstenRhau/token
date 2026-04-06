@@ -163,7 +163,7 @@ local function base(p)
     String = { fg = p.green },
     Character = { fg = p.green },
     Number = { fg = p.purple },
-    Boolean = { fg = p.accent2, bold = true },
+    Boolean = { fg = p.accent2 },
     Float = { fg = p.purple },
 
     Identifier = { fg = p.fg0 },

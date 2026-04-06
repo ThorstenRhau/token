@@ -5,18 +5,18 @@ local function treesitter(p)
     -- Variables
     ['@variable'] = { fg = p.fg0 },
     ['@variable.builtin'] = { fg = p.accent2, italic = true },
-    ['@variable.parameter'] = { fg = p.fg1, italic = true },
+    ['@variable.parameter'] = { fg = p.fg1 },
     ['@variable.parameter.builtin'] = { fg = p.accent2, italic = true },
     ['@variable.member'] = { fg = p.fg0 },
 
     -- Constants
     ['@constant'] = { link = 'Constant' },
-    ['@constant.builtin'] = { fg = p.purple, bold = true },
+    ['@constant.builtin'] = { fg = p.purple },
     ['@constant.macro'] = { link = 'Macro' },
 
     -- Modules / namespaces
     ['@module'] = { fg = p.blue },
-    ['@module.builtin'] = { fg = p.blue, bold = true },
+    ['@module.builtin'] = { fg = p.blue },
     ['@label'] = { link = 'Label' },
 
     -- Strings
@@ -38,7 +38,7 @@ local function treesitter(p)
 
     -- Types
     ['@type'] = { link = 'Type' },
-    ['@type.builtin'] = { fg = p.blue, bold = true },
+    ['@type.builtin'] = { fg = p.blue },
     ['@type.definition'] = { link = 'Type' },
 
     -- Attributes / decorators
@@ -48,7 +48,7 @@ local function treesitter(p)
 
     -- Functions
     ['@function'] = { link = 'Function' },
-    ['@function.builtin'] = { fg = p.accent, italic = true },
+    ['@function.builtin'] = { fg = p.accent },
     ['@function.call'] = { link = 'Function' },
     ['@function.macro'] = { fg = p.purple },
     ['@function.method'] = { link = 'Function' },
@@ -78,7 +78,7 @@ local function treesitter(p)
     ['@keyword.operator'] = { fg = p.accent2 },
     ['@keyword.import'] = { link = 'Include' },
     ['@keyword.type'] = { fg = p.accent2 },
-    ['@keyword.modifier'] = { fg = p.accent2 },
+    ['@keyword.modifier'] = { fg = p.accent2, italic = true },
     ['@keyword.repeat'] = { link = 'Repeat' },
     ['@keyword.return'] = { fg = p.accent2 },
     ['@keyword.debug'] = { fg = p.red },

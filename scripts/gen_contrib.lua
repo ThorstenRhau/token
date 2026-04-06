@@ -140,7 +140,7 @@ local function gen_bat(p, variant, _term)
     tmtheme_entry('Function', 'entity.name.function, support.function, meta.function-call', p.accent, nil),
     tmtheme_entry('String', 'string, punctuation.definition.string', p.green, nil),
     tmtheme_entry('String escape', 'constant.character.escape', p.purple, nil),
-    tmtheme_entry('Boolean', 'constant.language.boolean', p.accent2, 'bold'),
+    tmtheme_entry('Boolean', 'constant.language.boolean', p.accent2, nil),
     tmtheme_entry('Number', 'constant.numeric', p.purple, nil),
     tmtheme_entry('Constant', 'constant, constant.language, support.constant, variable.other.constant', p.purple, nil),
     tmtheme_entry('Type', 'storage.type, support.type, entity.name.type, entity.other.inherited-class', p.blue, nil),
@@ -169,7 +169,7 @@ local function gen_bat(p, variant, _term)
       nil
     ),
     tmtheme_entry('Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil),
-    tmtheme_entry('Parameter', 'variable.parameter', p.fg1, 'italic'),
+    tmtheme_entry('Parameter', 'variable.parameter', p.fg1, nil),
     -- Markup
     tmtheme_entry('Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', p.accent, 'bold'),
     tmtheme_entry('Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', p.accent2, 'bold'),
