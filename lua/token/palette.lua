@@ -1,6 +1,10 @@
 ---@param background 'dark'|'light'
 ---@return table
 local function palette(background)
+  if background ~= 'dark' and background ~= 'light' then
+    error('palette: expected "dark" or "light", got: ' .. tostring(background))
+  end
+
   if background == 'light' then
     return {
       bg0 = '#edece8',

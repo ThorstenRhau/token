@@ -6,31 +6,7 @@
 package.path = 'lua/?.lua;lua/?/init.lua;' .. package.path
 
 local palette_fn = require('token.palette')
-
--- ---------------------------------------------------------------------------
--- Terminal color mapping (pure-Lua replica of terminal.lua)
--- ---------------------------------------------------------------------------
-
-local function terminal_colors(p, is_dark)
-  return {
-    [0] = is_dark and p.bg1 or p.fg0,
-    [1] = p.red,
-    [2] = p.green,
-    [3] = p.yellow,
-    [4] = p.blue,
-    [5] = p.purple,
-    [6] = p.cyan,
-    [7] = is_dark and p.fg1 or p.bg1,
-    [8] = is_dark and p.fg3 or p.fg2,
-    [9] = p.accent,
-    [10] = p.bright_green,
-    [11] = p.accent2,
-    [12] = p.bright_blue,
-    [13] = p.bright_purple,
-    [14] = p.bright_cyan,
-    [15] = is_dark and p.fg0 or p.bg3,
-  }
-end
+local terminal = require('token.terminal')
 
 -- ---------------------------------------------------------------------------
 -- Helpers
@@ -568,8 +544,8 @@ local function main()
 
   local dark = palette_fn('dark')
   local light = palette_fn('light')
-  local dark_term = terminal_colors(dark, true)
-  local light_term = terminal_colors(light, false)
+  local dark_term = terminal.colors(dark, true)
+  local light_term = terminal.colors(light, false)
 
   local files = {}
 

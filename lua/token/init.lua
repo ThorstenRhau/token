@@ -27,7 +27,7 @@ function M.load()
   end
 
   local is_dark = vim.o.background == 'dark'
-  require('token.terminal')(p, is_dark)
+  require('token.terminal').set(p, is_dark)
 end
 
 return M

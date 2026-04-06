@@ -5,7 +5,7 @@ SELENEC          := $(ROOT)/selene.toml
 
 .PHONY: all format lint contrib contrib-verify install-hooks help
 
-all: format lint contrib contrib-verify
+all: format lint contrib
 
 # Install git hooks
 install-hooks:

@@ -31,7 +31,7 @@ token/
 - `init.lua` orchestrates: hi clear, set colors_name, bust module cache, load palette, merge groups, apply via `nvim_set_hl`, set terminal colors
 - `palette.lua` returns a function that takes `'dark'|'light'` and returns a flat table of 28 semantic hex color keys
 - Each file in `groups/` exports a function `(palette) -> { [group] = hl_opts }`
-- `terminal.lua` exports a function `(palette, is_dark)` that sets 16 ANSI terminal colors
+- `terminal.lua` exports `{ colors, set }`: `colors(palette, is_dark)` returns the 0..15 ANSI color table (pure Lua), `set()` applies it via `vim.g`
 - Groups merge order matters: base, treesitter, lsp, plugins (later overrides earlier via `tbl_extend('force', ...)`)
 
 ## Common tasks
