@@ -1,6 +1,10 @@
 # token
 
-A Neovim colorscheme with dark and light variants. Requires Neovim 0.12+.
+A Neovim colorscheme with dark and light variants, with full treesitter support.
+Requires Neovim 0.12+. Inspired by the Anthropic Claude interface. After years
+of switching between themes, I built my own. The contrib folder includes themes
+for Ghostty, fish, starship, delta, tmux, and more, all generated from the same
+palette.
 
 ## Showcase
 
