@@ -9,6 +9,8 @@ token/
 ├── colors/
 │   └── token.lua              # Entry point (calls require('token').load())
 ├── lua/
+│   ├── lualine/themes/
+│   │   └── token.lua          # Lualine theme (auto-discovered via runtimepath)
 │   └── token/
 │       ├── init.lua            # Public API: load()
 │       ├── palette.lua         # Returns color table for 'dark' or 'light' background
@@ -17,7 +19,7 @@ token/
 │           ├── base.lua        # Core editor, diff, diagnostics, LSP refs, legacy syntax
 │           ├── treesitter.lua  # Treesitter capture groups
 │           ├── lsp.lua         # LSP semantic tokens (@lsp.type.*, @lsp.mod.*)
-│           └── plugins.lua     # Plugin-specific highlights (~15 plugins)
+│           └── plugins.lua     # Plugin-specific highlights (~20 plugins)
 ├── scripts/
 │   └── gen_contrib.lua        # Generates contrib/ theme files (plain LuaJIT)
 ├── contrib/                   # Auto-generated theme files for external tools
@@ -28,7 +30,7 @@ token/
 ## Architecture
 
 - `colors/token.lua` is the Neovim entry point, discovered by `:colorscheme token`
-- `init.lua` orchestrates: hi clear, set colors_name, bust module cache, load palette, merge groups, apply via `nvim_set_hl`, set terminal colors
+- `init.lua` orchestrates: hi clear, set colors_name, bust module cache (including `lualine.themes.token`), load palette, merge groups, apply via `nvim_set_hl`, set terminal colors
 - `palette.lua` returns a function that takes `'dark'|'light'` and returns a flat table of 28 semantic hex color keys
 - Each file in `groups/` exports a function `(palette) -> { [group] = hl_opts }`
 - `terminal.lua` exports `{ colors, set }`: `colors(palette, is_dark)` returns the 0..15 ANSI color table (pure Lua), `set()` applies it via `vim.g`

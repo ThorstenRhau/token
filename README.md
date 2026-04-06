@@ -38,6 +38,8 @@ token/
 ├── colors/
 │   └── token.lua
 ├── lua/
+│   ├── lualine/themes/
+│   │   └── token.lua
 │   └── token/
 │       ├── init.lua
 │       ├── palette.lua
@@ -56,9 +58,9 @@ token/
 ## Supported plugins
 
 blink.cmp, claudecode.nvim, diffview.nvim, fzf-lua, gitsigns.nvim,
-hlchunk.nvim, indent-blankline.nvim, markview.nvim, mason.nvim, mini.clue,
-mini.icons, mini.statusline, neogit, nvim-tree.lua, oil.nvim,
-treesitter-context, trouble.nvim, vim-matchup.
+hlchunk.nvim, indent-blankline.nvim, lualine.nvim, markview.nvim, mason.nvim,
+mini.clue, mini.icons, mini.statusline, neogit, nvim-tree.lua, oil.nvim,
+snacks.nvim, treesitter-context, trouble.nvim, vim-matchup.
 
 ## Contrib themes
 

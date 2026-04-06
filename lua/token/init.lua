@@ -6,7 +6,7 @@ function M.load()
 
   -- Clear cached modules so palette/groups pick up the new background
   for key in pairs(package.loaded) do
-    if key:match('^token%.') then
+    if key:match('^token%.') or key == 'lualine.themes.token' then
       package.loaded[key] = nil
     end
   end
