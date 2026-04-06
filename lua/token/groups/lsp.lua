@@ -37,6 +37,7 @@ local function lsp(_p)
     ['@lsp.mod.definition'] = { bold = true },
     ['@lsp.mod.defaultLibrary'] = { italic = true },
     ['@lsp.mod.documentation'] = { italic = true },
+    ['@lsp.mod.modification'] = { bold = true },
   }
 end
 

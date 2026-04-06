@@ -59,6 +59,7 @@ local function treesitter(p)
 
     -- Operators / punctuation
     ['@operator'] = { link = 'Operator' },
+    ['@punctuation'] = { fg = p.fg1 },
     ['@punctuation.delimiter'] = { fg = p.fg1 },
     ['@punctuation.bracket'] = { fg = p.fg1 },
     ['@punctuation.special'] = { fg = p.purple },
@@ -95,6 +96,7 @@ local function treesitter(p)
     ['@tag.delimiter'] = { fg = p.fg2 },
 
     -- Markup (markdown etc.)
+    ['@markup'] = { fg = p.fg0 },
     ['@markup.strong'] = { bold = true },
     ['@markup.italic'] = { italic = true },
     ['@markup.strikethrough'] = { strikethrough = true },

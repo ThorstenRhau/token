@@ -203,6 +203,9 @@ local function base(p)
 
     -- Misc UI
     ComplMatchIns = { fg = p.accent, bold = true },
+    PreInsert = { fg = p.green },
+    ComplHint = { fg = p.fg3 },
+    ComplHintMore = { fg = p.fg2 },
     FloatShadow = { bg = p.bg0, blend = 50 },
     FloatShadowThrough = { bg = p.bg0, blend = 80 },
 
