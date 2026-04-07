@@ -5,17 +5,17 @@
 gui:
   theme:
     activeBorderColor:
-      - "#D97757"
+      - "#d07d62"
       - bold
     inactiveBorderColor:
-      - "#5a5955"
+      - "#878681"
     searchingActiveBorderColor:
       - "#C4A855"
       - bold
     optionsTextColor:
       - "#7B9EBD"
     selectedLineBgColor:
-      - "#3d3d3a"
+      - "#333331"
     inactiveViewSelectedLineBgColor:
       - "#2f2f2d"
     cherryPickedCommitFgColor:

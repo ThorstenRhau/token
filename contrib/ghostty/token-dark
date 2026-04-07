@@ -4,7 +4,7 @@ background = #262624
 foreground = #e8e4dc
 cursor-color = #e8e4dc
 cursor-text = #262624
-selection-background = #3d3d3a
+selection-background = #333331
 selection-foreground = #e8e4dc
 
 palette = 0=#1d1d1c
@@ -15,8 +15,8 @@ palette = 4=#7B9EBD
 palette = 5=#A68BBF
 palette = 6=#6BA8A8
 palette = 7=#d4cfc6
-palette = 8=#5a5955
-palette = 9=#D97757
+palette = 8=#878681
+palette = 9=#d07d62
 palette = 10=#98BF95
 palette = 11=#C4956A
 palette = 12=#96B8D3

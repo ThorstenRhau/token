@@ -8,15 +8,15 @@ selection-background = #dddcd6
 selection-foreground = #2a2920
 
 palette = 0=#2a2920
-palette = 1=#B05555
+palette = 1=#a44e4e
 palette = 2=#3F643C
 palette = 3=#6E5C20
-palette = 4=#527594
-palette = 5=#7C619A
+palette = 4=#496b8a
+palette = 5=#735990
 palette = 6=#2D6C6C
 palette = 7=#f1f0ec
-palette = 8=#7d7870
-palette = 9=#9A4929
+palette = 8=#6c675f
+palette = 9=#934e34
 palette = 10=#4D7B49
 palette = 11=#876032
 palette = 12=#6389A8
