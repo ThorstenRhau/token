@@ -301,7 +301,7 @@ local function fish_theme_lines(p)
     'fish_color_selection --reverse',
     'fish_color_operator ' .. s(p.accent),
     'fish_color_escape ' .. s(p.purple),
-    'fish_color_autosuggestion ' .. s(p.fg3),
+    'fish_color_autosuggestion ' .. s(p.line_nr),
     'fish_color_cwd ' .. s(p.blue),
     'fish_color_user ' .. s(p.green),
     'fish_color_host ' .. s(p.blue),

@@ -15,7 +15,7 @@ fish_color_comment 938e87
 fish_color_selection --reverse
 fish_color_operator d07d62
 fish_color_escape A68BBF
-fish_color_autosuggestion 878681
+fish_color_autosuggestion 585855
 fish_color_cwd 7B9EBD
 fish_color_user 7DA47A
 fish_color_host 7B9EBD
@@ -48,7 +48,7 @@ fish_color_comment 6c675f
 fish_color_selection --reverse
 fish_color_operator 934e34
 fish_color_escape 735990
-fish_color_autosuggestion 858179
+fish_color_autosuggestion b5b2ab
 fish_color_cwd 496b8a
 fish_color_user 3F643C
 fish_color_host 496b8a
@@ -81,7 +81,7 @@ fish_color_comment 938e87
 fish_color_selection --reverse
 fish_color_operator d07d62
 fish_color_escape A68BBF
-fish_color_autosuggestion 878681
+fish_color_autosuggestion 585855
 fish_color_cwd 7B9EBD
 fish_color_user 7DA47A
 fish_color_host 7B9EBD
