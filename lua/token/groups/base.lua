@@ -20,11 +20,11 @@ local function base(p)
     CursorLineSign = { fg = p.fg3, bg = p.bg5 },
     CursorLineNr = { fg = p.accent2, bold = true },
 
-    LineNr = { fg = p.line_nr, bg = p.gutter },
+    LineNr = { fg = p.line_nr, bg = p.bg5 },
     LineNrAbove = { link = 'LineNr' },
     LineNrBelow = { link = 'LineNr' },
-    SignColumn = { fg = p.fg3, bg = p.gutter },
-    FoldColumn = { fg = p.fg3, bg = p.gutter },
+    SignColumn = { fg = p.fg3, bg = p.bg5 },
+    FoldColumn = { fg = p.fg3, bg = p.bg5 },
     Folded = { fg = p.fg2, bg = p.bg4 },
 
     ColorColumn = { bg = p.bg4 },
