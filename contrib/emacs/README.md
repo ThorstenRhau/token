@@ -22,16 +22,16 @@ Emacs 27+ (uses `:extend` and `(:style wave)` underlines).
 
 1. Copy the `.el` files to a directory on your `custom-theme-load-path`:
 
-   ```
-   cp token-dark.el token-light.el ~/.emacs.d/themes/ (or whereever you have your theme files located)  
-   ```
+```
+cp token-dark.el token-light.el ~/.emacs.d/themes/ (or whereever you have your theme files located)  
+```
 
 2. Add the directory to your init file and load the theme:
 
-   ```elisp
-   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-   (load-theme 'token-dark t)   ; or token-light
-   ```
+```elisp
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme 'token-dark t)   ; or token-light
+```
 
 ### straight.el
 
