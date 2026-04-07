@@ -9,8 +9,8 @@ from the [themes](https://protesilaos.com/emacs/modus-themes) by Protesilaos.
 
 | File | Theme name |
 | --- | --- |
-| `token-dark.el` | `token-dark` |
-| `token-light.el` | `token-light` |
+| `token-dark-theme.el` | `token-dark` |
+| `token-light-theme.el` | `token-light` |
 
 ## Requirements
 
@@ -23,7 +23,8 @@ Emacs 27+ (uses `:extend` and `(:style wave)` underlines).
 1. Copy the `.el` files to a directory on your `custom-theme-load-path`:
 
 ```
-cp token-dark.el token-light.el ~/.emacs.d/themes/ (or whereever you have your theme files located)  
+cp token-dark.el token-light.el ~/.emacs.d/themes/ (or the location of your
+theme files)  
 ```
 
 2. Add the directory to your init file and load the theme:
