@@ -21,7 +21,7 @@ local function treesitter(p)
 
     -- Strings
     ['@string'] = { link = 'String' },
-    ['@string.documentation'] = { fg = p.orange, italic = true },
+    ['@string.documentation'] = { fg = p.green, italic = true },
     ['@string.regexp'] = { fg = p.purple },
     ['@string.escape'] = { fg = p.purple },
     ['@string.special'] = { link = 'SpecialChar' },
@@ -114,8 +114,8 @@ local function treesitter(p)
     ['@markup.link'] = { fg = p.blue, underline = true },
     ['@markup.link.label'] = { fg = p.blue },
     ['@markup.link.url'] = { fg = p.blue, underline = true },
-    ['@markup.raw'] = { fg = p.orange },
-    ['@markup.raw.block'] = { fg = p.orange },
+    ['@markup.raw'] = { fg = p.green },
+    ['@markup.raw.block'] = { fg = p.green },
     ['@markup.list'] = { fg = p.accent2 },
     ['@markup.list.checked'] = { fg = p.green },
     ['@markup.list.unchecked'] = { fg = p.fg3 },
