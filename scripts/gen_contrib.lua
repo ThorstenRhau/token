@@ -117,7 +117,7 @@ local function gen_bat(p, variant, _term)
     tmtheme_entry('String', 'string, punctuation.definition.string', p.green, nil),
     tmtheme_entry('String escape', 'constant.character.escape', p.purple, nil),
     tmtheme_entry('Boolean', 'constant.language.boolean', p.accent2, nil),
-    tmtheme_entry('Number', 'constant.numeric', p.purple, nil),
+    tmtheme_entry('Number', 'constant.numeric', p.orange, nil),
     tmtheme_entry('Constant', 'constant, constant.language, support.constant, variable.other.constant', p.purple, nil),
     tmtheme_entry('Type', 'storage.type, support.type, entity.name.type, entity.other.inherited-class', p.blue, nil),
     tmtheme_entry('Class', 'entity.name.type.class, support.class, entity.name.class', p.blue, nil),
@@ -481,6 +481,7 @@ local function gen_starship(p, variant, _term)
     'yellow  = "' .. p.yellow .. '"',
     'purple  = "' .. p.purple .. '"',
     'cyan    = "' .. p.cyan .. '"',
+    'orange  = "' .. p.orange .. '"',
     '',
   }, '\n')
 
