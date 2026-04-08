@@ -1,10 +1,11 @@
 # token
 
-A Neovim colorscheme with dark and light variants, with full treesitter support.
-Requires Neovim 0.12+. Inspired by the Anthropic Claude interface. After years
-of switching between themes, I built my own. The contrib folder includes themes
-for Ghostty, fish, starship, delta, tmux, and more, all generated from the same
-palette.
+Token is a warm, muted Neovim 0.12+ colorscheme. Dark and light variants, no
+configuration. There is no setup function. Load it and it works. The idea is
+simple: a theme you never configure is a theme you stop thinking about.
+
+Terminal themes for Ghostty, fish, delta, tmux and others are generated from the
+same palette file, so everything matches without extra work.
 
 ## Showcase
 
