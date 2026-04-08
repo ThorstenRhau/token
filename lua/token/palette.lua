@@ -125,21 +125,21 @@ local function palette(background)
     fg2 = '#938e87',
     fg3 = '#878681',
     -- Accent hues
-    accent = '#c5826d',
-    accent2 = '#be9570',
+    accent = '#bb8777',
+    accent2 = '#b59579',
     -- Syntax hues
-    blue = '#7a9ebe',
-    green = '#75ae71',
-    red = '#c17c82',
-    yellow = '#bca45d',
-    purple = '#a688c2',
-    cyan = '#66adad',
-    orange = '#c59159',
+    blue = '#819eb7',
+    green = '#7ea37c',
+    red = '#ba8388',
+    yellow = '#b29f67',
+    purple = '#a68ebc',
+    cyan = '#6da6a6',
+    orange = '#b99165',
     -- Bright variants
-    bright_green = '#8fbc8b',
-    bright_blue = '#90b1cc',
-    bright_purple = '#b79ece',
-    bright_cyan = '#7fbcbc',
+    bright_green = '#96b394',
+    bright_blue = '#96b0c6',
+    bright_purple = '#b7a3c9',
+    bright_cyan = '#85b6b6',
     -- Diff backgrounds
     diff_add = '#23331c',
     diff_del = '#421a1e',
@@ -157,9 +157,9 @@ local function palette(background)
     indent_active = '#636360',
     line_nr = '#585855',
     -- Git sign column
-    gsign_add = '#75ae71',
-    gsign_change = '#bca45d',
-    gsign_del = '#c17c82',
+    gsign_add = '#7ea37c',
+    gsign_change = '#b29f67',
+    gsign_del = '#ba8388',
     gsign_untracked = '#878681',
   }
 end

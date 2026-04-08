@@ -4,33 +4,33 @@
 [dark]
 # preferred_background: 262624
 fish_color_normal e8e4dc
-fish_color_command 7a9ebe
-fish_color_keyword be9570
-fish_color_quote 75ae71
-fish_color_redirection a688c2
+fish_color_command 819eb7
+fish_color_keyword b59579
+fish_color_quote 7ea37c
+fish_color_redirection a68ebc
 fish_color_end 938e87
-fish_color_error c17c82
+fish_color_error ba8388
 fish_color_param d4cfc6
 fish_color_comment 938e87
 fish_color_selection --reverse
-fish_color_operator c5826d
-fish_color_escape a688c2
+fish_color_operator bb8777
+fish_color_escape a68ebc
 fish_color_autosuggestion 585855
-fish_color_cwd 7a9ebe
-fish_color_user 75ae71
-fish_color_host 7a9ebe
-fish_color_host_remote be9570
-fish_color_cancel c17c82
+fish_color_cwd 819eb7
+fish_color_user 7ea37c
+fish_color_host 819eb7
+fish_color_host_remote b59579
+fish_color_cancel ba8388
 fish_color_search_match --background=4a4030
 fish_color_valid_path --underline
 
 # Pager
-fish_pager_color_progress c5826d
-fish_pager_color_prefix c5826d --bold
+fish_pager_color_progress bb8777
+fish_pager_color_prefix bb8777 --bold
 fish_pager_color_completion e8e4dc
 fish_pager_color_description 938e87
 fish_pager_color_selected_background --background=333331
-fish_pager_color_selected_prefix c5826d --bold
+fish_pager_color_selected_prefix bb8777 --bold
 fish_pager_color_selected_completion e8e4dc
 fish_pager_color_selected_description 938e87
 
@@ -70,32 +70,32 @@ fish_pager_color_selected_description 6c675f
 [unknown]
 # preferred_background: 262624
 fish_color_normal e8e4dc
-fish_color_command 7a9ebe
-fish_color_keyword be9570
-fish_color_quote 75ae71
-fish_color_redirection a688c2
+fish_color_command 819eb7
+fish_color_keyword b59579
+fish_color_quote 7ea37c
+fish_color_redirection a68ebc
 fish_color_end 938e87
-fish_color_error c17c82
+fish_color_error ba8388
 fish_color_param d4cfc6
 fish_color_comment 938e87
 fish_color_selection --reverse
-fish_color_operator c5826d
-fish_color_escape a688c2
+fish_color_operator bb8777
+fish_color_escape a68ebc
 fish_color_autosuggestion 585855
-fish_color_cwd 7a9ebe
-fish_color_user 75ae71
-fish_color_host 7a9ebe
-fish_color_host_remote be9570
-fish_color_cancel c17c82
+fish_color_cwd 819eb7
+fish_color_user 7ea37c
+fish_color_host 819eb7
+fish_color_host_remote b59579
+fish_color_cancel ba8388
 fish_color_search_match --background=4a4030
 fish_color_valid_path --underline
 
 # Pager
-fish_pager_color_progress c5826d
-fish_pager_color_prefix c5826d --bold
+fish_pager_color_progress bb8777
+fish_pager_color_prefix bb8777 --bold
 fish_pager_color_completion e8e4dc
 fish_pager_color_description 938e87
 fish_pager_color_selected_background --background=333331
-fish_pager_color_selected_prefix c5826d --bold
+fish_pager_color_selected_prefix bb8777 --bold
 fish_pager_color_selected_completion e8e4dc
 fish_pager_color_selected_description 938e87
