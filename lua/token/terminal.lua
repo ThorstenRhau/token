@@ -1,6 +1,6 @@
 local M = {}
 
----@param p table palette
+---@param p TokenPalette
 ---@param is_dark boolean
 ---@return table<integer,string> colors 0..15 ANSI terminal colors
 function M.colors(p, is_dark)
@@ -24,7 +24,7 @@ function M.colors(p, is_dark)
   }
 end
 
----@param p table palette
+---@param p TokenPalette
 ---@param is_dark boolean
 function M.set(p, is_dark)
   local c = M.colors(p, is_dark)
