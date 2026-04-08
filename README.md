@@ -7,6 +7,18 @@ simple: a theme you never configure is a theme you stop thinking about.
 Terminal themes for Ghostty, fish, delta, tmux and others are generated from the
 same palette file, so everything matches without extra work.
 
+## Features
+
+- Dark and light variants, switching at runtime via `vim.o.background`
+- Treesitter capture groups for accurate syntax highlighting
+- LSP semantic token highlights
+- LSP diagnostic signs, virtual text, and underlines
+- Diff highlights for buffers and signs
+- Legacy syntax group coverage for non-Treesitter filetypes
+- Terminal color support (ANSI colors 0–15)
+- Lualine theme included
+- Contrib themes for terminal tools generated from the same palette
+
 ## Showcase
 
 | Dark | Light |
@@ -46,10 +58,42 @@ token/
 │       ├── palette.lua
 │       ├── terminal.lua
 │       └── groups/
-│           ├── base.lua
+│           ├── init.lua
+│           ├── editor.lua
+│           ├── syntax.lua
 │           ├── treesitter.lua
 │           ├── lsp.lua
-│           └── plugins.lua
+│           ├── diagnostics.lua
+│           ├── diff.lua
+│           └── plugins/
+│               ├── init.lua
+│               ├── blink.lua
+│               ├── claudecode.lua
+│               ├── diffview.lua
+│               ├── fugitive.lua
+│               ├── fzf.lua
+│               ├── gitsigns.lua
+│               ├── hlchunk.lua
+│               ├── ibl.lua
+│               ├── markview.lua
+│               ├── mason.lua
+│               ├── matchup.lua
+│               ├── mini.lua
+│               ├── neogit.lua
+│               ├── nvimtree.lua
+│               ├── oil.lua
+│               ├── snacks.lua
+│               ├── treesitter_context.lua
+│               └── trouble.lua
+├── contrib/
+│   ├── bat/
+│   ├── fish/
+│   ├── fzf/
+│   ├── ghostty/
+│   ├── lazygit/
+│   ├── ripgrep/
+│   ├── starship/
+│   └── tmux/
 ├── scripts/
 │   └── gen_contrib.lua
 ├── README.md
@@ -58,10 +102,27 @@ token/
 
 ## Supported plugins
 
-blink.cmp, claudecode.nvim, diffview.nvim, fzf-lua, gitsigns.nvim,
-hlchunk.nvim, indent-blankline.nvim, lualine.nvim, markview.nvim, mason.nvim,
-mini.clue, mini.icons, mini.statusline, neogit, nvim-tree.lua, oil.nvim,
-snacks.nvim, treesitter-context, trouble.nvim, vim-matchup.
+- blink.cmp
+- claudecode.nvim
+- diffview.nvim
+- fugitive.vim
+- fzf-lua
+- gitsigns.nvim
+- hlchunk.nvim
+- indent-blankline.nvim
+- lualine.nvim
+- markview.nvim
+- mason.nvim
+- mini.clue
+- mini.icons
+- mini.statusline
+- neogit
+- nvim-tree.lua
+- oil.nvim
+- snacks.nvim
+- treesitter-context
+- trouble.nvim
+- vim-matchup
 
 ## Contrib themes
 
@@ -71,7 +132,6 @@ rebuild after palette changes with `make contrib`.
 | Tool                                                | Files                                          | Usage                                                                                                      |
 | --------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | [bat](https://github.com/sharkdp/bat)               | `contrib/bat/token-{dark,light}.tmTheme`       | Copy to bat themes dir, run `bat cache --build`                                                            |
-| [delta](https://github.com/dandavison/delta)        | `contrib/delta/token.gitconfig`                | Add `[include] path = /path/to/token.gitconfig`, then set `[delta] features = token-dark` or `token-light` |
 | [fish](https://fishshell.com/)                      | `contrib/fish/token.theme`                     | Copy to `~/.config/fish/themes/`, then run `fish_config theme choose token`                                |
 | [fzf](https://github.com/junegunn/fzf)              | `contrib/fzf/token-{dark,light}.fish`          | `source /path/to/token-dark.fish` in `config.fish` to append theme colors to `FZF_DEFAULT_OPTS`            |
 | [ghostty](https://ghostty.org/)                     | `contrib/ghostty/token-{dark,light}`           | Copy to `~/.config/ghostty/themes/`, then set `theme = dark:token-dark,light:token-light`                  |
