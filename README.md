@@ -88,6 +88,7 @@ token/
 │               └── trouble.lua
 ├── contrib/
 │   ├── bat/
+│   ├── emacs/
 │   ├── fish/
 │   ├── fzf/
 │   ├── ghostty/
@@ -133,6 +134,7 @@ rebuild after palette changes with `make contrib`.
 | Tool                                                | Files                                          | Usage                                                                                           |
 | --------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | [bat](https://github.com/sharkdp/bat)               | `contrib/bat/token-{dark,light}.tmTheme`       | Copy to bat themes dir, run `bat cache --build`                                                 |
+| [emacs](https://www.gnu.org/software/emacs/)        | `contrib/emacs/token-{dark,light}-theme.el`    | Copy to `~/.emacs.d/themes/`, then `(load-theme 'token-dark t)`                                 |
 | [fish](https://fishshell.com/)                      | `contrib/fish/token.theme`                     | Copy to `~/.config/fish/themes/`, then run `fish_config theme choose token`                     |
 | [fzf](https://github.com/junegunn/fzf)              | `contrib/fzf/token-{dark,light}.fish`          | `source /path/to/token-dark.fish` in `config.fish` to append theme colors to `FZF_DEFAULT_OPTS` |
 | [ghostty](https://ghostty.org/)                     | `contrib/ghostty/token-{dark,light}`           | Copy to `~/.config/ghostty/themes/`, then set `theme = dark:token-dark,light:token-light`       |
