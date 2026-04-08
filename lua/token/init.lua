@@ -11,16 +11,8 @@ function M.load()
     end
   end
 
-  local palette = require('token.palette')
-  local p = palette(vim.o.background)
-
-  local groups = vim.tbl_extend(
-    'force',
-    require('token.groups.base')(p),
-    require('token.groups.treesitter')(p),
-    require('token.groups.lsp')(p),
-    require('token.groups.plugins')(p)
-  )
+  local p = require('token.palette')(vim.o.background)
+  local groups = require('token.groups')(p)
 
   for group, hl in pairs(groups) do
     vim.api.nvim_set_hl(0, group, hl)

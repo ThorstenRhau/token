@@ -1,6 +1,6 @@
----@param p table palette
----@return table
-local function base(p)
+---@param p TokenPalette
+---@return table<string, vim.api.keyset.highlight>
+local function editor(p)
   return {
     -- Editor UI
     Normal = { fg = p.fg0, bg = p.bg3 },
@@ -95,57 +95,6 @@ local function base(p)
     SpellLocal = { undercurl = true, sp = p.blue },
     SpellRare = { undercurl = true, sp = p.purple },
 
-    -- Diff
-    DiffAdd = { bg = p.diff_add },
-    DiffDelete = { bg = p.diff_del },
-    DiffChange = { bg = p.diff_change },
-    DiffText = { bg = p.diff_text },
-    DiffTextAdd = { link = 'DiffAdd' },
-    Added = { fg = p.green },
-    Changed = { fg = p.yellow },
-    Removed = { fg = p.red },
-
-    -- Diagnostics
-    DiagnosticError = { fg = p.red },
-    DiagnosticWarn = { fg = p.yellow },
-    DiagnosticInfo = { fg = p.blue },
-    DiagnosticHint = { fg = p.green },
-    DiagnosticOk = { fg = p.green },
-
-    DiagnosticUnderlineError = { undercurl = true, sp = p.red },
-    DiagnosticUnderlineWarn = { undercurl = true, sp = p.yellow },
-    DiagnosticUnderlineInfo = { undercurl = true, sp = p.blue },
-    DiagnosticUnderlineHint = { undercurl = true, sp = p.green },
-    DiagnosticUnderlineOk = { undercurl = true, sp = p.green },
-
-    DiagnosticVirtualTextError = { fg = p.red, bg = p.diff_del },
-    DiagnosticVirtualTextWarn = { fg = p.yellow, bg = p.diff_text },
-    DiagnosticVirtualTextInfo = { fg = p.blue, bg = p.diff_change },
-    DiagnosticVirtualTextHint = { fg = p.green, bg = p.diff_add },
-
-    DiagnosticSignError = { link = 'DiagnosticError' },
-    DiagnosticSignWarn = { link = 'DiagnosticWarn' },
-    DiagnosticSignInfo = { link = 'DiagnosticInfo' },
-    DiagnosticSignHint = { link = 'DiagnosticHint' },
-
-    DiagnosticFloatingError = { link = 'DiagnosticError' },
-    DiagnosticFloatingWarn = { link = 'DiagnosticWarn' },
-    DiagnosticFloatingInfo = { link = 'DiagnosticInfo' },
-    DiagnosticFloatingHint = { link = 'DiagnosticHint' },
-    DiagnosticFloatingOk = { link = 'DiagnosticOk' },
-
-    DiagnosticDeprecated = { strikethrough = true },
-    DiagnosticUnnecessary = { fg = p.fg3 },
-
-    DiagnosticVirtualTextOk = { fg = p.green, bg = p.diff_add },
-    DiagnosticSignOk = { link = 'DiagnosticOk' },
-
-    DiagnosticVirtualLinesError = { link = 'DiagnosticError' },
-    DiagnosticVirtualLinesWarn = { link = 'DiagnosticWarn' },
-    DiagnosticVirtualLinesInfo = { link = 'DiagnosticInfo' },
-    DiagnosticVirtualLinesHint = { link = 'DiagnosticHint' },
-    DiagnosticVirtualLinesOk = { link = 'DiagnosticOk' },
-
     -- LSP references
     LspReferenceText = { bg = p.bg5 },
     LspReferenceRead = { bg = p.bg5 },
@@ -155,51 +104,6 @@ local function base(p)
     LspCodeLens = { fg = p.fg2 },
     LspCodeLensSeparator = { fg = p.fg3 },
     LspSignatureActiveParameter = { fg = p.accent, bold = true },
-
-    -- Legacy syntax groups
-    Comment = { fg = p.fg2, italic = true },
-    Constant = { fg = p.purple },
-    String = { fg = p.green },
-    Character = { fg = p.green },
-    Number = { fg = p.purple },
-    Boolean = { fg = p.accent2 },
-    Float = { fg = p.purple },
-
-    Identifier = { fg = p.fg0 },
-    Function = { fg = p.accent },
-
-    Statement = { fg = p.accent2 },
-    Conditional = { fg = p.accent2 },
-    Repeat = { fg = p.accent2 },
-    Label = { fg = p.accent2 },
-    Operator = { fg = p.fg1 },
-    Keyword = { fg = p.accent2 },
-    Exception = { fg = p.red },
-
-    PreProc = { fg = p.purple },
-    Include = { fg = p.purple },
-    Define = { fg = p.purple },
-    Macro = { fg = p.purple },
-    PreCondit = { fg = p.purple },
-
-    Type = { fg = p.blue },
-    StorageClass = { fg = p.accent2 },
-    Structure = { fg = p.blue },
-    Typedef = { fg = p.blue },
-
-    Special = { fg = p.purple },
-    SpecialChar = { fg = p.purple },
-    Tag = { fg = p.purple },
-    Delimiter = { fg = p.fg1 },
-    SpecialComment = { fg = p.fg2, italic = true },
-    Debug = { fg = p.red },
-
-    Underlined = { underline = true },
-    Bold = { bold = true },
-    Italic = { italic = true },
-    Ignore = { fg = p.fg3 },
-    Error = { fg = p.red, bold = true },
-    Todo = { fg = p.yellow, bold = true },
 
     -- Misc UI
     ComplMatchIns = { fg = p.accent, bold = true },
@@ -215,4 +119,4 @@ local function base(p)
   }
 end
 
-return base
+return editor
