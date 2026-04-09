@@ -1,6 +1,6 @@
 # token
 
-Token is a warm, muted Neovim 0.12+ colorscheme. Dark and light variants, no
+Token is a warm, muted Neovim 0.12+ colorscheme that is written in Lua. Dark and light variants, no
 configuration. There is no setup function. Load it and it works. The idea is
 simple: a theme you never configure is a theme you stop thinking about.
 
