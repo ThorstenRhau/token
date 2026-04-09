@@ -54,7 +54,7 @@ token/
 
 - `colors/token.lua` is the Neovim entry point, discovered by `:colorscheme token`
 - `init.lua` orchestrates: hi clear, set colors_name, bust module cache (including `lualine.themes.token`), load palette, merge groups, apply via `nvim_set_hl`, set terminal colors
-- `palette.lua` returns a function that takes `'dark'|'light'` and returns a flat table of 40 semantic hex color keys
+- `palette.lua` returns a function that takes `'dark'|'light'` and returns a flat table of 41 semantic hex color keys
 - `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp, diagnostics, diff, plugins
 - `groups/plugins/init.lua` loads individual plugin files from an explicit sorted list
 - Each group module exports a function `(palette) -> { [group] = hl_opts }`

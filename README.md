@@ -88,6 +88,7 @@ token/
 │               └── trouble.lua
 ├── contrib/
 │   ├── bat/
+│   ├── delta/
 │   ├── emacs/
 │   ├── fish/
 │   ├── fzf/
@@ -134,6 +135,7 @@ rebuild after palette changes with `make contrib`.
 | Tool                                                | Files                                          | Usage                                                                                           |
 | --------------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | [bat](https://github.com/sharkdp/bat)               | `contrib/bat/token-{dark,light}.tmTheme`       | Copy to bat themes dir, run `bat cache --build`                                                 |
+| [delta](https://github.com/dandavison/delta)        | `contrib/delta/token.gitconfig`                | Include from `~/.gitconfig`, set `features = token-dark` in `[delta]`                           |
 | [emacs](https://www.gnu.org/software/emacs/)        | `contrib/emacs/token-{dark,light}-theme.el`    | Copy to `~/.emacs.d/themes/`, then `(load-theme 'token-dark t)`                                 |
 | [fish](https://fishshell.com/)                      | `contrib/fish/token.theme`                     | Copy to `~/.config/fish/themes/`, then run `fish_config theme choose token`                     |
 | [fzf](https://github.com/junegunn/fzf)              | `contrib/fzf/token-{dark,light}.fish`          | `source /path/to/token-dark.fish` in `config.fish` to append theme colors to `FZF_DEFAULT_OPTS` |
