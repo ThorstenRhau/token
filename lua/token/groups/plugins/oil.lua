@@ -22,6 +22,10 @@ local function oil(p)
     OilTypeFile = { fg = p.fg2 },
     OilTypeLink = { fg = p.purple },
     OilTypeSocket = { fg = p.accent2 },
+    OilTrash = { fg = p.red },
+    OilRestore = { fg = p.green },
+    OilPurge = { fg = p.red, bold = true },
+    OilHidden = { fg = p.fg3 },
   }
 end
 

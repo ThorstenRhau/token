@@ -31,6 +31,34 @@ local function nvimtree(p)
     NvimTreeDiagnosticWarnIcon = { fg = p.yellow },
     NvimTreeDiagnosticInfoIcon = { fg = p.blue },
     NvimTreeDiagnosticHintIcon = { fg = p.cyan },
+    -- *HL variants: activated by renderer.highlight_git = 'name'
+    NvimTreeGitFileDirtyHL = { fg = p.yellow },
+    NvimTreeGitFileStagedHL = { fg = p.green },
+    NvimTreeGitFileMergeHL = { fg = p.accent },
+    NvimTreeGitFileRenamedHL = { fg = p.purple },
+    NvimTreeGitFileNewHL = { fg = p.green },
+    NvimTreeGitFileDeletedHL = { fg = p.red },
+    NvimTreeGitFileIgnoredHL = { fg = p.fg3 },
+    NvimTreeGitFolderDirtyHL = { link = 'NvimTreeGitFileDirtyHL' },
+    NvimTreeGitFolderStagedHL = { link = 'NvimTreeGitFileStagedHL' },
+    NvimTreeGitFolderMergeHL = { link = 'NvimTreeGitFileMergeHL' },
+    NvimTreeGitFolderRenamedHL = { link = 'NvimTreeGitFileRenamedHL' },
+    NvimTreeGitFolderNewHL = { link = 'NvimTreeGitFileNewHL' },
+    NvimTreeGitFolderDeletedHL = { link = 'NvimTreeGitFileDeletedHL' },
+    NvimTreeGitFolderIgnoredHL = { link = 'NvimTreeGitFileIgnoredHL' },
+    -- *HL variants: activated by renderer.highlight_modified / highlight_opened_files = 'name'
+    NvimTreeModifiedFileHL = { link = 'NvimTreeModifiedFile' },
+    NvimTreeModifiedFolderHL = { link = 'NvimTreeModifiedFile' },
+    NvimTreeOpenedHL = { link = 'NvimTreeOpenedFile' },
+    -- *HL variants: activated by renderer.highlight_diagnostics = 'name'
+    NvimTreeDiagnosticErrorFileHL = { link = 'DiagnosticError' },
+    NvimTreeDiagnosticWarnFileHL = { link = 'DiagnosticWarn' },
+    NvimTreeDiagnosticInfoFileHL = { link = 'DiagnosticInfo' },
+    NvimTreeDiagnosticHintFileHL = { link = 'DiagnosticHint' },
+    NvimTreeDiagnosticErrorFolderHL = { link = 'NvimTreeDiagnosticErrorFileHL' },
+    NvimTreeDiagnosticWarnFolderHL = { link = 'NvimTreeDiagnosticWarnFileHL' },
+    NvimTreeDiagnosticInfoFolderHL = { link = 'NvimTreeDiagnosticInfoFileHL' },
+    NvimTreeDiagnosticHintFolderHL = { link = 'NvimTreeDiagnosticHintFileHL' },
   }
 end
 

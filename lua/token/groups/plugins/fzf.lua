@@ -36,6 +36,12 @@ local function fzf(p)
     FzfLuaFzfMatch = { fg = p.accent, bold = true },
     FzfLuaFzfPointer = { fg = p.accent },
     FzfLuaFzfInfo = { fg = p.fg3 },
+    FzfLuaTitleFlags = { link = 'FzfLuaTitle' },
+    FzfLuaBackdrop = { bg = p.bg0 },
+    FzfLuaBufId = { link = 'FzfLuaBufNr' },
+    FzfLuaBufLineNr = { link = 'LineNr' },
+    FzfLuaDirPart = { fg = p.fg2 },
+    FzfLuaFilePart = { fg = p.fg0 },
   }
 end
 
