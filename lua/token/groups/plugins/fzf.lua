@@ -9,7 +9,7 @@ local function fzf(p)
     FzfLuaPreviewBorder = { fg = p.fg3, bg = p.bg0 },
     FzfLuaPreviewTitle = { fg = p.accent2, bg = p.bg0, bold = true },
     FzfLuaCursor = { link = 'Cursor' },
-    FzfLuaCursorLine = { link = 'CursorLine' },
+    FzfLuaCursorLine = { bg = p.sel },
     FzfLuaCursorLineNr = { link = 'CursorLineNr' },
     FzfLuaSearch = { link = 'Search' },
     FzfLuaScrollBorderEmpty = { fg = p.fg3, bg = p.bg1 },
