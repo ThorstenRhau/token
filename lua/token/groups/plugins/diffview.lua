@@ -22,6 +22,12 @@ local function diffview(p)
     DiffviewStatusDeleted = { fg = p.red },
     DiffviewStatusBroken = { fg = p.red, bold = true },
     DiffviewStatusIgnored = { fg = p.fg3 },
+    DiffviewDim1 = { fg = p.fg3 },
+    DiffviewPrimary = { fg = p.accent },
+    DiffviewSecondary = { fg = p.accent2 },
+    DiffviewHash = { fg = p.purple },
+    DiffviewReference = { fg = p.accent },
+    DiffviewFilePanelPath = { fg = p.fg3 },
   }
 end
 

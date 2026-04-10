@@ -13,7 +13,6 @@ local function gitsigns(p)
     GitSignsDeleteNr = { link = 'GitSignsDelete' },
     GitSignsAddLn = { bg = p.diff_add },
     GitSignsChangeLn = { bg = p.diff_change },
-    GitSignsDeleteLn = { bg = p.diff_del },
     GitSignsAddPreview = { bg = p.diff_add },
     GitSignsDeletePreview = { bg = p.diff_del },
     GitSignsCurrentLineBlame = { fg = p.fg3, italic = true },

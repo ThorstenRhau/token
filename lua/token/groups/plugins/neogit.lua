@@ -61,9 +61,11 @@ local function neogit(p)
 
     -- Status sections
     NeogitSectionHeader = { fg = p.accent, bold = true },
+    NeogitSectionHeaderCount = { fg = p.fg2 },
+    NeogitStatusHEAD = { fg = p.fg1, bold = true },
     NeogitObjectId = { fg = p.fg3 },
     NeogitStash = { fg = p.fg1 },
-    NeogitStashEntry = { fg = p.fg0 },
+    NeogitRebaseDone = { fg = p.fg3 },
     NeogitUnmergedInto = { fg = p.purple, bold = true },
     NeogitUnpushedTo = { fg = p.accent },
     NeogitUnpulledFrom = { fg = p.blue },
@@ -80,13 +82,43 @@ local function neogit(p)
 
     -- Commit view
     NeogitCommitViewHeader = { fg = p.fg0, bg = p.bg5, bold = true },
+    NeogitCommitViewDescription = { fg = p.fg1 },
     NeogitFilePath = { fg = p.blue, italic = true },
 
     -- Popup keys
+    NeogitPopupSectionTitle = { fg = p.accent, bold = true },
+    NeogitPopupBranchName = { fg = p.accent, bold = true },
+    NeogitPopupBold = { bold = true },
     NeogitPopupSwitchKey = { fg = p.purple },
+    NeogitPopupSwitchEnabled = { fg = p.green },
+    NeogitPopupSwitchDisabled = { fg = p.fg3 },
     NeogitPopupOptionKey = { fg = p.purple },
+    NeogitPopupOptionEnabled = { fg = p.green },
+    NeogitPopupOptionDisabled = { fg = p.fg3 },
     NeogitPopupConfigKey = { fg = p.purple },
+    NeogitPopupConfigEnabled = { fg = p.green },
+    NeogitPopupConfigDisabled = { fg = p.fg3 },
     NeogitPopupActionKey = { fg = p.purple },
+    NeogitPopupActionDisabled = { fg = p.fg3 },
+
+    -- Command output
+    NeogitCommandText = { fg = p.fg1 },
+    NeogitCommandTime = { fg = p.fg3 },
+    NeogitCommandCodeNormal = { fg = p.green },
+    NeogitCommandCodeError = { fg = p.red },
+
+    -- Subtle/dimmed text
+    NeogitSubtleText = { fg = p.fg3 },
+
+    -- Signature verification
+    NeogitSignatureGood = { fg = p.green },
+    NeogitSignatureBad = { fg = p.red },
+    NeogitSignatureMissing = { fg = p.fg3 },
+    NeogitSignatureNone = { fg = p.fg3 },
+    NeogitSignatureGoodUnknown = { fg = p.yellow },
+    NeogitSignatureGoodExpired = { fg = p.yellow },
+    NeogitSignatureGoodExpiredKey = { fg = p.yellow },
+    NeogitSignatureGoodRevokedKey = { fg = p.red },
 
     -- Float headers
     NeogitFloatHeader = { fg = p.fg1, bg = p.bg0, bold = true },

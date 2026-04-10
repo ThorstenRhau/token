@@ -23,7 +23,6 @@ local function mini(p)
     MiniIconsOrange = { fg = p.accent },
     MiniIconsPurple = { fg = p.purple },
     MiniIconsRed = { fg = p.red },
-    MiniIconsWhite = { fg = p.fg0 },
     MiniIconsYellow = { fg = p.yellow },
 
     -- mini.clue
