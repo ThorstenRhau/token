@@ -46,6 +46,20 @@ token/
 ├── scripts/
 │   └── gen_contrib.lua
 ├── contrib/
+│   ├── bat/
+│   ├── delta/
+│   ├── emacs/
+│   ├── fish/
+│   ├── fzf/
+│   ├── ghostty/
+│   ├── lazygit/
+│   ├── ripgrep/
+│   ├── starship/
+│   └── tmux/
+├── Makefile
+├── selene.toml
+├── neovim.yaml
+├── taplo.toml
 ├── README.md
 └── LICENSE
 ```
@@ -58,24 +72,27 @@ token/
 - `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp, diagnostics, diff, plugins
 - `groups/plugins/init.lua` loads individual plugin files from an explicit sorted list
 - Each group module exports a function `(palette) -> { [group] = hl_opts }`
-- `terminal.lua` exports `{ colors, set }`: `colors(palette, is_dark)` returns the 0..15 ANSI color table (pure Lua), `set()` applies it via `vim.g`
+- `terminal.lua` exports `{ colors, set }`: `colors(p, is_dark)` returns the 0..15 ANSI color table (pure Lua), `set(p, is_dark)` applies it via `vim.g`
 
 ## Common tasks
 
 - **Add a highlight group**: add it to the appropriate `groups/*.lua` file
 - **Add a palette color**: add it to both dark and light tables in `palette.lua`
 - **Add plugin support**: create `groups/plugins/<name>.lua`, add the module path to the list in `groups/plugins/init.lua`
-- **Regenerate contrib themes**: `make contrib` (after changing `palette.lua`)
+- **Regenerate contrib themes**: `make contrib` (run after changing `palette.lua`)
 - Prefer `{ link = 'GroupName' }` over duplicating color values
 
 ## Validation
 
 ```bash
-stylua --check lua/ colors/    # Formatting
-selene lua/                    # Linting
+make format                    # Format with stylua
+make lint                      # Lint with selene
+make contrib                   # Regenerate contrib/ theme files
+make contrib-verify            # Check contrib/ files are up to date
+make all                       # Format, lint, and generate contrib
 ```
 
-No test suite. Validate with both commands before committing.
+No test suite. Run `make all` before committing.
 
 ## Style
 
