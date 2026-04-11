@@ -99,6 +99,7 @@ token/
 │   └── tmux/
 ├── scripts/
 │   └── gen_contrib.lua
+├── Makefile
 ├── README.md
 └── LICENSE
 ```
@@ -119,10 +120,21 @@ token/
 - mini.clue
 - mini.icons
 - mini.statusline
+- mini.surround
 - neogit
 - nvim-tree.lua
 - oil.nvim
-- snacks.nvim
+- snacks.dashboard
+- snacks.debug
+- snacks.dim
+- snacks.image
+- snacks.indent
+- snacks.input
+- snacks.notifier
+- snacks.picker
+- snacks.scratch
+- snacks.statuscolumn
+- snacks.zen
 - treesitter-context
 - trouble.nvim
 - vim-matchup
