@@ -18,9 +18,9 @@ local function markview(p)
     MarkviewPalette2Fg = { fg = p.accent2 },
     MarkviewPalette2Bg = { bg = p.bg4 },
 
-    MarkviewPalette3 = { fg = p.yellow, bg = p.bg4 },
-    MarkviewPalette3Sign = { fg = p.yellow },
-    MarkviewPalette3Fg = { fg = p.yellow },
+    MarkviewPalette3 = { fg = p.olive, bg = p.bg4 },
+    MarkviewPalette3Sign = { fg = p.olive },
+    MarkviewPalette3Fg = { fg = p.olive },
     MarkviewPalette3Bg = { bg = p.bg4 },
 
     MarkviewPalette4 = { fg = p.blue, bg = p.bg4 },

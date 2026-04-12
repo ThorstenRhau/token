@@ -104,7 +104,7 @@ local function treesitter(p)
     ['@markup.heading'] = { fg = p.accent, bold = true },
     ['@markup.heading.1'] = { fg = p.accent, bold = true },
     ['@markup.heading.2'] = { fg = p.accent2, bold = true },
-    ['@markup.heading.3'] = { fg = p.yellow, bold = true },
+    ['@markup.heading.3'] = { fg = p.olive, bold = true },
     ['@markup.heading.4'] = { fg = p.blue, bold = true },
     ['@markup.heading.5'] = { fg = p.green, bold = true },
     ['@markup.heading.6'] = { fg = p.purple, bold = true },
