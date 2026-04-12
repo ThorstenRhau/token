@@ -51,6 +51,10 @@
 ---@field gsign_change string
 ---@field gsign_del string
 ---@field gsign_untracked string
+---@field gsign_add_staged string
+---@field gsign_change_staged string
+---@field gsign_del_staged string
+---@field gsign_untracked_staged string
 
 ---@param background 'dark'|'light'
 ---@return TokenPalette
@@ -86,10 +90,10 @@ local function palette(background)
       orange = '#9a5f22',
       olive = '#63742f',
       -- Bright variants
-      bright_green = '#4d7b49',
-      bright_blue = '#6389a8',
-      bright_purple = '#9075b2',
-      bright_cyan = '#3d8484',
+      bright_green = '#3a5e37',
+      bright_blue = '#486a88',
+      bright_purple = '#6f578c',
+      bright_cyan = '#286363',
       -- Diff backgrounds
       diff_add = '#daf6d5',
       diff_del = '#ffdada',
@@ -110,7 +114,11 @@ local function palette(background)
       gsign_add = '#24831f',
       gsign_change = '#9d6600',
       gsign_del = '#c82a2a',
-      gsign_untracked = '#858179',
+      gsign_untracked = '#a5a29b',
+      gsign_add_staged = '#5ea059',
+      gsign_change_staged = '#b28c43',
+      gsign_del_staged = '#d17473',
+      gsign_untracked_staged = '#858179',
     }
   end
 
@@ -165,7 +173,11 @@ local function palette(background)
     gsign_add = '#7da47a',
     gsign_change = '#c4a855',
     gsign_del = '#c67777',
-    gsign_untracked = '#5a5955',
+    gsign_untracked = '#7a7670',
+    gsign_add_staged = '#5e7a5c',
+    gsign_change_staged = '#88753f',
+    gsign_del_staged = '#9a5f5f',
+    gsign_untracked_staged = '#5a5955',
   }
 end
 
