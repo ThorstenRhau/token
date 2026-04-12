@@ -56,7 +56,7 @@ local function neogit(p)
     NeogitBranch = { fg = p.accent },
     NeogitBranchHead = { fg = p.accent, bold = true, underline = true },
     NeogitRemote = { fg = p.blue },
-    NeogitTagName = { fg = p.yellow },
+    NeogitTagName = { fg = p.orange, bold = true },
     NeogitTagDistance = { fg = p.cyan },
 
     -- Status sections
