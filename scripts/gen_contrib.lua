@@ -179,6 +179,10 @@ end
 local function gen_delta(dark, light, _dark_term, _light_term)
   local function section(p, variant)
     local is_dark = variant == 'dark'
+    local base_del = is_dark and p.diff_del_inline or p.diff_del
+    local base_add = is_dark and p.diff_add_inline or p.diff_add
+    local emph_del = is_dark and p.diff_del_strong or p.diff_del_inline
+    local emph_add = is_dark and p.diff_add_strong or p.diff_add_inline
     local lines = {
       '[delta "token-' .. variant .. '"]',
       '\t' .. (is_dark and 'dark' or 'light') .. ' = true',
@@ -196,14 +200,19 @@ local function gen_delta(dark, light, _dark_term, _light_term)
       '\tline-numbers-minus-style = bold "' .. p.red .. '"',
       '\tline-numbers-plus-style = bold "' .. p.green .. '"',
       '\tline-numbers-zero-style = "' .. p.fg2 .. '"',
-      '\tminus-style = syntax "' .. p.diff_del .. '"',
-      '\tminus-non-emph-style = syntax "' .. p.diff_del .. '"',
-      '\tminus-emph-style = bold "' .. p.fg0 .. '" "' .. p.diff_del_inline .. '"',
-      '\tminus-empty-line-marker-style = syntax "' .. p.diff_del .. '"',
-      '\tplus-style = syntax "' .. p.diff_add .. '"',
-      '\tplus-non-emph-style = syntax "' .. p.diff_add .. '"',
-      '\tplus-emph-style = bold "' .. p.fg0 .. '" "' .. p.diff_add_inline .. '"',
-      '\tplus-empty-line-marker-style = syntax "' .. p.diff_add .. '"',
+      '\tminus-style = syntax "' .. base_del .. '"',
+      '\tminus-non-emph-style = syntax "' .. base_del .. '"',
+      '\tminus-emph-style = bold "' .. p.fg0 .. '" "' .. emph_del .. '"',
+      '\tminus-empty-line-marker-style = syntax "' .. base_del .. '"',
+      '\tplus-style = syntax "' .. base_add .. '"',
+      '\tplus-non-emph-style = syntax "' .. base_add .. '"',
+      '\tplus-emph-style = bold "' .. p.fg0 .. '" "' .. emph_add .. '"',
+      '\tplus-empty-line-marker-style = syntax "' .. base_add .. '"',
+      '\tmap-styles = "bold purple => syntax \''
+        .. (is_dark and p.diff_text or p.diff_change)
+        .. "', bold cyan => syntax '"
+        .. (is_dark and p.diff_text or p.diff_change)
+        .. '\'"',
     }
     return table.concat(lines, '\n')
   end

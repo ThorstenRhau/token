@@ -35,6 +35,8 @@
 ---@field diff_del string
 ---@field diff_add_inline string
 ---@field diff_del_inline string
+---@field diff_add_strong string
+---@field diff_del_strong string
 ---@field diff_change string
 ---@field diff_text string
 --- Diagnostic backgrounds
@@ -99,6 +101,8 @@ local function palette(background)
       diff_del = '#ffdada',
       diff_add_inline = '#c0d8bc',
       diff_del_inline = '#e8c4c4',
+      diff_add_strong = '#a8c8a2',
+      diff_del_strong = '#d8aaaa',
       diff_change = '#eee4c6',
       diff_text = '#e2dac0',
       -- Diagnostic backgrounds
@@ -158,6 +162,8 @@ local function palette(background)
     diff_del = '#3c2024',
     diff_add_inline = '#2e5232',
     diff_del_inline = '#5a2529',
+    diff_add_strong = '#3a6e3e',
+    diff_del_strong = '#7a2e34',
     diff_change = '#2b2b29',
     diff_text = '#444039',
     -- Diagnostic backgrounds

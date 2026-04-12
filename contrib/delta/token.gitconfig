@@ -19,14 +19,15 @@
 	line-numbers-minus-style = bold "#c67777"
 	line-numbers-plus-style = bold "#7da47a"
 	line-numbers-zero-style = "#938e87"
-	minus-style = syntax "#3c2024"
-	minus-non-emph-style = syntax "#3c2024"
-	minus-emph-style = bold "#e8e4dc" "#5a2529"
-	minus-empty-line-marker-style = syntax "#3c2024"
-	plus-style = syntax "#1e3524"
-	plus-non-emph-style = syntax "#1e3524"
-	plus-emph-style = bold "#e8e4dc" "#2e5232"
-	plus-empty-line-marker-style = syntax "#1e3524"
+	minus-style = syntax "#5a2529"
+	minus-non-emph-style = syntax "#5a2529"
+	minus-emph-style = bold "#e8e4dc" "#7a2e34"
+	minus-empty-line-marker-style = syntax "#5a2529"
+	plus-style = syntax "#2e5232"
+	plus-non-emph-style = syntax "#2e5232"
+	plus-emph-style = bold "#e8e4dc" "#3a6e3e"
+	plus-empty-line-marker-style = syntax "#2e5232"
+	map-styles = "bold purple => syntax '#444039', bold cyan => syntax '#444039'"
 
 [delta "token-light"]
 	light = true
@@ -52,3 +53,4 @@
 	plus-non-emph-style = syntax "#daf6d5"
 	plus-emph-style = bold "#2a2920" "#c0d8bc"
 	plus-empty-line-marker-style = syntax "#daf6d5"
+	map-styles = "bold purple => syntax '#eee4c6', bold cyan => syntax '#eee4c6'"
