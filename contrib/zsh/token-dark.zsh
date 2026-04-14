@@ -75,7 +75,7 @@ export CLICOLOR=1
 export LSCOLORS='ExfxcxdxBxgxgxBxDxCxex'
 
 # Completion
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=48;2;51;51;49;38;2;232;228;220"
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=48;2;58;58;55;38;2;232;228;220"
 zstyle ':completion:*:descriptions' format '%F{#938e87}-- %d --%f'
 zstyle ':completion:*:messages' format '%F{#938e87}-- %d --%f'
 zstyle ':completion:*:warnings' format '%F{#c67777}-- no matches --%f'
@@ -83,7 +83,7 @@ zstyle ':completion:*:warnings' format '%F{#c67777}-- no matches --%f'
 # fzf-tab
 zstyle ':fzf-tab:*' fzf-flags \
   '--color=fg:#e8e4dc,bg:#262624,hl:#d97757' \
-  '--color=fg+:#e8e4dc,bg+:#333331,hl+:#d97757' \
+  '--color=fg+:#e8e4dc,bg+:#3a3a37,hl+:#d97757' \
   '--color=border:#5a5955,header:#7b9ebd,gutter:#262624' \
   '--color=spinner:#c4956a,info:#938e87' \
   '--color=pointer:#d97757,marker:#7da47a,prompt:#d97757'

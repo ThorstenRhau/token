@@ -39,7 +39,7 @@
       (diff-del-inline "#5a2529")
       (diff-change     "#2b2b29")
       (diff-text       "#444039")
-      (sel             "#333331")
+      (sel             "#3a3a37")
       (match           "#4a4030"))
 
   (custom-theme-set-faces
