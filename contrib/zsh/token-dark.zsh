@@ -80,6 +80,16 @@ zstyle ':completion:*:descriptions' format '%F{#938e87}-- %d --%f'
 zstyle ':completion:*:messages' format '%F{#938e87}-- %d --%f'
 zstyle ':completion:*:warnings' format '%F{#c67777}-- no matches --%f'
 
+# fzf-tab
+zstyle ':fzf-tab:*' fzf-flags \
+  '--color=fg:#e8e4dc,bg:#262624,hl:#d97757' \
+  '--color=fg+:#e8e4dc,bg+:#333331,hl+:#d97757' \
+  '--color=border:#5a5955,header:#7b9ebd,gutter:#262624' \
+  '--color=spinner:#c4956a,info:#938e87' \
+  '--color=pointer:#d97757,marker:#7da47a,prompt:#d97757'
+zstyle ':fzf-tab:*' default-color $'\033[38;2;232;228;220m'
+zstyle ':fzf-tab:*' group-colors $'\033[38;2;123;158;189m' $'\033[38;2;125;164;122m' $'\033[38;2;196;149;106m' $'\033[38;2;166;139;191m' $'\033[38;2;107;168;168m' $'\033[38;2;217;119;87m' $'\033[38;2;196;168;85m' $'\033[38;2;198;119;119m'
+
 # Prompt helpers
 export TOKEN_FG='#e8e4dc'
 export TOKEN_BG='#262624'
