@@ -17,7 +17,7 @@ format:
 
 # Lint Lua files (scripts/ excluded: plain LuaJIT, no vim globals)
 lint:
-	@selene --config "$(SELENEC)" "$(ROOT)/lua" "$(ROOT)/colors"
+	@selene --config "$(SELENEC)" "$(ROOT)/lua" "$(ROOT)/colors" "$(ROOT)/plugin"
 
 # Generate contrib/ theme files for external tools
 contrib:

@@ -13,6 +13,7 @@ token/
 │   │   └── token.lua          # Lualine theme
 │   └── token/
 │       ├── init.lua            # Public API: load()
+│       ├── compile.lua         # Bytecode compilation and cache loading
 │       ├── palette.lua         # Color definitions for dark/light
 │       ├── terminal.lua        # ANSI terminal colors 0..15
 │       └── groups/
@@ -27,26 +28,41 @@ token/
 │               ├── init.lua    # Plugin loader (merges all plugin modules)
 │               ├── blink.lua
 │               ├── claudecode.lua
+│               ├── cmp.lua
+│               ├── dap_ui.lua
 │               ├── diffview.lua
+│               ├── flash.lua
 │               ├── fugitive.lua
 │               ├── fzf.lua
 │               ├── gitsigns.lua
 │               ├── hlchunk.lua
 │               ├── ibl.lua
+│               ├── lazy.lua
 │               ├── markview.lua
 │               ├── mason.lua
 │               ├── matchup.lua
 │               ├── mini.lua
+│               ├── neo_tree.lua
 │               ├── neogit.lua
+│               ├── noice.lua
 │               ├── nvimtree.lua
 │               ├── oil.lua
+│               ├── render_markdown.lua
 │               ├── snacks.lua
+│               ├── telescope.lua
+│               ├── todo_comments.lua
 │               ├── treesitter_context.lua
-│               └── trouble.lua
+│               ├── trouble.lua
+│               └── whichkey.lua
+├── plugin/
+│   └── token.lua              # :TokenCompile command registration
 ├── scripts/
-│   └── gen_contrib.lua
+│   ├── gen_contrib.lua
+│   ├── gen_emacs.lua
+│   └── gen_lib.lua
 ├── contrib/
 │   ├── bat/
+│   ├── carapace/
 │   ├── delta/
 │   ├── emacs/
 │   ├── fish/
@@ -55,7 +71,8 @@ token/
 │   ├── lazygit/
 │   ├── ripgrep/
 │   ├── starship/
-│   └── tmux/
+│   ├── tmux/
+│   └── zsh/
 ├── Makefile
 ├── selene.toml
 ├── neovim.yaml
@@ -67,8 +84,9 @@ token/
 ## Architecture
 
 - `colors/token.lua` is the Neovim entry point, discovered by `:colorscheme token`
-- `init.lua` orchestrates: hi clear, set colors_name, bust module cache (including `lualine.themes.token`), load palette, merge groups, apply via `nvim_set_hl`, set terminal colors
-- `palette.lua` returns a function that takes `'dark'|'light'` and returns a flat table of 41 semantic hex color keys
+- `init.lua` orchestrates loading: tries compiled bytecode cache first, falls back to dynamic path (hi clear, bust module cache, load palette, merge groups, apply via `nvim_set_hl`, set terminal colors)
+- `compile.lua` handles `:TokenCompile` (generates bytecode cache to `stdpath('cache')/token/`) and cache loading
+- `palette.lua` returns a function that takes `'dark'|'light'` and returns a flat table of 47 semantic hex color keys
 - `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp, diagnostics, diff, plugins
 - `groups/plugins/init.lua` loads individual plugin files from an explicit sorted list
 - Each group module exports a function `(palette) -> { [group] = hl_opts }`
@@ -80,6 +98,7 @@ token/
 - **Add a palette color**: add it to both dark and light tables in `palette.lua`
 - **Add plugin support**: create `groups/plugins/<name>.lua`, add the module path to the list in `groups/plugins/init.lua`
 - **Regenerate contrib themes**: `make contrib` (run after changing `palette.lua`)
+- **Compile for faster loading**: `:TokenCompile` (rerun after updating the plugin)
 - Prefer `{ link = 'GroupName' }` over duplicating color values
 
 ## Validation

@@ -45,6 +45,20 @@ vim.cmd.colorscheme('token')
 Respects `vim.o.background`. Set `dark` or `light` before loading the
 colorscheme, or change it at runtime to switch variants.
 
+## Compilation
+
+Token works out of the box without compilation. For faster startup, you can
+pre-compile the theme into bytecode:
+
+```vim
+:TokenCompile
+```
+
+This writes compiled dark and light variants to `stdpath('cache')/token/`. On
+next load the cached bytecode is used instead of the dynamic highlight path.
+
+Rerun `:TokenCompile` after updating the plugin. If the cache becomes stale or
+corrupt it is deleted automatically and the dynamic path is used as fallback.
 
 ## Supported plugins
 
