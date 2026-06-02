@@ -19,6 +19,7 @@ local function render_markdown(p)
     -- code
     RenderMarkdownCode = { bg = p.bg2 },
     RenderMarkdownCodeBorder = { link = 'RenderMarkdownCode' },
+    RenderMarkdownCodeFallback = { link = 'RenderMarkdownCode' },
     RenderMarkdownCodeInline = { fg = p.green, bg = p.bg2 },
     RenderMarkdownCodeInfo = { fg = p.fg2, bg = p.bg2 },
 
@@ -33,6 +34,7 @@ local function render_markdown(p)
 
     -- links
     RenderMarkdownLink = { fg = p.blue, underline = true },
+    RenderMarkdownLinkTitle = { link = 'RenderMarkdownLink' },
     RenderMarkdownWikiLink = { link = 'RenderMarkdownLink' },
 
     -- checkboxes
