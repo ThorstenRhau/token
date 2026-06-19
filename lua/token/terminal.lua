@@ -12,7 +12,7 @@ function M.colors(p, is_dark)
     [4] = p.blue,
     [5] = p.purple,
     [6] = p.cyan,
-    [7] = is_dark and p.fg1 or p.bg1,
+    [7] = is_dark and p.fg1 or p.line_nr,
     [8] = is_dark and p.fg3 or p.fg2,
     [9] = p.accent,
     [10] = p.bright_green,
