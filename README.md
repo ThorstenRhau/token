@@ -103,6 +103,7 @@ rebuild after palette changes with `make contrib`.
 | Tool                                                | Files                                           | Usage                                                                                           |
 | --------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | [bat](https://github.com/sharkdp/bat)               | `contrib/bat/token-{dark,light}.tmTheme`        | Copy to bat themes dir, run `bat cache --build`                                                 |
+| [Blink Shell](https://blink.sh/)                    | `contrib/blink/token-{dark,light}.js`           | Paste the raw `token-dark.js` or `token-light.js` URL in Appearance > Themes > New Theme        |
 | [delta](https://github.com/dandavison/delta)        | `contrib/delta/token.gitconfig`                 | Include from `~/.gitconfig`, set `features = token-dark` in `[delta]`                           |
 | [emacs](https://www.gnu.org/software/emacs/)        | `contrib/emacs/token-{dark,light}-theme.el`     | Copy to `~/.emacs.d/themes/`, then `(load-theme 'token-dark t)`                                 |
 | [fish](https://fishshell.com/)                      | `contrib/fish/token.theme`                      | Copy to `~/.config/fish/themes/`, then run `fish_config theme choose token`                     |
