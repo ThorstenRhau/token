@@ -114,6 +114,8 @@ rebuild after palette changes with `make contrib`.
 | [ripgrep](https://github.com/BurntSushi/ripgrep)    | `contrib/ripgrep/token-{dark,light}.ripgreprc`  | `RIPGREP_CONFIG_PATH=/path/to/token-dark.ripgreprc`                                             |
 | [starship](https://starship.rs/)                    | `contrib/starship/token-{dark,light}.toml`      | Append to `starship.toml`, set `palette = "token"`                                              |
 | [tmux](https://github.com/tmux/tmux)                | `contrib/tmux/token-{dark,light}.conf`          | `source-file /path/to/token-dark.conf` in tmux.conf                                             |
+| [VS Code](https://code.visualstudio.com/)           | `contrib/vscode/`                               | Run `scripts/install_vscode_theme.sh`, then select `Token Dark` or `Token Light`                |
+| [Windows Terminal](https://github.com/microsoft/terminal) | `contrib/windows-terminal/token.json`           | Copy schemes into settings/fragments, then set `"colorScheme": { "dark": "Token Dark", "light": "Token Light" }` |
 
 ## License
 

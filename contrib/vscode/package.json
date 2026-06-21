@@ -1,0 +1,27 @@
+{
+  "name": "token-vscode-themes",
+  "displayName": "Token VS Code Themes",
+  "description": "Local VS Code themes generated from the Token colorscheme palette.",
+  "version": "0.0.0",
+  "publisher": "thorstenrhau",
+  "author": {
+    "name": "Thorsten Rhau"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "contributes": {
+    "themes": [
+      {
+        "label": "Token Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/token-dark-color-theme.json"
+      },
+      {
+        "label": "Token Light",
+        "uiTheme": "vs",
+        "path": "./themes/token-light-color-theme.json"
+      }
+    ]
+  }
+}

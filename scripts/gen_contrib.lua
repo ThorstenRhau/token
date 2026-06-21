@@ -17,6 +17,67 @@ local sgr_bg_rgb = lib.sgr_bg_rgb
 local write_if_changed = lib.write_if_changed
 local extend_lines = lib.extend_lines
 
+local function json_escape(s)
+  return s:gsub('[%z\1-\31\\"]', function(c)
+    local escapes = {
+      ['"'] = '\\"',
+      ['\\'] = '\\\\',
+      ['\b'] = '\\b',
+      ['\f'] = '\\f',
+      ['\n'] = '\\n',
+      ['\r'] = '\\r',
+      ['\t'] = '\\t',
+    }
+    return escapes[c] or string.format('\\u%04x', c:byte())
+  end)
+end
+
+local function json_object(entries)
+  return { __json_object = entries }
+end
+
+local function json_encode(value, indent)
+  indent = indent or 0
+  local t = type(value)
+  if t == 'string' then
+    return '"' .. json_escape(value) .. '"'
+  end
+  if t == 'number' or t == 'boolean' then
+    return tostring(value)
+  end
+  if value == nil then
+    return 'null'
+  end
+
+  local pad = string.rep(' ', indent)
+  local child_pad = string.rep(' ', indent + 2)
+  local lines = {}
+
+  if value.__json_object then
+    if #value.__json_object == 0 then
+      return '{}'
+    end
+    lines[#lines + 1] = '{'
+    for i, entry in ipairs(value.__json_object) do
+      local suffix = i < #value.__json_object and ',' or ''
+      lines[#lines + 1] = child_pad .. json_encode(entry[1]) .. ': ' .. json_encode(entry[2], indent + 2) .. suffix
+    end
+    lines[#lines + 1] = pad .. '}'
+    return table.concat(lines, '\n')
+  end
+
+  if #value == 0 then
+    return '[]'
+  end
+  lines[#lines + 1] = '['
+  for i, item in ipairs(value) do
+    local suffix = i < #value and ',' or ''
+    lines[#lines + 1] = child_pad .. json_encode(item, indent + 2) .. suffix
+  end
+  lines[#lines + 1] = pad .. ']'
+  return table.concat(lines, '\n')
+end
+
 -- ---------------------------------------------------------------------------
 -- carapace (styles.json)
 -- ---------------------------------------------------------------------------
@@ -107,90 +168,79 @@ local function tmtheme_entry(name, scope, fg, style)
   return table.concat(lines, '\n')
 end
 
-local function gen_bat(p, variant, _term)
-  local name = 'token-' .. variant
-
-  local scopes = {
-    tmtheme_entry('Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic'),
-    tmtheme_entry('Keyword', 'keyword, keyword.control, keyword.other', p.accent2, nil),
-    tmtheme_entry('Storage', 'storage, storage.modifier', p.accent2, nil),
-    tmtheme_entry('Operator', 'keyword.operator', p.fg1, nil),
-    tmtheme_entry('Function', 'entity.name.function, support.function, meta.function-call', p.accent, nil),
-    tmtheme_entry('String', 'string, punctuation.definition.string', p.green, nil),
-    tmtheme_entry('String escape', 'constant.character.escape', p.purple, nil),
-    tmtheme_entry('Boolean', 'constant.language.boolean', p.accent2, nil),
-    tmtheme_entry('Number', 'constant.numeric', p.purple, nil),
-    tmtheme_entry('Constant', 'constant, constant.language, support.constant, variable.other.constant', p.purple, nil),
-    tmtheme_entry('Type', 'storage.type, support.type, entity.name.type, entity.other.inherited-class', p.blue, nil),
-    tmtheme_entry('Class', 'entity.name.type.class, support.class, entity.name.class', p.blue, nil),
-    tmtheme_entry('Module', 'entity.name.namespace, entity.name.type.module, support.module', p.blue, nil),
-    tmtheme_entry(
+local function textmate_scope_rules(p)
+  return {
+    { 'Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic' },
+    { 'Keyword', 'keyword, keyword.control, keyword.other', p.accent2, nil },
+    { 'Storage', 'storage, storage.modifier', p.accent2, nil },
+    { 'Operator', 'keyword.operator', p.fg1, nil },
+    { 'Function', 'entity.name.function, support.function, meta.function-call', p.accent, nil },
+    { 'String', 'string, punctuation.definition.string', p.green, nil },
+    { 'String escape', 'constant.character.escape', p.purple, nil },
+    { 'Boolean', 'constant.language.boolean', p.accent2, nil },
+    { 'Number', 'constant.numeric', p.purple, nil },
+    { 'Constant', 'constant, constant.language, support.constant, variable.other.constant', p.purple, nil },
+    { 'Type', 'storage.type, support.type, entity.name.type, entity.other.inherited-class', p.blue, nil },
+    { 'Class', 'entity.name.type.class, support.class, entity.name.class', p.blue, nil },
+    { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', p.blue, nil },
+    {
       'PreProc',
       'keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor',
       p.purple,
-      nil
-    ),
-    tmtheme_entry('Include', 'keyword.other.import, keyword.other.package, keyword.other.using', p.purple, nil),
-    tmtheme_entry('Macro', 'entity.name.function.preprocessor', p.purple, nil),
-    tmtheme_entry('Tag', 'entity.name.tag', p.purple, nil),
-    tmtheme_entry('Tag attribute', 'entity.other.attribute-name', p.accent2, 'italic'),
-    tmtheme_entry('Attribute', 'meta.annotation, storage.type.annotation', p.purple, nil),
-    tmtheme_entry('Label', 'entity.name.label, constant.other.label', p.accent2, nil),
-    tmtheme_entry('Special', 'variable.language, constant.language.null, constant.language.undefined', p.purple, nil),
-    tmtheme_entry('Debug', 'keyword.other.debugger', p.red, nil),
-    tmtheme_entry('Exception', 'keyword.control.exception, keyword.control.trycatch', p.red, nil),
-    tmtheme_entry('Identifier', 'variable, support.variable, meta.definition.variable', p.fg0, nil),
-    tmtheme_entry(
+      nil,
+    },
+    { 'Include', 'keyword.other.import, keyword.other.package, keyword.other.using', p.purple, nil },
+    { 'Macro', 'entity.name.function.preprocessor', p.purple, nil },
+    { 'Tag', 'entity.name.tag', p.purple, nil },
+    { 'Tag attribute', 'entity.other.attribute-name', p.accent2, 'italic' },
+    { 'Attribute', 'meta.annotation, storage.type.annotation', p.purple, nil },
+    { 'Label', 'entity.name.label, constant.other.label', p.accent2, nil },
+    { 'Special', 'variable.language, constant.language.null, constant.language.undefined', p.purple, nil },
+    { 'Debug', 'keyword.other.debugger', p.red, nil },
+    { 'Exception', 'keyword.control.exception, keyword.control.trycatch', p.red, nil },
+    { 'Identifier', 'variable, support.variable, meta.definition.variable', p.fg0, nil },
+    {
       'Property',
       'variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key',
       p.fg0,
-      nil
-    ),
-    tmtheme_entry('Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil),
-    tmtheme_entry('Parameter', 'variable.parameter', p.fg1, nil),
-    -- Markup
-    tmtheme_entry('Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', p.accent, 'bold'),
-    tmtheme_entry('Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', p.accent2, 'bold'),
-    tmtheme_entry('Heading 3', 'heading.3.markdown', p.yellow, 'bold'),
-    tmtheme_entry('Heading 4', 'heading.4.markdown', p.blue, 'bold'),
-    tmtheme_entry('Heading 5', 'heading.5.markdown', p.green, 'bold'),
-    tmtheme_entry('Heading 6', 'heading.6.markdown', p.purple, 'bold'),
-    tmtheme_entry('Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil),
-    tmtheme_entry('Markup link', 'markup.underline.link, string.other.link', p.blue, 'underline'),
-    tmtheme_entry(
-      'Markup link text',
-      'string.other.link.title.markdown, constant.other.reference.link.markdown',
-      p.blue,
-      nil
-    ),
-    tmtheme_entry(
-      'Markup code',
-      'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw',
-      p.green,
-      nil
-    ),
-    tmtheme_entry(
-      'Markup code delimiter',
-      'punctuation.definition.markdown, punctuation.definition.raw.markdown',
-      p.fg2,
-      nil
-    ),
-    tmtheme_entry('Markup list', 'punctuation.definition.list.begin.markdown, markup.list', p.accent2, nil),
-    tmtheme_entry('Markup bold', 'markup.bold', nil, 'bold'),
-    tmtheme_entry('Markup italic', 'markup.italic', nil, 'italic'),
-    tmtheme_entry('Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold'),
-    tmtheme_entry('Markup quote', 'markup.quote', p.fg2, 'italic'),
-    -- Diff
-    tmtheme_entry('Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil),
-    tmtheme_entry('Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil),
-    tmtheme_entry('Diff changed', 'markup.changed', p.yellow, nil),
-    -- GitGutter
-    tmtheme_entry('GitGutter inserted', 'markup.inserted.git_gutter', p.green, nil),
-    tmtheme_entry('GitGutter deleted', 'markup.deleted.git_gutter', p.red, nil),
-    tmtheme_entry('GitGutter changed', 'markup.changed.git_gutter', p.yellow, nil),
-    tmtheme_entry('GitGutter untracked', 'markup.untracked.git_gutter', p.fg3, nil),
-    tmtheme_entry('GitGutter ignored', 'markup.ignored.git_gutter', p.fg3, nil),
+      nil,
+    },
+    { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil },
+    { 'Parameter', 'variable.parameter', p.fg1, nil },
+    { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', p.accent, 'bold' },
+    { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', p.accent2, 'bold' },
+    { 'Heading 3', 'heading.3.markdown', p.yellow, 'bold' },
+    { 'Heading 4', 'heading.4.markdown', p.blue, 'bold' },
+    { 'Heading 5', 'heading.5.markdown', p.green, 'bold' },
+    { 'Heading 6', 'heading.6.markdown', p.purple, 'bold' },
+    { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil },
+    { 'Markup link', 'markup.underline.link, string.other.link', p.blue, 'underline' },
+    { 'Markup link text', 'string.other.link.title.markdown, constant.other.reference.link.markdown', p.blue, nil },
+    { 'Markup code', 'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw', p.green, nil },
+    { 'Markup code delimiter', 'punctuation.definition.markdown, punctuation.definition.raw.markdown', p.fg2, nil },
+    { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', p.accent2, nil },
+    { 'Markup bold', 'markup.bold', nil, 'bold' },
+    { 'Markup italic', 'markup.italic', nil, 'italic' },
+    { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
+    { 'Markup quote', 'markup.quote', p.fg2, 'italic' },
+    { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
+    { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
+    { 'Diff changed', 'markup.changed', p.yellow, nil },
+    { 'GitGutter inserted', 'markup.inserted.git_gutter', p.green, nil },
+    { 'GitGutter deleted', 'markup.deleted.git_gutter', p.red, nil },
+    { 'GitGutter changed', 'markup.changed.git_gutter', p.yellow, nil },
+    { 'GitGutter untracked', 'markup.untracked.git_gutter', p.fg3, nil },
+    { 'GitGutter ignored', 'markup.ignored.git_gutter', p.fg3, nil },
   }
+end
+
+local function gen_bat(p, variant, _term)
+  local name = 'token-' .. variant
+
+  local scopes = {}
+  for _, rule in ipairs(textmate_scope_rules(p)) do
+    scopes[#scopes + 1] = tmtheme_entry(rule[1], rule[2], rule[3], rule[4])
+  end
 
   local content = table.concat({
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -507,6 +557,261 @@ local function gen_iterm2(p, variant, term)
   }, '\n')
 
   return { path = 'contrib/iterm2/token-' .. variant .. '.itermcolors', content = content }
+end
+
+-- ---------------------------------------------------------------------------
+-- Windows Terminal (settings fragment)
+-- ---------------------------------------------------------------------------
+
+local function windows_terminal_scheme(p, name, term)
+  local ansi_names = {
+    'black',
+    'red',
+    'green',
+    'yellow',
+    'blue',
+    'purple',
+    'cyan',
+    'white',
+    'brightBlack',
+    'brightRed',
+    'brightGreen',
+    'brightYellow',
+    'brightBlue',
+    'brightPurple',
+    'brightCyan',
+    'brightWhite',
+  }
+  local entries = {
+    { 'name', name },
+    { 'background', p.bg3 },
+    { 'foreground', p.fg0 },
+    { 'cursorColor', p.fg0 },
+    { 'selectionBackground', p.sel },
+  }
+  for i, color_name in ipairs(ansi_names) do
+    entries[#entries + 1] = { color_name, term[i - 1] }
+  end
+  return json_object(entries)
+end
+
+local function gen_windows_terminal(dark, light, dark_term, light_term)
+  local content = table.concat({
+    json_encode(json_object({
+      {
+        'schemes',
+        {
+          windows_terminal_scheme(dark, 'Token Dark', dark_term),
+          windows_terminal_scheme(light, 'Token Light', light_term),
+        },
+      },
+    })),
+    '',
+  }, '\n')
+
+  return { path = 'contrib/windows-terminal/token.json', content = content }
+end
+
+-- ---------------------------------------------------------------------------
+-- VS Code (local color theme extension)
+-- ---------------------------------------------------------------------------
+
+local function vscode_token_colors(p)
+  local rules = {}
+  for _, rule in ipairs(textmate_scope_rules(p)) do
+    local settings = {}
+    if rule[3] then
+      settings[#settings + 1] = { 'foreground', rule[3] }
+    end
+    if rule[4] then
+      settings[#settings + 1] = { 'fontStyle', rule[4] }
+    end
+    rules[#rules + 1] = json_object({
+      { 'name', rule[1] },
+      { 'scope', rule[2] },
+      { 'settings', json_object(settings) },
+    })
+  end
+  return rules
+end
+
+local function vscode_terminal_colors(term)
+  local names = {
+    'terminal.ansiBlack',
+    'terminal.ansiRed',
+    'terminal.ansiGreen',
+    'terminal.ansiYellow',
+    'terminal.ansiBlue',
+    'terminal.ansiMagenta',
+    'terminal.ansiCyan',
+    'terminal.ansiWhite',
+    'terminal.ansiBrightBlack',
+    'terminal.ansiBrightRed',
+    'terminal.ansiBrightGreen',
+    'terminal.ansiBrightYellow',
+    'terminal.ansiBrightBlue',
+    'terminal.ansiBrightMagenta',
+    'terminal.ansiBrightCyan',
+    'terminal.ansiBrightWhite',
+  }
+  local colors = {}
+  for i, name in ipairs(names) do
+    colors[#colors + 1] = { name, term[i - 1] }
+  end
+  return colors
+end
+
+local function gen_vscode_theme(p, variant, term)
+  local is_dark = variant == 'dark'
+  local colors = {
+    { 'focusBorder', p.accent },
+    { 'foreground', p.fg0 },
+    { 'descriptionForeground', p.fg2 },
+    { 'errorForeground', p.red },
+    { 'textLink.foreground', p.blue },
+    { 'textLink.activeForeground', p.accent },
+    { 'selection.background', p.sel },
+    { 'icon.foreground', p.fg1 },
+    { 'sash.hoverBorder', p.accent },
+    { 'editor.background', p.bg3 },
+    { 'editor.foreground', p.fg0 },
+    { 'editorLineNumber.foreground', p.line_nr },
+    { 'editorLineNumber.activeForeground', p.fg2 },
+    { 'editorCursor.foreground', p.fg0 },
+    { 'editor.selectionBackground', p.sel },
+    { 'editor.inactiveSelectionBackground', p.bg4 },
+    { 'editor.lineHighlightBackground', p.bg5 .. '40' },
+    { 'editor.findMatchBackground', p.match },
+    { 'editor.findMatchHighlightBackground', p.match .. '80' },
+    { 'editorWhitespace.foreground', p.fg3 .. '80' },
+    { 'editorIndentGuide.background1', p.fg3 .. '40' },
+    { 'editorIndentGuide.activeBackground1', p.fg2 .. '80' },
+    { 'editorBracketMatch.background', p.bg5 },
+    { 'editorBracketMatch.border', p.accent },
+    { 'editorGutter.addedBackground', p.green },
+    { 'editorGutter.modifiedBackground', p.yellow },
+    { 'editorGutter.deletedBackground', p.red },
+    { 'diffEditor.insertedTextBackground', p.diff_add },
+    { 'diffEditor.removedTextBackground', p.diff_del },
+    { 'editorError.foreground', p.red },
+    { 'editorWarning.foreground', p.yellow },
+    { 'editorInfo.foreground', p.blue },
+    { 'editorHint.foreground', p.cyan },
+    { 'activityBar.background', p.bg2 },
+    { 'activityBar.foreground', p.fg0 },
+    { 'activityBar.inactiveForeground', p.fg2 },
+    { 'activityBarBadge.background', p.accent },
+    { 'activityBarBadge.foreground', p.bg3 },
+    { 'sideBar.background', p.bg2 },
+    { 'sideBar.foreground', p.fg1 },
+    { 'sideBarTitle.foreground', p.fg0 },
+    { 'sideBarSectionHeader.background', p.bg3 },
+    { 'list.activeSelectionBackground', p.sel },
+    { 'list.activeSelectionForeground', p.fg0 },
+    { 'list.inactiveSelectionBackground', p.bg4 },
+    { 'list.hoverBackground', p.bg4 },
+    { 'list.focusBackground', p.bg4 },
+    { 'quickInput.background', p.bg2 },
+    { 'quickInput.foreground', p.fg0 },
+    { 'quickInputList.focusBackground', p.sel },
+    { 'panel.background', p.bg2 },
+    { 'panel.border', p.bg5 },
+    { 'panelTitle.activeForeground', p.fg0 },
+    { 'panelTitle.inactiveForeground', p.fg2 },
+    { 'statusBar.background', p.bg2 },
+    { 'statusBar.foreground', p.fg1 },
+    { 'statusBar.noFolderBackground', p.bg2 },
+    { 'statusBar.debuggingBackground', p.purple },
+    { 'titleBar.activeBackground', p.bg2 },
+    { 'titleBar.activeForeground', p.fg0 },
+    { 'titleBar.inactiveBackground', p.bg1 },
+    { 'titleBar.inactiveForeground', p.fg2 },
+    { 'tab.activeBackground', p.bg3 },
+    { 'tab.activeForeground', p.fg0 },
+    { 'tab.inactiveBackground', p.bg2 },
+    { 'tab.inactiveForeground', p.fg2 },
+    { 'tab.border', p.bg2 },
+    { 'terminal.background', p.bg3 },
+    { 'terminal.foreground', p.fg0 },
+    { 'terminalCursor.foreground', p.fg0 },
+    { 'terminal.selectionBackground', p.sel },
+  }
+  extend_lines(colors, vscode_terminal_colors(term))
+
+  local theme = json_object({
+    { 'name', 'Token ' .. (is_dark and 'Dark' or 'Light') },
+    { 'type', is_dark and 'dark' or 'light' },
+    { 'colors', json_object(colors) },
+    { 'tokenColors', vscode_token_colors(p) },
+    { 'semanticHighlighting', true },
+    {
+      'semanticTokenColors',
+      json_object({
+        { 'class', p.blue },
+        { 'enum', p.blue },
+        { 'interface', p.blue },
+        { 'struct', p.blue },
+        { 'type', p.blue },
+        { 'typeParameter', p.blue },
+        { 'namespace', p.blue },
+        { 'function', p.accent },
+        { 'method', p.accent },
+        { 'macro', p.purple },
+        { 'keyword', p.accent2 },
+        { 'string', p.green },
+        { 'number', p.purple },
+        { 'enumMember', p.purple },
+        { 'variable.readonly', p.purple },
+        { 'property.readonly', p.purple },
+        { 'parameter', p.fg1 },
+        { '*.deprecated', json_object({ { 'strikethrough', true } }) },
+        { '*.readonly', json_object({ { 'foreground', p.purple } }) },
+        { '*.async', json_object({ { 'italic', true } }) },
+        { '*.static', json_object({ { 'italic', true } }) },
+        { '*.abstract', json_object({ { 'italic', true } }) },
+        { '*.defaultLibrary', json_object({ { 'italic', true } }) },
+        { '*.declaration', json_object({ { 'bold', true } }) },
+        { '*.definition', json_object({ { 'bold', true } }) },
+      }),
+    },
+  })
+
+  local content = table.concat({ json_encode(theme), '' }, '\n')
+  return { path = 'contrib/vscode/themes/token-' .. variant .. '-color-theme.json', content = content }
+end
+
+local function gen_vscode_package()
+  local manifest = json_object({
+    { 'name', 'token-vscode-themes' },
+    { 'displayName', 'Token VS Code Themes' },
+    { 'description', 'Local VS Code themes generated from the Token colorscheme palette.' },
+    { 'version', '0.0.0' },
+    { 'publisher', 'thorstenrhau' },
+    { 'author', json_object({ { 'name', 'Thorsten Rhau' } }) },
+    { 'engines', json_object({ { 'vscode', '^1.80.0' } }) },
+    {
+      'contributes',
+      json_object({
+        {
+          'themes',
+          {
+            json_object({
+              { 'label', 'Token Dark' },
+              { 'uiTheme', 'vs-dark' },
+              { 'path', './themes/token-dark-color-theme.json' },
+            }),
+            json_object({
+              { 'label', 'Token Light' },
+              { 'uiTheme', 'vs' },
+              { 'path', './themes/token-light-color-theme.json' },
+            }),
+          },
+        },
+      }),
+    },
+  })
+
+  return { path = 'contrib/vscode/package.json', content = table.concat({ json_encode(manifest), '' }, '\n') }
 end
 
 -- ---------------------------------------------------------------------------
@@ -861,6 +1166,10 @@ local function main()
 
   files[#files + 1] = gen_fish(dark, light, dark_term, light_term)
   files[#files + 1] = gen_delta(dark, light, dark_term, light_term)
+  files[#files + 1] = gen_windows_terminal(dark, light, dark_term, light_term)
+  files[#files + 1] = gen_vscode_package()
+  files[#files + 1] = gen_vscode_theme(dark, 'dark', dark_term)
+  files[#files + 1] = gen_vscode_theme(light, 'light', light_term)
 
   local ok = true
   for _, f in ipairs(files) do
