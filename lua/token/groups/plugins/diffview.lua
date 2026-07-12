@@ -2,10 +2,19 @@
 ---@return table<string, vim.api.keyset.highlight>
 local function diffview(p)
   return {
+    DiffviewNormal = { link = 'Normal' },
+    DiffviewNonText = { link = 'NonText' },
+    DiffviewCursorLine = { link = 'CursorLine' },
+    DiffviewWinSeparator = { link = 'WinSeparator' },
+    DiffviewSignColumn = { link = 'Normal' },
+    DiffviewStatusLine = { link = 'StatusLine' },
+    DiffviewStatusLineNC = { link = 'StatusLineNC' },
+    DiffviewEndOfBuffer = { link = 'EndOfBuffer' },
     DiffviewFilePanelRootPath = { fg = p.fg3 },
     DiffviewFilePanelTitle = { fg = p.accent, bold = true },
     DiffviewFilePanelCounter = { fg = p.fg2 },
     DiffviewFilePanelFileName = { fg = p.fg0 },
+    DiffviewFilePanelSelected = { link = 'Type' },
     DiffviewFilePanelInsertions = { fg = p.green },
     DiffviewFilePanelDeletions = { fg = p.red },
     DiffviewFilePanelConflicts = { fg = p.yellow },
@@ -17,6 +26,7 @@ local function diffview(p)
     DiffviewStatusRenamed = { fg = p.purple },
     DiffviewStatusCopied = { fg = p.accent2 },
     DiffviewStatusTypeChange = { fg = p.blue },
+    DiffviewStatusTypeChanged = { link = 'DiffviewStatusTypeChange' },
     DiffviewStatusUnmerged = { fg = p.accent },
     DiffviewStatusUnknown = { fg = p.red },
     DiffviewStatusDeleted = { fg = p.red },
@@ -27,7 +37,14 @@ local function diffview(p)
     DiffviewSecondary = { fg = p.accent2 },
     DiffviewHash = { fg = p.purple },
     DiffviewReference = { fg = p.accent },
+    DiffviewReflogSelector = { link = 'Special' },
     DiffviewFilePanelPath = { fg = p.fg3 },
+    DiffviewDiffAdd = { link = 'DiffAdd' },
+    DiffviewDiffDelete = { link = 'DiffDelete' },
+    DiffviewDiffChange = { link = 'DiffChange' },
+    DiffviewDiffText = { link = 'DiffText' },
+    DiffviewDiffAddAsDelete = { link = 'DiffDelete' },
+    DiffviewDiffDeleteDim = { link = 'Comment' },
   }
 end
 

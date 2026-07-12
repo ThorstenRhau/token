@@ -1,7 +1,16 @@
 ---@param p TokenPalette
 ---@return table<string, vim.api.keyset.highlight>
 local function neogit(p)
-  return {
+  local groups = {
+    NeogitNormal = { link = 'Normal' },
+    NeogitNormalFloat = { link = 'NeogitNormal' },
+    NeogitFloatBorder = { link = 'NeogitNormalFloat' },
+    NeogitSignColumn = {},
+    NeogitCursorLine = { link = 'CursorLine' },
+    NeogitCursorLineNr = { link = 'CursorLineNr' },
+    NeogitFold = {},
+    NeogitFoldColumn = {},
+    NeogitWinSeparator = { link = 'WinSeparator' },
     -- Graph colors
     NeogitGraphAuthor = { fg = p.accent },
     NeogitGraphRed = { fg = p.red },
@@ -127,6 +136,52 @@ local function neogit(p)
     -- Active item (currently viewed commit in log)
     NeogitActiveItem = { bg = p.bg5, bold = true },
   }
+
+  local change_links = {
+    M = 'NeogitChangeModified',
+    A = 'NeogitChangeAdded',
+    N = 'NeogitChangeNewFile',
+    D = 'NeogitChangeDeleted',
+    C = 'NeogitChangeCopied',
+    U = 'NeogitChangeUpdated',
+    R = 'NeogitChangeRenamed',
+    T = 'NeogitChangeUpdated',
+    DD = 'NeogitChangeUnmerged',
+    UU = 'NeogitChangeUnmerged',
+    AA = 'NeogitChangeUnmerged',
+    DU = 'NeogitChangeUnmerged',
+    UD = 'NeogitChangeUnmerged',
+    AU = 'NeogitChangeUnmerged',
+    UA = 'NeogitChangeUnmerged',
+  }
+  for _, state in ipairs({ 'untracked', 'unstaged', 'staged' }) do
+    for code, link in pairs(change_links) do
+      if code ~= 'T' or state ~= 'untracked' then
+        groups['NeogitChange' .. code .. state] = { link = link }
+      end
+    end
+    groups['NeogitChangeUntracked' .. state] = {}
+  end
+
+  for _, name in ipairs({
+    'Untrackedfiles',
+    'Unstagedchanges',
+    'Unmergedchanges',
+    'Unpulledchanges',
+    'Unpushedchanges',
+    'Recentcommits',
+    'Stagedchanges',
+    'Stashes',
+    'Merging',
+    'Bisecting',
+    'Rebasing',
+    'Picking',
+    'Reverting',
+  }) do
+    groups['Neogit' .. name] = { link = 'NeogitSectionHeader' }
+  end
+
+  return groups
 end
 
 return neogit

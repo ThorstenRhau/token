@@ -4,6 +4,7 @@ local function dap_ui(p)
   return {
     -- window
     DapUINormal = { fg = p.fg0, bg = p.bg1 },
+    DapUINormalNC = { link = 'DapUINormal' },
     DapUIEndofBuffer = { fg = p.bg1 },
     DapUIFloatNormal = { link = 'NormalFloat' },
     DapUIFloatBorder = { link = 'FloatBorder' },
@@ -38,13 +39,21 @@ local function dap_ui(p)
 
     -- controls
     DapUIPlayPause = { fg = p.green },
+    DapUIPlayPauseNC = { link = 'DapUIPlayPause' },
     DapUIRestart = { fg = p.green },
+    DapUIRestartNC = { link = 'DapUIRestart' },
     DapUIStepOver = { fg = p.blue },
+    DapUIStepOverNC = { link = 'DapUIStepOver' },
     DapUIStepInto = { fg = p.blue },
+    DapUIStepIntoNC = { link = 'DapUIStepInto' },
     DapUIStepBack = { fg = p.blue },
+    DapUIStepBackNC = { link = 'DapUIStepBack' },
     DapUIStepOut = { fg = p.blue },
+    DapUIStepOutNC = { link = 'DapUIStepOut' },
     DapUIStop = { fg = p.red },
+    DapUIStopNC = { link = 'DapUIStop' },
     DapUIUnavailable = { fg = p.fg3 },
+    DapUIUnavailableNC = { link = 'DapUIUnavailable' },
     DapUIWinSelect = { fg = p.accent, bold = true },
   }
 end

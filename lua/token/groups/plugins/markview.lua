@@ -49,6 +49,27 @@ local function markview(p)
     MarkviewCodeFg = { fg = p.fg3 },
     MarkviewInlineCode = { fg = p.green, bg = p.bg2 },
 
+    -- markview.nvim icons and headings
+    MarkviewIcon0 = { link = 'MarkviewPalette0Fg' },
+    MarkviewIcon1 = { link = 'MarkviewPalette1Fg' },
+    MarkviewIcon2 = { link = 'MarkviewPalette2Fg' },
+    MarkviewIcon3 = { link = 'MarkviewPalette3Fg' },
+    MarkviewIcon4 = { link = 'MarkviewPalette4Fg' },
+    MarkviewIcon5 = { link = 'MarkviewPalette5Fg' },
+    MarkviewIcon6 = { link = 'MarkviewPalette6Fg' },
+    MarkviewHeading1 = { link = 'MarkviewPalette1' },
+    MarkviewHeading1Sign = { link = 'MarkviewPalette1Sign' },
+    MarkviewHeading2 = { link = 'MarkviewPalette2' },
+    MarkviewHeading2Sign = { link = 'MarkviewPalette2Sign' },
+    MarkviewHeading3 = { link = 'MarkviewPalette3' },
+    MarkviewHeading3Sign = { link = 'MarkviewPalette3Sign' },
+    MarkviewHeading4 = { link = 'MarkviewPalette4' },
+    MarkviewHeading4Sign = { link = 'MarkviewPalette4Sign' },
+    MarkviewHeading5 = { link = 'MarkviewPalette5' },
+    MarkviewHeading5Sign = { link = 'MarkviewPalette5Sign' },
+    MarkviewHeading6 = { link = 'MarkviewPalette6' },
+    MarkviewHeading6Sign = { link = 'MarkviewPalette6Sign' },
+
     -- markview.nvim block quotes (override palette links for semantic colors)
     MarkviewBlockQuoteDefault = { fg = p.fg2 },
     MarkviewBlockQuoteError = { fg = p.red },
@@ -64,6 +85,21 @@ local function markview(p)
     MarkviewCheckboxProgress = { fg = p.blue },
     MarkviewCheckboxCancelled = { fg = p.fg2 },
     MarkviewCheckboxStriked = { fg = p.fg2, strikethrough = true },
+
+    -- markview.nvim inline markup, lists, and tables
+    MarkviewHyperlink = { link = '@markup.link.label.markdown_inline' },
+    MarkviewImage = { link = '@markup.link.label.markdown_inline' },
+    MarkviewEmail = { link = '@markup.link.url.markdown_inline' },
+    MarkviewSubscript = { link = 'MarkviewPalette3Fg' },
+    MarkviewSuperscript = { link = 'MarkviewPalette6Fg' },
+    MarkviewListItemMinus = { link = 'MarkviewPalette2Fg' },
+    MarkviewListItemPlus = { link = 'MarkviewPalette4Fg' },
+    MarkviewListItemStar = { link = 'MarkviewPalette6Fg' },
+    MarkviewTableHeader = { link = '@markup.heading' },
+    MarkviewTableBorder = { link = 'MarkviewPalette5Fg' },
+    MarkviewTableAlignLeft = { link = '@markup.heading' },
+    MarkviewTableAlignCenter = { link = '@markup.heading' },
+    MarkviewTableAlignRight = { link = '@markup.heading' },
 
     -- markview.nvim horizontal rule gradient
     MarkviewGradient0 = { fg = p.bg5 },

@@ -23,6 +23,7 @@ local function noice(p)
     NoiceConfirm = { link = 'NormalFloat' },
     NoiceConfirmBorder = { link = 'FloatBorder' },
     NoiceCursor = { link = 'Cursor' },
+    NoiceHiddenCursor = { blend = 100, nocombine = true },
 
     -- popupmenu
     NoicePopupmenu = { link = 'Pmenu' },
@@ -58,6 +59,8 @@ local function noice(p)
 
     -- completion item kinds (matches blink.lua mapping)
     NoiceCompletionItemKindDefault = { fg = p.fg2 },
+    NoiceCompletionItemMenu = { fg = p.fg2 },
+    NoiceCompletionItemWord = { fg = p.fg0 },
     NoiceCompletionItemKindText = { fg = p.fg1 },
     NoiceCompletionItemKindMethod = { fg = p.accent },
     NoiceCompletionItemKindFunction = { fg = p.accent },
@@ -75,14 +78,10 @@ local function noice(p)
     NoiceCompletionItemKindSnippet = { fg = p.green },
     NoiceCompletionItemKindColor = { fg = p.purple },
     NoiceCompletionItemKindFile = { fg = p.blue },
-    NoiceCompletionItemKindReference = { fg = p.blue },
     NoiceCompletionItemKindFolder = { fg = p.blue },
     NoiceCompletionItemKindEnumMember = { fg = p.purple },
     NoiceCompletionItemKindConstant = { fg = p.purple },
     NoiceCompletionItemKindStruct = { fg = p.blue },
-    NoiceCompletionItemKindEvent = { fg = p.accent2 },
-    NoiceCompletionItemKindOperator = { fg = p.fg1 },
-    NoiceCompletionItemKindTypeParameter = { fg = p.blue },
   }
 end
 

@@ -21,6 +21,7 @@ local function render_markdown(p)
     RenderMarkdownCodeBorder = { link = 'RenderMarkdownCode' },
     RenderMarkdownCodeFallback = { link = 'RenderMarkdownCode' },
     RenderMarkdownCodeInline = { fg = p.green, bg = p.bg2 },
+    RenderMarkdownInlineHighlight = { link = 'RenderMarkdownCodeInline' },
     RenderMarkdownCodeInfo = { fg = p.fg2, bg = p.bg2 },
 
     -- block quotes
@@ -62,6 +63,7 @@ local function render_markdown(p)
     RenderMarkdownSign = { link = 'SignColumn' },
     RenderMarkdownIndent = { link = 'Whitespace' },
     RenderMarkdownMath = { fg = p.purple },
+    RenderMarkdownHtmlComment = { link = '@comment' },
   }
 end
 

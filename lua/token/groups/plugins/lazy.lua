@@ -2,6 +2,9 @@
 ---@return table<string, vim.api.keyset.highlight>
 local function lazy(p)
   return {
+    LazyNormal = { link = 'NormalFloat' },
+    LazyBackdrop = { bg = p.bg0 },
+
     -- headings and buttons
     LazyH1 = { fg = p.bg3, bg = p.accent, bold = true },
     LazyH2 = { fg = p.accent, bold = true },
@@ -16,6 +19,7 @@ local function lazy(p)
     LazyError = { fg = p.red },
     LazyWarning = { fg = p.yellow },
     LazyInfo = { fg = p.blue },
+    LazyTaskOutput = { link = 'MsgArea' },
 
     -- commit info
     LazyCommit = { fg = p.purple },
@@ -32,6 +36,8 @@ local function lazy(p)
     LazyValue = { fg = p.green },
     LazyNoCond = { fg = p.fg3 },
     LazyLocal = { fg = p.green },
+    LazyBold = { bold = true },
+    LazyItalic = { italic = true },
 
     -- load reasons
     LazyReasonPlugin = { fg = p.accent },

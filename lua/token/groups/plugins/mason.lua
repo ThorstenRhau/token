@@ -2,6 +2,8 @@
 ---@return table<string, vim.api.keyset.highlight>
 local function mason(p)
   return {
+    MasonBackdrop = { bg = p.bg0 },
+    MasonNormal = { link = 'NormalFloat' },
     MasonHeader = { fg = p.bg3, bg = p.accent, bold = true },
     MasonHeaderSecondary = { fg = p.bg3, bg = p.accent2, bold = true },
     MasonHighlight = { fg = p.accent },
@@ -16,6 +18,7 @@ local function mason(p)
     MasonError = { fg = p.red },
     MasonWarning = { fg = p.yellow },
     MasonLink = { fg = p.blue, underline = true },
+    MasonHeading = { bold = true },
   }
 end
 
