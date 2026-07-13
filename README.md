@@ -111,6 +111,7 @@ rebuild after palette changes with `make contrib`.
 | [fzf](https://github.com/junegunn/fzf)              | `contrib/fzf/token-{dark,light}.fish`           | `source /path/to/token-dark.fish` in `config.fish` to append theme colors to `FZF_DEFAULT_OPTS` |
 | [ghostty](https://ghostty.org/)                     | `contrib/ghostty/token-{dark,light}`            | Copy to `~/.config/ghostty/themes/`, then set `theme = dark:token-dark,light:token-light`       |
 | [iTerm2](https://iterm2.com/)                       | `contrib/iterm2/token-{dark,light}.itermcolors` | Import from Profiles > Colors > Color Presets                                                  |
+| [kitty](https://sw.kovidgoyal.net/kitty/)           | `contrib/kitty/token-{dark,light}.conf`         | `include /path/to/token-dark.conf` in `kitty.conf`                                              |
 | [lazygit](https://github.com/jesseduffield/lazygit) | `contrib/lazygit/token-{dark,light}.yml`        | Merge into `~/.config/lazygit/config.yml`                                                       |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)    | `contrib/ripgrep/token-{dark,light}.ripgreprc`  | `RIPGREP_CONFIG_PATH=/path/to/token-dark.ripgreprc`                                             |
 | [starship](https://starship.rs/)                    | `contrib/starship/token-{dark,light}.toml`      | Append to `starship.toml`, set `palette = "token"`                                              |
