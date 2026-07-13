@@ -27,7 +27,7 @@ token/
 │           └── plugins/
 │               ├── init.lua    # Plugin loader (merges all plugin modules)
 │               ├── blink.lua
-│               ├── Codex.lua
+│               ├── claudecode.lua
 │               ├── cmp.lua
 │               ├── dap_ui.lua
 │               ├── diffview.lua
@@ -62,16 +62,22 @@ token/
 │   └── gen_lib.lua
 ├── contrib/
 │   ├── bat/
+│   ├── blink/
 │   ├── carapace/
+│   ├── chatgpt/
 │   ├── delta/
 │   ├── emacs/
 │   ├── fish/
 │   ├── fzf/
 │   ├── ghostty/
+│   ├── iterm2/
+│   ├── kitty/
 │   ├── lazygit/
 │   ├── ripgrep/
 │   ├── starship/
 │   ├── tmux/
+│   ├── vscode/
+│   ├── windows-terminal/
 │   └── zsh/
 ├── Makefile
 ├── selene.toml
