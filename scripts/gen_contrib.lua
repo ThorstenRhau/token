@@ -138,6 +138,42 @@ local function gen_carapace(p, variant, _term)
 end
 
 -- ---------------------------------------------------------------------------
+-- ChatGPT desktop (codex-theme-v1 share string)
+-- ---------------------------------------------------------------------------
+
+local function gen_chatgpt(p, variant)
+  local theme = json_object({
+    { 'codeThemeId', 'codex' },
+    {
+      'theme',
+      json_object({
+        { 'accent', p.accent },
+        { 'contrast', variant == 'dark' and 60 or 45 },
+        { 'fonts', json_object({ { 'code', nil }, { 'ui', nil } }) },
+        { 'ink', p.fg0 },
+        { 'opaqueWindows', false },
+        {
+          'semanticColors',
+          json_object({
+            { 'diffAdded', p.gsign_add },
+            { 'diffRemoved', p.gsign_del },
+            { 'skill', p.purple },
+          }),
+        },
+        { 'surface', p.bg3 },
+      }),
+    },
+    { 'variant', variant },
+  })
+  local payload = json_encode(theme):gsub('\n%s*', '')
+
+  return {
+    path = 'contrib/chatgpt/token-' .. variant .. '.txt',
+    content = 'codex-theme-v1:' .. payload .. '\n',
+  }
+end
+
+-- ---------------------------------------------------------------------------
 -- bat (.tmTheme)
 -- ---------------------------------------------------------------------------
 
@@ -1152,6 +1188,7 @@ local function main()
     files[#files + 1] = gen_bat(p, variant, term)
     files[#files + 1] = gen_blink(p, variant, term)
     files[#files + 1] = gen_carapace(p, variant, term)
+    files[#files + 1] = gen_chatgpt(p, variant)
     files[#files + 1] = gen_emacs(p, variant)
     files[#files + 1] = gen_fzf(p, variant, term)
     files[#files + 1] = gen_fzf_zsh(p, variant, term)
