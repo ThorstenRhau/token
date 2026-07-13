@@ -68,6 +68,7 @@ token/
 │   ├── fish/
 │   ├── fzf/
 │   ├── ghostty/
+│   ├── kitty/
 │   ├── lazygit/
 │   ├── ripgrep/
 │   ├── starship/
