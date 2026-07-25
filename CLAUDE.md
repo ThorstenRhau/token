@@ -72,6 +72,7 @@ token/
 │   ├── lazygit/
 │   ├── ripgrep/
 │   ├── starship/
+│   ├── sublime/
 │   ├── tmux/
 │   └── zsh/
 ├── Makefile
