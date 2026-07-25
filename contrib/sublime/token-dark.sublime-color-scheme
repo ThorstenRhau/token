@@ -13,7 +13,7 @@
     "inactive_selection": "#2f2f2d",
     "misspelling": "#c67777",
     "find_highlight": "#4a4030",
-    "find_highlight_foreground": "#262624",
+    "find_highlight_foreground": "#e8e4dc",
     "gutter_foreground": "#585855",
     "guide": "#5a595540",
     "active_guide": "#938e8780",
