@@ -75,6 +75,7 @@ token/
 │   ├── lazygit/
 │   ├── ripgrep/
 │   ├── starship/
+│   ├── sublime/
 │   ├── tmux/
 │   ├── vscode/
 │   ├── windows-terminal/

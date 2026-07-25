@@ -357,7 +357,7 @@ local function gen_sublime(p, variant, _term)
         { 'inactive_selection', p.bg4 },
         { 'misspelling', p.red },
         { 'find_highlight', p.match },
-        { 'find_highlight_foreground', p.bg3 },
+        { 'find_highlight_foreground', p.fg0 },
         { 'gutter_foreground', p.line_nr },
         { 'guide', p.fg3 .. '40' },
         { 'active_guide', p.fg2 .. '80' },
