@@ -68,6 +68,7 @@ token/
 │   ├── fish/
 │   ├── fzf/
 │   ├── ghostty/
+│   ├── gtksourceview/
 │   ├── kitty/
 │   ├── lazygit/
 │   ├── ripgrep/
