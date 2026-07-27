@@ -410,11 +410,13 @@ local function gen_gtksourceview(p, variant, _term)
     -- Global editor UI
     { 'text', { fg = p.fg0, bg = p.bg3 } },
     { 'selection', { bg = p.sel } },
+    { 'selection-unfocused', { bg = p.bg4 } },
     { 'cursor', { fg = p.fg0 } },
     { 'secondary-cursor', { fg = p.fg2 } },
     { 'current-line', { bg = p.bg4 } },
     { 'current-line-number', { fg = p.fg2, bg = p.bg4 } },
     { 'line-numbers', { fg = p.line_nr, bg = p.bg2 } },
+    { 'line-numbers-border', { bg = p.bg5 } },
     { 'draw-spaces', { fg = p.fg3 } },
     { 'background-pattern', { bg = p.bg2 } },
     { 'right-margin', { fg = p.fg3, bg = p.fg3 } },
@@ -451,6 +453,15 @@ local function gen_gtksourceview(p, variant, _term)
     { 'def:net-address', { fg = p.blue, underline = true } },
     -- Markup (Markdown, etc.)
     { 'def:heading', { fg = p.accent, bold = true } },
+    { 'def:heading0', { fg = p.accent, bold = true } },
+    { 'def:heading1', { fg = p.accent, bold = true } },
+    { 'def:heading2', { fg = p.accent2, bold = true } },
+    { 'def:heading3', { fg = p.blue, bold = true } },
+    { 'def:heading4', { fg = p.green, bold = true } },
+    { 'def:heading5', { fg = p.cyan, bold = true } },
+    { 'def:heading6', { fg = p.purple, bold = true } },
+    { 'def:thematic-break', { fg = p.fg2, bold = true } },
+    { 'def:preformatted-section', { fg = p.fg0, bg = p.bg2 } },
     { 'def:link-destination', { fg = p.blue, underline = true } },
     { 'def:link-text', { fg = p.blue } },
     { 'def:link-symbol', { fg = p.accent2 } },
@@ -467,6 +478,7 @@ local function gen_gtksourceview(p, variant, _term)
     { 'diff:changed-line', { fg = p.yellow } },
     { 'diff:location', { fg = p.blue } },
     { 'diff:diff-file', { fg = p.accent, bold = true } },
+    { 'diff:special-case', { fg = p.purple } },
   }
 
   local lines = {

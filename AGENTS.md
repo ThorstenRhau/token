@@ -70,6 +70,7 @@ token/
 │   ├── fish/
 │   ├── fzf/
 │   ├── ghostty/
+│   ├── gtksourceview/
 │   ├── iterm2/
 │   ├── kitty/
 │   ├── lazygit/

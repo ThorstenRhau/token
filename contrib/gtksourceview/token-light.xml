@@ -5,11 +5,13 @@
     <description>Token light - warm, muted theme</description>
     <style name="text" foreground="#2a2920" background="#faf9f5"/>
     <style name="selection" background="#dddcd6"/>
+    <style name="selection-unfocused" background="#f0efeb"/>
     <style name="cursor" foreground="#2a2920"/>
     <style name="secondary-cursor" foreground="#6c675f"/>
     <style name="current-line" background="#f0efeb"/>
     <style name="current-line-number" foreground="#6c675f" background="#f0efeb"/>
     <style name="line-numbers" foreground="#b5b2ab" background="#f6f5f1"/>
+    <style name="line-numbers-border" background="#eae9e5"/>
     <style name="draw-spaces" foreground="#858179"/>
     <style name="background-pattern" background="#f6f5f1"/>
     <style name="right-margin" foreground="#858179" background="#858179"/>
@@ -44,6 +46,15 @@
     <style name="def:note" foreground="#527594" bold="true"/>
     <style name="def:net-address" foreground="#527594" underline="single"/>
     <style name="def:heading" foreground="#9a4929" bold="true"/>
+    <style name="def:heading0" foreground="#9a4929" bold="true"/>
+    <style name="def:heading1" foreground="#9a4929" bold="true"/>
+    <style name="def:heading2" foreground="#876032" bold="true"/>
+    <style name="def:heading3" foreground="#527594" bold="true"/>
+    <style name="def:heading4" foreground="#3f643c" bold="true"/>
+    <style name="def:heading5" foreground="#2d6c6c" bold="true"/>
+    <style name="def:heading6" foreground="#7c619a" bold="true"/>
+    <style name="def:thematic-break" foreground="#6c675f" bold="true"/>
+    <style name="def:preformatted-section" foreground="#2a2920" background="#f6f5f1"/>
     <style name="def:link-destination" foreground="#527594" underline="single"/>
     <style name="def:link-text" foreground="#527594"/>
     <style name="def:link-symbol" foreground="#876032"/>
@@ -59,4 +70,5 @@
     <style name="diff:changed-line" foreground="#6e5c20"/>
     <style name="diff:location" foreground="#527594"/>
     <style name="diff:diff-file" foreground="#9a4929" bold="true"/>
+    <style name="diff:special-case" foreground="#7c619a"/>
 </style-scheme>
