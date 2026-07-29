@@ -1054,6 +1054,192 @@ local function gen_vscode_package()
 end
 
 -- ---------------------------------------------------------------------------
+-- Obsidian (local app theme)
+-- ---------------------------------------------------------------------------
+
+local function obsidian_rgb(hex)
+  local h = strip(hex)
+  return table.concat({
+    tonumber(h:sub(1, 2), 16),
+    tonumber(h:sub(3, 4), 16),
+    tonumber(h:sub(5, 6), 16),
+  }, ', ')
+end
+
+local function obsidian_hsl(hex)
+  local h = strip(hex)
+  local r = tonumber(h:sub(1, 2), 16) / 255
+  local g = tonumber(h:sub(3, 4), 16) / 255
+  local b = tonumber(h:sub(5, 6), 16) / 255
+  local max = math.max(r, g, b)
+  local min = math.min(r, g, b)
+  local lightness = (max + min) / 2
+  local hue = 0
+  local saturation = 0
+
+  if max ~= min then
+    local delta = max - min
+    saturation = lightness > 0.5 and delta / (2 - max - min) or delta / (max + min)
+    if max == r then
+      hue = (g - b) / delta + (g < b and 6 or 0)
+    elseif max == g then
+      hue = (b - r) / delta + 2
+    else
+      hue = (r - g) / delta + 4
+    end
+    hue = hue / 6
+  end
+
+  return string.format('%.2f', hue * 360),
+    string.format('%.2f%%', saturation * 100),
+    string.format('%.2f%%', lightness * 100)
+end
+
+local function obsidian_theme_block(p, variant)
+  local base = variant == 'dark'
+      and {
+        p.bg0,
+        p.bg1,
+        p.bg2,
+        p.bg3,
+        p.bg4,
+        p.bg5,
+        p.fg3,
+        p.fg3,
+        p.fg2,
+        p.fg2,
+        p.fg1,
+        p.fg0,
+      }
+    or {
+      p.bg3,
+      p.bg2,
+      p.bg4,
+      p.bg1,
+      p.bg5,
+      p.bg0,
+      p.line_nr,
+      p.indent_active,
+      p.fg3,
+      p.fg2,
+      p.fg1,
+      p.fg0,
+    }
+  local base_names = { '00', '05', '10', '20', '25', '30', '35', '40', '50', '60', '70', '100' }
+  local lines = { '.theme-' .. variant .. ' {' }
+  local accent_h, accent_s, accent_l = obsidian_hsl(p.accent)
+
+  for i, name in ipairs(base_names) do
+    lines[#lines + 1] = '  --color-base-' .. name .. ': ' .. base[i] .. ';'
+  end
+
+  local colors = {
+    { 'red', p.red },
+    { 'orange', p.orange },
+    { 'yellow', p.yellow },
+    { 'green', p.green },
+    { 'cyan', p.cyan },
+    { 'blue', p.blue },
+    { 'purple', p.purple },
+    { 'pink', p.purple },
+  }
+  for _, color in ipairs(colors) do
+    lines[#lines + 1] = '  --color-' .. color[1] .. ': ' .. color[2] .. ';'
+    lines[#lines + 1] = '  --color-' .. color[1] .. '-rgb: ' .. obsidian_rgb(color[2]) .. ';'
+  end
+
+  extend_lines(lines, {
+    '',
+    '  --accent-h: ' .. accent_h .. ';',
+    '  --accent-s: ' .. accent_s .. ';',
+    '  --accent-l: ' .. accent_l .. ';',
+    '',
+    '  --background-primary: ' .. p.bg3 .. ';',
+    '  --background-primary-alt: ' .. p.bg2 .. ';',
+    '  --background-secondary: ' .. p.bg2 .. ';',
+    '  --background-secondary-alt: ' .. p.bg1 .. ';',
+    '  --background-modifier-hover: ' .. p.bg4 .. ';',
+    '  --background-modifier-active-hover: ' .. p.bg5 .. ';',
+    '  --background-modifier-border: ' .. p.bg5 .. ';',
+    '  --background-modifier-border-hover: ' .. p.fg3 .. ';',
+    '  --background-modifier-border-focus: var(--interactive-accent);',
+    '  --background-modifier-form-field: ' .. p.bg2 .. ';',
+    '',
+    '  --interactive-normal: ' .. p.bg4 .. ';',
+    '  --interactive-hover: ' .. p.bg5 .. ';',
+    '',
+    '  --text-normal: ' .. p.fg0 .. ';',
+    '  --text-muted: ' .. p.fg2 .. ';',
+    '  --text-faint: ' .. p.fg3 .. ';',
+    '  --text-on-accent: ' .. p.bg3 .. ';',
+    '  --text-on-accent-inverted: ' .. p.bg3 .. ';',
+    '  --text-success: ' .. p.green .. ';',
+    '  --text-warning: ' .. p.yellow .. ';',
+    '  --text-error: ' .. p.red .. ';',
+    '  --text-selection: ' .. p.sel .. ';',
+    '  --text-highlight-bg: ' .. p.match .. ';',
+    '  --caret-color: ' .. p.fg0 .. ';',
+    '',
+    '  --link-color: ' .. p.blue .. ';',
+    '  --link-color-hover: ' .. p.accent .. ';',
+    '  --link-external-color: ' .. p.blue .. ';',
+    '  --link-external-color-hover: ' .. p.accent .. ';',
+    '  --tag-color: ' .. p.accent2 .. ';',
+    '  --tag-color-hover: ' .. p.accent .. ';',
+    '  --tag-background: ' .. p.bg4 .. ';',
+    '  --tag-background-hover: ' .. p.bg5 .. ';',
+    '',
+    '  --h1-color: ' .. p.accent .. ';',
+    '  --h2-color: ' .. p.accent2 .. ';',
+    '  --h3-color: ' .. p.olive .. ';',
+    '  --h4-color: ' .. p.blue .. ';',
+    '  --h5-color: ' .. p.green .. ';',
+    '  --h6-color: ' .. p.purple .. ';',
+    '',
+    '  --code-normal: ' .. p.fg0 .. ';',
+    '  --code-background: ' .. p.bg1 .. ';',
+    '  --code-comment: ' .. p.fg2 .. ';',
+    '  --code-function: ' .. p.accent .. ';',
+    '  --code-important: ' .. p.red .. ';',
+    '  --code-keyword: ' .. p.accent2 .. ';',
+    '  --code-operator: ' .. p.fg1 .. ';',
+    '  --code-property: ' .. p.fg0 .. ';',
+    '  --code-punctuation: ' .. p.fg1 .. ';',
+    '  --code-string: ' .. p.green .. ';',
+    '  --code-tag: ' .. p.purple .. ';',
+    '  --code-value: ' .. p.orange .. ';',
+    '}',
+  })
+
+  return table.concat(lines, '\n')
+end
+
+local function gen_obsidian_theme(dark, light)
+  local content = table.concat({
+    '/* Generated by token colorscheme. Do not edit manually. */',
+    '',
+    obsidian_theme_block(dark, 'dark'),
+    '',
+    obsidian_theme_block(light, 'light'),
+    '',
+  }, '\n')
+
+  return { path = 'contrib/obsidian/theme.css', content = content }
+end
+
+local function gen_obsidian_manifest()
+  local manifest = json_object({
+    { 'name', 'Token' },
+    { 'version', '1.0.0' },
+    { 'minAppVersion', '1.0.0' },
+    { 'author', 'Thorsten Rhau' },
+    { 'authorUrl', 'https://github.com/ThorstenRhau' },
+  })
+
+  return { path = 'contrib/obsidian/manifest.json', content = table.concat({ json_encode(manifest), '' }, '\n') }
+end
+
+-- ---------------------------------------------------------------------------
 -- lazygit (YAML)
 -- ---------------------------------------------------------------------------
 
@@ -1410,6 +1596,8 @@ local function main()
   files[#files + 1] = gen_fish(dark, light, dark_term, light_term)
   files[#files + 1] = gen_delta(dark, light, dark_term, light_term)
   files[#files + 1] = gen_windows_terminal(dark, light, dark_term, light_term)
+  files[#files + 1] = gen_obsidian_theme(dark, light)
+  files[#files + 1] = gen_obsidian_manifest()
   files[#files + 1] = gen_vscode_package()
   files[#files + 1] = gen_vscode_theme(dark, 'dark', dark_term)
   files[#files + 1] = gen_vscode_theme(light, 'light', light_term)

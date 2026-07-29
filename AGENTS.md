@@ -74,6 +74,7 @@ token/
 │   ├── iterm2/
 │   ├── kitty/
 │   ├── lazygit/
+│   ├── obsidian/
 │   ├── ripgrep/
 │   ├── starship/
 │   ├── sublime/

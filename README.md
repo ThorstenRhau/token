@@ -18,7 +18,7 @@ same palette file, so everything matches without extra work.
 - Legacy syntax group coverage for non-Treesitter filetypes
 - Terminal color support (ANSI colors 0–15)
 - Lualine theme included
-- Contrib themes for terminal tools generated from the same palette
+- Contrib themes for external tools and apps generated from the same palette
 
 ## Showcase
 
@@ -98,7 +98,7 @@ corrupt it is deleted automatically and the dynamic path is used as fallback.
 
 ## Contrib themes
 
-Pre-generated theme files for terminal tools. Auto-generated from the palette;
+Pre-generated themes for external tools and apps. Auto-generated from the palette;
 rebuild after palette changes with `make contrib`.
 
 | Tool                                                      | Files                                           | Usage                                                                                                            |
@@ -115,6 +115,7 @@ rebuild after palette changes with `make contrib`.
 | [iTerm2](https://iterm2.com/)                             | `contrib/iterm2/token-{dark,light}.itermcolors` | Import from Profiles > Colors > Color Presets                                                                    |
 | [kitty](https://sw.kovidgoyal.net/kitty/)                 | `contrib/kitty/token-{dark,light}.conf`         | `include /path/to/token-dark.conf` in `kitty.conf`                                                               |
 | [lazygit](https://github.com/jesseduffield/lazygit)       | `contrib/lazygit/token-{dark,light}.yml`        | Merge into `~/.config/lazygit/config.yml`                                                                        |
+| [Obsidian](https://obsidian.md/)                          | `contrib/obsidian/`                             | Copy to `<vault>/.obsidian/themes/Token`, restart Obsidian, select Token, then set the accent color to `#bc6a49` |
 | [ripgrep](https://github.com/BurntSushi/ripgrep)          | `contrib/ripgrep/token-{dark,light}.ripgreprc`  | `RIPGREP_CONFIG_PATH=/path/to/token-dark.ripgreprc`                                                              |
 | [starship](https://starship.rs/)                          | `contrib/starship/token-{dark,light}.toml`      | Append to `starship.toml`, set `palette = "token"`                                                               |
 | [Sublime Text](https://www.sublimetext.com/)              | `contrib/sublime/token-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/`, set `"color_scheme"` in Preferences                                          |
