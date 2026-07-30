@@ -1,6 +1,7 @@
 # AGENTS.md - token
 
-Standalone Neovim colorscheme plugin with dark and light variants. Requires **Neovim 0.12+**.
+Standalone Neovim colorscheme plugin with dark and light variants. Requires
+**Neovim 0.12+**.
 
 ## Structure
 
@@ -59,7 +60,8 @@ token/
 ├── scripts/
 │   ├── gen_contrib.lua
 │   ├── gen_emacs.lua
-│   └── gen_lib.lua
+│   ├── gen_lib.lua
+│   └── install_vscode_theme.sh
 ├── contrib/
 │   ├── bat/
 │   ├── blink/
@@ -92,29 +94,45 @@ token/
 
 ## Architecture
 
-- `colors/token.lua` is the Neovim entry point, discovered by `:colorscheme token`
-- `init.lua` orchestrates loading: tries compiled bytecode cache first, falls back to dynamic path (hi clear, bust module cache, load palette, merge groups, apply via `nvim_set_hl`, set terminal colors)
-- `compile.lua` handles `:TokenCompile` (generates bytecode cache to `stdpath('cache')/token/`) and cache loading
-- `palette.lua` returns a function that takes `'dark'|'light'` and returns a flat table of 47 semantic hex color keys
-- `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp, diagnostics, diff, plugins
-- `groups/plugins/init.lua` loads individual plugin files from an explicit sorted list
+- `colors/token.lua` is the Neovim entry point, discovered by
+  `:colorscheme token`
+- `init.lua` orchestrates loading: tries compiled bytecode cache first, falls
+  back to dynamic path (hi clear, bust module cache, load palette, merge groups,
+  apply via `nvim_set_hl`, set terminal colors)
+- `compile.lua` handles `:TokenCompile` (generates bytecode cache to
+  `stdpath('cache')/token/`) and cache loading
+- `palette.lua` returns a function that takes `'dark'|'light'` and returns a
+  flat table of 49 semantic hex color keys
+- `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp,
+  diagnostics, diff, plugins
+- `groups/plugins/init.lua` loads individual plugin files from an explicit
+  sorted list
 - Each group module exports a function `(palette) -> { [group] = hl_opts }`
-- `terminal.lua` exports `{ colors, set }`: `colors(p, is_dark)` returns the 0..15 ANSI color table (pure Lua), `set(p, is_dark)` applies it via `vim.g`
-- `palette.lua` is the single source of truth for both runtime highlights and generated contrib themes; some palette keys are intentionally consumed only by generator scripts under `scripts/`
+- `terminal.lua` exports `{ colors, set }`: `colors(p, is_dark)` returns the
+  0..15 ANSI color table (pure Lua), `set(p, is_dark)` applies it via `vim.g`
+- `palette.lua` is the single source of truth for both runtime highlights and
+  generated contrib themes; some palette keys are intentionally consumed only by
+  generator scripts under `scripts/`
 
 ## Common tasks
 
 - **Add a highlight group**: add it to the appropriate `groups/*.lua` file
 - **Add a palette color**: add it to both dark and light tables in `palette.lua`
-- **Add plugin support**: create `groups/plugins/<name>.lua`, add the module path to the list in `groups/plugins/init.lua`
-- **Regenerate contrib themes**: `make contrib` (run after changing `palette.lua`)
-- **Compile for faster loading**: `:TokenCompile` (rerun after updating the plugin)
+- **Add plugin support**: create `groups/plugins/<name>.lua`, add the module
+  path to the list in `groups/plugins/init.lua`
+- **Regenerate contrib themes**: `make contrib` (run after changing
+  `palette.lua`)
+- **Compile for faster loading**: `:TokenCompile` (rerun after updating the
+  plugin)
 - Prefer `{ link = 'GroupName' }` over duplicating color values
-- Intentional same-file duplicate highlight tables are allowed when they preserve future per-group tuning without introducing cross-module link dependencies
+- Intentional same-file duplicate highlight tables are allowed when they
+  preserve future per-group tuning without introducing cross-module link
+  dependencies
 
 ## Validation
 
 ```bash
+make check                     # Read-only formatting, lint, and contrib checks
 make format                    # Format with stylua
 make lint                      # Lint with selene
 make contrib                   # Regenerate contrib/ theme files
@@ -122,7 +140,8 @@ make contrib-verify            # Check contrib/ files are up to date
 make all                       # Format, lint, and generate contrib
 ```
 
-No test suite. Run `make all` before committing.
+No test suite. The pre-commit hook runs `make check`; run `make all` before
+committing changes that need formatting or contrib regeneration.
 
 ## Style
 

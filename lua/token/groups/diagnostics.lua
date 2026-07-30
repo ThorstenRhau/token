@@ -14,8 +14,8 @@ local function diagnostics(p)
     DiagnosticUnderlineHint = { undercurl = true, sp = p.cyan },
     DiagnosticUnderlineOk = { undercurl = true, sp = p.green },
 
-    DiagnosticVirtualTextError = { fg = p.red, bg = p.diff_del },
-    DiagnosticVirtualTextWarn = { fg = p.yellow, bg = p.diff_text },
+    DiagnosticVirtualTextError = { fg = p.red, bg = p.diag_error },
+    DiagnosticVirtualTextWarn = { fg = p.yellow, bg = p.diag_warn },
     DiagnosticVirtualTextInfo = { fg = p.blue, bg = p.diag_info },
     DiagnosticVirtualTextHint = { fg = p.cyan, bg = p.diag_hint },
 

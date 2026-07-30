@@ -40,6 +40,8 @@
 ---@field diff_change string
 ---@field diff_text string
 --- Diagnostic backgrounds
+---@field diag_error string
+---@field diag_warn string
 ---@field diag_info string
 ---@field diag_hint string
 --- UI elements
@@ -106,6 +108,8 @@ local function palette(background)
       diff_change = '#eee4c6',
       diff_text = '#e2dac0',
       -- Diagnostic backgrounds
+      diag_error = '#ffdada',
+      diag_warn = '#e2dac0',
       diag_info = '#dae4f2',
       diag_hint = '#d6eeea',
       -- UI elements
@@ -167,6 +171,8 @@ local function palette(background)
     diff_change = '#2b2b29',
     diff_text = '#444039',
     -- Diagnostic backgrounds
+    diag_error = '#3c2024',
+    diag_warn = '#444039',
     diag_info = '#1e2634',
     diag_hint = '#1c2e2e',
     -- UI elements

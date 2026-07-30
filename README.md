@@ -31,7 +31,7 @@ same palette file, so everything matches without extra work.
 
 ```lua
 -- vim.pack (Neovim 0.12+)
-vim.pack.add('https://github.com/ThorstenRhau/token')
+vim.pack.add({ 'https://github.com/ThorstenRhau/token' })
 
 -- lazy.nvim
 { 'ThorstenRhau/token' }
@@ -98,30 +98,32 @@ corrupt it is deleted automatically and the dynamic path is used as fallback.
 
 ## Contrib themes
 
-Pre-generated themes for external tools and apps. Auto-generated from the palette;
-rebuild after palette changes with `make contrib`.
+Pre-generated themes for external tools and apps. Auto-generated from the
+palette; rebuild after palette changes with `make contrib`.
 
-| Tool                                                      | Files                                           | Usage                                                                                                            |
-| --------------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [bat](https://github.com/sharkdp/bat)                     | `contrib/bat/token-{dark,light}.tmTheme`        | Copy to bat themes dir, run `bat cache --build`                                                                  |
-| [Blink Shell](https://blink.sh/)                          | `contrib/blink/token-{dark,light}.js`           | Paste the raw `token-dark.js` or `token-light.js` URL in Appearance > Themes > New Theme                         |
-| [ChatGPT desktop](https://chatgpt.com/download/)          | `contrib/chatgpt/token-{dark,light}.txt`        | Paste the share string into Settings > Appearance > Import for the matching theme variant                        |
-| [delta](https://github.com/dandavison/delta)              | `contrib/delta/token.gitconfig`                 | Include from `~/.gitconfig`, set `features = token-dark` in `[delta]`                                            |
-| [emacs](https://www.gnu.org/software/emacs/)              | `contrib/emacs/token-{dark,light}-theme.el`     | Copy to `~/.emacs.d/themes/`, then `(load-theme 'token-dark t)`                                                  |
-| [fish](https://fishshell.com/)                            | `contrib/fish/token.theme`                      | Copy to `~/.config/fish/themes/`, then run `fish_config theme choose token`                                      |
-| [fzf](https://github.com/junegunn/fzf)                    | `contrib/fzf/token-{dark,light}.fish`           | `source /path/to/token-dark.fish` in `config.fish` to append theme colors to `FZF_DEFAULT_OPTS`                  |
-| [ghostty](https://ghostty.org/)                           | `contrib/ghostty/token-{dark,light}`            | Copy to `~/.config/ghostty/themes/`, then set `theme = dark:token-dark,light:token-light`                        |
-| [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview) (gedit, GNOME Text Editor) | `contrib/gtksourceview/token-{dark,light}.xml`  | Copy to `~/.local/share/gtksourceview-{4,5}/styles/`, then pick the scheme in the editor's preferences           |
-| [iTerm2](https://iterm2.com/)                             | `contrib/iterm2/token-{dark,light}.itermcolors` | Import from Profiles > Colors > Color Presets                                                                    |
-| [kitty](https://sw.kovidgoyal.net/kitty/)                 | `contrib/kitty/token-{dark,light}.conf`         | `include /path/to/token-dark.conf` in `kitty.conf`                                                               |
-| [lazygit](https://github.com/jesseduffield/lazygit)       | `contrib/lazygit/token-{dark,light}.yml`        | Merge into `~/.config/lazygit/config.yml`                                                                        |
-| [Obsidian](https://obsidian.md/)                          | `contrib/obsidian/`                             | Copy to `<vault>/.obsidian/themes/Token`, restart Obsidian, select Token, then set the accent color to `#bc6a49` |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)          | `contrib/ripgrep/token-{dark,light}.ripgreprc`  | `RIPGREP_CONFIG_PATH=/path/to/token-dark.ripgreprc`                                                              |
-| [starship](https://starship.rs/)                          | `contrib/starship/token-{dark,light}.toml`      | Append to `starship.toml`, set `palette = "token"`                                                               |
-| [Sublime Text](https://www.sublimetext.com/)              | `contrib/sublime/token-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/`, set `"color_scheme"` in Preferences                                          |
-| [tmux](https://github.com/tmux/tmux)                      | `contrib/tmux/token-{dark,light}.conf`          | `source-file /path/to/token-dark.conf` in tmux.conf                                                              |
-| [VS Code](https://code.visualstudio.com/)                 | `contrib/vscode/`                               | Run `scripts/install_vscode_theme.sh`, then select `Token Dark` or `Token Light`                                 |
-| [Windows Terminal](https://github.com/microsoft/terminal) | `contrib/windows-terminal/token.json`           | Copy schemes into settings/fragments, then set `"colorScheme": { "dark": "Token Dark", "light": "Token Light" }` |
+| Tool                                                                                     | Files                                                     | Usage                                                                                                            |
+| ---------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [bat](https://github.com/sharkdp/bat)                                                    | `contrib/bat/token-{dark,light}.tmTheme`                  | Copy to bat themes dir, run `bat cache --build`                                                                  |
+| [Blink Shell](https://blink.sh/)                                                         | `contrib/blink/token-{dark,light}.js`                     | Paste the raw `token-dark.js` or `token-light.js` URL in Appearance > Themes > New Theme                         |
+| [Carapace](https://carapace-sh.github.io/carapace-bin/)                                  | `contrib/carapace/token-{dark,light}.json`                | Merge the selected `carapace` object into `~/.config/carapace/styles.json`                                       |
+| [ChatGPT desktop](https://chatgpt.com/download/)                                         | `contrib/chatgpt/token-{dark,light}.txt`                  | Paste the share string into Settings > Appearance > Import for the matching theme variant                        |
+| [delta](https://github.com/dandavison/delta)                                             | `contrib/delta/token.gitconfig`                           | Include from `~/.gitconfig`, set `features = token-dark` in `[delta]`                                            |
+| [emacs](https://www.gnu.org/software/emacs/)                                             | `contrib/emacs/token-{dark,light}-theme.el`               | Copy to `~/.emacs.d/themes/`, then `(load-theme 'token-dark t)`                                                  |
+| [fish](https://fishshell.com/)                                                           | `contrib/fish/token.theme`                                | Copy to `~/.config/fish/themes/`, then run `fish_config theme choose token`                                      |
+| [fzf](https://github.com/junegunn/fzf)                                                   | `contrib/fzf/token-{dark,light}.{fish,zsh}`               | Source the matching Fish or Zsh file to append theme colors to `FZF_DEFAULT_OPTS`                                |
+| [ghostty](https://ghostty.org/)                                                          | `contrib/ghostty/token-{dark,light}`                      | Copy to `~/.config/ghostty/themes/`, then set `theme = dark:token-dark,light:token-light`                        |
+| [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview) (gedit, GNOME Text Editor) | `contrib/gtksourceview/token-{dark,light}.xml`            | Copy to `~/.local/share/gtksourceview-{4,5}/styles/`, then pick the scheme in the editor's preferences           |
+| [iTerm2](https://iterm2.com/)                                                            | `contrib/iterm2/token-{dark,light}.itermcolors`           | Import from Profiles > Colors > Color Presets                                                                    |
+| [kitty](https://sw.kovidgoyal.net/kitty/)                                                | `contrib/kitty/token-{dark,light}.conf`                   | `include /path/to/token-dark.conf` in `kitty.conf`                                                               |
+| [lazygit](https://github.com/jesseduffield/lazygit)                                      | `contrib/lazygit/token-{dark,light}.yml`                  | Merge into `~/.config/lazygit/config.yml`                                                                        |
+| [Obsidian](https://obsidian.md/)                                                         | `contrib/obsidian/`                                       | Copy to `<vault>/.obsidian/themes/Token`, restart Obsidian, select Token, then set the accent color to `#bc6a49` |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                                         | `contrib/ripgrep/token-{dark,light}.ripgreprc`            | `RIPGREP_CONFIG_PATH=/path/to/token-dark.ripgreprc`                                                              |
+| [starship](https://starship.rs/)                                                         | `contrib/starship/token-{dark,light}.toml`                | Append to `starship.toml`, set `palette = "token"`                                                               |
+| [Sublime Text](https://www.sublimetext.com/)                                             | `contrib/sublime/token-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/`, set `"color_scheme"` in Preferences                                                    |
+| [tmux](https://github.com/tmux/tmux)                                                     | `contrib/tmux/token-{dark,light}.conf`                    | `source-file /path/to/token-dark.conf` in tmux.conf                                                              |
+| [VS Code](https://code.visualstudio.com/)                                                | `contrib/vscode/`                                         | Run `scripts/install_vscode_theme.sh`, then select `Token Dark` or `Token Light`                                 |
+| [Windows Terminal](https://github.com/microsoft/terminal)                                | `contrib/windows-terminal/token.json`                     | Copy schemes into settings/fragments, then set `"colorScheme": { "dark": "Token Dark", "light": "Token Light" }` |
+| [Zsh](https://www.zsh.org/)                                                              | `contrib/zsh/token-{dark,light}.zsh`                      | Source the selected file from `.zshrc` for matching `ls`, completion, fzf-tab, and prompt helper colors          |
 
 ## License
 

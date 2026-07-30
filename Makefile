@@ -3,9 +3,11 @@ ROOT             := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 STYLUAC          := $(ROOT)/.stylua.toml
 SELENEC          := $(ROOT)/selene.toml
 
-.PHONY: all format lint contrib contrib-verify install-hooks help
+.PHONY: all check format format-check lint contrib contrib-verify install-hooks help
 
 all: format lint contrib
+
+check: format-check lint contrib-verify
 
 # Install git hooks
 install-hooks:
@@ -14,6 +16,10 @@ install-hooks:
 # Format all Lua files according to .stylua.toml
 format:
 	@stylua --config-path "$(STYLUAC)" "$(ROOT)"
+
+# Check Lua formatting without changing files
+format-check:
+	@stylua --check --config-path "$(STYLUAC)" "$(ROOT)"
 
 # Lint Lua files (scripts/ excluded: plain LuaJIT, no vim globals)
 lint:
@@ -30,8 +36,10 @@ contrib-verify:
 # Display available targets
 help:
 	@echo "Available targets:"
-	@echo "  all            - Format, lint, and verify contrib files"
+	@echo "  all            - Format, lint, and generate contrib files"
+	@echo "  check          - Check formatting, lint, and contrib files"
 	@echo "  format         - Format Lua files with stylua"
+	@echo "  format-check   - Check Lua formatting with stylua"
 	@echo "  lint           - Lint Lua files with selene"
 	@echo "  contrib        - Generate contrib/ theme files"
 	@echo "  contrib-verify - Check contrib/ files are up to date"
