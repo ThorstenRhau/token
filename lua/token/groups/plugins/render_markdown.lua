@@ -46,7 +46,6 @@ local function render_markdown(p)
     -- tables
     RenderMarkdownTableHead = { fg = p.accent, bold = true },
     RenderMarkdownTableRow = { fg = p.fg1 },
-    RenderMarkdownTableFill = { fg = p.fg3 },
 
     -- bullets and rules
     RenderMarkdownBullet = { fg = p.accent2 },
