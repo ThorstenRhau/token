@@ -68,6 +68,9 @@ end)
 fails('must be a boolean', function()
   token.setup({ transparent = 'yes' })
 end)
+fails('setup options must be a table', function()
+  token.setup(false)
+end)
 fails('#RRGGBB', function()
   token.setup({ colors = { dark = { fg0 = 'red' } } })
   load()
@@ -221,6 +224,11 @@ fails('highlight callbacks', function()
   load()
 end)
 
+-- Cache fingerprinting must not make compilation a requirement for dynamic loading.
+token.setup({ on_colors = pairs })
+load()
+equal(vim.g.colors_name, 'token', 'non-dumpable callback blocked dynamic loading')
+
 -- Dynamic and compiled variants, keyed misses, terminal opt-out, and corrupt fallback.
 local callback = function(groups, colors, background)
   groups.TokenCompiled = { fg = colors.accent, bold = background == 'dark' }
@@ -260,5 +268,14 @@ assert(file:write('corrupt'))
 assert(file:close())
 equal(compile.load('dark'), false, 'corrupt cache did not fall back')
 equal(vim.uv.fs_stat(dark_path), nil, 'corrupt cache was not removed')
+
+file = assert(io.open(dark_path, 'wb'))
+assert(file:write(string.dump(function()
+  error({ message = 'cache execution failed' })
+end)))
+assert(file:close())
+load('dark')
+truthy(hl('TokenCompiled').bold, 'non-string cache error did not reach dynamic fallback')
+equal(vim.uv.fs_stat(dark_path), nil, 'cache with a non-string error was not removed')
 
 print('token: headless tests passed')

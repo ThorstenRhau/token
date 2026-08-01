@@ -130,20 +130,23 @@ end
 ---@param background 'dark'|'light'
 ---@return boolean
 function M.load(background)
-  local path = M.path(background)
+  local path_ok, path = pcall(M.path, background)
+  if not path_ok then
+    return false
+  end
   if not vim.uv.fs_stat(path) then
     return false
   end
   local chunk, err = loadfile(path)
   if not chunk then
-    vim.notify('token: cache load failed, using dynamic path: ' .. err, vim.log.levels.WARN)
     os.remove(path)
+    vim.notify('token: cache load failed, using dynamic path: ' .. tostring(err), vim.log.levels.WARN)
     return false
   end
   local ok, exec_err = pcall(chunk)
   if not ok then
-    vim.notify('token: compiled theme error, using dynamic path: ' .. exec_err, vim.log.levels.WARN)
     os.remove(path)
+    vim.notify('token: compiled theme error, using dynamic path: ' .. tostring(exec_err), vim.log.levels.WARN)
     return false
   end
   return true

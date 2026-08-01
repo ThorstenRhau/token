@@ -169,7 +169,9 @@ end
 
 ---@param opts? token.Config
 function M.setup(opts)
-  opts = opts or {}
+  if opts == nil then
+    opts = {}
+  end
   expect_table(opts, 'setup options')
   validate_keys(
     opts,
