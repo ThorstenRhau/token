@@ -39,7 +39,6 @@ vim.pack.add({ 'https://github.com/ThorstenRhau/token' })
 ## Usage
 
 ```lua
----@module 'token'
 local token = require('token')
 
 ---@type token.Config
@@ -74,7 +73,6 @@ to a core-only default. Select integrations under `plugins`, or use
 ## Configuration
 
 ```lua
----@module 'token'
 local token = require('token')
 
 ---@type token.Config

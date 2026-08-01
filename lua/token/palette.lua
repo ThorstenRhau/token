@@ -1,64 +1,64 @@
+---Token's semantic color palette for one background variant.
+---All values are six-digit hexadecimal colors and may be mutated by `token.Config.on_colors`.
 ---@class TokenPalette
---- Background ramp
---- Dark:  bg0 (darkest) -> bg5 (lightest), bg3 = Normal
---- Light: bg3 (lightest) -> bg0 (darkest), bg4/bg5 also darker than bg3
----@field bg0 string
----@field bg1 string
----@field bg2 string
----@field bg3 string  Normal background
----@field bg4 string
----@field bg5 string
---- Foreground ramp
----@field fg0 string  Normal foreground
----@field fg1 string
----@field fg2 string  Comments, muted text
----@field fg3 string  Most muted foreground
---- Accent hues
----@field accent string   Primary accent (functions, titles)
----@field accent2 string  Secondary accent (keywords, booleans)
---- Syntax hues
----@field blue string
----@field green string
----@field red string
----@field yellow string
----@field purple string
----@field cyan string
----@field orange string   Numeric literals
----@field olive string    Warm yellow-green (numbers)
---- Bright variants (terminal colors 10-14 only)
----@field bright_green string
----@field bright_blue string
----@field bright_purple string
----@field bright_cyan string
---- Diff backgrounds
----@field diff_add string
----@field diff_del string
----@field diff_add_inline string
----@field diff_del_inline string
----@field diff_add_strong string
----@field diff_del_strong string
----@field diff_change string
----@field diff_text string
---- Diagnostic backgrounds
----@field diag_error string
----@field diag_warn string
----@field diag_info string
----@field diag_hint string
---- UI elements
----@field sel string
----@field match string
----@field indent string
----@field indent_active string
----@field line_nr string
---- Git sign column
----@field gsign_add string
----@field gsign_change string
----@field gsign_del string
----@field gsign_untracked string
----@field gsign_add_staged string
----@field gsign_change_staged string
----@field gsign_del_staged string
----@field gsign_untracked_staged string
+-- Background ramp
+---@field bg0 string Recessed background used by floating windows and shadows.
+---@field bg1 string Secondary background used by menus, status lines, and plugin panels.
+---@field bg2 string Inactive background used by gutters, folded text, and inactive windows.
+---@field bg3 string Primary editor background used by `Normal`.
+---@field bg4 string Raised background used by cursor lines, separators, and inactive UI details.
+---@field bg5 string Strong raised background used by references, active snippets, and quickfix selections.
+-- Foreground ramp
+---@field fg0 string Primary foreground used by normal text and identifiers.
+---@field fg1 string Secondary foreground used by operators, delimiters, and emphasized UI text.
+---@field fg2 string Muted foreground used by comments, concealed text, and secondary UI text.
+---@field fg3 string Most subdued foreground used by borders, inactive UI, and nonessential text.
+-- Accent hues
+---@field accent string Primary accent used by functions, titles, active search, and focused UI.
+---@field accent2 string Secondary accent used by keywords, control flow, and alternate active UI.
+-- Syntax and status hues
+---@field blue string Blue semantic hue used by types, paths, informational messages, and directories.
+---@field green string Green semantic hue used by strings, additions, success states, and positive messages.
+---@field red string Red semantic hue used by errors, deletions, exceptions, and destructive states.
+---@field yellow string Yellow semantic hue used by warnings, changes, and pending states.
+---@field purple string Purple semantic hue used by constants, preprocessor groups, and special syntax.
+---@field cyan string Cyan semantic hue used by hints and auxiliary information.
+---@field orange string Orange semantic hue used by numeric and boolean literals.
+---@field olive string Warm olive hue used by the current line number and tertiary headings.
+-- Bright terminal variants
+---@field bright_green string Bright ANSI green used for terminal color 10.
+---@field bright_blue string Bright ANSI blue used for terminal color 12.
+---@field bright_purple string Bright ANSI purple used for terminal color 13.
+---@field bright_cyan string Bright ANSI cyan used for terminal color 14.
+-- Diff backgrounds
+---@field diff_add string Background for added lines and addition previews.
+---@field diff_del string Background for deleted lines and deletion previews.
+---@field diff_add_inline string Stronger background for inline added text.
+---@field diff_del_inline string Stronger background for inline deleted text.
+---@field diff_add_strong string Strongest background for emphasized additions.
+---@field diff_del_strong string Strongest background for emphasized deletions.
+---@field diff_change string Background for changed lines.
+---@field diff_text string Background for changed text within changed lines.
+-- Diagnostic backgrounds
+---@field diag_error string Background for virtual-text and diagnostic error emphasis.
+---@field diag_warn string Background for virtual-text and diagnostic warning emphasis.
+---@field diag_info string Background for virtual-text and diagnostic information emphasis.
+---@field diag_hint string Background for virtual-text and diagnostic hint emphasis.
+-- UI elements
+---@field sel string Background for visual selections, selected menu items, and focused rows.
+---@field match string Background for search matches and active snippet placeholders.
+---@field indent string Foreground for ordinary indentation guides and whitespace markers.
+---@field indent_active string Foreground for active indentation scopes.
+---@field line_nr string Foreground for ordinary line numbers.
+-- Git signs
+---@field gsign_add string Foreground for unstaged added-line signs.
+---@field gsign_change string Foreground for unstaged changed-line signs.
+---@field gsign_del string Foreground for unstaged deleted-line signs.
+---@field gsign_untracked string Foreground for untracked-line signs.
+---@field gsign_add_staged string Foreground for staged added-line signs.
+---@field gsign_change_staged string Foreground for staged changed-line signs.
+---@field gsign_del_staged string Foreground for staged deleted-line signs.
+---@field gsign_untracked_staged string Foreground for staged untracked-line signs.
 
 ---@param background 'dark'|'light'
 ---@return TokenPalette

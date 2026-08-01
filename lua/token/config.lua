@@ -1,81 +1,98 @@
+---Semantic color palette exposed to configuration callbacks.
 ---@alias token.Palette TokenPalette
 
----@class token.HighlightAttributes
----@field bold? boolean Enable bold text.
----@field italic? boolean Enable italic text.
----@field underline? boolean Enable underlined text.
----@field undercurl? boolean Enable undercurled text.
----@field strikethrough? boolean Enable struck-through text.
+---Highlight name-to-definition mapping accepted by Neovim's highlight API.
+---@alias token.HighlightMap table<string, vim.api.keyset.highlight>
 
----@class token.Styles
----@field booleans? token.HighlightAttributes
----@field comments? token.HighlightAttributes
----@field conditionals? token.HighlightAttributes Applied after `keywords`.
----@field constants? token.HighlightAttributes
----@field functions? token.HighlightAttributes
----@field keywords? token.HighlightAttributes
----@field loops? token.HighlightAttributes Applied after `keywords`.
----@field numbers? token.HighlightAttributes
----@field operators? token.HighlightAttributes
----@field preprocessor? token.HighlightAttributes
----@field properties? token.HighlightAttributes Applied after `variables`.
----@field strings? token.HighlightAttributes
----@field types? token.HighlightAttributes
----@field variables? token.HighlightAttributes
+---Callback invoked after declarative palette overrides.
+---@alias token.OnColors fun(colors: token.Palette, background: 'dark'|'light')
 
----@class token.Colors
----@field all? table<string, string> Colors shared by both variants.
----@field dark? table<string, string> Dark overrides applied after `all`.
----@field light? table<string, string> Light overrides applied after `all`.
+---Callback invoked after highlight overrides and before global attribute gates.
+---@alias token.OnHighlights fun(highlights: token.HighlightMap, colors: token.Palette, background: 'dark'|'light')
 
----@class token.Highlights
----@field all? table<string, vim.api.keyset.highlight> Complete definitions shared by both variants.
----@field dark? table<string, vim.api.keyset.highlight> Complete dark definitions applied after `all`.
----@field light? table<string, vim.api.keyset.highlight> Complete light definitions applied after `all`.
+---Text attributes accepted by global gates and semantic style overlays.
+---@class (exact) token.HighlightAttributes
+---@field bold? boolean Set bold text. Global gate default: true; style overlay default: unset.
+---@field italic? boolean Set italic text. Global gate default: true; style overlay default: unset.
+---@field underline? boolean Set underlined text. Global gate default: true; style overlay default: unset.
+---@field undercurl? boolean Set undercurled text. Global gate default: true; style overlay default: unset.
+---@field strikethrough? boolean Set struck-through text. Global gate default: true; style overlay default: unset.
 
----@class token.Plugins
----@field all? boolean Enable every integration unless explicitly overridden.
----@field blink? boolean
----@field blink_indent? boolean
----@field claudecode? boolean
----@field cmp? boolean
----@field dap_ui? boolean
----@field diffview? boolean
----@field flash? boolean
----@field fugitive? boolean
----@field fzf? boolean
----@field gitsigns? boolean
----@field hlchunk? boolean
----@field ibl? boolean
----@field lazy? boolean
----@field markview? boolean
----@field mason? boolean
----@field matchup? boolean
----@field mini? boolean
----@field neo_tree? boolean
----@field neogit? boolean
----@field noice? boolean
----@field nvimtree? boolean
----@field oil? boolean
----@field render_markdown? boolean
----@field snacks? boolean
----@field telescope? boolean
----@field todo_comments? boolean
----@field treesitter_context? boolean
----@field trouble? boolean
----@field whichkey? boolean
+---Attribute overlays for semantic syntax categories. Defaults to no overlays.
+---More-specific categories are applied after overlapping broader categories.
+---@class (exact) token.Styles
+---@field booleans? token.HighlightAttributes Style booleans and built-in constants after `constants`.
+---@field comments? token.HighlightAttributes Style comments, documentation comments, and comment annotations.
+---@field conditionals? token.HighlightAttributes Style conditional keywords after `keywords`.
+---@field constants? token.HighlightAttributes Style constants, macros, and booleans.
+---@field functions? token.HighlightAttributes Style functions, methods, calls, and constructors.
+---@field keywords? token.HighlightAttributes Style statements and all keyword captures.
+---@field loops? token.HighlightAttributes Style loop and repeat keywords after `keywords`.
+---@field numbers? token.HighlightAttributes Style integer and floating-point literals.
+---@field operators? token.HighlightAttributes Style operators.
+---@field preprocessor? token.HighlightAttributes Style imports, directives, and macros after `keywords`.
+---@field properties? token.HighlightAttributes Style properties and members after `variables`.
+---@field strings? token.HighlightAttributes Style strings, characters, paths, URLs, regular expressions, and escapes.
+---@field types? token.HighlightAttributes Style types, definitions, storage classes, structures, and constructors.
+---@field variables? token.HighlightAttributes Style identifiers, variables, parameters, properties, and members.
 
----@class token.Config
----@field transparent? boolean Clear base surfaces while preserving semantic backgrounds.
----@field terminal_colors? boolean Set Neovim's ANSI terminal palette. Defaults to true.
----@field dim_inactive? boolean Use quieter colors for inactive windows.
----@field attributes? token.HighlightAttributes Global attribute gates applied last.
----@field styles? token.Styles Semantic attribute overlays.
----@field colors? token.Colors Declarative palette overrides.
----@field highlights? token.Highlights Declarative complete highlight definitions.
----@field plugins? token.Plugins Opt-in plugin integrations.
----@field on_colors? fun(colors: token.Palette, background: 'dark'|'light') Mutate the configured palette in place.
----@field on_highlights? fun(highlights: table<string, vim.api.keyset.highlight>, colors: token.Palette, background: 'dark'|'light') Mutate final highlights in place.
+---Palette overrides. Keys may replace built-in colors or add colors for callbacks; values must be `#RRGGBB` strings.
+---@class (exact) token.Colors
+---@field all? table<string, string> Colors shared by both variants. Defaults to an empty table.
+---@field dark? table<string, string> Dark overrides applied after `all`. Defaults to an empty table.
+---@field light? table<string, string> Light overrides applied after `all`. Defaults to an empty table.
+
+---Complete highlight definitions applied after semantic styles and surface options.
+---@class (exact) token.Highlights
+---@field all? token.HighlightMap Definitions shared by both variants. Defaults to an empty table.
+---@field dark? token.HighlightMap Dark definitions replacing entries from `all`. Defaults to an empty table.
+---@field light? token.HighlightMap Light definitions replacing entries from `all`. Defaults to an empty table.
+
+---Optional plugin highlight integrations. Omitted keys inherit `all`; `all` defaults to false.
+---@class (exact) token.Plugins
+---@field all? boolean Enable every integration unless explicitly overridden. Default: false.
+---@field blink? boolean Enable highlights for blink.cmp.
+---@field blink_indent? boolean Enable highlights for blink.indent.
+---@field claudecode? boolean Enable highlights for claudecode.nvim.
+---@field cmp? boolean Enable highlights for nvim-cmp.
+---@field dap_ui? boolean Enable highlights for nvim-dap-ui.
+---@field diffview? boolean Enable highlights for diffview.nvim.
+---@field flash? boolean Enable highlights for flash.nvim.
+---@field fugitive? boolean Enable highlights for vim-fugitive.
+---@field fzf? boolean Enable highlights for fzf-lua.
+---@field gitsigns? boolean Enable highlights for gitsigns.nvim.
+---@field hlchunk? boolean Enable highlights for hlchunk.nvim.
+---@field ibl? boolean Enable highlights for indent-blankline.nvim.
+---@field lazy? boolean Enable highlights for lazy.nvim.
+---@field markview? boolean Enable highlights for markview.nvim.
+---@field mason? boolean Enable highlights for mason.nvim.
+---@field matchup? boolean Enable highlights for vim-matchup.
+---@field mini? boolean Enable highlights for supported mini.nvim modules.
+---@field neo_tree? boolean Enable highlights for neo-tree.nvim.
+---@field neogit? boolean Enable highlights for neogit.
+---@field noice? boolean Enable highlights for noice.nvim.
+---@field nvimtree? boolean Enable highlights for nvim-tree.lua.
+---@field oil? boolean Enable highlights for oil.nvim.
+---@field render_markdown? boolean Enable highlights for render-markdown.nvim.
+---@field snacks? boolean Enable highlights for snacks.nvim.
+---@field telescope? boolean Enable highlights for telescope.nvim.
+---@field todo_comments? boolean Enable highlights for todo-comments.nvim.
+---@field treesitter_context? boolean Enable highlights for nvim-treesitter-context.
+---@field trouble? boolean Enable highlights for trouble.nvim.
+---@field whichkey? boolean Enable highlights for which-key.nvim.
+
+---Configuration for `require('token').setup()`. Each call starts from defaults and deep-merges these options.
+---@class (exact) token.Config
+---@field transparent? boolean Clear ordinary UI surfaces while preserving semantic backgrounds. Default: false.
+---@field terminal_colors? boolean Set Neovim terminal colors 0 through 15 when loading. Default: true.
+---@field dim_inactive? boolean Use quieter colors for inactive windows. Default: false.
+---@field attributes? token.HighlightAttributes Global attribute gates applied last. Defaults to all enabled.
+---@field styles? token.Styles Semantic attribute overlays applied to Token's built-in groups.
+---@field colors? token.Colors Declarative palette overrides applied before `on_colors`.
+---@field highlights? token.Highlights Complete highlight definitions applied before `on_highlights`.
+---@field plugins? token.Plugins Opt-in plugin integrations. Defaults to `{ all = false }`.
+---@field on_colors? token.OnColors Edit the palette after declarative overrides.
+---@field on_highlights? token.OnHighlights Edit final highlights before global attribute gates.
 
 local M = {}
 

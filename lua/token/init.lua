@@ -1,11 +1,18 @@
----@class token.Module
+---Token colorscheme configuration and loading API.
+---@class (exact) token.Module
+---@field setup fun(opts?: token.Config) Store configuration for subsequent colorscheme loads.
+---@field load fun() Load Token for the current value of `vim.o.background`.
 local M = {}
 
----@param opts? token.Config
+---Replace the stored configuration with defaults deep-merged with `opts`.
+---This does not reload an already active colorscheme.
+---@param opts? token.Config Configuration options. Omit to restore defaults.
 function M.setup(opts)
   require('token.config').setup(opts)
 end
 
+---Load Token for the current value of `vim.o.background`.
+---Uses a matching compiled cache when available and otherwise builds the highlights dynamically.
 function M.load()
   local bg = vim.o.background
 
