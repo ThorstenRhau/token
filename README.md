@@ -64,6 +64,7 @@ corrupt it is deleted automatically and the dynamic path is used as fallback.
 ## Supported plugins
 
 - blink.cmp
+- blink.indent
 - claudecode.nvim
 - diffview.nvim
 - flash.nvim
@@ -95,6 +96,20 @@ corrupt it is deleted automatically and the dynamic path is used as fallback.
 - trouble.nvim
 - vim-matchup
 - which-key.nvim
+
+blink.indent defaults to rainbow scope guides. To use Token's muted guides and
+single brighter neutral scope guide, configure it with Token's neutral groups:
+
+```lua
+require('blink.indent').setup({
+  scope = {
+    highlights = { 'BlinkIndentScope' },
+    underline = {
+      highlights = { 'BlinkIndentUnderline' },
+    },
+  },
+})
+```
 
 ## Contrib themes
 

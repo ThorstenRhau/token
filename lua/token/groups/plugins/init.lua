@@ -1,5 +1,6 @@
 local plugin_modules = {
   'token.groups.plugins.blink',
+  'token.groups.plugins.blink_indent',
   'token.groups.plugins.claudecode',
   'token.groups.plugins.cmp',
   'token.groups.plugins.dap_ui',
