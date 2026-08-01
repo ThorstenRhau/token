@@ -1,6 +1,6 @@
 ---@param p TokenPalette
 ---@return table<string, vim.api.keyset.highlight>
-local function load(p)
+local function load(p, plugins)
   return vim.tbl_extend(
     'force',
     require('token.groups.editor')(p),
@@ -9,7 +9,7 @@ local function load(p)
     require('token.groups.lsp')(p),
     require('token.groups.diagnostics')(p),
     require('token.groups.diff')(p),
-    require('token.groups.plugins').load(p)
+    require('token.groups.plugins').load(p, plugins)
   )
 end
 

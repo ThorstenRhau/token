@@ -1,27 +1,57 @@
 local M = {}
 
+local function stable(value)
+  local kind = type(value)
+  if kind == 'function' then
+    local ok, dumped = pcall(string.dump, value)
+    if not ok then
+      error('token: callbacks must be dumpable Lua functions for compilation', 0)
+    end
+    return 'function:' .. vim.fn.sha256(dumped)
+  end
+  if kind ~= 'table' then
+    return kind .. ':' .. tostring(value)
+  end
+  local keys = vim.tbl_keys(value)
+  table.sort(keys, function(a, b)
+    return stable(a) < stable(b)
+  end)
+  local parts = {}
+  for _, key in ipairs(keys) do
+    parts[#parts + 1] = stable(key) .. '=' .. stable(value[key])
+  end
+  return '{' .. table.concat(parts, ',') .. '}'
+end
+
+function M.fingerprint()
+  return vim.fn.sha256(stable(require('token.config').get())):sub(1, 16)
+end
+
 ---@param background 'dark'|'light'
 ---@return string
 function M.path(background)
-  return vim.fn.stdpath('cache') .. '/token/' .. background .. '.lua'
+  return vim.fn.stdpath('cache') .. '/token/' .. background .. '-' .. M.fingerprint() .. '.lua'
 end
 
----@param t table<string, any>
----@return string
-local function serialize_hl(t)
-  local keys = vim.tbl_keys(t)
-  table.sort(keys)
+local function serialize(value)
+  local kind = type(value)
+  if kind == 'string' then
+    return string.format('%q', value)
+  end
+  if kind == 'boolean' or kind == 'number' then
+    return tostring(value)
+  end
+  if kind ~= 'table' then
+    error('token: compiled highlights do not support ' .. kind .. ' values', 0)
+  end
+
+  local keys = vim.tbl_keys(value)
+  table.sort(keys, function(a, b)
+    return stable(a) < stable(b)
+  end)
   local parts = {}
   for _, k in ipairs(keys) do
-    local v = t[k]
-    local tv = type(v)
-    if tv == 'string' then
-      parts[#parts + 1] = k .. '=' .. string.format('%q', v)
-    elseif tv == 'boolean' then
-      parts[#parts + 1] = k .. '=' .. tostring(v)
-    elseif tv == 'number' then
-      parts[#parts + 1] = k .. '=' .. v
-    end
+    parts[#parts + 1] = '[' .. serialize(k) .. ']=' .. serialize(value[k])
   end
   return '{' .. table.concat(parts, ',') .. '}'
 end
@@ -30,9 +60,7 @@ end
 ---@return string source
 local function build_source(background)
   local is_dark = background == 'dark'
-  local p = require('token.palette')(background)
-  local groups = require('token.groups')(p)
-  local terminal = require('token.terminal').colors(p, is_dark)
+  local p, groups = require('token.theme').build(background)
 
   local lines = {
     "vim.cmd('hi clear')",
@@ -43,11 +71,14 @@ local function build_source(background)
   local names = vim.tbl_keys(groups)
   table.sort(names)
   for _, name in ipairs(names) do
-    lines[#lines + 1] = 'H(0,' .. string.format('%q', name) .. ',' .. serialize_hl(groups[name]) .. ')'
+    lines[#lines + 1] = 'H(0,' .. string.format('%q', name) .. ',' .. serialize(groups[name]) .. ')'
   end
 
-  for i = 0, 15 do
-    lines[#lines + 1] = 'vim.g.terminal_color_' .. i .. '=' .. string.format('%q', terminal[i])
+  if require('token.config').get().terminal_colors then
+    local terminal = require('token.terminal').colors(p, is_dark)
+    for i = 0, 15 do
+      lines[#lines + 1] = 'vim.g.terminal_color_' .. i .. '=' .. string.format('%q', terminal[i])
+    end
   end
 
   return table.concat(lines, '\n') .. '\n'
@@ -62,7 +93,7 @@ function M.compile()
   local ok, err = pcall(function()
     for _, bg in ipairs({ 'dark', 'light' }) do
       for key in pairs(package.loaded) do
-        if key:match('^token%.') and key ~= 'token.compile' then
+        if key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config' then
           package.loaded[key] = nil
         end
       end

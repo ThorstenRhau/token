@@ -3,11 +3,19 @@ ROOT             := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 STYLUAC          := $(ROOT)/.stylua.toml
 SELENEC          := $(ROOT)/selene.toml
 
-.PHONY: all check format format-check lint contrib contrib-verify install-hooks help
+.PHONY: all check format format-check lint test benchmark contrib contrib-verify install-hooks help
 
 all: format lint contrib
 
-check: format-check lint contrib-verify
+check: format-check lint test contrib-verify
+
+test:
+	@cache_dir="$$(mktemp -d)"; trap 'rm -rf "$$cache_dir"' EXIT; \
+		XDG_CACHE_HOME="$$cache_dir" nvim --headless -u NONE -l "$(ROOT)/tests/headless.lua"
+
+benchmark:
+	@cache_dir="$$(mktemp -d)"; trap 'rm -rf "$$cache_dir"' EXIT; \
+		XDG_CACHE_HOME="$$cache_dir" nvim --headless -u NONE -l "$(ROOT)/tests/benchmark.lua"
 
 # Install git hooks
 install-hooks:
@@ -41,6 +49,8 @@ help:
 	@echo "  format         - Format Lua files with stylua"
 	@echo "  format-check   - Check Lua formatting with stylua"
 	@echo "  lint           - Lint Lua files with selene"
+	@echo "  test           - Run dependency-free headless Neovim tests"
+	@echo "  benchmark      - Report filtered/all load medians and cache sizes"
 	@echo "  contrib        - Generate contrib/ theme files"
 	@echo "  contrib-verify - Check contrib/ files are up to date"
 	@echo "  install-hooks  - Enable git pre-commit hook"

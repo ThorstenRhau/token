@@ -1,7 +1,23 @@
+---@class token.Module
 local M = {}
+
+---@param opts? token.Config
+function M.setup(opts)
+  require('token.config').setup(opts)
+end
 
 function M.load()
   local bg = vim.o.background
+
+  -- Keep user configuration while ensuring disabled integrations leave package.loaded.
+  for key in pairs(package.loaded) do
+    if
+      (key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config')
+      or key == 'lualine.themes.token'
+    then
+      package.loaded[key] = nil
+    end
+  end
 
   -- Try compiled cache first
   local compile = require('token.compile')
@@ -14,22 +30,15 @@ function M.load()
   vim.cmd('hi clear')
   vim.g.colors_name = 'token'
 
-  -- Clear cached modules so palette/groups pick up the new background
-  for key in pairs(package.loaded) do
-    if key == 'token' or (key:match('^token%.') and key ~= 'token.compile') or key == 'lualine.themes.token' then
-      package.loaded[key] = nil
-    end
-  end
-
-  local p = require('token.palette')(bg)
-  local groups = require('token.groups')(p)
+  local p, groups = require('token.theme').build(bg)
 
   for group, hl in pairs(groups) do
     vim.api.nvim_set_hl(0, group, hl)
   end
 
-  local is_dark = bg == 'dark'
-  require('token.terminal').set(p, is_dark)
+  if require('token.config').get().terminal_colors then
+    require('token.terminal').set(p, bg == 'dark')
+  end
 end
 
 return M

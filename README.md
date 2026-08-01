@@ -1,9 +1,7 @@
 # token
 
-Token is a warm, muted Neovim 0.12+ colorscheme that is written in Lua. Dark and
-light variants, no configuration. There is no setup function. Load it and it
-works. The idea is simple: a theme you never configure is a theme you stop
-thinking about.
+Token is a warm, muted Neovim 0.12+ colorscheme with dark and light variants,
+selective plugin integrations, and an optional configuration API.
 
 Terminal themes for Ghostty, fish, delta, tmux and others are generated from the
 same palette file, so everything matches without extra work.
@@ -18,6 +16,7 @@ same palette file, so everything matches without extra work.
 - Legacy syntax group coverage for non-Treesitter filetypes
 - Terminal color support (ANSI colors 0–15)
 - Lualine theme included
+- Opt-in plugin integrations and configuration-keyed bytecode compilation
 - Contrib themes for external tools and apps generated from the same palette
 
 ## Showcase
@@ -40,11 +39,127 @@ vim.pack.add({ 'https://github.com/ThorstenRhau/token' })
 ## Usage
 
 ```lua
+---@module 'token'
+local token = require('token')
+
+---@type token.Config
+local config = {
+  transparent = false,
+  plugins = { gitsigns = true, snacks = true },
+}
+
+token.setup(config)
+
 vim.cmd.colorscheme('token')
 ```
 
 Respects `vim.o.background`. Set `dark` or `light` before loading the
 colorscheme, or change it at runtime to switch variants.
+
+`setup()` is optional. Each call starts from the defaults and deep-merges the
+provided options. It does not reload an active colorscheme automatically.
+
+## Token v2
+
+Token is configurable starting with v2. Call `require('token').setup()` before
+loading the colorscheme to customize its appearance, semantic styles, palette,
+highlights, terminal colors, and plugin integrations. Calling `setup()` is
+optional, so the minimal `vim.cmd.colorscheme('token')` configuration continues
+to work.
+
+V2 also changes plugin integrations from eagerly loading every supported module
+to a core-only default. Select integrations under `plugins`, or use
+`plugins = { all = true }` to retain the v1 integration behavior.
+
+## Configuration
+
+```lua
+---@module 'token'
+local token = require('token')
+
+---@type token.Config
+local config = {
+  -- Clear base UI surfaces while preserving semantic backgrounds.
+  transparent = false,
+
+  -- Set Neovim's ANSI terminal palette when the colorscheme loads.
+  terminal_colors = true,
+
+  -- Give inactive windows a quieter foreground and background.
+  dim_inactive = false,
+
+  -- Disable an attribute globally, including in overrides and plugin groups.
+  attributes = {
+    bold = true,
+    italic = true,
+    underline = true,
+    undercurl = true,
+    strikethrough = true,
+  },
+
+  -- Overlay attributes on semantic highlight categories.
+  styles = {
+    booleans = {},
+    comments = {},
+    conditionals = {},
+    constants = {},
+    functions = {},
+    keywords = {},
+    loops = {},
+    numbers = {},
+    operators = {},
+    preprocessor = {},
+    properties = {},
+    strings = {},
+    types = {},
+    variables = {},
+  },
+
+  -- Apply shared colors first, then the active background variant.
+  colors = { all = {}, dark = {}, light = {} },
+
+  -- Replace complete highlight definitions; variant entries take precedence.
+  highlights = { all = {}, dark = {}, light = {} },
+
+  -- Integrations are opt-in. `all = true` restores v1 behavior.
+  plugins = {
+    all = false,
+    gitsigns = true,
+    snacks = true,
+  },
+
+  -- Mutate the configured palette after declarative color overrides.
+  on_colors = function(colors, background) end,
+
+  -- Mutate final highlights before global attribute gates are applied.
+  on_highlights = function(highlights, colors, background) end,
+}
+
+token.setup(config)
+```
+
+Style entries accept the boolean attributes shown under `attributes`. They are
+overlaid on Token's existing definitions. Broad categories run before their
+more specific counterparts: `keywords` before `preprocessor`, `conditionals`,
+and `loops`, `constants` before `booleans`, and `variables` before `properties`.
+
+Color overrides apply in the order `all`, current background, then `on_colors`.
+Existing palette keys and additional keys must contain `#RRGGBB` values.
+Highlight entries are complete `nvim_set_hl` definitions: a variant entry
+replaces an entry with the same name from `all`. `on_highlights` runs afterward
+and can mutate existing definitions. Both callbacks mutate their arguments in
+place and receive an explicit `dark` or `light` background.
+
+Transparency clears Token's base surfaces while retaining cursor-line,
+selection, search, diff, diagnostic, and accent backgrounds. Highlight
+overrides and callbacks can restore individual backgrounds. `dim_inactive`
+uses `fg1` and `bg1` for core and enabled-plugin `NormalNC` groups. Global
+attribute gates run last and also apply to plugin, callback, and Lualine output.
+Links to targets outside Token are preserved because Neovim links cannot combine
+inherited styling with attribute overrides.
+
+Unknown options, style categories, attributes, and plugin names are rejected
+with a `token:` error.
 
 ## Compilation
 
@@ -55,47 +170,29 @@ pre-compile the theme into bytecode:
 :TokenCompile
 ```
 
-This writes compiled dark and light variants to `stdpath('cache')/token/`. On
-next load the cached bytecode is used instead of the dynamic highlight path.
+This writes configuration-keyed dark and light variants to
+`stdpath('cache')/token/`. On next load, matching cached bytecode is used instead
+of the dynamic highlight path. Compiled output contains only enabled
+integrations and omits terminal assignments when `terminal_colors = false`.
 
-Rerun `:TokenCompile` after updating the plugin. If the cache becomes stale or
-corrupt it is deleted automatically and the dynamic path is used as fallback.
+Rerun `:TokenCompile` after changing Token's source or any global, captured, or
+external inputs read by callbacks. Static configuration and callback-body
+changes use a different cache key and fall back dynamically until recompiled.
+Legacy unkeyed caches are ignored. A corrupt matching cache is deleted
+automatically and the dynamic path is used as fallback.
 
 ## Supported plugins
 
-- blink.cmp
-- blink.indent
-- claudecode.nvim
-- diffview.nvim
-- flash.nvim
-- fugitive.vim
-- fzf-lua
-- gitsigns.nvim
-- hlchunk.nvim
-- indent-blankline.nvim
-- lazy.nvim
-- lualine.nvim
-- markview.nvim
-- mason.nvim
-- mini.clue
-- mini.icons
-- mini.statusline
-- mini.surround
-- neo-tree.nvim
-- neogit
-- noice.nvim
-- nvim-cmp
-- nvim-dap-ui
-- nvim-tree.lua
-- oil.nvim
-- render-markdown.nvim
-- snacks.nvim
-- telescope.nvim
-- todo-comments.nvim
-- treesitter-context
-- trouble.nvim
-- vim-matchup
-- which-key.nvim
+Plugin integrations are opt-in and the default is core-only. Set
+`plugins = { all = true }` to restore the historical behavior of loading every
+integration. An explicit boolean overrides `all`. Keys match the module
+filenames below; Lualine remains available on demand and is not selected here.
+
+`blink`, `blink_indent`, `claudecode`, `cmp`, `dap_ui`, `diffview`, `flash`,
+`fugitive`, `fzf`, `gitsigns`, `hlchunk`, `ibl`, `lazy`, `markview`, `mason`,
+`matchup`, `mini`, `neo_tree`, `neogit`, `noice`, `nvimtree`, `oil`,
+`render_markdown`, `snacks`, `telescope`, `todo_comments`,
+`treesitter_context`, `trouble`, and `whichkey`.
 
 blink.indent defaults to rainbow scope guides. To use Token's muted guides and
 single brighter neutral scope guide, configure it with Token's neutral groups:

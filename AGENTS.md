@@ -13,9 +13,11 @@ token/
 │   ├── lualine/themes/
 │   │   └── token.lua          # Lualine theme
 │   └── token/
-│       ├── init.lua            # Public API: load()
+│       ├── init.lua            # Public API: setup(), load()
+│       ├── config.lua          # Persistent normalized configuration
 │       ├── compile.lua         # Bytecode compilation and cache loading
 │       ├── palette.lua         # Color definitions for dark/light
+│       ├── theme.lua           # Shared configured variant builder
 │       ├── terminal.lua        # ANSI terminal colors 0..15
 │       └── groups/
 │           ├── init.lua        # Group loader (merges all modules)
@@ -97,16 +99,19 @@ token/
 - `colors/token.lua` is the Neovim entry point, discovered by
   `:colorscheme token`
 - `init.lua` orchestrates loading: tries compiled bytecode cache first, falls
-  back to dynamic path (hi clear, bust module cache, load palette, merge groups,
-  apply via `nvim_set_hl`, set terminal colors)
+  back to the dynamic configured variant path
+- `config.lua` validates options and persists normalized configuration across
+  Token's runtime module cache clearing
+- `theme.lua` applies palette overrides, enabled integrations, styles, surfaces,
+  user highlights, callbacks, and global attribute gates in shared order
 - `compile.lua` handles `:TokenCompile` (generates bytecode cache to
-  `stdpath('cache')/token/`) and cache loading
+  `stdpath('cache')/token/`) and configuration-fingerprinted cache loading
 - `palette.lua` returns a function that takes `'dark'|'light'` and returns a
   flat table of 49 semantic hex color keys
 - `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp,
   diagnostics, diff, plugins
-- `groups/plugins/init.lua` loads individual plugin files from an explicit
-  sorted list
+- `groups/plugins/init.lua` exposes a keyed registry and requires enabled plugin
+  modules in sorted order
 - Each group module exports a function `(palette) -> { [group] = hl_opts }`
 - `terminal.lua` exports `{ colors, set }`: `colors(p, is_dark)` returns the
   0..15 ANSI color table (pure Lua), `set(p, is_dark)` applies it via `vim.g`
@@ -118,8 +123,8 @@ token/
 
 - **Add a highlight group**: add it to the appropriate `groups/*.lua` file
 - **Add a palette color**: add it to both dark and light tables in `palette.lua`
-- **Add plugin support**: create `groups/plugins/<name>.lua`, add the module
-  path to the list in `groups/plugins/init.lua`
+- **Add plugin support**: create `groups/plugins/<name>.lua`, add its filename
+  and module path to the registry in `groups/plugins/init.lua`
 - **Regenerate contrib themes**: `make contrib` (run after changing
   `palette.lua`)
 - **Compile for faster loading**: `:TokenCompile` (rerun after updating the
@@ -135,13 +140,15 @@ token/
 make check                     # Read-only formatting, lint, and contrib checks
 make format                    # Format with stylua
 make lint                      # Lint with selene
+make test                      # Run dependency-free headless Neovim tests
+make benchmark                 # Report load medians, group counts, cache sizes
 make contrib                   # Regenerate contrib/ theme files
 make contrib-verify            # Check contrib/ files are up to date
 make all                       # Format, lint, and generate contrib
 ```
 
-No test suite. The pre-commit hook runs `make check`; run `make all` before
-committing changes that need formatting or contrib regeneration.
+The pre-commit hook runs `make check`; run `make all` before committing changes
+that need formatting or contrib regeneration.
 
 ## Style
 
