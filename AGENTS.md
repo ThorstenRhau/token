@@ -85,6 +85,7 @@ token/
 │   ├── tmux/
 │   ├── vscode/
 │   ├── windows-terminal/
+│   ├── xcode/
 │   └── zsh/
 ├── Makefile
 ├── selene.toml

@@ -233,6 +233,7 @@ palette; rebuild after palette changes with `make contrib`.
 | [tmux](https://github.com/tmux/tmux)                                                     | `contrib/tmux/token-{dark,light}.conf`                    | `source-file /path/to/token-dark.conf` in tmux.conf                                                              |
 | [VS Code](https://code.visualstudio.com/)                                                | `contrib/vscode/`                                         | Run `scripts/install_vscode_theme.sh`, then select `Token Dark` or `Token Light`                                 |
 | [Windows Terminal](https://github.com/microsoft/terminal)                                | `contrib/windows-terminal/token.json`                     | Copy schemes into settings/fragments, then set `"colorScheme": { "dark": "Token Dark", "light": "Token Light" }` |
+| [Xcode](https://developer.apple.com/xcode/)                                              | `contrib/xcode/token-{dark,light}.xccolortheme`           | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/`, then select Token Dark or Token Light           |
 | [Zsh](https://www.zsh.org/)                                                              | `contrib/zsh/token-{dark,light}.zsh`                      | Source the selected file from `.zshrc` for matching `ls`, completion, fzf-tab, and prompt helper colors          |
 
 ## License
