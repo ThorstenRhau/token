@@ -112,6 +112,8 @@ local function markview(p)
     MarkviewGradient7 = { fg = p.fg1 },
     MarkviewGradient8 = { fg = p.accent2 },
     MarkviewGradient9 = { fg = p.accent },
+    -- Current presets reference Gradient10 although Markview's generator stops at 9.
+    MarkviewGradient10 = { link = 'MarkviewGradient9' },
   }
 end
 

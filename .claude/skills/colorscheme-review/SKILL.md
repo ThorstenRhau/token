@@ -4,65 +4,77 @@ description: Read-only audit of the token colorscheme for palette integrity, mod
 user-invocable: true
 ---
 
-Perform a **read-only** structured audit of this Neovim colorscheme. Do NOT modify any files. Do NOT create any files (no report saved to disk). Read everything, analyze, and produce a single markdown report printed to the conversation.
+Perform a **read-only** structured audit of this Neovim colorscheme. Do not create or modify repository files, and do not save the report to disk. Temporary state outside the repository is allowed only for isolated runtime checks and must be removed afterward. Produce a single markdown report in the conversation.
 
 ## Setup
 
 Before starting, read these files to understand the project:
 
 1. `CLAUDE.md` (project conventions)
-2. `colors/token.lua`, `plugin/token.lua`, `lua/token/init.lua`, `lua/token/compile.lua` (entry points and load flow)
-3. `lua/token/palette.lua` (dark and light color tables)
-4. `lua/token/groups/init.lua`, `lua/token/groups/plugins/init.lua` (group merge order and plugin list)
-5. `lua/token/terminal.lua`, `lua/lualine/themes/token.lua`
-6. `Makefile`, `.stylua.toml`, `selene.toml`, `neovim.yaml`, `taplo.toml`
-7. `scripts/*.lua` (contrib and library generators)
+2. `README.md` (public API, integrations, contrib inventory, and installation)
+3. `colors/token.lua`, `plugin/token.lua`, `lua/token/init.lua`, `lua/token/config.lua`, `lua/token/theme.lua`, and `lua/token/compile.lua`
+4. `lua/token/palette.lua`, `lua/token/terminal.lua`, and `lua/lualine/themes/token.lua`
+5. `lua/token/groups/init.lua` and `lua/token/groups/plugins/init.lua`
+6. `Makefile`, `.stylua.toml`, `selene.toml`, `neovim.yaml`, `taplo.toml`, `.editorconfig`, and `.prettierrc.toml`
+7. `scripts/*.lua` and `scripts/install_vscode_theme.sh`
+8. `tests/*.lua`, `.githooks/*`, and both copies of this skill
+9. Every file under `contrib/`, including `contrib/emacs/README.md`
 
 ## Tool Usage
 
 Use the available tools to **verify findings before reporting**. A finding based only on grep without verification is not production-grade.
 
-### context7 MCP (library documentation)
+### Context7 MCP and official upstream sources
 
-Use `resolve-library-id` then `query-docs` to fetch current plugin documentation. Required when:
+Prefer `resolve-library-id` then `query-docs` when the plugin is discoverable. Otherwise use current official documentation, tagged source, types, parsers, or default themes. Record the exact source revision or release and access date.
 
-- Verifying current highlight group names for a plugin in `lua/token/groups/plugins/*.lua` (Phase 5)
-- Confirming a group has been renamed, added, or removed upstream before flagging it
+- Verify current highlight group names for every plugin in `lua/token/groups/plugins/*.lua` (Phase 5).
+- Confirm a group has been renamed, added, removed, or meaningfully omitted before flagging it.
+- Do not treat missing Context7 coverage as a reason to skip an integration when official source is available.
 
-Skip plugins whose documentation is not discoverable rather than guessing.
+Never establish a finding from third-party documentation alone.
 
-### LSP tool (Lua code intelligence)
+### LSP tool and runtime fallback
 
-Use LSP operations (hover, go-to-definition, find-references, document-symbols) to:
+When available, use LSP operations (hover, go-to-definition, find-references, document-symbols) to:
 
 - Confirm a grep match is an actual code reference, not a comment or string (Phase 2, 3)
 - Verify `p.<key>` references resolve to real fields on the palette table (Phase 3)
-- Check that group modules return a function with the expected signature (Phase 3)
+- Check that group modules return a function with the expected signature (Phase 3).
+
+If LSP is unavailable, use source inspection plus isolated headless Neovim assertions. State that fallback in the report.
 
 ### Bash (read-only targets only)
 
-The following are pre-approved and safe to run:
+The following repository commands are read-only and safe to run:
 
+- `make check`
 - `stylua --check --config-path .stylua.toml .`
 - `selene --config selene.toml lua/ colors/ plugin/`
+- `make test`
+- `make benchmark`
 - `make contrib-verify`
+- `git diff --check`
+
+Native syntax validators and installed application CLIs may be used with isolated temporary configuration and cache directories. Do not install missing applications or alter persistent application settings. Remove temporary state when finished.
 
 Do NOT run any command that mutates the working tree. `make format`, `make contrib`, and `make all` all rewrite files and are forbidden in this audit.
 
 ## Audit Phases
 
-Execute all 8 phases in order. For each finding, record a severity, an ID tag, the `file:line` reference, and a suggested fix.
+Execute all 10 phases in order. For each finding, record a severity, an ID tag, the `file:line` reference, upstream evidence, impact, the smallest suggested fix, and an acceptance test.
 
 ### Phase 1: Toolchain & Static Analysis
 
-1. Run `stylua --check --config-path .stylua.toml .` and capture the output.
+1. Run `make check` and capture the output. Run individual components when needed to isolate a failure.
+2. Run `stylua --check --config-path .stylua.toml .` and capture the output.
    - Format drift → Warning (list the files).
    - Missing `stylua` binary → Critical.
-2. Run `selene --config selene.toml lua/ colors/ plugin/` and capture the output.
+3. Run `selene --config selene.toml lua/ colors/ plugin/` and capture the output.
    - Lint errors → Critical.
    - Missing `selene` binary → Critical.
-3. Run `make contrib-verify`. Any out-of-date contrib file → Warning, naming the specific file and which palette change likely caused the drift. Missing `luajit` → Critical.
-4. Grep Lua sources under `lua/`, `colors/`, `plugin/` for deprecated Neovim APIs. Use LSP to confirm each match is a real call (not a comment or string) before reporting:
+4. Run `make test`, `make contrib-verify`, and `git diff --check`. Any failure → Critical, naming the exact failing contract.
+5. Grep Lua sources under `lua/`, `colors/`, `plugin/` for deprecated Neovim APIs. Confirm each match with LSP when available, otherwise inspect its call site before reporting:
    - `vim.cmd('hi ` / `vim.cmd("hi ` / `vim.cmd('highlight ` / `vim.cmd("highlight ` (use `vim.api.nvim_set_hl`)
    - `vim.tbl_flatten` (use `vim.iter(t):flatten():totable()`)
    - `vim.tbl_islist` (use `vim.islist`)
@@ -98,15 +110,15 @@ Execute all 8 phases in order. For each finding, record a severity, an ID tag, t
 2. Verify the list in `init.lua` is alphabetically sorted.
    - Out of order → Info.
 
-### Phase 5: Plugin API Verification (context7)
+### Phase 5: Plugin API Verification
 
-For each plugin group module in `lua/token/groups/plugins/`, resolve the upstream library via `resolve-library-id` and pull current highlight-group documentation via `query-docs`. Compare against the groups the module defines.
+For each plugin group module in `lua/token/groups/plugins/`, use Context7 when available or inspect the current official source and documentation. Compare the upstream highlight inventory with the groups the module defines, and headlessly load every integration.
 
 - Module sets a group that no longer appears in upstream docs (may be stale) → Info.
 - Upstream documents a highlight group that the module does not define or link → Info.
 - Upstream documents a renamed group (e.g., old name removed, new name added) → Warning.
 
-Batch one resolve + one query per plugin. Skip plugins whose docs are not discoverable — silence beats a guess.
+Do not report every optional group as missing. Report only renamed, removed, stale, or visibly meaningful omissions established by authoritative evidence.
 
 ### Phase 6: Load Path & Compile Cache
 
@@ -140,9 +152,29 @@ Cross-reference defined highlight groups against a curated list of commonly user
 
 Guard: only flag a group if it is absent **and** not targeted via `link = '<Group>'` elsewhere. Apply the zero-false-positive rule harder here than anywhere else — bias toward silence.
 
+### Phase 9: Contributions
+
+1. Reconcile all contribution directories, generated files, generator functions, README rows, generated headers, variants, and install instructions.
+2. For every contribution, record the current official documentation, schema, release, or source revision and access date.
+3. Validate every available JSON, XML/plist, CSS, TOML, YAML, Git config, and shell format with a native parser or published schema.
+4. Exercise installed CLI applications with temporary profiles. Put unavailable or state-changing GUI imports into a separate manual dark/light checklist.
+5. Trace rendered colors to `lua/token/palette.lua`, terminal slots, or documented format encodings. Do not report intentional low contrast or aesthetics as defects.
+6. Verify generator parity, deterministic output, dark/light identity, and stale-file detection. Recommend generator-source changes, not edits to generated files.
+
+The live contribution families are: bat, Blink Shell, Carapace, ChatGPT desktop, delta, Emacs, fish, fzf, Ghostty, GtkSourceView, iTerm2, Kitty, lazygit, Obsidian, ripgrep, Starship, Sublime Text, tmux, VS Code, Windows Terminal, Xcode, and Zsh.
+
+### Phase 10: Repository Tooling
+
+1. Verify Make dependencies, `.PHONY`, help, working-directory independence, read-only versus mutating targets, and exit propagation.
+2. Review all generators for deterministic ordering, escaping, safe relative paths, symlink handling, atomic publication, stale outputs, partial failures, and verify-mode non-mutation.
+3. Review `scripts/install_vscode_theme.sh` with `bash -n`, ShellCheck, and isolated install/replacement/rollback fixtures.
+4. Review tests for public contracts, both variants, dynamic/compiled parity, registry coverage, generator safety, cleanup, and failure paths.
+5. Confirm the benchmark is isolated, informational, and accurately labels what it measures.
+6. Reconcile StyLua, Selene, Neovim globals, Taplo, EditorConfig, Prettier, ignore rules, hooks, repository documentation, and both audit-skill copies.
+
 ## Output Format
 
-Produce a single markdown report with this structure, printed to the conversation (do not write to disk):
+Produce a single markdown report printed to the conversation. Include a coverage matrix for every Neovim subsystem, plugin integration, contribution family, documentation surface, and tooling component before the severity sections:
 
 ```markdown
 # Token Colorscheme Audit Report
@@ -154,6 +186,8 @@ Produce a single markdown report with this structure, printed to the conversatio
 | Critical | X     |
 | Warning  | X     |
 | Info     | X     |
+
+## Coverage
 
 ## Critical
 
@@ -175,26 +209,36 @@ Produce a single markdown report with this structure, printed to the conversatio
 - **File**: `path/to/file.lua:5`
 - **Issue**: Description
 - **Suggestion**: Optional improvement
+
+## Manual and Unverified Checks
+
+## Approval-Required Palette Proposals
+
+## Commands, Versions, and Repository State
 ```
 
 ## Severity Definitions
 
-- **Critical**: broken functionality right now. `make all` or `make contrib-verify` failures. Palette asymmetry. Unresolved `p.<key>` references. Plugin file/list mismatch. Missing load-path step. Gaps in terminal colors 0–15.
+- **Critical**: broken functionality right now. `make check` or `make contrib-verify` failures. Palette asymmetry. Unresolved `p.<key>` references. Plugin file/list mismatch. Missing load-path step. Gaps in terminal colors 0–15.
 - **Warning**: convention violations from CLAUDE.md. Deprecated APIs (still functional but should be updated). Hardcoded hex outside the allowed files. Missing lualine mode or section. Contrib drift. Renamed upstream highlight groups.
 - **Info**: consistency improvements, unused palette keys, missing standard Neovim groups, minor stylistic opportunities. Not wrong, just could be better.
 
 ## Rules
 
-1. Do NOT modify any files. This is a read-only audit.
-2. Do NOT create any files (no reports saved to disk). Print the report to the conversation only.
-3. Use context7 MCP (`resolve-library-id` then `query-docs`) to verify plugin highlight groups before flagging drift.
-4. Use the LSP tool to verify grep matches are real code, not comments or strings.
+1. Do not create or modify repository files. This is a read-only audit.
+2. Keep temporary runtime state outside the repository, remove it afterward, and print the report to the conversation only.
+3. Prefer Context7 for plugin documentation when it is available; otherwise use official source and record the fallback.
+4. Prefer LSP for code references when it is available; otherwise require source inspection plus headless runtime evidence.
 5. Be specific: always include `file:line` references.
 6. Do not flag intentional design choices:
    - `scripts/` and `contrib/` may contain hex literals (they generate external theme files).
    - Some palette keys exist primarily for terminal colors or lualine and may look unused from a narrow grep.
    - `ibl.lua` and `hlchunk.lua` coexist by design (different indentation plugins supported in parallel).
    - Both `neo_tree.lua` and `nvimtree.lua` coexist by design (two file tree plugins supported in parallel).
+   - README's Obsidian accent `#bc6a49` is an intentional light/dark compromise so automatic macOS appearance changes do not require a user-setting change.
 7. Group related findings under the same ID if they share a root cause (e.g., ten unused keys from one naming family = one finding).
 8. **Zero false positives is more important than coverage.** If a check might flag correct code, skip the finding rather than report it. The user can request deeper investigation.
 9. **Do not report the absence of optional features.** Missing support for a plugin not in the current list is not a finding. Missing a niche highlight group outside the Phase 8 curated list is not a finding.
+10. Do not report intentional low contrast, aesthetic preference, or a contrast ratio alone as a defect.
+11. Preserve established colors. Put any justified palette change in a separate approval-required section with authoritative semantics, a reproducible mapping problem, and dark/light impact.
+12. Finish by running `git status --short` and confirming the audit created no tracked or untracked files.

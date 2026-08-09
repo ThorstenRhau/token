@@ -18,7 +18,6 @@
     "Highlight10": "#938e87",
     "Highlight11": "#a8b56b",
     "Highlight12": "#d4914a",
-    "Keyword": "#c4956a",
     "KeywordAmbiguous": "#c4a855",
     "KeywordNegative": "#c67777",
     "KeywordPositive": "#7da47a",
@@ -30,9 +29,6 @@
     "LogLevelInfo": "#7b9ebd",
     "LogLevelTrace": "#938e87",
     "LogLevelWarning": "#c4a855",
-    "Positional1": "#7b9ebd",
-    "Positional2": "#7da47a",
-    "Positional3": "#c4956a",
     "Usage": "#938e87",
     "Value": "#d4cfc6"
   }

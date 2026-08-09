@@ -17,11 +17,14 @@ fish_color_operator d97757
 fish_color_escape a68bbf
 fish_color_autosuggestion 585855
 fish_color_cwd 7b9ebd
+fish_color_cwd_root c67777
 fish_color_user 7da47a
 fish_color_host 7b9ebd
 fish_color_host_remote c4956a
+fish_color_status c67777
 fish_color_cancel c67777
 fish_color_search_match --background=4a4030
+fish_color_history_current d97757
 fish_color_valid_path --underline
 
 # Pager
@@ -50,11 +53,14 @@ fish_color_operator 9a4929
 fish_color_escape 7c619a
 fish_color_autosuggestion b5b2ab
 fish_color_cwd 527594
+fish_color_cwd_root b05555
 fish_color_user 3f643c
 fish_color_host 527594
 fish_color_host_remote 876032
+fish_color_status b05555
 fish_color_cancel b05555
 fish_color_search_match --background=e8d8b0
+fish_color_history_current 9a4929
 fish_color_valid_path --underline
 
 # Pager
@@ -83,11 +89,14 @@ fish_color_operator d97757
 fish_color_escape a68bbf
 fish_color_autosuggestion 585855
 fish_color_cwd 7b9ebd
+fish_color_cwd_root c67777
 fish_color_user 7da47a
 fish_color_host 7b9ebd
 fish_color_host_remote c4956a
+fish_color_status c67777
 fish_color_cancel c67777
 fish_color_search_match --background=4a4030
+fish_color_history_current d97757
 fish_color_valid_path --underline
 
 # Pager

@@ -29,6 +29,8 @@ local rgb_fmt = lib.rgb_fmt
 local sgr_rgb = lib.sgr_rgb
 local sgr_bg_rgb = lib.sgr_bg_rgb
 local write_if_changed = lib.write_if_changed
+local list_files = lib.list_files
+local unexpected_paths = lib.unexpected_paths
 local extend_lines = lib.extend_lines
 
 local function json_escape(s)
@@ -120,7 +122,6 @@ local function gen_carapace(p, variant, _term)
     q('Highlight10', p.fg2),
     q('Highlight11', p.olive),
     q('Highlight12', p.orange),
-    q('Keyword', p.accent2),
     q('KeywordAmbiguous', p.yellow),
     q('KeywordNegative', p.red),
     q('KeywordPositive', p.green),
@@ -132,9 +133,6 @@ local function gen_carapace(p, variant, _term)
     q('LogLevelInfo', p.blue),
     q('LogLevelTrace', p.fg2),
     q('LogLevelWarning', p.yellow),
-    q('Positional1', p.blue),
-    q('Positional2', p.green),
-    q('Positional3', p.accent2),
     q('Usage', p.fg2),
     q('Value', p.fg1),
   }
@@ -625,11 +623,14 @@ local function fish_theme_lines(p)
     'fish_color_escape ' .. s(p.purple),
     'fish_color_autosuggestion ' .. s(p.line_nr),
     'fish_color_cwd ' .. s(p.blue),
+    'fish_color_cwd_root ' .. s(p.red),
     'fish_color_user ' .. s(p.green),
     'fish_color_host ' .. s(p.blue),
     'fish_color_host_remote ' .. s(p.accent2),
+    'fish_color_status ' .. s(p.red),
     'fish_color_cancel ' .. s(p.red),
     'fish_color_search_match --background=' .. s(p.match),
+    'fish_color_history_current ' .. s(p.accent),
     'fish_color_valid_path --underline',
     '',
     '# Pager',
@@ -1619,6 +1620,7 @@ local function gen_zsh(p, variant, _term)
     F .. "[for-loop-operator]='fg=#" .. s(p.accent2) .. "'",
     F .. "[for-loop-number]='fg=#" .. s(p.purple) .. "'",
     F .. "[for-loop-separator]='fg=#" .. s(p.fg2) .. "'",
+    F .. "[exec-descriptor]='fg=#" .. s(p.accent2) .. "'",
     F .. "[here-string-tri]='fg=#" .. s(p.accent2) .. "'",
     F .. "[here-string-text]='none'",
     F .. "[here-string-var]='fg=#" .. s(p.purple) .. "'",
@@ -1635,9 +1637,13 @@ local function gen_zsh(p, variant, _term)
     F .. "[single-sq-bracket]='fg=#" .. s(p.blue) .. "'",
     F .. "[double-sq-bracket]='fg=#" .. s(p.blue) .. "'",
     F .. "[double-paren]='fg=#" .. s(p.accent2) .. "'",
+    F .. "[optarg-string]='fg=#" .. s(p.green) .. "'",
+    F .. "[optarg-number]='fg=#" .. s(p.purple) .. "'",
+    F .. "[recursive-base]='none'",
     F .. "[correct-subtle]='fg=#" .. s(p.blue) .. "'",
     F .. "[incorrect-subtle]='fg=#" .. s(p.red) .. "'",
     F .. "[subtle-separator]='fg=#" .. s(p.green) .. "'",
+    F .. "[subtle-bg]='bg=#" .. s(p.match) .. "'",
     '',
     '# zsh-autosuggestions',
     "ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#" .. s(p.line_nr) .. "'",
@@ -1780,7 +1786,26 @@ local function main()
   files[#files + 1] = gen_vscode_theme(dark, 'dark', dark_term)
   files[#files + 1] = gen_vscode_theme(light, 'light', light_term)
 
+  for _, file in ipairs(files) do
+    lib.validate_output_path(file.path)
+  end
+
   local ok = true
+  if verify then
+    local expected = {}
+    for _, file in ipairs(files) do
+      expected[#expected + 1] = file.path
+    end
+    local actual = list_files('contrib')
+    for _, path in ipairs(actual) do
+      -- Refuse symlinked generated targets before comparing their contents.
+      lib.validate_output_path(path)
+    end
+    for _, path in ipairs(unexpected_paths(actual, expected, { 'contrib/emacs/README.md' })) do
+      io.stderr:write('unexpected: ' .. path .. '\n')
+      ok = false
+    end
+  end
   for _, f in ipairs(files) do
     if not write_if_changed(f.path, f.content, verify) then
       ok = false

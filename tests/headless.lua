@@ -1,5 +1,6 @@
 local root = vim.fn.getcwd()
 vim.opt.runtimepath:append(root)
+package.path = root .. '/scripts/?.lua;' .. package.path
 
 local token = require('token')
 
@@ -33,6 +34,196 @@ end
 
 local function loaded(plugin)
   return package.loaded['token.groups.plugins.' .. plugin] ~= nil
+end
+
+local function read_text(path)
+  local file = assert(io.open(root .. '/' .. path, 'rb'))
+  local content = assert(file:read('*a'))
+  assert(file:close())
+  return content
+end
+
+local function sorted_keys(value)
+  local keys = vim.tbl_keys(value)
+  table.sort(keys)
+  return keys
+end
+
+-- Generated schemas and visible shell roles stay aligned with their supported tools.
+for _, path in ipairs({
+  'contrib/carapace/token-dark.json',
+  'contrib/carapace/token-light.json',
+  'contrib/obsidian/manifest.json',
+  'contrib/vscode/package.json',
+  'contrib/vscode/themes/token-dark-color-theme.json',
+  'contrib/vscode/themes/token-light-color-theme.json',
+  'contrib/windows-terminal/token.json',
+}) do
+  truthy(vim.json.decode(read_text(path)), 'invalid generated JSON: ' .. path)
+end
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local share = read_text('contrib/chatgpt/token-' .. variant .. '.txt')
+  local payload = share:match('^codex%-theme%-v1:(.+)%s*$')
+  truthy(payload and vim.json.decode(payload), 'invalid ChatGPT share payload for ' .. variant)
+
+  local sublime = read_text('contrib/sublime/token-' .. variant .. '.sublime-color-scheme')
+  sublime = sublime:gsub('^//[^\n]*\n', '', 1)
+  truthy(vim.json.decode(sublime), 'invalid Sublime scheme for ' .. variant)
+end
+
+local git_config = vim
+  .system({ 'git', 'config', '--file', root .. '/contrib/delta/token.gitconfig', '--list' }, {
+    text = true,
+  })
+  :wait()
+equal(git_config.code, 0, 'invalid delta Git config: ' .. (git_config.stderr or ''))
+local installer_syntax = vim
+  .system({ 'bash', '-n', root .. '/scripts/install_vscode_theme.sh' }, { text = true })
+  :wait()
+equal(installer_syntax.code, 0, 'invalid VS Code installer syntax: ' .. (installer_syntax.stderr or ''))
+
+local carapace_keys = {
+  'Description',
+  'Error',
+  'FlagArg',
+  'FlagMultiArg',
+  'FlagNoArg',
+  'FlagOptArg',
+  'Highlight1',
+  'Highlight10',
+  'Highlight11',
+  'Highlight12',
+  'Highlight2',
+  'Highlight3',
+  'Highlight4',
+  'Highlight5',
+  'Highlight6',
+  'Highlight7',
+  'Highlight8',
+  'Highlight9',
+  'KeywordAmbiguous',
+  'KeywordNegative',
+  'KeywordPositive',
+  'KeywordUnknown',
+  'LogLevelCritical',
+  'LogLevelDebug',
+  'LogLevelError',
+  'LogLevelFatal',
+  'LogLevelInfo',
+  'LogLevelTrace',
+  'LogLevelWarning',
+  'Usage',
+  'Value',
+}
+table.sort(carapace_keys)
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local decoded = vim.json.decode(read_text('contrib/carapace/token-' .. variant .. '.json'))
+  equal(sorted_keys(decoded.carapace), carapace_keys, 'Carapace schema drift for ' .. variant)
+end
+
+local function fish_sections(content)
+  local sections = {}
+  local current
+  for line in content:gmatch('[^\r\n]+') do
+    local section = line:match('^%[([^]]+)%]$')
+    if section then
+      current = {}
+      sections[section] = current
+    elseif current then
+      local key, value = line:match('^(fish_%S+)%s+(.+)$')
+      if key then
+        current[key] = value
+      end
+    end
+  end
+  return sections
+end
+
+local fish = fish_sections(read_text('contrib/fish/token.theme'))
+for _, variant in ipairs({ 'dark', 'light', 'unknown' }) do
+  local palette_variant = variant == 'unknown' and 'dark' or variant
+  local palette = require('token.palette')(palette_variant)
+  equal(fish[variant].fish_color_cwd_root, palette.red:sub(2), 'Fish root cwd color for ' .. variant)
+  equal(fish[variant].fish_color_status, palette.red:sub(2), 'Fish status color for ' .. variant)
+  equal(fish[variant].fish_color_history_current, palette.accent:sub(2), 'Fish history color for ' .. variant)
+end
+
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local palette = require('token.palette')(variant)
+  local zsh = read_text('contrib/zsh/token-' .. variant .. '.zsh')
+  local styles = {
+    ['exec-descriptor'] = 'fg=#' .. palette.accent2:sub(2),
+    ['subtle-bg'] = 'bg=#' .. palette.match:sub(2),
+    ['optarg-string'] = 'fg=#' .. palette.green:sub(2),
+    ['optarg-number'] = 'fg=#' .. palette.purple:sub(2),
+    ['recursive-base'] = 'none',
+  }
+  for name, style in pairs(styles) do
+    local assignment = 'FAST_HIGHLIGHT_STYLES[' .. name .. "]='" .. style .. "'"
+    truthy(zsh:find(assignment, 1, true), 'missing Zsh style ' .. name .. ' for ' .. variant)
+  end
+end
+
+-- Generated output helpers reject path escapes and symlinks, and publish ordinary files correctly.
+local gen_lib = require('gen_lib')
+equal(
+  gen_lib.unexpected_paths(
+    { 'contrib/expected', 'contrib/stale', 'contrib/emacs/README.md' },
+    { 'contrib/expected' },
+    { 'contrib/emacs/README.md' }
+  ),
+  { 'contrib/stale' },
+  'unexpected generated output detection'
+)
+
+local temporary = vim.fn.tempname()
+assert(vim.fn.mkdir(temporary, 'p') == 1)
+local previous_cwd = vim.fn.getcwd()
+local helper_ok, helper_error = xpcall(function()
+  vim.fn.chdir(temporary)
+  gen_lib.write_if_changed('nested/output', 'first', false)
+  equal(gen_lib.read_file('nested/output'), 'first', 'atomic generated output content')
+  equal(vim.uv.fs_stat('nested/output').mode % 512, tonumber('644', 8), 'generated output permissions')
+
+  assert(vim.fn.mkdir('bin', 'p') == 1)
+  local failing_chmod = assert(io.open('bin/chmod', 'wb'))
+  assert(failing_chmod:write('#!/bin/sh\nexit 1\n'))
+  assert(failing_chmod:close())
+  truthy(vim.uv.fs_chmod('bin/chmod', tonumber('755', 8)), 'failed to prepare chmod failure fixture')
+  local existing = assert(io.open('failure-output', 'wb'))
+  assert(existing:write('original'))
+  assert(existing:close())
+  local original_path = vim.env.PATH
+  vim.env.PATH = temporary .. '/bin:' .. original_path
+  local failure_ok, failure_error = pcall(gen_lib.write_if_changed, 'failure-output', 'changed', false)
+  vim.env.PATH = original_path
+  equal(failure_ok, false, 'injected publication failure unexpectedly succeeded')
+  truthy(tostring(failure_error):match('failed to set permissions'), 'unexpected publication failure')
+  equal(gen_lib.read_file('failure-output'), 'original', 'publication failure replaced existing output')
+  equal(#vim.fn.glob('.failure-output.tmp.*', false, true), 0, 'publication failure left a temporary file')
+
+  local sentinel = assert(io.open('sentinel', 'wb'))
+  assert(sentinel:write('preserved'))
+  assert(sentinel:close())
+  truthy(vim.uv.fs_symlink('sentinel', 'linked-output'), 'failed to create output symlink fixture')
+  fails('refusing symlinked output path', function()
+    gen_lib.write_if_changed('linked-output', 'changed', false)
+  end)
+  equal(gen_lib.read_file('sentinel'), 'preserved', 'output symlink referent changed')
+
+  assert(vim.fn.mkdir('outside', 'p') == 1)
+  truthy(vim.uv.fs_symlink('outside', 'linked-directory'), 'failed to create directory symlink fixture')
+  fails('refusing symlinked output path', function()
+    gen_lib.write_if_changed('linked-directory/output', 'changed', false)
+  end)
+  fails('safe relative path', function()
+    gen_lib.write_if_changed('/tmp/token-output', 'changed', false)
+  end)
+end, debug.traceback)
+vim.fn.chdir(previous_cwd)
+equal(vim.fn.delete(temporary, 'rf'), 0, 'failed to remove generated-output fixtures')
+if not helper_ok then
+  error(helper_error, 0)
 end
 
 -- Defaults are core-only.
@@ -194,6 +385,7 @@ equal(
   '@markup.link.label.markdown_inline',
   'attribute gate erased a Markview link'
 )
+equal(hl('MarkviewGradient10'), hl('MarkviewGradient9'), 'Markview gradient endpoint is missing')
 equal(
   require('token.config').get().highlights.all.TokenCtermGated.cterm.bold,
   true,
@@ -277,5 +469,61 @@ assert(file:close())
 load('dark')
 truthy(hl('TokenCompiled').bold, 'non-string cache error did not reach dynamic fallback')
 equal(vim.uv.fs_stat(dark_path), nil, 'cache with a non-string error was not removed')
+
+-- Complete dynamic and compiled maps, including ANSI colors, must match for both registry modes.
+local function applied_groups(groups)
+  local result = {}
+  for name in pairs(groups) do
+    result[name] = vim.api.nvim_get_hl(0, { name = name, link = true })
+  end
+  return result
+end
+
+local function terminal_colors()
+  local result = {}
+  for index = 0, 15 do
+    result[index] = vim.g['terminal_color_' .. index]
+    truthy(result[index], 'terminal color ' .. index .. ' is missing')
+  end
+  return result
+end
+
+local function parity(config, label)
+  token.setup(config)
+  local expected = {}
+  for _, background in ipairs({ 'dark', 'light' }) do
+    local _, groups = require('token.theme').build(background)
+    expected[background] = groups
+    os.remove(compile.path(background))
+  end
+
+  local dynamic = {}
+  for _, background in ipairs({ 'dark', 'light' }) do
+    for index = 0, 15 do
+      vim.g['terminal_color_' .. index] = nil
+    end
+    equal(compile.load(background), false, label .. ' unexpectedly found a compiled cache')
+    load(background)
+    dynamic[background] = {
+      groups = applied_groups(expected[background]),
+      terminal = terminal_colors(),
+    }
+  end
+
+  compile.compile()
+  for _, background in ipairs({ 'dark', 'light' }) do
+    for index = 0, 15 do
+      vim.g['terminal_color_' .. index] = nil
+    end
+    truthy(vim.uv.fs_stat(compile.path(background)), label .. ' compiled cache is missing')
+    vim.o.background = background
+    truthy(compile.load(background), label .. ' compiled cache did not load')
+    equal(applied_groups(expected[background]), dynamic[background].groups, label .. ' group parity for ' .. background)
+    equal(terminal_colors(), dynamic[background].terminal, label .. ' terminal parity for ' .. background)
+  end
+end
+
+parity({}, 'core-only')
+parity({ plugins = { all = true } }, 'all-plugin')
 
 print('token: headless tests passed')

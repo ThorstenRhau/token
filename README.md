@@ -236,6 +236,10 @@ palette; rebuild after palette changes with `make contrib`.
 | [Xcode](https://developer.apple.com/xcode/)                                              | `contrib/xcode/token-{dark,light}.xccolortheme`           | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/`, then select Token Dark or Token Light           |
 | [Zsh](https://www.zsh.org/)                                                              | `contrib/zsh/token-{dark,light}.zsh`                      | Source the selected file from `.zshrc` for matching ZLE selection/paste, `ls`, completion, fzf-tab, and prompts  |
 
+The recommended Obsidian accent, `#bc6a49`, is deliberately a compromise
+between Token's light and dark accents. Keeping one user-level accent avoids
+having to change the Obsidian setting whenever macOS switches appearance.
+
 ## License
 
 BSD 3-Clause

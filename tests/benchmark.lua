@@ -28,6 +28,6 @@ require('token.compile').compile()
 local dark_size = vim.uv.fs_stat(require('token.compile').path('dark')).size
 local light_size = vim.uv.fs_stat(require('token.compile').path('light')).size
 
-print(string.format('filtered: %.3f ms, %d groups', filtered_ms, filtered_groups))
-print(string.format('all: %.3f ms, %d groups', all_ms, all_groups))
+print(string.format('filtered warm reload: %.3f ms, %d groups', filtered_ms, filtered_groups))
+print(string.format('all-plugin warm reload: %.3f ms, %d groups', all_ms, all_groups))
 print(string.format('bytecode: dark %d bytes, light %d bytes', dark_size, light_size))

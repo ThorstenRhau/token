@@ -30,6 +30,7 @@ token/
 │           └── plugins/
 │               ├── init.lua    # Plugin loader (merges all plugin modules)
 │               ├── blink.lua
+│               ├── blink_indent.lua
 │               ├── claudecode.lua
 │               ├── cmp.lua
 │               ├── dap_ui.lua
@@ -138,18 +139,19 @@ token/
 ## Validation
 
 ```bash
-make check                     # Read-only formatting, lint, and contrib checks
+make check                     # Read-only formatting, lint, tests, and contrib checks
 make format                    # Format with stylua
 make lint                      # Lint with selene
-make test                      # Run dependency-free headless Neovim tests
-make benchmark                 # Report load medians, group counts, cache sizes
+make test                      # Run dependency-free headless runtime and generator tests
+make benchmark                 # Report warm reload medians, group counts, cache sizes
 make contrib                   # Regenerate contrib/ theme files
 make contrib-verify            # Check contrib/ files are up to date
 make all                       # Format, lint, and generate contrib
 ```
 
 The pre-commit hook runs `make check`; run `make all` before committing changes
-that need formatting or contrib regeneration.
+that need formatting or contrib regeneration. Enable it with
+`make install-hooks`.
 
 ## Style
 
