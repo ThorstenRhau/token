@@ -176,6 +176,22 @@ that need formatting or contrib regeneration. Enable it with
 - **Selene**: `neovim` std (neovim.yaml defines vim global)
 - Sparse comments, only where non-obvious
 
+## Durable project knowledge
+
+- Use the global `$project-knowledge` workflow when explicitly asked to capture,
+  audit, or promote durable knowledge for this repository.
+- Keep always-applicable architecture and operating rules in `AGENTS.md`. Keep
+  the public feature and configuration contract in `README.md`, and keep the
+  repeatable colorscheme audit procedure in
+  `.agents/skills/colorscheme-review/`.
+- Record accepted, non-obvious rationale under `docs/decisions/` only when it
+  meets the workflow's capture threshold. Add `docs/index.md` only when the
+  repository has multiple durable knowledge sources that need routing.
+- Update current-state documentation with the implementation change that makes
+  it stale. Treat implementation plans as active work, not accepted decisions,
+  and do not store session summaries or temporary branch state as project
+  knowledge.
+
 ## Commits
 
 ```txt
