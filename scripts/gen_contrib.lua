@@ -1521,6 +1521,11 @@ local function obsidian_rgb(hex)
   }, ', ')
 end
 
+local function obsidian_number(value)
+  local formatted = string.format('%.2f', value)
+  return (formatted:gsub('%.?0+$', ''))
+end
+
 local function obsidian_hsl(hex)
   local h = strip(hex)
   local r = tonumber(h:sub(1, 2), 16) / 255
@@ -1545,9 +1550,7 @@ local function obsidian_hsl(hex)
     hue = hue / 6
   end
 
-  return string.format('%.2f', hue * 360),
-    string.format('%.2f%%', saturation * 100),
-    string.format('%.2f%%', lightness * 100)
+  return obsidian_number(hue * 360), obsidian_number(saturation * 100) .. '%', obsidian_number(lightness * 100) .. '%'
 end
 
 local function obsidian_theme_block(p, variant, appearance)

@@ -56,6 +56,15 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     or 'contrib/obsidian/' .. appearance.slug .. '/'
   generated_json[#generated_json + 1] = obsidian_prefix .. 'manifest.json'
   generated_json[#generated_json + 1] = 'contrib/windows-terminal/' .. appearance.slug .. '.json'
+
+  local obsidian_css = read_text(obsidian_prefix .. 'theme.css')
+  local hsl_values = 0
+  for property, value in obsidian_css:gmatch('(%-%-accent%-%a): ([^;]+);') do
+    hsl_values = hsl_values + 1
+    local number = value:gsub('%%$', '')
+    truthy(not number:match('%.%d*0$'), 'padded Obsidian HSL value for ' .. property .. ': ' .. value)
+  end
+  equal(hsl_values, 6, 'Obsidian HSL property count for ' .. appearance.name)
 end
 for _, path in ipairs(generated_json) do
   truthy(vim.json.decode(read_text(path)), 'invalid generated JSON: ' .. path)
@@ -476,6 +485,27 @@ end
 fails('unknown internal colorscheme name', function()
   token.load('unknown')
 end)
+
+-- Active Markview configuration groups resolve for every appearance and variant.
+local markview_links = {
+  { 'MarkviewIcon3Fg', 'MarkviewPalette3Fg' },
+  { 'MarkviewSpecial', 'Special' },
+  { 'MarkviewComment', 'Comment' },
+}
+token.setup({ plugins = { markview = true } })
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    for _, group in ipairs(markview_links) do
+      equal(
+        vim.api.nvim_get_hl(0, { name = group[1], link = true }).link,
+        group[2],
+        'Markview link for ' .. group[1] .. ' in ' .. appearance.name .. ' ' .. background
+      )
+      truthy(not vim.tbl_isempty(hl(group[1])), 'empty Markview group ' .. group[1])
+    end
+  end
+end
 
 -- Flint's default grammar uses typography to distinguish definitions, calls, references, and built-ins.
 token.setup()
