@@ -12,7 +12,7 @@
     <key>DVTConsoleDebuggerOutputTextFont</key>
     <string>SFMono-Regular - 12.0</string>
     <key>DVTConsoleDebuggerPromptTextColor</key>
-    <string>0.560784 0.709804 0.513725 1</string>
+    <string>0.580392 0.643137 0.466667 1</string>
     <key>DVTConsoleDebuggerPromptTextFont</key>
     <string>SFMono-Regular - 12.0</string>
     <key>DVTConsoleExectuableInputTextColor</key>
@@ -46,7 +46,7 @@
     <key>DVTMarkupTextInlineCodeColor</key>
     <string>0.760784 0.788235 0.815686 0.7</string>
     <key>DVTMarkupTextLinkColor</key>
-    <string>0.509804 0.666667 0.815686 1</string>
+    <string>0.498039 0.635294 0.729412 1</string>
     <key>DVTMarkupTextLinkFont</key>
     <string>.AppleSystemUIFont - 10.0</string>
     <key>DVTMarkupTextNormalColor</key>
@@ -58,11 +58,11 @@
     <key>DVTMarkupTextOtherHeadingFont</key>
     <string>.AppleSystemUIFont - 14.0</string>
     <key>DVTMarkupTextPrimaryHeadingColor</key>
-    <string>0.717647 0.627451 0.878431 1</string>
+    <string>0.835294 0.541176 0.435294 1</string>
     <key>DVTMarkupTextPrimaryHeadingFont</key>
     <string>.AppleSystemUIFont - 24.0</string>
     <key>DVTMarkupTextSecondaryHeadingColor</key>
-    <string>0.450980 0.717647 0.690196 1</string>
+    <string>0.776471 0.631373 0.352941 1</string>
     <key>DVTMarkupTextSecondaryHeadingFont</key>
     <string>.AppleSystemUIFont - 18.0</string>
     <key>DVTMarkupTextStrongColor</key>
@@ -70,9 +70,9 @@
     <key>DVTMarkupTextStrongFont</key>
     <string>.AppleSystemUIFontBold - 10.0</string>
     <key>DVTScrollbarMarkerAnalyzerColor</key>
-    <string>0.450980 0.717647 0.690196 1</string>
+    <string>0.498039 0.635294 0.729412 1</string>
     <key>DVTScrollbarMarkerBreakpointColor</key>
-    <string>0.509804 0.666667 0.815686 1</string>
+    <string>0.498039 0.635294 0.729412 1</string>
     <key>DVTScrollbarMarkerDiffColor</key>
     <string>0.776471 0.631373 0.352941 1</string>
     <key>DVTScrollbarMarkerDiffConflictColor</key>
@@ -80,7 +80,7 @@
     <key>DVTScrollbarMarkerErrorColor</key>
     <string>0.831373 0.478431 0.498039 1</string>
     <key>DVTScrollbarMarkerRuntimeIssueColor</key>
-    <string>0.717647 0.627451 0.878431 1</string>
+    <string>0.835294 0.541176 0.435294 1</string>
     <key>DVTScrollbarMarkerWarningColor</key>
     <string>0.776471 0.631373 0.352941 1</string>
     <key>DVTSourceTextBackground</key>
@@ -100,7 +100,7 @@
       <key>xcode.syntax.attribute</key>
       <string>0.760784 0.788235 0.815686 1</string>
       <key>xcode.syntax.character</key>
-      <string>0.560784 0.709804 0.513725 1</string>
+      <string>0.580392 0.643137 0.466667 1</string>
       <key>xcode.syntax.comment</key>
       <string>0.572549 0.607843 0.647059 1</string>
       <key>xcode.syntax.comment.doc</key>
@@ -108,51 +108,51 @@
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>0.776471 0.631373 0.352941 1</string>
       <key>xcode.syntax.declaration.other</key>
-      <string>0.717647 0.627451 0.878431 1</string>
+      <string>0.835294 0.541176 0.435294 1</string>
       <key>xcode.syntax.declaration.type</key>
-      <string>0.717647 0.627451 0.878431 1</string>
+      <string>0.835294 0.541176 0.435294 1</string>
       <key>xcode.syntax.identifier.class</key>
-      <string>0.509804 0.666667 0.815686 1</string>
+      <string>0.760784 0.788235 0.815686 1</string>
       <key>xcode.syntax.identifier.class.system</key>
-      <string>0.509804 0.666667 0.815686 1</string>
+      <string>0.760784 0.788235 0.815686 1</string>
       <key>xcode.syntax.identifier.constant</key>
-      <string>0.560784 0.709804 0.513725 1</string>
+      <string>0.580392 0.643137 0.466667 1</string>
       <key>xcode.syntax.identifier.constant.system</key>
-      <string>0.560784 0.709804 0.513725 1</string>
+      <string>0.580392 0.643137 0.466667 1</string>
       <key>xcode.syntax.identifier.function</key>
-      <string>0.717647 0.627451 0.878431 1</string>
+      <string>0.835294 0.541176 0.435294 1</string>
       <key>xcode.syntax.identifier.function.system</key>
       <string>0.760784 0.788235 0.815686 1</string>
       <key>xcode.syntax.identifier.macro</key>
-      <string>0.450980 0.717647 0.690196 1</string>
+      <string>0.776471 0.631373 0.352941 1</string>
       <key>xcode.syntax.identifier.macro.system</key>
-      <string>0.450980 0.717647 0.690196 1</string>
+      <string>0.776471 0.631373 0.352941 1</string>
       <key>xcode.syntax.identifier.type</key>
-      <string>0.509804 0.666667 0.815686 1</string>
+      <string>0.760784 0.788235 0.815686 1</string>
       <key>xcode.syntax.identifier.type.system</key>
-      <string>0.509804 0.666667 0.815686 1</string>
+      <string>0.760784 0.788235 0.815686 1</string>
       <key>xcode.syntax.identifier.variable</key>
       <string>0.862745 0.882353 0.901961 1</string>
       <key>xcode.syntax.identifier.variable.system</key>
       <string>0.760784 0.788235 0.815686 1</string>
       <key>xcode.syntax.keyword</key>
-      <string>0.450980 0.717647 0.690196 1</string>
+      <string>0.776471 0.631373 0.352941 1</string>
       <key>xcode.syntax.mark</key>
       <string>0.776471 0.631373 0.352941 1</string>
       <key>xcode.syntax.markup.aside.kind</key>
       <string>0.776471 0.631373 0.352941 1</string>
       <key>xcode.syntax.markup.code</key>
-      <string>0.560784 0.709804 0.513725 1</string>
+      <string>0.580392 0.643137 0.466667 1</string>
       <key>xcode.syntax.number</key>
-      <string>0.560784 0.709804 0.513725 1</string>
+      <string>0.580392 0.643137 0.466667 1</string>
       <key>xcode.syntax.plain</key>
       <string>0.862745 0.882353 0.901961 1</string>
       <key>xcode.syntax.preprocessor</key>
-      <string>0.450980 0.717647 0.690196 1</string>
+      <string>0.776471 0.631373 0.352941 1</string>
       <key>xcode.syntax.string</key>
-      <string>0.560784 0.709804 0.513725 1</string>
+      <string>0.580392 0.643137 0.466667 1</string>
       <key>xcode.syntax.url</key>
-      <string>0.509804 0.666667 0.815686 1</string>
+      <string>0.498039 0.635294 0.729412 1</string>
     </dict>
     <key>DVTSourceTextSyntaxFonts</key>
     <dict>

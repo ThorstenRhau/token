@@ -17,14 +17,14 @@ end
 function M.load(colorscheme)
   local appearance = require('token.appearance').get(colorscheme)
   local bg = vim.o.background
+  local lualine_wrappers = {}
+  for _, registered in ipairs(require('token.appearance').all()) do
+    lualine_wrappers['lualine.themes.' .. registered.name] = true
+  end
 
   -- Keep user configuration while ensuring disabled integrations leave package.loaded.
   for key in pairs(package.loaded) do
-    if
-      (key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config')
-      or key == 'lualine.themes.token'
-      or key == 'lualine.themes.token-flint'
-    then
+    if (key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config') or lualine_wrappers[key] then
       package.loaded[key] = nil
     end
   end
@@ -32,8 +32,9 @@ function M.load(colorscheme)
   -- Try compiled cache first
   local compile = require('token.compile')
   if compile.load(bg, appearance.name) then
-    package.loaded['lualine.themes.token'] = nil
-    package.loaded['lualine.themes.token-flint'] = nil
+    for wrapper in pairs(lualine_wrappers) do
+      package.loaded[wrapper] = nil
+    end
     return
   end
 

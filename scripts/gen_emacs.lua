@@ -1250,14 +1250,57 @@ local function flint_face(entry)
     ['font-lock-builtin-face'] = { fg = 'fg1', italic = true },
     ['font-lock-function-name-face'] = { fg = 'accent', bold = true },
     ['font-lock-function-call-face'] = { fg = 'accent' },
-    ['font-lock-type-face'] = { fg = 'blue', italic = true },
+    ['font-lock-type-face'] = { fg = 'fg1', italic = true },
     ['font-lock-constant-face'] = { fg = 'green' },
     ['font-lock-preprocessor-face'] = { fg = 'accent2' },
     ['font-lock-regexp-grouping-backslash'] = { fg = 'green' },
     ['font-lock-regexp-grouping-construct'] = { fg = 'green' },
     ['font-lock-escape-face'] = { fg = 'green' },
     ['font-lock-number-face'] = { fg = 'green' },
-    ['font-lock-reference-face'] = { fg = 'blue', italic = true },
+    ['font-lock-reference-face'] = { fg = 'fg1', italic = true },
+  }
+  local override = overrides[entry[1]]
+  if override then
+    result = { entry[1] }
+    for key, value in pairs(override) do
+      result[key] = value
+    end
+    return result
+  end
+
+  local heading = entry[1]:match('^outline%-(%d)$')
+    or entry[1]:match('^org%-level%-(%d)$')
+    or entry[1]:match('^markdown%-header%-face%-(%d)$')
+  if heading then
+    local colors = { 'accent', 'accent2', 'fg1', 'accent', 'accent2', 'fg1', 'accent', 'accent2' }
+    result.fg = colors[tonumber(heading)]
+  end
+  return result
+end
+
+local function temper_face(entry)
+  if entry.section then
+    return entry
+  end
+
+  local result = {}
+  for key, value in pairs(entry) do
+    result[key] = value
+  end
+
+  local overrides = {
+    ['font-lock-builtin-face'] = { fg = 'fg1', italic = true },
+    ['font-lock-function-name-face'] = { fg = 'accent', bold = true },
+    ['font-lock-function-call-face'] = { fg = 'accent' },
+    ['font-lock-type-face'] = { fg = 'fg1', italic = true },
+    ['font-lock-constant-face'] = { fg = 'accent', italic = true },
+    ['font-lock-preprocessor-face'] = { fg = 'accent2' },
+    ['font-lock-regexp-grouping-backslash'] = { fg = 'accent', italic = true },
+    ['font-lock-regexp-grouping-construct'] = { fg = 'accent', italic = true },
+    ['font-lock-escape-face'] = { fg = 'accent', italic = true },
+    ['font-lock-number-face'] = { fg = 'accent', italic = true },
+    ['font-lock-reference-face'] = { fg = 'fg1', italic = true },
+    ['font-lock-string-face'] = { fg = 'accent', italic = true },
   }
   local override = overrides[entry[1]]
   if override then
@@ -1312,6 +1355,8 @@ local function gen_emacs(p, variant, appearance)
   for _, entry in ipairs(EMACS_FACES) do
     if appearance.name == 'token-flint' then
       entry = flint_face(entry)
+    elseif appearance.name == 'token-temper' then
+      entry = temper_face(entry)
     end
     if entry.section then
       lines[#lines + 1] = ''

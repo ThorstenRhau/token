@@ -20,21 +20,39 @@ local function run(config, colorscheme)
   return median(samples), count
 end
 
-local classic_filtered_ms, classic_filtered_groups = run({}, 'token')
-local flint_filtered_ms, flint_filtered_groups = run({}, 'token-flint')
-local classic_all_ms, classic_all_groups = run({ plugins = { all = true } }, 'token')
-local flint_all_ms, flint_all_groups = run({ plugins = { all = true } }, 'token-flint')
+local results = {}
+local appearances = require('token.appearance').all()
+for _, appearance in ipairs(appearances) do
+  local filtered_ms, filtered_groups = run({}, appearance.name)
+  results[appearance.name] = {
+    filtered_ms = filtered_ms,
+    filtered_groups = filtered_groups,
+  }
+end
+for _, appearance in ipairs(appearances) do
+  local all_ms, all_groups = run({ plugins = { all = true } }, appearance.name)
+  results[appearance.name] = vim.tbl_extend('force', results[appearance.name], {
+    all_ms = all_ms,
+    all_groups = all_groups,
+  })
+end
 
 token.setup({})
 require('token.compile').compile()
-local dark_size = vim.uv.fs_stat(require('token.compile').path('dark')).size
-local light_size = vim.uv.fs_stat(require('token.compile').path('light')).size
-local flint_dark_size = vim.uv.fs_stat(require('token.compile').path('dark', 'token-flint')).size
-local flint_light_size = vim.uv.fs_stat(require('token.compile').path('light', 'token-flint')).size
 
-print(string.format('classic filtered warm reload: %.3f ms, %d groups', classic_filtered_ms, classic_filtered_groups))
-print(string.format('Flint filtered warm reload: %.3f ms, %d groups', flint_filtered_ms, flint_filtered_groups))
-print(string.format('classic all-plugin warm reload: %.3f ms, %d groups', classic_all_ms, classic_all_groups))
-print(string.format('Flint all-plugin warm reload: %.3f ms, %d groups', flint_all_ms, flint_all_groups))
-print(string.format('classic bytecode: dark %d bytes, light %d bytes', dark_size, light_size))
-print(string.format('Flint bytecode: dark %d bytes, light %d bytes', flint_dark_size, flint_light_size))
+for _, appearance in ipairs(appearances) do
+  local result = results[appearance.name]
+  local label = appearance.name == 'token' and 'classic' or appearance.display_name:gsub('^Token ', '')
+  print(string.format('%s filtered warm reload: %.3f ms, %d groups', label, result.filtered_ms, result.filtered_groups))
+end
+for _, appearance in ipairs(appearances) do
+  local result = results[appearance.name]
+  local label = appearance.name == 'token' and 'classic' or appearance.display_name:gsub('^Token ', '')
+  print(string.format('%s all-plugin warm reload: %.3f ms, %d groups', label, result.all_ms, result.all_groups))
+end
+for _, appearance in ipairs(appearances) do
+  local label = appearance.name == 'token' and 'classic' or appearance.display_name:gsub('^Token ', '')
+  local dark_size = vim.uv.fs_stat(require('token.compile').path('dark', appearance.name)).size
+  local light_size = vim.uv.fs_stat(require('token.compile').path('light', appearance.name)).size
+  print(string.format('%s bytecode: dark %d bytes, light %d bytes', label, dark_size, light_size))
+end

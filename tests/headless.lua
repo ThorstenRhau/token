@@ -50,13 +50,14 @@ local function sorted_keys(value)
 end
 
 -- Generated schemas and visible shell roles stay aligned with their supported tools.
-for _, path in ipairs({
-  'contrib/obsidian/manifest.json',
-  'contrib/obsidian/token-flint/manifest.json',
-  'contrib/vscode/package.json',
-  'contrib/windows-terminal/token.json',
-  'contrib/windows-terminal/token-flint.json',
-}) do
+local generated_json = { 'contrib/vscode/package.json' }
+for _, appearance in ipairs(require('token.appearance').all()) do
+  local obsidian_prefix = appearance.name == 'token' and 'contrib/obsidian/'
+    or 'contrib/obsidian/' .. appearance.slug .. '/'
+  generated_json[#generated_json + 1] = obsidian_prefix .. 'manifest.json'
+  generated_json[#generated_json + 1] = 'contrib/windows-terminal/' .. appearance.slug .. '.json'
+end
+for _, path in ipairs(generated_json) do
   truthy(vim.json.decode(read_text(path)), 'invalid generated JSON: ' .. path)
 end
 for _, appearance in ipairs(require('token.appearance').all()) do
@@ -83,19 +84,38 @@ end
 
 for _, variant in ipairs({ 'dark', 'light' }) do
   local theme = vim.json.decode(read_text('contrib/vscode/themes/token-flint-' .. variant .. '-color-theme.json'))
-  local palette = require('token.palettes.flint')(variant)
-  local accent = palette.accent
-  equal(
-    theme.semanticTokenColors.type,
-    { foreground = palette.blue, italic = true },
-    'Flint VS Code semantic type reference ' .. variant
-  )
+  local accent = require('token.palettes.flint')(variant).accent
   for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
       equal(
         theme.semanticTokenColors[token_type .. '.' .. modifier],
         { foreground = accent, bold = true, italic = false },
         'Flint VS Code semantic type role for ' .. token_type .. '.' .. modifier .. ' ' .. variant
+      )
+    end
+  end
+end
+
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-temper-' .. variant .. '-color-theme.json'))
+  local palette = require('token.palettes.temper')(variant)
+  equal(
+    theme.semanticTokenColors.type,
+    { foreground = palette.fg1, italic = true },
+    'Temper VS Code semantic type reference ' .. variant
+  )
+  equal(
+    theme.semanticTokenColors.string,
+    { foreground = palette.accent, italic = true },
+    'Temper VS Code semantic literal ' .. variant
+  )
+  equal(theme.semanticTokenColors.keyword, palette.accent2, 'Temper VS Code semantic keyword ' .. variant)
+  for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter', 'function', 'method' }) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      equal(
+        theme.semanticTokenColors[token_type .. '.' .. modifier],
+        { foreground = palette.accent, bold = true, italic = false },
+        'Temper VS Code semantic definition for ' .. token_type .. '.' .. modifier .. ' ' .. variant
       )
     end
   end
@@ -206,11 +226,12 @@ for _, appearance in ipairs(require('token.appearance').all()) do
 end
 
 local vscode_package = vim.json.decode(read_text('contrib/vscode/package.json'))
-equal(#vscode_package.contributes.themes, 4, 'VS Code package does not inventory four themes')
+equal(#vscode_package.contributes.themes, 6, 'VS Code package does not inventory six themes')
 equal(vscode_package.contributes.themes[3].label, 'Token Flint Dark', 'VS Code Flint dark label')
 equal(vscode_package.contributes.themes[4].label, 'Token Flint Light', 'VS Code Flint light label')
+equal(vscode_package.contributes.themes[5].label, 'Token Temper Dark', 'VS Code Temper dark label')
+equal(vscode_package.contributes.themes[6].label, 'Token Temper Light', 'VS Code Temper light label')
 local vscode_flint = vim.json.decode(read_text('contrib/vscode/themes/token-flint-dark-color-theme.json'))
-local flint_dark = require('token.palettes.flint')('dark')
 local vscode_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
   vscode_rules[rule.name] = rule.settings
@@ -218,8 +239,6 @@ end
 equal(vscode_rules['Function definition'].fontStyle, 'bold', 'VS Code Flint definition typography')
 equal(vscode_rules['Function call'].fontStyle, nil, 'VS Code Flint call typography')
 equal(vscode_rules['Type reference'].fontStyle, 'italic', 'VS Code Flint reference typography')
-equal(vscode_rules['Type reference'].foreground, flint_dark.blue, 'VS Code Flint type reference color')
-equal(vscode_rules.Exception.foreground, flint_dark.accent2, 'VS Code Flint exception color')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-flint/manifest.json')).name,
   'Token Flint',
@@ -228,8 +247,6 @@ equal(
 local windows_flint = vim.json.decode(read_text('contrib/windows-terminal/token-flint.json')).schemes
 equal(windows_flint[1].name, 'Token Flint Dark', 'Windows Terminal Flint dark name')
 equal(windows_flint[2].name, 'Token Flint Light', 'Windows Terminal Flint light name')
-equal(windows_flint[1].brightRed, flint_dark.bright_red, 'Windows Terminal Flint bright red')
-equal(windows_flint[1].brightYellow, flint_dark.bright_yellow, 'Windows Terminal Flint bright yellow')
 local emacs_flint = read_text('contrib/emacs/token-flint-dark-theme.el')
 truthy(
   emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
@@ -239,9 +256,43 @@ truthy(
   emacs_flint:find('font-lock-function-call-face      ((,class (:foreground ,accent)))', 1, true),
   'Emacs Flint call typography'
 )
+local temper_dark = require('token.palettes.temper')('dark')
+local vscode_temper = vim.json.decode(read_text('contrib/vscode/themes/token-temper-dark-color-theme.json'))
+local temper_rules = {}
+for _, rule in ipairs(vscode_temper.tokenColors) do
+  temper_rules[rule.name] = rule.settings
+end
+equal(temper_rules['Function definition'].fontStyle, 'bold', 'VS Code Temper definition typography')
+equal(temper_rules['Function call'].fontStyle, nil, 'VS Code Temper call typography')
+equal(temper_rules['String'].fontStyle, 'italic', 'VS Code Temper literal typography')
+equal(temper_rules['String'].foreground, temper_dark.accent, 'VS Code Temper literal color')
+equal(temper_rules['Type reference'].fontStyle, 'italic', 'VS Code Temper reference typography')
+equal(temper_rules['Type reference'].foreground, temper_dark.fg1, 'VS Code Temper type reference color')
+equal(temper_rules.Exception.foreground, temper_dark.accent2, 'VS Code Temper exception color')
+equal(
+  vim.json.decode(read_text('contrib/obsidian/token-temper/manifest.json')).name,
+  'Token Temper',
+  'Obsidian Temper name'
+)
+local windows_temper = vim.json.decode(read_text('contrib/windows-terminal/token-temper.json')).schemes
+equal(windows_temper[1].name, 'Token Temper Dark', 'Windows Terminal Temper dark name')
+equal(windows_temper[2].name, 'Token Temper Light', 'Windows Terminal Temper light name')
+local emacs_temper = read_text('contrib/emacs/token-temper-dark-theme.el')
 truthy(
-  emacs_flint:find('font-lock-type-face               ((,class (:foreground ,blue :slant italic)))', 1, true),
-  'Emacs Flint type grammar'
+  emacs_temper:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
+  'Emacs Temper definition typography'
+)
+truthy(
+  emacs_temper:find('font-lock-function-call-face      ((,class (:foreground ,accent)))', 1, true),
+  'Emacs Temper call typography'
+)
+truthy(
+  emacs_temper:find('font-lock-type-face               ((,class (:foreground ,fg1 :slant italic)))', 1, true),
+  'Emacs Temper type grammar'
+)
+truthy(
+  emacs_temper:find('font-lock-string-face             ((,class (:foreground ,accent :slant italic)))', 1, true),
+  'Emacs Temper literal grammar'
 )
 
 -- Generated output helpers reject path escapes and symlinks, and publish ordinary files correctly.
@@ -306,7 +357,7 @@ if not helper_ok then
   error(helper_error, 0)
 end
 
--- Classic and Flint expose the same complete palette contract, with approved anchors and contrast.
+-- All appearances expose the same complete palette contract, with approved anchors and contrast.
 local function luminance(hex)
   local channels = {}
   for _, index in ipairs({ 2, 4, 6 }) do
@@ -333,16 +384,11 @@ local flint_anchors = {
     fg1 = '#C2C9D0',
     fg2 = '#929BA5',
     fg3 = '#626C77',
-    accent = '#B7A0E0',
-    accent2 = '#73B7B0',
-    green = '#8FB583',
-    blue = '#82AAD0',
+    accent = '#D58A6F',
+    accent2 = '#C6A15A',
+    green = '#94A477',
+    blue = '#7FA2BA',
     red = '#D47A7F',
-    yellow = '#C6A15A',
-    purple = '#B7A0E0',
-    cyan = '#73B7B0',
-    bright_red = '#E79196',
-    bright_yellow = '#DAB96C',
   },
   light = {
     bg3 = '#F5F7F8',
@@ -352,40 +398,70 @@ local flint_anchors = {
     fg1 = '#3D4853',
     fg2 = '#65717D',
     fg3 = '#828E9A',
-    accent = '#6D5591',
-    accent2 = '#27766F',
-    green = '#4C732C',
-    blue = '#306F9C',
+    accent = '#B64E2E',
+    accent2 = '#946409',
+    green = '#5A772B',
+    blue = '#34779D',
     red = '#BE3E50',
-    yellow = '#89610D',
-    purple = '#6D5591',
-    cyan = '#27766F',
-    bright_red = '#A93347',
-    bright_yellow = '#77530A',
   },
 }
 for _, background in ipairs({ 'dark', 'light' }) do
   local classic = require('token.palette')(background)
   local flint = require('token.palettes.flint')(background)
   equal(sorted_keys(flint), sorted_keys(classic), 'Flint palette keys for ' .. background)
-  equal(vim.tbl_count(flint), 51, 'Flint palette key count for ' .. background)
+  equal(vim.tbl_count(flint), 49, 'Flint palette key count for ' .. background)
   for key, color in pairs(flint) do
     truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Flint color ' .. key .. ' for ' .. background)
   end
   for key, color in pairs(flint_anchors[background]) do
     equal(flint[key], color, 'Flint anchor ' .. key .. ' for ' .. background)
   end
-  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'green', 'blue', 'red', 'yellow', 'purple', 'cyan' }) do
+  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'green', 'blue', 'red' }) do
     truthy(contrast(flint[key], flint.bg3) >= 4.5, 'insufficient Flint contrast for ' .. key .. ' ' .. background)
   end
-  local terminal = require('token.terminal').colors(flint, background == 'dark')
-  equal(terminal[9], flint.bright_red, 'Flint ANSI bright red for ' .. background)
-  equal(terminal[11], flint.bright_yellow, 'Flint ANSI bright yellow for ' .. background)
 end
 
--- Both colorscheme entry points select their appearance while background selects the variant.
+local temper_anchors = {
+  dark = {
+    bg3 = '#272C33',
+    bg1 = '#1C2127',
+    fg0 = '#DCE1E6',
+    fg1 = '#C2C9D0',
+    fg2 = '#929BA5',
+    fg3 = '#626C77',
+    accent = '#56BCAE',
+    accent2 = '#B184D5',
+  },
+  light = {
+    bg3 = '#F5F7F8',
+    bg1 = '#E7EBEF',
+    fg0 = '#28313A',
+    fg1 = '#3D4853',
+    fg2 = '#65717D',
+    fg3 = '#828E9A',
+    accent = '#007D72',
+    accent2 = '#7845A7',
+  },
+}
+for _, background in ipairs({ 'dark', 'light' }) do
+  local classic = require('token.palette')(background)
+  local temper = require('token.palettes.temper')(background)
+  equal(sorted_keys(temper), sorted_keys(classic), 'Temper palette keys for ' .. background)
+  for key, color in pairs(temper) do
+    truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Temper color ' .. key .. ' for ' .. background)
+  end
+  for key, color in pairs(temper_anchors[background]) do
+    equal(temper[key], color, 'Temper anchor ' .. key .. ' for ' .. background)
+  end
+  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2' }) do
+    truthy(contrast(temper[key], temper.bg3) >= 4.5, 'insufficient Temper contrast for ' .. key .. ' ' .. background)
+  end
+end
+
+-- Every colorscheme entry point selects its appearance while background selects the variant.
 token.setup()
-for _, colorscheme in ipairs({ 'token', 'token-flint' }) do
+for _, appearance in ipairs(require('token.appearance').all()) do
+  local colorscheme = appearance.name
   for _, background in ipairs({ 'dark', 'light' }) do
     vim.o.background = background
     vim.cmd.colorscheme(colorscheme)
@@ -412,7 +488,7 @@ equal(hl('@function.call').fg, tonumber(flint.accent:sub(2), 16), 'Flint functio
 truthy(hl('@function.method').bold, 'Flint method definition is not bold')
 equal(hl('@function.method.call').bold, nil, 'Flint method call is bold')
 truthy(hl('@type').italic, 'Flint type reference is not italic')
-equal(hl('@type').fg, tonumber(flint.blue:sub(2), 16), 'Flint type reference color')
+equal(hl('@type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint type reference color')
 truthy(hl('@type.definition').bold, 'Flint type definition is not bold')
 equal(hl('@type.definition').fg, tonumber(flint.accent:sub(2), 16), 'Flint type definition color')
 truthy(hl('@function.builtin').italic, 'Flint built-in is not italic')
@@ -420,7 +496,7 @@ equal(hl('@function.builtin').fg, tonumber(flint.fg1:sub(2), 16), 'Flint built-i
 equal(hl('@lsp.type.function').bold, nil, 'Flint LSP function reference is bold')
 equal(hl('@lsp.type.function').fg, tonumber(flint.accent:sub(2), 16), 'Flint LSP function reference color')
 truthy(hl('@lsp.type.type').italic, 'Flint LSP type reference is not italic')
-equal(hl('@lsp.type.type').fg, tonumber(flint.blue:sub(2), 16), 'Flint LSP type reference color')
+equal(hl('@lsp.type.type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint LSP type reference color')
 truthy(hl('@lsp.typemod.function.definition').bold, 'Flint LSP function definition is not bold')
 equal(
   hl('@lsp.typemod.function.definition').fg,
@@ -428,13 +504,53 @@ equal(
   'Flint LSP function definition color'
 )
 equal(hl('@keyword').fg, tonumber(flint.accent2:sub(2), 16), 'Flint keyword color')
-equal(hl('@keyword.exception').fg, tonumber(flint.accent2:sub(2), 16), 'Flint exception keyword color')
-equal(hl('@keyword.debug').fg, tonumber(flint.accent2:sub(2), 16), 'Flint debug keyword color')
 equal(hl('@string').fg, tonumber(flint.green:sub(2), 16), 'Flint literal color')
 truthy(hl('@markup.link').underline, 'Flint link is not underlined')
 equal(hl('@markup.link').fg, tonumber(flint.blue:sub(2), 16), 'Flint link color')
 truthy(hl('@lsp.mod.deprecated').strikethrough, 'Flint deprecated modifier is not struck through')
 truthy(hl('DiagnosticUnderlineError').undercurl, 'Flint diagnostic is not undercurled')
+
+-- Temper uses teal and purple plus typography for routine syntax roles.
+token.setup()
+load('dark', 'token-temper')
+local temper = require('token.palettes.temper')('dark')
+truthy(hl('@function').bold, 'Temper function definition is not bold')
+equal(hl('@function').fg, tonumber(temper.accent:sub(2), 16), 'Temper function definition color')
+equal(hl('@function.call').bold, nil, 'Temper function call is bold')
+equal(hl('@function.call').fg, tonumber(temper.accent:sub(2), 16), 'Temper function call color')
+truthy(hl('@function.method').bold, 'Temper method definition is not bold')
+equal(hl('@function.method.call').bold, nil, 'Temper method call is bold')
+truthy(hl('@type').italic, 'Temper type reference is not italic')
+equal(hl('@type').fg, tonumber(temper.fg1:sub(2), 16), 'Temper type reference color')
+truthy(hl('@type.definition').bold, 'Temper type definition is not bold')
+equal(hl('@type.definition').fg, tonumber(temper.accent:sub(2), 16), 'Temper type definition color')
+truthy(hl('@function.builtin').italic, 'Temper built-in is not italic')
+equal(hl('@function.builtin').fg, tonumber(temper.fg1:sub(2), 16), 'Temper built-in color')
+truthy(hl('@lsp.type.type').italic, 'Temper LSP type reference is not italic')
+equal(hl('@lsp.type.type').fg, tonumber(temper.fg1:sub(2), 16), 'Temper LSP type reference color')
+for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+  for _, modifier in ipairs({ 'declaration', 'definition' }) do
+    local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
+    truthy(hl(name).bold, 'Temper LSP definition is not bold for ' .. name)
+    equal(hl(name).fg, tonumber(temper.accent:sub(2), 16), 'Temper LSP definition color for ' .. name)
+  end
+end
+for _, name in ipairs({ '@keyword', '@keyword.exception', '@keyword.debug', '@function.macro', '@keyword.directive' }) do
+  equal(hl(name).fg, tonumber(temper.accent2:sub(2), 16), 'Temper purple role color for ' .. name)
+end
+for _, name in ipairs({ '@string', '@number', '@boolean', '@constant' }) do
+  equal(hl(name).fg, tonumber(temper.accent:sub(2), 16), 'Temper literal color for ' .. name)
+  truthy(hl(name).italic, 'Temper literal is not italic for ' .. name)
+end
+truthy(hl('@markup.link').underline, 'Temper link is not underlined')
+equal(hl('@markup.link').fg, tonumber(temper.accent:sub(2), 16), 'Temper link color')
+truthy(hl('@lsp.mod.deprecated').strikethrough, 'Temper deprecated modifier is not struck through')
+truthy(hl('DiagnosticUnderlineError').undercurl, 'Temper diagnostic is not undercurled')
+
+token.setup({ plugins = { markview = true, render_markdown = true } })
+load('dark', 'token-temper')
+equal(hl('RenderMarkdownH3').fg, tonumber(temper.fg1:sub(2), 16), 'Temper render-markdown headings are rainbowed')
+equal(hl('MarkviewHeading3').fg, tonumber(temper.fg1:sub(2), 16), 'Temper Markview headings are rainbowed')
 
 token.setup({ plugins = { markview = true, render_markdown = true } })
 load('dark', 'token-flint')
@@ -466,6 +582,23 @@ for _, background in ipairs({ 'dark', 'light' }) do
     end
   end
 end
+for _, background in ipairs({ 'dark', 'light' }) do
+  load(background, 'token-temper')
+  equal(hl('@function').bold, nil, 'user style did not remove Temper definition weight ' .. background)
+  truthy(hl('@function').underline, 'user style did not augment Temper definition ' .. background)
+  truthy(hl('@lsp.type.function').underline, 'user style did not reach Temper LSP function references ' .. background)
+  for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
+      equal(
+        hl(name).bold,
+        nil,
+        'user style did not remove Temper LSP definition weight for ' .. name .. ' ' .. background
+      )
+      truthy(hl(name).underline, 'user style did not reach Temper LSP definition role ' .. name .. ' ' .. background)
+    end
+  end
+end
 
 -- Shared user customization follows the appearance overlay and receives the active colorscheme.
 local callback_colorscheme
@@ -485,6 +618,25 @@ equal(callback_colorscheme, 'colors:token-flint,highlights:token-flint', 'callba
 equal(hl('@function').fg, tonumber('112233', 16), 'user highlight did not replace Flint profile')
 equal(hl('@function').bold, nil, 'user highlight did not completely replace Flint profile')
 truthy(hl('TokenAppearanceCallback').bold, 'Flint callback highlight missing')
+
+token.setup({
+  colors = { all = { accent = '#445566' } },
+  highlights = { all = { ['@function'] = { fg = '#112233' } } },
+  on_colors = function(colors, _, colorscheme)
+    callback_colorscheme = 'colors:' .. colorscheme
+    colors.accent2 = '#665544'
+  end,
+  on_highlights = function(groups, colors, _, colorscheme)
+    callback_colorscheme = callback_colorscheme .. ',highlights:' .. colorscheme
+    groups.TokenAppearanceCallback = { fg = colors.accent2 }
+  end,
+})
+load('dark', 'token-temper')
+equal(callback_colorscheme, 'colors:token-temper,highlights:token-temper', 'Temper callback colorscheme arguments')
+equal(hl('@function.call').fg, tonumber('445566', 16), 'user color did not override Temper profile')
+equal(hl('@function').fg, tonumber('112233', 16), 'user highlight did not replace Temper profile')
+equal(hl('@function').bold, nil, 'user highlight did not completely replace Temper profile')
+equal(hl('TokenAppearanceCallback').fg, tonumber('665544', 16), 'Temper callback highlight missing')
 
 -- Defaults are core-only.
 token.setup()
@@ -638,6 +790,13 @@ equal(hl('@type').italic, nil, 'italic gate did not remove Flint reference slant
 equal(hl('@markup.link').underline, nil, 'underline gate did not remove Flint link underline')
 equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Flint deprecation')
 equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Flint diagnostic')
+load('dark', 'token-temper')
+equal(hl('@function').bold, nil, 'bold gate did not remove Temper definition weight')
+equal(hl('@type').italic, nil, 'italic gate did not remove Temper reference slant')
+equal(hl('@string').italic, nil, 'italic gate did not remove Temper literal slant')
+equal(hl('@markup.link').underline, nil, 'underline gate did not remove Temper link underline')
+equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Temper deprecation')
+equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Temper diagnostic')
 equal(hl('TokenGatedLink').bold, nil, 'attribute gate did not resolve a user link')
 equal(hl('TokenCtermGated').cterm, nil, 'attribute gate did not disable a cterm attribute')
 equal(
@@ -677,11 +836,19 @@ equal(
   require('token.theme').palette('dark', 'token-flint').fg3,
   'Flint Lualine inactive text is not muted'
 )
+local temper_lualine = require('lualine.themes.token-temper')
+equal(temper_lualine.normal.b.bg, 'NONE', 'Temper Lualine base is not transparent')
+equal(
+  temper_lualine.inactive.a.fg,
+  require('token.theme').palette('dark', 'token-temper').fg3,
+  'Temper Lualine inactive text is not muted'
+)
 
 token.setup({ attributes = { bold = false } })
 load('dark', 'token-flint')
 equal(require('lualine.themes.token').normal.a.gui, nil, 'classic Lualine ignored bold gate')
 equal(require('lualine.themes.token-flint').normal.a.gui, nil, 'Flint Lualine ignored bold gate')
+equal(require('lualine.themes.token-temper').normal.a.gui, nil, 'Temper Lualine ignored bold gate')
 
 -- Invalid callback output is rejected.
 token.setup({
@@ -704,7 +871,12 @@ local callback = function(groups, colors, background, colorscheme)
   if fail_flint_compile and colorscheme == 'token-flint' then
     error('injected Flint compile failure')
   end
-  groups.TokenCompiled = { fg = colors.accent, bold = background == 'dark', italic = colorscheme == 'token-flint' }
+  groups.TokenCompiled = {
+    fg = colors.accent,
+    bold = background == 'dark',
+    italic = colorscheme == 'token-flint',
+    underline = colorscheme == 'token-temper',
+  }
 end
 token.setup({
   terminal_colors = false,
@@ -718,20 +890,31 @@ local dark_path = compile.path('dark')
 local light_path = compile.path('light')
 local flint_dark_path = compile.path('dark', 'token-flint')
 local flint_light_path = compile.path('light', 'token-flint')
+local temper_dark_path = compile.path('dark', 'token-temper')
+local temper_light_path = compile.path('light', 'token-temper')
 truthy(vim.uv.fs_stat(dark_path), 'dark cache missing')
 truthy(vim.uv.fs_stat(light_path), 'light cache missing')
 truthy(vim.uv.fs_stat(flint_dark_path), 'Flint dark cache missing')
 truthy(vim.uv.fs_stat(flint_light_path), 'Flint light cache missing')
+truthy(vim.uv.fs_stat(temper_dark_path), 'Temper dark cache missing')
+truthy(vim.uv.fs_stat(temper_light_path), 'Temper light cache missing')
 equal(
-  vim.tbl_count({ [dark_path] = true, [light_path] = true, [flint_dark_path] = true, [flint_light_path] = true }),
-  4,
+  vim.tbl_count({
+    [dark_path] = true,
+    [light_path] = true,
+    [flint_dark_path] = true,
+    [flint_light_path] = true,
+    [temper_dark_path] = true,
+    [temper_light_path] = true,
+  }),
+  6,
   'cache paths collide'
 )
 fail_flint_compile = true
 local compile_ok, compile_error = pcall(compile.compile)
 equal(compile_ok, false, 'injected Flint compilation unexpectedly succeeded')
 truthy(tostring(compile_error):match('injected Flint compile failure'), 'unexpected Flint compilation failure')
-for _, path in ipairs({ dark_path, light_path, flint_dark_path, flint_light_path }) do
+for _, path in ipairs({ dark_path, light_path, flint_dark_path, flint_light_path, temper_dark_path, temper_light_path }) do
   truthy(vim.uv.fs_stat(path), 'failed Flint rebuild removed existing cache: ' .. path)
 end
 equal(#vim.fn.glob(vim.fn.stdpath('cache') .. '/token/*.tmp', false, true), 0, 'failed rebuild left cache temporaries')
@@ -752,10 +935,21 @@ truthy(hl('TokenCompiled').bold and hl('TokenCompiled').italic, 'compiled Flint 
 load('light', 'token-flint')
 equal(vim.g.colors_name, 'token-flint', 'compiled Flint light colors_name')
 truthy(hl('TokenCompiled').italic and not hl('TokenCompiled').bold, 'compiled Flint light callback result incorrect')
+load('dark', 'token-temper')
+equal(vim.g.colors_name, 'token-temper', 'compiled Temper colors_name')
+truthy(hl('TokenCompiled').bold and hl('TokenCompiled').underline, 'compiled Temper callback result incorrect')
+equal(hl('TokenCompiled').italic, nil, 'Temper cache used Flint callback result')
+load('light', 'token-temper')
+equal(vim.g.colors_name, 'token-temper', 'compiled Temper light colors_name')
+truthy(
+  hl('TokenCompiled').underline and not hl('TokenCompiled').bold,
+  'compiled Temper light callback result incorrect'
+)
 
 token.setup({ transparent = true })
 equal(compile.load('dark'), false, 'configuration change reused stale cache')
 equal(compile.load('dark', 'token-flint'), false, 'configuration change reused stale Flint cache')
+equal(compile.load('dark', 'token-temper'), false, 'configuration change reused stale Temper cache')
 
 token.setup({
   terminal_colors = false,
@@ -763,6 +957,14 @@ token.setup({
   highlights = { all = { TokenCterm = { fg = '#abcdef', cterm = { bold = true } } } },
   on_highlights = callback,
 })
+local temper_file = assert(io.open(temper_dark_path, 'wb'))
+assert(temper_file:write('corrupt'))
+assert(temper_file:close())
+equal(compile.load('dark', 'token-temper'), false, 'corrupt Temper cache did not fall back')
+equal(vim.uv.fs_stat(temper_dark_path), nil, 'corrupt Temper cache was not removed')
+truthy(compile.load('dark'), 'corrupt Temper cache affected classic Token')
+truthy(compile.load('dark', 'token-flint'), 'corrupt Temper cache affected Flint')
+
 local flint_file = assert(io.open(flint_dark_path, 'wb'))
 assert(flint_file:write('corrupt'))
 assert(flint_file:close())

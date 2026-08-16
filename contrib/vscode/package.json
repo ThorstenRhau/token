@@ -31,6 +31,16 @@
         "label": "Token Flint Light",
         "uiTheme": "vs",
         "path": "./themes/token-flint-light-color-theme.json"
+      },
+      {
+        "label": "Token Temper Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/token-temper-dark-color-theme.json"
+      },
+      {
+        "label": "Token Temper Light",
+        "uiTheme": "vs",
+        "path": "./themes/token-temper-light-color-theme.json"
       }
     ]
   }

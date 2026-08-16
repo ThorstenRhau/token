@@ -12,7 +12,7 @@ Before starting, read these files to understand the project:
 
 1. `CLAUDE.md` (project conventions)
 2. `README.md` (public API, integrations, contrib inventory, and installation)
-3. Both `colors/token*.lua` entry points, `plugin/token.lua`, `lua/token/init.lua`, `lua/token/config.lua`, `lua/token/theme.lua`, and `lua/token/compile.lua`
+3. All `colors/token*.lua` entry points, `plugin/token.lua`, `lua/token/init.lua`, `lua/token/config.lua`, `lua/token/theme.lua`, and `lua/token/compile.lua`
 4. `lua/token/appearance.lua`, every registered palette and appearance-profile module, `lua/token/terminal.lua`, `lua/token/lualine.lua`, and all matching `lua/lualine/themes/token*.lua` wrappers
 5. `lua/token/groups/init.lua` and `lua/token/groups/plugins/init.lua`
 6. `Makefile`, `.stylua.toml`, `selene.toml`, `neovim.yaml`, `taplo.toml`, `.editorconfig`, and `.prettierrc.toml`

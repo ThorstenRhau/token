@@ -14,9 +14,17 @@ local appearances = {
     palette = 'token.palettes.flint',
     highlights = 'token.appearances.flint',
   },
+  ['token-temper'] = {
+    name = 'token-temper',
+    display_name = 'Token Temper',
+    slug = 'token-temper',
+    cache_prefix = 'temper-',
+    palette = 'token.palettes.temper',
+    highlights = 'token.appearances.temper',
+  },
 }
 
-local order = { 'token', 'token-flint' }
+local order = { 'token', 'token-flint', 'token-temper' }
 
 local M = {}
 

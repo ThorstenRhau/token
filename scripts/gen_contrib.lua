@@ -221,7 +221,12 @@ local function tmtheme_entry(name, scope, fg, style)
 end
 
 local function textmate_scope_rules(p, appearance)
-  if appearance.name == 'token-flint' then
+  if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+    local is_temper = appearance.name == 'token-temper'
+    local literal = is_temper and p.accent or p.green
+    local literal_style = is_temper and 'italic' or nil
+    local link = is_temper and p.accent or p.blue
+    local exceptional = is_temper and p.accent2 or p.red
     return {
       { 'Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic' },
       { 'Keyword', 'keyword, keyword.control, keyword.other, storage.modifier', p.accent2, nil },
@@ -229,11 +234,16 @@ local function textmate_scope_rules(p, appearance)
       { 'Function definition', 'entity.name.function, meta.function.definition entity.name', p.accent, 'bold' },
       { 'Function call', 'meta.function-call, variable.function', p.accent, nil },
       { 'Built-in function', 'support.function', p.fg1, 'italic' },
-      { 'String', 'string, punctuation.definition.string', p.green, nil },
-      { 'Literal', 'constant, constant.language, constant.numeric, variable.other.constant', p.green, nil },
+      { 'String', 'string, punctuation.definition.string', literal, literal_style },
+      { 'Literal', 'constant, constant.language, constant.numeric, variable.other.constant', literal, literal_style },
       { 'Type definition', 'entity.name.type, entity.name.class, entity.name.type.class', p.accent, 'bold' },
-      { 'Type reference', 'storage.type, support.type, support.class, entity.other.inherited-class', p.blue, 'italic' },
-      { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', p.blue, 'italic' },
+      {
+        'Type reference',
+        'storage.type, support.type, support.class, entity.other.inherited-class',
+        p.fg1,
+        'italic',
+      },
+      { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', p.fg1, 'italic' },
       {
         'Preprocessor',
         'keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using',
@@ -246,8 +256,8 @@ local function textmate_scope_rules(p, appearance)
       { 'Attribute', 'meta.annotation, storage.type.annotation', p.fg1, 'italic' },
       { 'Label', 'entity.name.label, constant.other.label', p.accent2, nil },
       { 'Built-in symbol', 'variable.language', p.fg1, 'italic' },
-      { 'Debug', 'keyword.other.debugger', p.accent2, nil },
-      { 'Exception', 'keyword.control.exception, keyword.control.trycatch', p.accent2, nil },
+      { 'Debug', 'keyword.other.debugger', exceptional, nil },
+      { 'Exception', 'keyword.control.exception, keyword.control.trycatch', exceptional, nil },
       { 'Identifier', 'variable, support.variable, meta.definition.variable', p.fg0, nil },
       {
         'Property',
@@ -264,18 +274,18 @@ local function textmate_scope_rules(p, appearance)
       { 'Heading 5', 'heading.5.markdown', p.accent2, 'bold' },
       { 'Heading 6', 'heading.6.markdown', p.fg1, 'bold' },
       { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil },
-      { 'Markup link', 'markup.underline.link, string.other.link', p.blue, 'underline' },
+      { 'Markup link', 'markup.underline.link, string.other.link', link, 'underline' },
       {
         'Markup link text',
         'string.other.link.title.markdown, constant.other.reference.link.markdown',
-        p.blue,
+        link,
         'underline',
       },
       {
         'Markup code',
         'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw',
-        p.green,
-        nil,
+        literal,
+        literal_style,
       },
       { 'Markup code delimiter', 'punctuation.definition.markdown, punctuation.definition.raw.markdown', p.fg2, nil },
       { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', p.accent2, nil },
@@ -574,28 +584,33 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     { 'diff:special-case', { fg = p.purple } },
   }
 
-  if appearance.name == 'token-flint' then
-    local flint_styles = {
-      ['def:constant'] = { fg = p.green },
-      ['def:special-constant'] = { fg = p.green },
-      ['def:number'] = { fg = p.green },
-      ['def:decimal'] = { fg = p.green },
-      ['def:base-n-integer'] = { fg = p.green },
-      ['def:floating-point'] = { fg = p.green },
-      ['def:complex'] = { fg = p.green },
-      ['def:boolean'] = { fg = p.green },
-      ['def:special-char'] = { fg = p.green },
+  if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+    local is_temper = appearance.name == 'token-temper'
+    local literal = is_temper and { fg = p.accent, italic = true } or { fg = p.green }
+    local profile_styles = {
+      ['def:constant'] = literal,
+      ['def:special-constant'] = literal,
+      ['def:number'] = literal,
+      ['def:decimal'] = literal,
+      ['def:base-n-integer'] = literal,
+      ['def:floating-point'] = literal,
+      ['def:complex'] = literal,
+      ['def:boolean'] = literal,
+      ['def:character'] = literal,
+      ['def:string'] = literal,
+      ['def:special-char'] = literal,
       ['def:function'] = { fg = p.accent, bold = true },
       ['def:builtin'] = { fg = p.fg1, italic = true },
-      ['def:type'] = { fg = p.blue, italic = true },
+      ['def:type'] = { fg = p.fg1, italic = true },
       ['def:preprocessor'] = { fg = p.accent2 },
+      ['def:inline-code'] = literal,
       ['def:heading3'] = { fg = p.fg1, bold = true },
       ['def:heading4'] = { fg = p.accent, bold = true },
       ['def:heading5'] = { fg = p.accent2, bold = true },
       ['def:heading6'] = { fg = p.fg1, bold = true },
     }
     for _, style in ipairs(styles) do
-      style[2] = flint_styles[style[1]] or style[2]
+      style[2] = profile_styles[style[1]] or style[2]
     end
   end
 
@@ -1058,25 +1073,30 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'xcode.syntax.url', p.blue },
   }
 
-  if appearance.name == 'token-flint' then
-    local flint_colors = {
+  if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+    local is_temper = appearance.name == 'token-temper'
+    local profile_colors = {
       ['xcode.syntax.attribute'] = p.fg1,
+      ['xcode.syntax.character'] = is_temper and p.accent or p.green,
       ['xcode.syntax.declaration.type'] = p.accent,
-      ['xcode.syntax.identifier.class'] = p.blue,
-      ['xcode.syntax.identifier.class.system'] = p.blue,
-      ['xcode.syntax.identifier.constant'] = p.green,
-      ['xcode.syntax.identifier.constant.system'] = p.green,
+      ['xcode.syntax.identifier.class'] = p.fg1,
+      ['xcode.syntax.identifier.class.system'] = p.fg1,
+      ['xcode.syntax.identifier.constant'] = is_temper and p.accent or p.green,
+      ['xcode.syntax.identifier.constant.system'] = is_temper and p.accent or p.green,
       ['xcode.syntax.identifier.function.system'] = p.fg1,
       ['xcode.syntax.identifier.macro'] = p.accent2,
       ['xcode.syntax.identifier.macro.system'] = p.accent2,
-      ['xcode.syntax.identifier.type'] = p.blue,
-      ['xcode.syntax.identifier.type.system'] = p.blue,
+      ['xcode.syntax.identifier.type'] = p.fg1,
+      ['xcode.syntax.identifier.type.system'] = p.fg1,
       ['xcode.syntax.identifier.variable.system'] = p.fg1,
-      ['xcode.syntax.number'] = p.green,
+      ['xcode.syntax.markup.code'] = is_temper and p.accent or p.green,
+      ['xcode.syntax.number'] = is_temper and p.accent or p.green,
       ['xcode.syntax.preprocessor'] = p.accent2,
+      ['xcode.syntax.string'] = is_temper and p.accent or p.green,
+      ['xcode.syntax.url'] = is_temper and p.accent or p.blue,
     }
     for _, role in ipairs(syntax_roles) do
-      role[2] = flint_colors[role[1]] or role[2]
+      role[2] = profile_colors[role[1]] or role[2]
     end
   end
 
@@ -1102,7 +1122,8 @@ local function gen_xcode(p, variant, _term, appearance)
     elseif role[1] == 'xcode.syntax.keyword' then
       font = keyword_font
     end
-    if appearance.name == 'token-flint' then
+    if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+      local is_temper = appearance.name == 'token-temper'
       if role[1] == 'xcode.syntax.comment' or role[1] == 'xcode.syntax.comment.doc' then
         font = 'SFMono-RegularItalic - 12.0'
       elseif role[1] == 'xcode.syntax.declaration.other' or role[1] == 'xcode.syntax.declaration.type' then
@@ -1119,6 +1140,18 @@ local function gen_xcode(p, variant, _term, appearance)
         font = 'SFMono-RegularItalic - 12.0'
       elseif role[1] == 'xcode.syntax.keyword' then
         font = regular_font
+      elseif
+        is_temper
+        and (
+          role[1] == 'xcode.syntax.character'
+          or role[1] == 'xcode.syntax.identifier.constant'
+          or role[1] == 'xcode.syntax.identifier.constant.system'
+          or role[1] == 'xcode.syntax.markup.code'
+          or role[1] == 'xcode.syntax.number'
+          or role[1] == 'xcode.syntax.string'
+        )
+      then
+        font = 'SFMono-RegularItalic - 12.0'
       end
     end
     xcode_entry(lines, role[1], font, '      ')
@@ -1342,13 +1375,13 @@ local function gen_vscode_theme(p, variant, term, appearance)
   }
   if appearance.name == 'token-flint' then
     semantic_colors = {
-      { 'class', json_object({ { 'foreground', p.blue }, { 'italic', true } }) },
-      { 'enum', json_object({ { 'foreground', p.blue }, { 'italic', true } }) },
-      { 'interface', json_object({ { 'foreground', p.blue }, { 'italic', true } }) },
-      { 'struct', json_object({ { 'foreground', p.blue }, { 'italic', true } }) },
-      { 'type', json_object({ { 'foreground', p.blue }, { 'italic', true } }) },
-      { 'typeParameter', json_object({ { 'foreground', p.blue }, { 'italic', true } }) },
-      { 'namespace', json_object({ { 'foreground', p.blue }, { 'italic', true } }) },
+      { 'class', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'enum', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'interface', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'struct', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'type', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'typeParameter', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'namespace', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
       { 'function', p.accent },
       { 'method', p.accent },
       { 'macro', p.accent2 },
@@ -1369,6 +1402,51 @@ local function gen_vscode_theme(p, variant, term, appearance)
       { '*.definition', json_object({ { 'bold', true } }) },
     }
     for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+      for _, modifier in ipairs({ 'declaration', 'definition' }) do
+        semantic_colors[#semantic_colors + 1] = {
+          token_type .. '.' .. modifier,
+          json_object({ { 'foreground', p.accent }, { 'bold', true }, { 'italic', false } }),
+        }
+      end
+    end
+  elseif appearance.name == 'token-temper' then
+    semantic_colors = {
+      { 'class', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'enum', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'interface', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'struct', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'type', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'typeParameter', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'namespace', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'function', p.accent },
+      { 'method', p.accent },
+      { 'macro', p.accent2 },
+      { 'keyword', p.accent2 },
+      { 'string', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
+      { 'number', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
+      { 'enumMember', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
+      { 'variable.readonly', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
+      { 'property.readonly', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
+      { 'parameter', p.fg1 },
+      { '*.deprecated', json_object({ { 'strikethrough', true } }) },
+      { '*.readonly', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
+      { '*.async', json_object({ { 'italic', true } }) },
+      { '*.static', json_object({ { 'italic', true } }) },
+      { '*.abstract', json_object({ { 'italic', true } }) },
+      { '*.defaultLibrary', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { '*.declaration', json_object({ { 'bold', true } }) },
+      { '*.definition', json_object({ { 'bold', true } }) },
+    }
+    for _, token_type in ipairs({
+      'type',
+      'class',
+      'enum',
+      'interface',
+      'struct',
+      'typeParameter',
+      'function',
+      'method',
+    }) do
       for _, modifier in ipairs({ 'declaration', 'definition' }) do
         semantic_colors[#semantic_colors + 1] = {
           token_type .. '.' .. modifier,
@@ -1568,10 +1646,10 @@ local function obsidian_theme_block(p, variant, appearance)
     '',
     '  --h1-color: ' .. p.accent .. ';',
     '  --h2-color: ' .. p.accent2 .. ';',
-    '  --h3-color: ' .. (appearance.name == 'token-flint' and p.fg1 or p.olive) .. ';',
-    '  --h4-color: ' .. (appearance.name == 'token-flint' and p.accent or p.blue) .. ';',
-    '  --h5-color: ' .. (appearance.name == 'token-flint' and p.accent2 or p.green) .. ';',
-    '  --h6-color: ' .. (appearance.name == 'token-flint' and p.fg1 or p.purple) .. ';',
+    '  --h3-color: ' .. (appearance.name ~= 'token' and p.fg1 or p.olive) .. ';',
+    '  --h4-color: ' .. (appearance.name ~= 'token' and p.accent or p.blue) .. ';',
+    '  --h5-color: ' .. (appearance.name ~= 'token' and p.accent2 or p.green) .. ';',
+    '  --h6-color: ' .. (appearance.name ~= 'token' and p.fg1 or p.purple) .. ';',
     '',
     '  --code-normal: ' .. p.fg0 .. ';',
     '  --code-background: ' .. p.bg1 .. ';',
@@ -1601,7 +1679,7 @@ local function gen_obsidian_theme(dark, light, appearance)
     '',
   }, '\n')
 
-  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/token-flint/'
+  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/' .. appearance.slug .. '/'
   return { path = prefix .. 'theme.css', content = content }
 end
 
@@ -1614,7 +1692,7 @@ local function gen_obsidian_manifest(appearance)
     { 'authorUrl', 'https://github.com/ThorstenRhau' },
   })
 
-  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/token-flint/'
+  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/' .. appearance.slug .. '/'
   return { path = prefix .. 'manifest.json', content = table.concat({ json_encode(manifest), '' }, '\n') }
 end
 

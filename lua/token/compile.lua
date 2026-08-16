@@ -98,9 +98,10 @@ function M.compile()
   vim.fn.mkdir(dir, 'p')
 
   local pending = {}
+  local appearances = require('token.appearance').all()
 
   local ok, err = pcall(function()
-    for _, appearance in ipairs(require('token.appearance').all()) do
+    for _, appearance in ipairs(appearances) do
       for _, bg in ipairs({ 'dark', 'light' }) do
         for key in pairs(package.loaded) do
           if key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config' then
@@ -132,7 +133,10 @@ function M.compile()
     assert(vim.uv.fs_rename(pair[1], pair[2]))
   end
 
-  vim.notify('token: compiled classic and Flint dark and light variants', vim.log.levels.INFO)
+  vim.notify(
+    string.format('token: compiled %d appearances and %d variants', #appearances, #appearances * 2),
+    vim.log.levels.INFO
+  )
 end
 
 ---@param background 'dark'|'light'

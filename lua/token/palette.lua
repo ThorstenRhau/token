@@ -26,9 +26,7 @@
 ---@field orange string Orange semantic hue used by numeric and boolean literals.
 ---@field olive string Warm olive hue used by the current line number and tertiary headings.
 -- Bright terminal variants
----@field bright_red string Bright ANSI red used for terminal color 9.
 ---@field bright_green string Bright ANSI green used for terminal color 10.
----@field bright_yellow string Bright ANSI yellow used for terminal color 11.
 ---@field bright_blue string Bright ANSI blue used for terminal color 12.
 ---@field bright_purple string Bright ANSI purple used for terminal color 13.
 ---@field bright_cyan string Bright ANSI cyan used for terminal color 14.
@@ -96,9 +94,7 @@ local function palette(background)
       orange = '#9a5f22',
       olive = '#63742f',
       -- Bright variants
-      bright_red = '#9a4929',
       bright_green = '#3a5e37',
-      bright_yellow = '#876032',
       bright_blue = '#486a88',
       bright_purple = '#6f578c',
       bright_cyan = '#286363',
@@ -161,9 +157,7 @@ local function palette(background)
     orange = '#d4914a',
     olive = '#a8b56b',
     -- Bright variants
-    bright_red = '#d97757',
     bright_green = '#98bf95',
-    bright_yellow = '#c4956a',
     bright_blue = '#96b8d3',
     bright_purple = '#bea5d4',
     bright_cyan = '#88c0c0',
