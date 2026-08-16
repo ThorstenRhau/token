@@ -119,7 +119,7 @@ token/
 - `compile.lua` handles `:TokenCompile` (generates classic and Flint dark/light
   bytecode under `stdpath('cache')/token/`) and configuration-fingerprinted loading
 - `palette.lua` and `palettes/flint.lua` each take `'dark'|'light'` and return a
-  flat table of 49 semantic hex color keys
+  flat table of 51 semantic hex color keys
 - `appearances/flint.lua` overlays Flint's restrained color grammar and semantic
   typography before shared user styles are applied
 - `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp,

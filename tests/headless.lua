@@ -83,7 +83,13 @@ end
 
 for _, variant in ipairs({ 'dark', 'light' }) do
   local theme = vim.json.decode(read_text('contrib/vscode/themes/token-flint-' .. variant .. '-color-theme.json'))
-  local accent = require('token.palettes.flint')(variant).accent
+  local palette = require('token.palettes.flint')(variant)
+  local accent = palette.accent
+  equal(
+    theme.semanticTokenColors.type,
+    { foreground = palette.blue, italic = true },
+    'Flint VS Code semantic type reference ' .. variant
+  )
   for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
       equal(
@@ -204,6 +210,7 @@ equal(#vscode_package.contributes.themes, 4, 'VS Code package does not inventory
 equal(vscode_package.contributes.themes[3].label, 'Token Flint Dark', 'VS Code Flint dark label')
 equal(vscode_package.contributes.themes[4].label, 'Token Flint Light', 'VS Code Flint light label')
 local vscode_flint = vim.json.decode(read_text('contrib/vscode/themes/token-flint-dark-color-theme.json'))
+local flint_dark = require('token.palettes.flint')('dark')
 local vscode_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
   vscode_rules[rule.name] = rule.settings
@@ -211,6 +218,8 @@ end
 equal(vscode_rules['Function definition'].fontStyle, 'bold', 'VS Code Flint definition typography')
 equal(vscode_rules['Function call'].fontStyle, nil, 'VS Code Flint call typography')
 equal(vscode_rules['Type reference'].fontStyle, 'italic', 'VS Code Flint reference typography')
+equal(vscode_rules['Type reference'].foreground, flint_dark.blue, 'VS Code Flint type reference color')
+equal(vscode_rules.Exception.foreground, flint_dark.accent2, 'VS Code Flint exception color')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-flint/manifest.json')).name,
   'Token Flint',
@@ -219,6 +228,8 @@ equal(
 local windows_flint = vim.json.decode(read_text('contrib/windows-terminal/token-flint.json')).schemes
 equal(windows_flint[1].name, 'Token Flint Dark', 'Windows Terminal Flint dark name')
 equal(windows_flint[2].name, 'Token Flint Light', 'Windows Terminal Flint light name')
+equal(windows_flint[1].brightRed, flint_dark.bright_red, 'Windows Terminal Flint bright red')
+equal(windows_flint[1].brightYellow, flint_dark.bright_yellow, 'Windows Terminal Flint bright yellow')
 local emacs_flint = read_text('contrib/emacs/token-flint-dark-theme.el')
 truthy(
   emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
@@ -227,6 +238,10 @@ truthy(
 truthy(
   emacs_flint:find('font-lock-function-call-face      ((,class (:foreground ,accent)))', 1, true),
   'Emacs Flint call typography'
+)
+truthy(
+  emacs_flint:find('font-lock-type-face               ((,class (:foreground ,blue :slant italic)))', 1, true),
+  'Emacs Flint type grammar'
 )
 
 -- Generated output helpers reject path escapes and symlinks, and publish ordinary files correctly.
@@ -318,11 +333,16 @@ local flint_anchors = {
     fg1 = '#C2C9D0',
     fg2 = '#929BA5',
     fg3 = '#626C77',
-    accent = '#D58A6F',
-    accent2 = '#C6A15A',
-    green = '#94A477',
-    blue = '#7FA2BA',
+    accent = '#B7A0E0',
+    accent2 = '#73B7B0',
+    green = '#8FB583',
+    blue = '#82AAD0',
     red = '#D47A7F',
+    yellow = '#C6A15A',
+    purple = '#B7A0E0',
+    cyan = '#73B7B0',
+    bright_red = '#E79196',
+    bright_yellow = '#DAB96C',
   },
   light = {
     bg3 = '#F5F7F8',
@@ -332,27 +352,35 @@ local flint_anchors = {
     fg1 = '#3D4853',
     fg2 = '#65717D',
     fg3 = '#828E9A',
-    accent = '#B64E2E',
-    accent2 = '#946409',
-    green = '#5A772B',
-    blue = '#34779D',
+    accent = '#6D5591',
+    accent2 = '#27766F',
+    green = '#4C732C',
+    blue = '#306F9C',
     red = '#BE3E50',
+    yellow = '#89610D',
+    purple = '#6D5591',
+    cyan = '#27766F',
+    bright_red = '#A93347',
+    bright_yellow = '#77530A',
   },
 }
 for _, background in ipairs({ 'dark', 'light' }) do
   local classic = require('token.palette')(background)
   local flint = require('token.palettes.flint')(background)
   equal(sorted_keys(flint), sorted_keys(classic), 'Flint palette keys for ' .. background)
-  equal(vim.tbl_count(flint), 49, 'Flint palette key count for ' .. background)
+  equal(vim.tbl_count(flint), 51, 'Flint palette key count for ' .. background)
   for key, color in pairs(flint) do
     truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Flint color ' .. key .. ' for ' .. background)
   end
   for key, color in pairs(flint_anchors[background]) do
     equal(flint[key], color, 'Flint anchor ' .. key .. ' for ' .. background)
   end
-  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'green', 'blue', 'red' }) do
+  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'green', 'blue', 'red', 'yellow', 'purple', 'cyan' }) do
     truthy(contrast(flint[key], flint.bg3) >= 4.5, 'insufficient Flint contrast for ' .. key .. ' ' .. background)
   end
+  local terminal = require('token.terminal').colors(flint, background == 'dark')
+  equal(terminal[9], flint.bright_red, 'Flint ANSI bright red for ' .. background)
+  equal(terminal[11], flint.bright_yellow, 'Flint ANSI bright yellow for ' .. background)
 end
 
 -- Both colorscheme entry points select their appearance while background selects the variant.
@@ -384,7 +412,7 @@ equal(hl('@function.call').fg, tonumber(flint.accent:sub(2), 16), 'Flint functio
 truthy(hl('@function.method').bold, 'Flint method definition is not bold')
 equal(hl('@function.method.call').bold, nil, 'Flint method call is bold')
 truthy(hl('@type').italic, 'Flint type reference is not italic')
-equal(hl('@type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint type reference color')
+equal(hl('@type').fg, tonumber(flint.blue:sub(2), 16), 'Flint type reference color')
 truthy(hl('@type.definition').bold, 'Flint type definition is not bold')
 equal(hl('@type.definition').fg, tonumber(flint.accent:sub(2), 16), 'Flint type definition color')
 truthy(hl('@function.builtin').italic, 'Flint built-in is not italic')
@@ -392,7 +420,7 @@ equal(hl('@function.builtin').fg, tonumber(flint.fg1:sub(2), 16), 'Flint built-i
 equal(hl('@lsp.type.function').bold, nil, 'Flint LSP function reference is bold')
 equal(hl('@lsp.type.function').fg, tonumber(flint.accent:sub(2), 16), 'Flint LSP function reference color')
 truthy(hl('@lsp.type.type').italic, 'Flint LSP type reference is not italic')
-equal(hl('@lsp.type.type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint LSP type reference color')
+equal(hl('@lsp.type.type').fg, tonumber(flint.blue:sub(2), 16), 'Flint LSP type reference color')
 truthy(hl('@lsp.typemod.function.definition').bold, 'Flint LSP function definition is not bold')
 equal(
   hl('@lsp.typemod.function.definition').fg,
@@ -400,6 +428,8 @@ equal(
   'Flint LSP function definition color'
 )
 equal(hl('@keyword').fg, tonumber(flint.accent2:sub(2), 16), 'Flint keyword color')
+equal(hl('@keyword.exception').fg, tonumber(flint.accent2:sub(2), 16), 'Flint exception keyword color')
+equal(hl('@keyword.debug').fg, tonumber(flint.accent2:sub(2), 16), 'Flint debug keyword color')
 equal(hl('@string').fg, tonumber(flint.green:sub(2), 16), 'Flint literal color')
 truthy(hl('@markup.link').underline, 'Flint link is not underlined')
 equal(hl('@markup.link').fg, tonumber(flint.blue:sub(2), 16), 'Flint link color')

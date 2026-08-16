@@ -1250,14 +1250,14 @@ local function flint_face(entry)
     ['font-lock-builtin-face'] = { fg = 'fg1', italic = true },
     ['font-lock-function-name-face'] = { fg = 'accent', bold = true },
     ['font-lock-function-call-face'] = { fg = 'accent' },
-    ['font-lock-type-face'] = { fg = 'fg1', italic = true },
+    ['font-lock-type-face'] = { fg = 'blue', italic = true },
     ['font-lock-constant-face'] = { fg = 'green' },
     ['font-lock-preprocessor-face'] = { fg = 'accent2' },
     ['font-lock-regexp-grouping-backslash'] = { fg = 'green' },
     ['font-lock-regexp-grouping-construct'] = { fg = 'green' },
     ['font-lock-escape-face'] = { fg = 'green' },
     ['font-lock-number-face'] = { fg = 'green' },
-    ['font-lock-reference-face'] = { fg = 'fg1', italic = true },
+    ['font-lock-reference-face'] = { fg = 'blue', italic = true },
   }
   local override = overrides[entry[1]]
   if override then
