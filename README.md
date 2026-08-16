@@ -23,10 +23,11 @@ matching appearance palette, so everything stays consistent without extra work.
 
 ## Showcase
 
-| Dark                                            | Light                                            |
-| ----------------------------------------------- | ------------------------------------------------ |
-| ![Dark variant 1](https://rhau.se/token-d1.png) | ![Light variant 1](https://rhau.se/token-l1.png) |
-| ![Dark variant 2](https://rhau.se/token-d2.png) | ![Light variant 2](https://rhau.se/token-l2.png) |
+| Appearance   | Dark                                                           | Light                                                           |
+| ------------ | -------------------------------------------------------------- | --------------------------------------------------------------- |
+| Token        | ![Token dark](https://rhau.se/token-dark.png)                  | ![Token light](https://rhau.se/token-light.png)                  |
+| Token Flint  | ![Token Flint dark](https://rhau.se/token-flint-dark.png)       | ![Token Flint light](https://rhau.se/token-flint-light.png)      |
+| Token Temper | ![Token Temper dark](https://rhau.se/token-temper-dark.png)     | ![Token Temper light](https://rhau.se/token-temper-light.png)    |
 
 ## Install
 
