@@ -1,12 +1,13 @@
-# token — Emacs themes
+# token - Emacs themes
 
-Dark and light Emacs themes derived from the [token](https://github.com/ThorstenRhau/token)
-Neovim colorscheme. Covers ~860 faces across syntax, org-mode, magit, completion
-frameworks, diagnostics, diffs, shell, mail, and more.
+Classic Token and Token Flint dark and light Emacs themes derived from the
+[token](https://github.com/ThorstenRhau/token) Neovim colorscheme. Each covers
+about 860 faces across syntax, org-mode, magit, completion frameworks,
+diagnostics, diffs, shell, mail, and more.
 
-> The `.el` files in this directory are generated from `lua/token/palette.lua`
-> via `scripts/gen_contrib.lua`. Do not edit them by hand; run `make contrib`
-> after changing the palette and commit the regenerated output.
+> The `.el` files in this directory are generated from Token's appearance
+> palettes via `scripts/gen_contrib.lua`. Do not edit them by hand; run
+> `make contrib` after changing a palette and commit the regenerated output.
 
 ## Files
 
@@ -14,6 +15,8 @@ frameworks, diagnostics, diffs, shell, mail, and more.
 | --- | --- |
 | `token-dark-theme.el` | `token-dark` |
 | `token-light-theme.el` | `token-light` |
+| `token-flint-dark-theme.el` | `token-flint-dark` |
+| `token-flint-light-theme.el` | `token-flint-light` |
 
 ## Requirements
 
@@ -26,14 +29,15 @@ Emacs 27+ (uses `:extend`, `(:style wave)` underlines, and `lexical-binding`).
 1. Copy the `.el` files to a directory on your `custom-theme-load-path`:
 
 ```bash
-cp token-dark-theme.el token-light-theme.el ~/.emacs.d/themes/
+cp token{,-flint}-{dark,light}-theme.el ~/.emacs.d/themes/
 ```
 
 2. Add the directory to your init file and load the theme:
 
 ```elisp
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'token-dark t)   ; or token-light
+(load-theme 'token-dark t)         ; classic
+(load-theme 'token-flint-dark t)   ; Flint
 ```
 
 The files include a `;;;###autoload` cookie, so `package.el`-style installers
@@ -63,6 +67,8 @@ pick up the `custom-theme-load-path` entry automatically.
 
 ## Switching between dark and light
 
+Use the matching pair for the appearance you want. For example, classic Token:
+
 ```elisp
 ;; Load dark
 (load-theme 'token-dark t)
@@ -71,6 +77,8 @@ pick up the `custom-theme-load-path` entry automatically.
 (disable-theme 'token-dark)
 (load-theme 'token-light t)
 ```
+
+For Flint, use `token-flint-dark` and `token-flint-light` in the same places.
 
 To follow the system appearance automatically (macOS / Emacs 29+):
 

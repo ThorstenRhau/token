@@ -1,1 +1,1 @@
-require('token').load()
+require('token').load('token')

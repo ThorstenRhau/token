@@ -19,8 +19,8 @@ local verify = parse_args(arg)
 
 package.path = 'lua/?.lua;lua/?/init.lua;scripts/?.lua;' .. package.path
 
+local appearance_registry = require('token.appearance')
 local gen_emacs = require('gen_emacs')
-local palette_fn = require('token.palette')
 local terminal = require('token.terminal')
 
 local lib = require('gen_lib')
@@ -32,6 +32,10 @@ local write_if_changed = lib.write_if_changed
 local list_files = lib.list_files
 local unexpected_paths = lib.unexpected_paths
 local extend_lines = lib.extend_lines
+
+local function variant_name(appearance, variant)
+  return appearance.display_name .. ' ' .. (variant == 'dark' and 'Dark' or 'Light')
+end
 
 local function json_escape(s)
   return s:gsub('[%z\1-\31\\"]', function(c)
@@ -98,7 +102,7 @@ end
 -- carapace (styles.json)
 -- ---------------------------------------------------------------------------
 
-local function gen_carapace(p, variant, _term)
+local function gen_carapace(p, variant, _term, appearance)
   local function q(key, color)
     return '    "' .. key .. '": "' .. color .. '"'
   end
@@ -146,14 +150,14 @@ local function gen_carapace(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/carapace/token-' .. variant .. '.json', content = content }
+  return { path = 'contrib/carapace/' .. appearance.slug .. '-' .. variant .. '.json', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- ChatGPT desktop (codex-theme-v1 share string)
 -- ---------------------------------------------------------------------------
 
-local function gen_chatgpt(p, variant)
+local function gen_chatgpt(p, variant, appearance)
   local theme = json_object({
     { 'codeThemeId', 'codex' },
     {
@@ -180,7 +184,7 @@ local function gen_chatgpt(p, variant)
   local payload = json_encode(theme):gsub('\n%s*', '')
 
   return {
-    path = 'contrib/chatgpt/token-' .. variant .. '.txt',
+    path = 'contrib/chatgpt/' .. appearance.slug .. '-' .. variant .. '.txt',
     content = 'codex-theme-v1:' .. payload .. '\n',
   }
 end
@@ -216,7 +220,79 @@ local function tmtheme_entry(name, scope, fg, style)
   return table.concat(lines, '\n')
 end
 
-local function textmate_scope_rules(p)
+local function textmate_scope_rules(p, appearance)
+  if appearance.name == 'token-flint' then
+    return {
+      { 'Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic' },
+      { 'Keyword', 'keyword, keyword.control, keyword.other, storage.modifier', p.accent2, nil },
+      { 'Operator', 'keyword.operator', p.fg1, nil },
+      { 'Function definition', 'entity.name.function, meta.function.definition entity.name', p.accent, 'bold' },
+      { 'Function call', 'meta.function-call, variable.function', p.accent, nil },
+      { 'Built-in function', 'support.function', p.fg1, 'italic' },
+      { 'String', 'string, punctuation.definition.string', p.green, nil },
+      { 'Literal', 'constant, constant.language, constant.numeric, variable.other.constant', p.green, nil },
+      { 'Type definition', 'entity.name.type, entity.name.class, entity.name.type.class', p.accent, 'bold' },
+      { 'Type reference', 'storage.type, support.type, support.class, entity.other.inherited-class', p.fg1, 'italic' },
+      { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', p.fg1, 'italic' },
+      {
+        'Preprocessor',
+        'keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using',
+        p.accent2,
+        nil,
+      },
+      { 'Macro', 'entity.name.function.preprocessor', p.accent2, nil },
+      { 'Tag', 'entity.name.tag', p.fg1, nil },
+      { 'Tag attribute', 'entity.other.attribute-name', p.fg0, nil },
+      { 'Attribute', 'meta.annotation, storage.type.annotation', p.fg1, 'italic' },
+      { 'Label', 'entity.name.label, constant.other.label', p.accent2, nil },
+      { 'Built-in symbol', 'variable.language', p.fg1, 'italic' },
+      { 'Debug', 'keyword.other.debugger', p.red, nil },
+      { 'Exception', 'keyword.control.exception, keyword.control.trycatch', p.red, nil },
+      { 'Identifier', 'variable, support.variable, meta.definition.variable', p.fg0, nil },
+      {
+        'Property',
+        'variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key',
+        p.fg0,
+        nil,
+      },
+      { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil },
+      { 'Parameter', 'variable.parameter', p.fg1, nil },
+      { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', p.accent, 'bold' },
+      { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', p.accent2, 'bold' },
+      { 'Heading 3', 'heading.3.markdown', p.fg1, 'bold' },
+      { 'Heading 4', 'heading.4.markdown', p.accent, 'bold' },
+      { 'Heading 5', 'heading.5.markdown', p.accent2, 'bold' },
+      { 'Heading 6', 'heading.6.markdown', p.fg1, 'bold' },
+      { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil },
+      { 'Markup link', 'markup.underline.link, string.other.link', p.blue, 'underline' },
+      {
+        'Markup link text',
+        'string.other.link.title.markdown, constant.other.reference.link.markdown',
+        p.blue,
+        'underline',
+      },
+      {
+        'Markup code',
+        'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw',
+        p.green,
+        nil,
+      },
+      { 'Markup code delimiter', 'punctuation.definition.markdown, punctuation.definition.raw.markdown', p.fg2, nil },
+      { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', p.accent2, nil },
+      { 'Markup bold', 'markup.bold', nil, 'bold' },
+      { 'Markup italic', 'markup.italic', nil, 'italic' },
+      { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
+      { 'Markup quote', 'markup.quote', p.fg2, 'italic' },
+      { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
+      { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
+      { 'Diff changed', 'markup.changed', p.yellow, nil },
+      { 'GitGutter inserted', 'markup.inserted.git_gutter', p.green, nil },
+      { 'GitGutter deleted', 'markup.deleted.git_gutter', p.red, nil },
+      { 'GitGutter changed', 'markup.changed.git_gutter', p.yellow, nil },
+      { 'GitGutter untracked', 'markup.untracked.git_gutter', p.fg3, nil },
+      { 'GitGutter ignored', 'markup.ignored.git_gutter', p.fg3, nil },
+    }
+  end
   return {
     { 'Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic' },
     { 'Keyword', 'keyword, keyword.control, keyword.other', p.accent2, nil },
@@ -282,11 +358,11 @@ local function textmate_scope_rules(p)
   }
 end
 
-local function gen_bat(p, variant, _term)
-  local name = 'token-' .. variant
+local function gen_bat(p, variant, _term, appearance)
+  local name = appearance.slug .. '-' .. variant
 
   local scopes = {}
-  for _, rule in ipairs(textmate_scope_rules(p)) do
+  for _, rule in ipairs(textmate_scope_rules(p, appearance)) do
     scopes[#scopes + 1] = tmtheme_entry(rule[1], rule[2], rule[3], rule[4])
   end
 
@@ -335,11 +411,11 @@ end
 -- Sublime Text (.sublime-color-scheme)
 -- ---------------------------------------------------------------------------
 
-local function gen_sublime(p, variant, _term)
-  local name = 'Token ' .. (variant == 'dark' and 'Dark' or 'Light')
+local function gen_sublime(p, variant, _term, appearance)
+  local name = variant_name(appearance, variant)
 
   local rules = {}
-  for _, rule in ipairs(textmate_scope_rules(p)) do
+  for _, rule in ipairs(textmate_scope_rules(p, appearance)) do
     local entries = {
       { 'name', rule[1] },
       { 'scope', rule[2] },
@@ -385,7 +461,10 @@ local function gen_sublime(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/sublime/token-' .. variant .. '.sublime-color-scheme', content = content }
+  return {
+    path = 'contrib/sublime/' .. appearance.slug .. '-' .. variant .. '.sublime-color-scheme',
+    content = content,
+  }
 end
 
 -- ---------------------------------------------------------------------------
@@ -413,9 +492,11 @@ local function gtk_style(name, opts)
   return table.concat(attrs)
 end
 
-local function gen_gtksourceview(p, variant, _term)
-  local id = 'token-' .. variant
-  local name = 'Token ' .. (variant == 'dark' and 'Dark' or 'Light')
+local function gen_gtksourceview(p, variant, _term, appearance)
+  local id = appearance.slug .. '-' .. variant
+  local name = variant_name(appearance, variant)
+  local description = appearance.name == 'token' and 'Token ' .. variant .. ' - warm, muted theme'
+    or appearance.display_name .. ' ' .. variant .. ' theme'
 
   -- name -> style options; ordered for readable output
   local styles = {
@@ -493,12 +574,37 @@ local function gen_gtksourceview(p, variant, _term)
     { 'diff:special-case', { fg = p.purple } },
   }
 
+  if appearance.name == 'token-flint' then
+    local flint_styles = {
+      ['def:constant'] = { fg = p.green },
+      ['def:special-constant'] = { fg = p.green },
+      ['def:number'] = { fg = p.green },
+      ['def:decimal'] = { fg = p.green },
+      ['def:base-n-integer'] = { fg = p.green },
+      ['def:floating-point'] = { fg = p.green },
+      ['def:complex'] = { fg = p.green },
+      ['def:boolean'] = { fg = p.green },
+      ['def:special-char'] = { fg = p.green },
+      ['def:function'] = { fg = p.accent, bold = true },
+      ['def:builtin'] = { fg = p.fg1, italic = true },
+      ['def:type'] = { fg = p.fg1, italic = true },
+      ['def:preprocessor'] = { fg = p.accent2 },
+      ['def:heading3'] = { fg = p.fg1, bold = true },
+      ['def:heading4'] = { fg = p.accent, bold = true },
+      ['def:heading5'] = { fg = p.accent2, bold = true },
+      ['def:heading6'] = { fg = p.fg1, bold = true },
+    }
+    for _, style in ipairs(styles) do
+      style[2] = flint_styles[style[1]] or style[2]
+    end
+  end
+
   local lines = {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<!-- Generated by token colorscheme. Do not edit manually. -->',
     '<style-scheme id="' .. id .. '" name="' .. name .. '" version="1.0">',
     '    <author>Generated by token colorscheme</author>',
-    '    <description>Token ' .. variant .. ' - warm, muted theme</description>',
+    '    <description>' .. description .. '</description>',
   }
   for _, s in ipairs(styles) do
     lines[#lines + 1] = gtk_style(s[1], s[2])
@@ -506,7 +612,10 @@ local function gen_gtksourceview(p, variant, _term)
   lines[#lines + 1] = '</style-scheme>'
   lines[#lines + 1] = ''
 
-  return { path = 'contrib/gtksourceview/token-' .. variant .. '.xml', content = table.concat(lines, '\n') }
+  return {
+    path = 'contrib/gtksourceview/' .. appearance.slug .. '-' .. variant .. '.xml',
+    content = table.concat(lines, '\n'),
+  }
 end
 
 -- ---------------------------------------------------------------------------
@@ -521,7 +630,7 @@ local function blink_rgba(hex, alpha)
   return string.format('rgba(%d, %d, %d, %.1f)', r, g, b, alpha)
 end
 
-local function gen_blink(p, variant, term)
+local function gen_blink(p, variant, term, appearance)
   local palette = {}
   for i = 0, 15 do
     palette[#palette + 1] = "  '" .. term[i] .. "',"
@@ -539,14 +648,14 @@ local function gen_blink(p, variant, term)
     '',
   }, '\n')
 
-  return { path = 'contrib/blink/token-' .. variant .. '.js', content = content }
+  return { path = 'contrib/blink/' .. appearance.slug .. '-' .. variant .. '.js', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- delta (.gitconfig)
 -- ---------------------------------------------------------------------------
 
-local function gen_delta(dark, light, _dark_term, _light_term)
+local function gen_delta(dark, light, _dark_term, _light_term, appearance)
   local function section(p, variant)
     local is_dark = variant == 'dark'
     local base_del = is_dark and p.diff_del_inline or p.diff_del
@@ -554,9 +663,9 @@ local function gen_delta(dark, light, _dark_term, _light_term)
     local emph_del = is_dark and p.diff_del_strong or p.diff_del_inline
     local emph_add = is_dark and p.diff_add_strong or p.diff_add_inline
     local lines = {
-      '[delta "token-' .. variant .. '"]',
+      '[delta "' .. appearance.slug .. '-' .. variant .. '"]',
       '\t' .. (is_dark and 'dark' or 'light') .. ' = true',
-      '\tsyntax-theme = token-' .. variant,
+      '\tsyntax-theme = ' .. appearance.slug .. '-' .. variant,
       '\tblame-palette = "' .. p.bg1 .. ' ' .. p.bg2 .. ' ' .. p.bg3 .. ' ' .. p.bg4 .. ' ' .. p.bg5 .. '"',
       '\tcommit-decoration-style = "' .. p.fg3 .. '" bold box ul',
       '\tfile-style = "' .. p.fg0 .. '"',
@@ -591,7 +700,7 @@ local function gen_delta(dark, light, _dark_term, _light_term)
     '# Generated by token colorscheme. Do not edit manually.',
     '# Include this file from ~/.gitconfig, then enable one of these named delta features:',
     '#   [delta]',
-    '#     features = token-dark',
+    '#     features = ' .. appearance.slug .. '-dark',
     '',
     section(dark, 'dark'),
     '',
@@ -599,7 +708,7 @@ local function gen_delta(dark, light, _dark_term, _light_term)
     '',
   }, '\n')
 
-  return { path = 'contrib/delta/token.gitconfig', content = content }
+  return { path = 'contrib/delta/' .. appearance.slug .. '.gitconfig', content = content }
 end
 
 -- ---------------------------------------------------------------------------
@@ -645,7 +754,7 @@ local function fish_theme_lines(p)
   }
 end
 
-local function gen_fish(dark, light, _dark_term, _light_term)
+local function gen_fish(dark, light, _dark_term, _light_term, appearance)
   local function add_variant(lines, name, p)
     lines[#lines + 1] = '[' .. name .. ']'
     lines[#lines + 1] = '# preferred_background: ' .. strip(p.bg3)
@@ -655,7 +764,7 @@ local function gen_fish(dark, light, _dark_term, _light_term)
 
   local lines = {
     '# Generated by token colorscheme. Do not edit manually.',
-    "# name: 'token'",
+    "# name: '" .. appearance.slug .. "'",
     '',
   }
 
@@ -663,14 +772,14 @@ local function gen_fish(dark, light, _dark_term, _light_term)
   add_variant(lines, 'light', light)
   add_variant(lines, 'unknown', dark)
 
-  return { path = 'contrib/fish/token.theme', content = table.concat(lines, '\n') }
+  return { path = 'contrib/fish/' .. appearance.slug .. '.theme', content = table.concat(lines, '\n') }
 end
 
 -- ---------------------------------------------------------------------------
 -- fzf (fish script)
 -- ---------------------------------------------------------------------------
 
-local function gen_fzf(p, variant, _term)
+local function gen_fzf(p, variant, _term, appearance)
   local content = table.concat({
     '# Generated by token colorscheme. Do not edit manually.',
     '# Source this file from config.fish to append token colors to FZF_DEFAULT_OPTS.',
@@ -686,10 +795,10 @@ local function gen_fzf(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/fzf/token-' .. variant .. '.fish', content = content }
+  return { path = 'contrib/fzf/' .. appearance.slug .. '-' .. variant .. '.fish', content = content }
 end
 
-local function gen_fzf_zsh(p, variant, _term)
+local function gen_fzf_zsh(p, variant, _term, appearance)
   local content = table.concat({
     '# Generated by token colorscheme. Do not edit manually.',
     '# Source this file from your .zshrc to append token colors to FZF_DEFAULT_OPTS.',
@@ -706,14 +815,14 @@ local function gen_fzf_zsh(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/fzf/token-' .. variant .. '.zsh', content = content }
+  return { path = 'contrib/fzf/' .. appearance.slug .. '-' .. variant .. '.zsh', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- ghostty (config fragment)
 -- ---------------------------------------------------------------------------
 
-local function gen_ghostty(p, variant, term)
+local function gen_ghostty(p, variant, term, appearance)
   local lines = {
     '# Generated by token colorscheme. Do not edit manually.',
     '',
@@ -730,14 +839,14 @@ local function gen_ghostty(p, variant, term)
   end
   lines[#lines + 1] = ''
 
-  return { path = 'contrib/ghostty/token-' .. variant, content = table.concat(lines, '\n') }
+  return { path = 'contrib/ghostty/' .. appearance.slug .. '-' .. variant, content = table.concat(lines, '\n') }
 end
 
 -- ---------------------------------------------------------------------------
 -- kitty (.conf fragment)
 -- ---------------------------------------------------------------------------
 
-local function gen_kitty(p, variant, term)
+local function gen_kitty(p, variant, term, appearance)
   local lines = {
     '# Generated by token colorscheme. Do not edit manually.',
     '',
@@ -755,7 +864,10 @@ local function gen_kitty(p, variant, term)
   end
   lines[#lines + 1] = ''
 
-  return { path = 'contrib/kitty/token-' .. variant .. '.conf', content = table.concat(lines, '\n') }
+  return {
+    path = 'contrib/kitty/' .. appearance.slug .. '-' .. variant .. '.conf',
+    content = table.concat(lines, '\n'),
+  }
 end
 
 -- ---------------------------------------------------------------------------
@@ -784,7 +896,7 @@ local function iterm2_color_entry(name, hex)
   }, '\n')
 end
 
-local function gen_iterm2(p, variant, term)
+local function gen_iterm2(p, variant, term, appearance)
   local entries = {
     iterm2_color_entry('Background Color', p.bg3),
     iterm2_color_entry('Foreground Color', p.fg0),
@@ -812,7 +924,7 @@ local function gen_iterm2(p, variant, term)
     '',
   }, '\n')
 
-  return { path = 'contrib/iterm2/token-' .. variant .. '.itermcolors', content = content }
+  return { path = 'contrib/iterm2/' .. appearance.slug .. '-' .. variant .. '.itermcolors', content = content }
 end
 
 -- ---------------------------------------------------------------------------
@@ -833,7 +945,7 @@ local function xcode_entry(lines, key, value, indent)
   lines[#lines + 1] = indent .. '<string>' .. value .. '</string>'
 end
 
-local function gen_xcode(p, variant, _term)
+local function gen_xcode(p, variant, _term, appearance)
   local lines = {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
@@ -946,6 +1058,28 @@ local function gen_xcode(p, variant, _term)
     { 'xcode.syntax.url', p.blue },
   }
 
+  if appearance.name == 'token-flint' then
+    local flint_colors = {
+      ['xcode.syntax.attribute'] = p.fg1,
+      ['xcode.syntax.declaration.type'] = p.accent,
+      ['xcode.syntax.identifier.class'] = p.fg1,
+      ['xcode.syntax.identifier.class.system'] = p.fg1,
+      ['xcode.syntax.identifier.constant'] = p.green,
+      ['xcode.syntax.identifier.constant.system'] = p.green,
+      ['xcode.syntax.identifier.function.system'] = p.fg1,
+      ['xcode.syntax.identifier.macro'] = p.accent2,
+      ['xcode.syntax.identifier.macro.system'] = p.accent2,
+      ['xcode.syntax.identifier.type'] = p.fg1,
+      ['xcode.syntax.identifier.type.system'] = p.fg1,
+      ['xcode.syntax.identifier.variable.system'] = p.fg1,
+      ['xcode.syntax.number'] = p.green,
+      ['xcode.syntax.preprocessor'] = p.accent2,
+    }
+    for _, role in ipairs(syntax_roles) do
+      role[2] = flint_colors[role[1]] or role[2]
+    end
+  end
+
   lines[#lines + 1] = '    <key>DVTSourceTextSyntaxColors</key>'
   lines[#lines + 1] = '    <dict>'
   for _, role in ipairs(syntax_roles) do
@@ -968,6 +1102,25 @@ local function gen_xcode(p, variant, _term)
     elseif role[1] == 'xcode.syntax.keyword' then
       font = keyword_font
     end
+    if appearance.name == 'token-flint' then
+      if role[1] == 'xcode.syntax.comment' or role[1] == 'xcode.syntax.comment.doc' then
+        font = 'SFMono-RegularItalic - 12.0'
+      elseif role[1] == 'xcode.syntax.declaration.other' or role[1] == 'xcode.syntax.declaration.type' then
+        font = 'SFMono-Bold - 12.0'
+      elseif
+        role[1] == 'xcode.syntax.attribute'
+        or role[1] == 'xcode.syntax.identifier.class'
+        or role[1] == 'xcode.syntax.identifier.class.system'
+        or role[1] == 'xcode.syntax.identifier.function.system'
+        or role[1] == 'xcode.syntax.identifier.type'
+        or role[1] == 'xcode.syntax.identifier.type.system'
+        or role[1] == 'xcode.syntax.identifier.variable.system'
+      then
+        font = 'SFMono-RegularItalic - 12.0'
+      elseif role[1] == 'xcode.syntax.keyword' then
+        font = regular_font
+      end
+    end
     xcode_entry(lines, role[1], font, '      ')
   end
   lines[#lines + 1] = '    </dict>'
@@ -975,7 +1128,10 @@ local function gen_xcode(p, variant, _term)
   lines[#lines + 1] = '</plist>'
   lines[#lines + 1] = ''
 
-  return { path = 'contrib/xcode/token-' .. variant .. '.xccolortheme', content = table.concat(lines, '\n') }
+  return {
+    path = 'contrib/xcode/' .. appearance.slug .. '-' .. variant .. '.xccolortheme',
+    content = table.concat(lines, '\n'),
+  }
 end
 
 -- ---------------------------------------------------------------------------
@@ -1014,30 +1170,30 @@ local function windows_terminal_scheme(p, name, term)
   return json_object(entries)
 end
 
-local function gen_windows_terminal(dark, light, dark_term, light_term)
+local function gen_windows_terminal(dark, light, dark_term, light_term, appearance)
   local content = table.concat({
     json_encode(json_object({
       {
         'schemes',
         {
-          windows_terminal_scheme(dark, 'Token Dark', dark_term),
-          windows_terminal_scheme(light, 'Token Light', light_term),
+          windows_terminal_scheme(dark, variant_name(appearance, 'dark'), dark_term),
+          windows_terminal_scheme(light, variant_name(appearance, 'light'), light_term),
         },
       },
     })),
     '',
   }, '\n')
 
-  return { path = 'contrib/windows-terminal/token.json', content = content }
+  return { path = 'contrib/windows-terminal/' .. appearance.slug .. '.json', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- VS Code (local color theme extension)
 -- ---------------------------------------------------------------------------
 
-local function vscode_token_colors(p)
+local function vscode_token_colors(p, appearance)
   local rules = {}
-  for _, rule in ipairs(textmate_scope_rules(p)) do
+  for _, rule in ipairs(textmate_scope_rules(p, appearance)) do
     local settings = {}
     if rule[3] then
       settings[#settings + 1] = { 'foreground', rule[3] }
@@ -1080,7 +1236,7 @@ local function vscode_terminal_colors(term)
   return colors
 end
 
-local function gen_vscode_theme(p, variant, term)
+local function gen_vscode_theme(p, variant, term, appearance)
   local is_dark = variant == 'dark'
   local colors = {
     { 'focusBorder', p.accent },
@@ -1157,49 +1313,101 @@ local function gen_vscode_theme(p, variant, term)
   }
   extend_lines(colors, vscode_terminal_colors(term))
 
+  local semantic_colors = {
+    { 'class', p.blue },
+    { 'enum', p.blue },
+    { 'interface', p.blue },
+    { 'struct', p.blue },
+    { 'type', p.blue },
+    { 'typeParameter', p.blue },
+    { 'namespace', p.blue },
+    { 'function', p.accent },
+    { 'method', p.accent },
+    { 'macro', p.purple },
+    { 'keyword', p.accent2 },
+    { 'string', p.green },
+    { 'number', p.purple },
+    { 'enumMember', p.purple },
+    { 'variable.readonly', p.purple },
+    { 'property.readonly', p.purple },
+    { 'parameter', p.fg1 },
+    { '*.deprecated', json_object({ { 'strikethrough', true } }) },
+    { '*.readonly', json_object({ { 'foreground', p.purple } }) },
+    { '*.async', json_object({ { 'italic', true } }) },
+    { '*.static', json_object({ { 'italic', true } }) },
+    { '*.abstract', json_object({ { 'italic', true } }) },
+    { '*.defaultLibrary', json_object({ { 'italic', true } }) },
+    { '*.declaration', json_object({ { 'bold', true } }) },
+    { '*.definition', json_object({ { 'bold', true } }) },
+  }
+  if appearance.name == 'token-flint' then
+    semantic_colors = {
+      { 'class', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'enum', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'interface', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'struct', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'type', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'typeParameter', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'namespace', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
+      { 'function', p.accent },
+      { 'method', p.accent },
+      { 'macro', p.accent2 },
+      { 'keyword', p.accent2 },
+      { 'string', p.green },
+      { 'number', p.green },
+      { 'enumMember', p.green },
+      { 'variable.readonly', p.green },
+      { 'property.readonly', p.green },
+      { 'parameter', p.fg1 },
+      { '*.deprecated', json_object({ { 'strikethrough', true } }) },
+      { '*.readonly', json_object({ { 'foreground', p.green } }) },
+      { '*.async', json_object({ { 'italic', true } }) },
+      { '*.static', json_object({ { 'italic', true } }) },
+      { '*.abstract', json_object({ { 'italic', true } }) },
+      { '*.defaultLibrary', json_object({ { 'italic', true } }) },
+      { '*.declaration', json_object({ { 'bold', true } }) },
+      { '*.definition', json_object({ { 'bold', true } }) },
+    }
+    for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+      for _, modifier in ipairs({ 'declaration', 'definition' }) do
+        semantic_colors[#semantic_colors + 1] = {
+          token_type .. '.' .. modifier,
+          json_object({ { 'foreground', p.accent }, { 'bold', true }, { 'italic', false } }),
+        }
+      end
+    end
+  end
+
   local theme = json_object({
-    { 'name', 'Token ' .. (is_dark and 'Dark' or 'Light') },
+    { 'name', variant_name(appearance, variant) },
     { 'type', is_dark and 'dark' or 'light' },
     { 'colors', json_object(colors) },
-    { 'tokenColors', vscode_token_colors(p) },
+    { 'tokenColors', vscode_token_colors(p, appearance) },
     { 'semanticHighlighting', true },
     {
       'semanticTokenColors',
-      json_object({
-        { 'class', p.blue },
-        { 'enum', p.blue },
-        { 'interface', p.blue },
-        { 'struct', p.blue },
-        { 'type', p.blue },
-        { 'typeParameter', p.blue },
-        { 'namespace', p.blue },
-        { 'function', p.accent },
-        { 'method', p.accent },
-        { 'macro', p.purple },
-        { 'keyword', p.accent2 },
-        { 'string', p.green },
-        { 'number', p.purple },
-        { 'enumMember', p.purple },
-        { 'variable.readonly', p.purple },
-        { 'property.readonly', p.purple },
-        { 'parameter', p.fg1 },
-        { '*.deprecated', json_object({ { 'strikethrough', true } }) },
-        { '*.readonly', json_object({ { 'foreground', p.purple } }) },
-        { '*.async', json_object({ { 'italic', true } }) },
-        { '*.static', json_object({ { 'italic', true } }) },
-        { '*.abstract', json_object({ { 'italic', true } }) },
-        { '*.defaultLibrary', json_object({ { 'italic', true } }) },
-        { '*.declaration', json_object({ { 'bold', true } }) },
-        { '*.definition', json_object({ { 'bold', true } }) },
-      }),
+      json_object(semantic_colors),
     },
   })
 
   local content = table.concat({ json_encode(theme), '' }, '\n')
-  return { path = 'contrib/vscode/themes/token-' .. variant .. '-color-theme.json', content = content }
+  return {
+    path = 'contrib/vscode/themes/' .. appearance.slug .. '-' .. variant .. '-color-theme.json',
+    content = content,
+  }
 end
 
-local function gen_vscode_package()
+local function gen_vscode_package(appearances)
+  local themes = {}
+  for _, appearance in ipairs(appearances) do
+    for _, variant in ipairs({ 'dark', 'light' }) do
+      themes[#themes + 1] = json_object({
+        { 'label', variant_name(appearance, variant) },
+        { 'uiTheme', variant == 'dark' and 'vs-dark' or 'vs' },
+        { 'path', './themes/' .. appearance.slug .. '-' .. variant .. '-color-theme.json' },
+      })
+    end
+  end
   local manifest = json_object({
     { 'name', 'token-vscode-themes' },
     { 'displayName', 'Token VS Code Themes' },
@@ -1213,18 +1421,7 @@ local function gen_vscode_package()
       json_object({
         {
           'themes',
-          {
-            json_object({
-              { 'label', 'Token Dark' },
-              { 'uiTheme', 'vs-dark' },
-              { 'path', './themes/token-dark-color-theme.json' },
-            }),
-            json_object({
-              { 'label', 'Token Light' },
-              { 'uiTheme', 'vs' },
-              { 'path', './themes/token-light-color-theme.json' },
-            }),
-          },
+          themes,
         },
       }),
     },
@@ -1275,7 +1472,7 @@ local function obsidian_hsl(hex)
     string.format('%.2f%%', lightness * 100)
 end
 
-local function obsidian_theme_block(p, variant)
+local function obsidian_theme_block(p, variant, appearance)
   local base = variant == 'dark'
       and {
         p.bg0,
@@ -1371,10 +1568,10 @@ local function obsidian_theme_block(p, variant)
     '',
     '  --h1-color: ' .. p.accent .. ';',
     '  --h2-color: ' .. p.accent2 .. ';',
-    '  --h3-color: ' .. p.olive .. ';',
-    '  --h4-color: ' .. p.blue .. ';',
-    '  --h5-color: ' .. p.green .. ';',
-    '  --h6-color: ' .. p.purple .. ';',
+    '  --h3-color: ' .. (appearance.name == 'token-flint' and p.fg1 or p.olive) .. ';',
+    '  --h4-color: ' .. (appearance.name == 'token-flint' and p.accent or p.blue) .. ';',
+    '  --h5-color: ' .. (appearance.name == 'token-flint' and p.accent2 or p.green) .. ';',
+    '  --h6-color: ' .. (appearance.name == 'token-flint' and p.fg1 or p.purple) .. ';',
     '',
     '  --code-normal: ' .. p.fg0 .. ';',
     '  --code-background: ' .. p.bg1 .. ';',
@@ -1391,39 +1588,41 @@ local function obsidian_theme_block(p, variant)
     '}',
   })
 
-  return table.concat(lines, '\n')
+  return (table.concat(lines, '\n'):gsub('#%x%x%x%x%x%x', string.lower))
 end
 
-local function gen_obsidian_theme(dark, light)
+local function gen_obsidian_theme(dark, light, appearance)
   local content = table.concat({
     '/* Generated by token colorscheme. Do not edit manually. */',
     '',
-    obsidian_theme_block(dark, 'dark'),
+    obsidian_theme_block(dark, 'dark', appearance),
     '',
-    obsidian_theme_block(light, 'light'),
+    obsidian_theme_block(light, 'light', appearance),
     '',
   }, '\n')
 
-  return { path = 'contrib/obsidian/theme.css', content = content }
+  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/token-flint/'
+  return { path = prefix .. 'theme.css', content = content }
 end
 
-local function gen_obsidian_manifest()
+local function gen_obsidian_manifest(appearance)
   local manifest = json_object({
-    { 'name', 'Token' },
+    { 'name', appearance.display_name },
     { 'version', '1.0.0' },
     { 'minAppVersion', '1.0.0' },
     { 'author', 'Thorsten Rhau' },
     { 'authorUrl', 'https://github.com/ThorstenRhau' },
   })
 
-  return { path = 'contrib/obsidian/manifest.json', content = table.concat({ json_encode(manifest), '' }, '\n') }
+  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/token-flint/'
+  return { path = prefix .. 'manifest.json', content = table.concat({ json_encode(manifest), '' }, '\n') }
 end
 
 -- ---------------------------------------------------------------------------
 -- lazygit (YAML)
 -- ---------------------------------------------------------------------------
 
-local function gen_lazygit(p, variant, _term)
+local function gen_lazygit(p, variant, _term, appearance)
   local content = table.concat({
     '# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json',
     '# Generated by token colorscheme. Do not edit manually.',
@@ -1460,14 +1659,14 @@ local function gen_lazygit(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/lazygit/token-' .. variant .. '.yml', content = content }
+  return { path = 'contrib/lazygit/' .. appearance.slug .. '-' .. variant .. '.yml', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- ripgrep (.ripgreprc)
 -- ---------------------------------------------------------------------------
 
-local function gen_ripgrep(p, variant, _term)
+local function gen_ripgrep(p, variant, _term, appearance)
   local content = table.concat({
     '# Generated by token colorscheme. Do not edit manually.',
     '--colors=match:none',
@@ -1485,19 +1684,19 @@ local function gen_ripgrep(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/ripgrep/token-' .. variant .. '.ripgreprc', content = content }
+  return { path = 'contrib/ripgrep/' .. appearance.slug .. '-' .. variant .. '.ripgreprc', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- starship (TOML palette)
 -- ---------------------------------------------------------------------------
 
-local function gen_starship(p, variant, _term)
+local function gen_starship(p, variant, _term, appearance)
   local content = table.concat({
     '# Generated by token colorscheme. Do not edit manually.',
-    '# Add palette = "token" to your starship.toml to use these colors.',
+    '# Add palette = "' .. appearance.slug .. '" to your starship.toml to use these colors.',
     '',
-    '[palettes.token]',
+    '[palettes.' .. appearance.slug .. ']',
     'bg      = "' .. p.bg3 .. '"',
     'fg      = "' .. p.fg0 .. '"',
     'muted   = "' .. p.fg2 .. '"',
@@ -1514,18 +1713,18 @@ local function gen_starship(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/starship/token-' .. variant .. '.toml', content = content }
+  return { path = 'contrib/starship/' .. appearance.slug .. '-' .. variant .. '.toml', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- tmux (.conf)
 -- ---------------------------------------------------------------------------
 
-local function gen_tmux(p, variant, _term)
+local function gen_tmux(p, variant, _term, appearance)
   local status_bg = variant == 'light' and p.bg4 or p.bg0
   local content = table.concat({
     '# Generated by token colorscheme. Do not edit manually.',
-    '# Source this file from your tmux.conf: source-file /path/to/token-' .. variant .. '.conf',
+    '# Source this file from your tmux.conf: source-file /path/to/' .. appearance.slug .. '-' .. variant .. '.conf',
     '',
     '# Status bar',
     'set -g status-style "bg=' .. status_bg .. ',fg=' .. p.fg1 .. '"',
@@ -1558,20 +1757,20 @@ local function gen_tmux(p, variant, _term)
     '',
   }, '\n')
 
-  return { path = 'contrib/tmux/token-' .. variant .. '.conf', content = content }
+  return { path = 'contrib/tmux/' .. appearance.slug .. '-' .. variant .. '.conf', content = content }
 end
 
 -- ---------------------------------------------------------------------------
 -- zsh (sourceable .zsh)
 -- ---------------------------------------------------------------------------
 
-local function gen_zsh(p, variant, _term)
+local function gen_zsh(p, variant, _term, appearance)
   local s = strip
   local F = 'FAST_HIGHLIGHT_STYLES'
   local zle_selected = 'fg=#' .. s(p.fg0) .. ',bg=#' .. s(p.sel)
   local lines = {
     '# Generated by token colorscheme. Do not edit manually.',
-    '# Source this file from your .zshrc to apply token ' .. variant .. ' colors.',
+    '# Source this file from your .zshrc to apply ' .. appearance.slug .. ' ' .. variant .. ' colors.',
     '',
     '# ZLE selection and pasted text',
     'zle_highlight=(${zle_highlight:#region:*})',
@@ -1739,7 +1938,10 @@ local function gen_zsh(p, variant, _term)
     '',
   }
 
-  return { path = 'contrib/zsh/token-' .. variant .. '.zsh', content = table.concat(lines, '\n') }
+  return {
+    path = 'contrib/zsh/' .. appearance.slug .. '-' .. variant .. '.zsh',
+    content = table.concat(lines, '\n'),
+  }
 end
 
 -- ---------------------------------------------------------------------------
@@ -1747,44 +1949,48 @@ end
 -- ---------------------------------------------------------------------------
 
 local function main()
-  local dark = palette_fn('dark')
-  local light = palette_fn('light')
-  local dark_term = terminal.colors(dark, true)
-  local light_term = terminal.colors(light, false)
-
   local files = {}
+  local appearances = appearance_registry.all()
 
-  for _, variant in ipairs({ 'dark', 'light' }) do
-    local p = variant == 'dark' and dark or light
-    local term = variant == 'dark' and dark_term or light_term
-    files[#files + 1] = gen_bat(p, variant, term)
-    files[#files + 1] = gen_sublime(p, variant, term)
-    files[#files + 1] = gen_gtksourceview(p, variant, term)
-    files[#files + 1] = gen_blink(p, variant, term)
-    files[#files + 1] = gen_carapace(p, variant, term)
-    files[#files + 1] = gen_chatgpt(p, variant)
-    files[#files + 1] = gen_emacs(p, variant)
-    files[#files + 1] = gen_fzf(p, variant, term)
-    files[#files + 1] = gen_fzf_zsh(p, variant, term)
-    files[#files + 1] = gen_ghostty(p, variant, term)
-    files[#files + 1] = gen_kitty(p, variant, term)
-    files[#files + 1] = gen_iterm2(p, variant, term)
-    files[#files + 1] = gen_lazygit(p, variant)
-    files[#files + 1] = gen_ripgrep(p, variant, term)
-    files[#files + 1] = gen_starship(p, variant, term)
-    files[#files + 1] = gen_tmux(p, variant, term)
-    files[#files + 1] = gen_xcode(p, variant, term)
-    files[#files + 1] = gen_zsh(p, variant, term)
+  for _, appearance in ipairs(appearances) do
+    local palette_fn = require(appearance.palette)
+    local dark = palette_fn('dark')
+    local light = palette_fn('light')
+    local dark_term = terminal.colors(dark, true)
+    local light_term = terminal.colors(light, false)
+
+    for _, variant in ipairs({ 'dark', 'light' }) do
+      local p = variant == 'dark' and dark or light
+      local term = variant == 'dark' and dark_term or light_term
+      files[#files + 1] = gen_bat(p, variant, term, appearance)
+      files[#files + 1] = gen_sublime(p, variant, term, appearance)
+      files[#files + 1] = gen_gtksourceview(p, variant, term, appearance)
+      files[#files + 1] = gen_blink(p, variant, term, appearance)
+      files[#files + 1] = gen_carapace(p, variant, term, appearance)
+      files[#files + 1] = gen_chatgpt(p, variant, appearance)
+      files[#files + 1] = gen_emacs(p, variant, appearance)
+      files[#files + 1] = gen_fzf(p, variant, term, appearance)
+      files[#files + 1] = gen_fzf_zsh(p, variant, term, appearance)
+      files[#files + 1] = gen_ghostty(p, variant, term, appearance)
+      files[#files + 1] = gen_kitty(p, variant, term, appearance)
+      files[#files + 1] = gen_iterm2(p, variant, term, appearance)
+      files[#files + 1] = gen_lazygit(p, variant, term, appearance)
+      files[#files + 1] = gen_ripgrep(p, variant, term, appearance)
+      files[#files + 1] = gen_starship(p, variant, term, appearance)
+      files[#files + 1] = gen_tmux(p, variant, term, appearance)
+      files[#files + 1] = gen_xcode(p, variant, term, appearance)
+      files[#files + 1] = gen_zsh(p, variant, term, appearance)
+      files[#files + 1] = gen_vscode_theme(p, variant, term, appearance)
+    end
+
+    files[#files + 1] = gen_fish(dark, light, dark_term, light_term, appearance)
+    files[#files + 1] = gen_delta(dark, light, dark_term, light_term, appearance)
+    files[#files + 1] = gen_windows_terminal(dark, light, dark_term, light_term, appearance)
+    files[#files + 1] = gen_obsidian_theme(dark, light, appearance)
+    files[#files + 1] = gen_obsidian_manifest(appearance)
   end
 
-  files[#files + 1] = gen_fish(dark, light, dark_term, light_term)
-  files[#files + 1] = gen_delta(dark, light, dark_term, light_term)
-  files[#files + 1] = gen_windows_terminal(dark, light, dark_term, light_term)
-  files[#files + 1] = gen_obsidian_theme(dark, light)
-  files[#files + 1] = gen_obsidian_manifest()
-  files[#files + 1] = gen_vscode_package()
-  files[#files + 1] = gen_vscode_theme(dark, 'dark', dark_term)
-  files[#files + 1] = gen_vscode_theme(light, 'light', light_term)
+  files[#files + 1] = gen_vscode_package(appearances)
 
   for _, file in ipairs(files) do
     lib.validate_output_path(file.path)

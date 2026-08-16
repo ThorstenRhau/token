@@ -28,9 +28,17 @@ function M.fingerprint()
 end
 
 ---@param background 'dark'|'light'
+---@param colorscheme? string
 ---@return string
-function M.path(background)
-  return vim.fn.stdpath('cache') .. '/token/' .. background .. '-' .. M.fingerprint() .. '.lua'
+function M.path(background, colorscheme)
+  local appearance = require('token.appearance').get(colorscheme)
+  return vim.fn.stdpath('cache')
+    .. '/token/'
+    .. appearance.cache_prefix
+    .. background
+    .. '-'
+    .. M.fingerprint()
+    .. '.lua'
 end
 
 local function serialize(value)
@@ -57,14 +65,15 @@ local function serialize(value)
 end
 
 ---@param background 'dark'|'light'
+---@param colorscheme string
 ---@return string source
-local function build_source(background)
+local function build_source(background, colorscheme)
   local is_dark = background == 'dark'
-  local p, groups = require('token.theme').build(background)
+  local p, groups = require('token.theme').build(background, colorscheme)
 
   local lines = {
     "vim.cmd('hi clear')",
-    "vim.g.colors_name='token'",
+    'vim.g.colors_name=' .. string.format('%q', colorscheme),
     'local H=vim.api.nvim_set_hl',
   }
 
@@ -91,31 +100,30 @@ function M.compile()
   local pending = {}
 
   local ok, err = pcall(function()
-    for _, bg in ipairs({ 'dark', 'light' }) do
-      for key in pairs(package.loaded) do
-        if key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config' then
-          package.loaded[key] = nil
+    for _, appearance in ipairs(require('token.appearance').all()) do
+      for _, bg in ipairs({ 'dark', 'light' }) do
+        for key in pairs(package.loaded) do
+          if key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config' then
+            package.loaded[key] = nil
+          end
         end
-      end
-      local source = build_source(bg)
-      local chunk = assert(load(source, '=' .. bg))
-      local bytecode = string.dump(chunk)
+        local source = build_source(bg, appearance.name)
+        local chunk = assert(load(source, '=' .. appearance.name .. '-' .. bg))
+        local bytecode = string.dump(chunk)
 
-      local final = M.path(bg)
-      local tmp = final .. '.tmp'
-      local f = assert(io.open(tmp, 'wb'))
-      assert(f:write(bytecode))
-      f:close()
-      pending[#pending + 1] = { tmp, final }
+        local final = M.path(bg, appearance.name)
+        local tmp = final .. '.tmp'
+        local f = assert(io.open(tmp, 'wb'))
+        assert(f:write(bytecode))
+        f:close()
+        pending[#pending + 1] = { tmp, final }
+      end
     end
   end)
 
   if not ok then
     for _, pair in ipairs(pending) do
       os.remove(pair[1])
-    end
-    for _, bg in ipairs({ 'dark', 'light' }) do
-      os.remove(M.path(bg))
     end
     error(err)
   end
@@ -124,13 +132,14 @@ function M.compile()
     assert(vim.uv.fs_rename(pair[1], pair[2]))
   end
 
-  vim.notify('token: compiled dark and light variants', vim.log.levels.INFO)
+  vim.notify('token: compiled classic and Flint dark and light variants', vim.log.levels.INFO)
 end
 
 ---@param background 'dark'|'light'
+---@param colorscheme? string
 ---@return boolean
-function M.load(background)
-  local path_ok, path = pcall(M.path, background)
+function M.load(background, colorscheme)
+  local path_ok, path = pcall(M.path, background, colorscheme)
   if not path_ok then
     return false
   end

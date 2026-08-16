@@ -39,6 +39,18 @@ local style_groups = {
     '@type.builtin',
     '@type.definition',
     '@constructor',
+    '@lsp.typemod.type.declaration',
+    '@lsp.typemod.type.definition',
+    '@lsp.typemod.class.declaration',
+    '@lsp.typemod.class.definition',
+    '@lsp.typemod.enum.declaration',
+    '@lsp.typemod.enum.definition',
+    '@lsp.typemod.interface.declaration',
+    '@lsp.typemod.interface.definition',
+    '@lsp.typemod.struct.declaration',
+    '@lsp.typemod.struct.definition',
+    '@lsp.typemod.typeParameter.declaration',
+    '@lsp.typemod.typeParameter.definition',
   },
   functions = {
     'Function',
@@ -48,6 +60,10 @@ local style_groups = {
     '@function.macro',
     '@function.method',
     '@function.method.call',
+    '@lsp.typemod.function.declaration',
+    '@lsp.typemod.function.definition',
+    '@lsp.typemod.method.declaration',
+    '@lsp.typemod.method.definition',
   },
   operators = { 'Operator', '@operator' },
   comments = {
@@ -234,29 +250,40 @@ local function apply_attribute_gates(groups, attributes)
 end
 
 ---@param background 'dark'|'light'
-function M.palette(background)
+---@param colorscheme? string
+function M.palette(background, colorscheme)
   local config = require('token.config').get()
-  local stock = require('token.palette')(background)
-  required_palette_keys = required_palette_keys or vim.deepcopy(stock)
+  local appearance = require('token.appearance').get(colorscheme)
+  local stock = require(appearance.palette)(background)
+  required_palette_keys = required_palette_keys or vim.deepcopy(require('token.palette')(background))
   local p = vim.tbl_extend('force', stock, config.colors.all, config.colors[background])
   if config.on_colors then
-    config.on_colors(p, background)
+    config.on_colors(p, background, appearance.name)
   end
   validate_palette(p)
   return p
 end
 
 ---@param background 'dark'|'light'
-function M.build(background)
+---@param colorscheme? string
+function M.build(background, colorscheme)
   local config = require('token.config').get()
-  local p = M.palette(background)
+  local appearance = require('token.appearance').get(colorscheme)
+  local p = M.palette(background, appearance.name)
   local groups = require('token.groups')(p, config.plugins)
+  if appearance.highlights then
+    for name, hl in pairs(require(appearance.highlights)(p)) do
+      if groups[name] or name:match('^@lsp%.typemod%.') then
+        groups[name] = hl
+      end
+    end
+  end
   apply_styles(groups, config.styles)
   apply_surfaces(groups, p, config)
   groups =
     vim.tbl_extend('force', groups, vim.deepcopy(config.highlights.all), vim.deepcopy(config.highlights[background]))
   if config.on_highlights then
-    config.on_highlights(groups, p, background)
+    config.on_highlights(groups, p, background, appearance.name)
   end
   for name, hl in pairs(groups) do
     if type(name) ~= 'string' or type(hl) ~= 'table' then

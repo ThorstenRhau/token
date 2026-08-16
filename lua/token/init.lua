@@ -1,7 +1,7 @@
 ---Token colorscheme configuration and loading API.
 ---@class (exact) token.Module
 ---@field setup fun(opts?: token.Config) Store configuration for subsequent colorscheme loads.
----@field load fun() Load Token for the current value of `vim.o.background`.
+---@field load fun(colorscheme?: string) Load a Token colorscheme for the current value of `vim.o.background`.
 local M = {}
 
 ---Replace the stored configuration with defaults deep-merged with `opts`.
@@ -11,9 +11,11 @@ function M.setup(opts)
   require('token.config').setup(opts)
 end
 
----Load Token for the current value of `vim.o.background`.
+---Load a Token colorscheme for the current value of `vim.o.background`.
 ---Uses a matching compiled cache when available and otherwise builds the highlights dynamically.
-function M.load()
+---@param colorscheme? string Internal colorscheme name. Defaults to classic Token.
+function M.load(colorscheme)
+  local appearance = require('token.appearance').get(colorscheme)
   local bg = vim.o.background
 
   -- Keep user configuration while ensuring disabled integrations leave package.loaded.
@@ -21,6 +23,7 @@ function M.load()
     if
       (key:match('^token%.') and key ~= 'token.compile' and key ~= 'token.config')
       or key == 'lualine.themes.token'
+      or key == 'lualine.themes.token-flint'
     then
       package.loaded[key] = nil
     end
@@ -28,16 +31,17 @@ function M.load()
 
   -- Try compiled cache first
   local compile = require('token.compile')
-  if compile.load(bg) then
+  if compile.load(bg, appearance.name) then
     package.loaded['lualine.themes.token'] = nil
+    package.loaded['lualine.themes.token-flint'] = nil
     return
   end
 
   -- Dynamic fallback
   vim.cmd('hi clear')
-  vim.g.colors_name = 'token'
+  vim.g.colors_name = appearance.name
 
-  local p, groups = require('token.theme').build(bg)
+  local p, groups = require('token.theme').build(bg, appearance.name)
 
   for group, hl in pairs(groups) do
     vim.api.nvim_set_hl(0, group, hl)

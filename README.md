@@ -1,14 +1,16 @@
 # token
 
-Token is a warm, muted Neovim 0.12+ colorscheme with dark and light variants,
-selective plugin integrations, and an optional configuration API.
+Token is a Neovim 0.12+ colorscheme with two first-class appearances: classic
+Token's warm, muted palette and Token Flint's cool-gray palette with restrained
+warm accents. Both have dark and light variants, selective plugin integrations,
+and a shared optional configuration API.
 
 Terminal themes for Ghostty, fish, delta, tmux and others are generated from the
-same palette file, so everything matches without extra work.
+matching appearance palette, so everything stays consistent without extra work.
 
 ## Features
 
-- Dark and light variants, switching at runtime via `vim.o.background`
+- Classic Token and Token Flint appearances, each with dark and light variants
 - Treesitter capture groups for accurate syntax highlighting
 - LSP semantic token highlights
 - LSP diagnostic signs, virtual text, and underlines
@@ -17,7 +19,7 @@ same palette file, so everything matches without extra work.
 - Terminal color support (ANSI colors 0–15)
 - Lualine theme included
 - Opt-in plugin integrations and configuration-keyed bytecode compilation
-- Contrib themes for external tools and apps generated from the same palette
+- Contrib themes for external tools and apps generated from each appearance palette
 
 ## Showcase
 
@@ -49,14 +51,17 @@ local config = {
 
 token.setup(config)
 
-vim.cmd.colorscheme('token')
+vim.cmd.colorscheme('token')       -- classic and default
+vim.cmd.colorscheme('token-flint') -- cool-gray Flint appearance
 ```
 
-Respects `vim.o.background`. Set `dark` or `light` before loading the
-colorscheme, or change it at runtime to switch variants.
+The colorscheme name selects classic Token or Token Flint. `vim.o.background`
+selects `dark` or `light` within that appearance. Set the background before
+loading the colorscheme, or change it at runtime to switch variants.
 
-`setup()` is optional. Each call starts from the defaults and deep-merges the
-provided options. It does not reload an active colorscheme automatically.
+`setup()` is shared by both appearances and is optional. Each call starts from
+the defaults and deep-merges the provided options. It does not reload an active
+colorscheme automatically.
 
 ## Token v2
 
@@ -127,10 +132,10 @@ local config = {
   },
 
   -- Mutate the configured palette after declarative color overrides.
-  on_colors = function(colors, background) end,
+  on_colors = function(colors, background, colorscheme) end,
 
   -- Mutate final highlights before global attribute gates are applied.
-  on_highlights = function(highlights, colors, background) end,
+  on_highlights = function(highlights, colors, background, colorscheme) end,
 }
 
 token.setup(config)
@@ -146,7 +151,9 @@ Existing palette keys and additional keys must contain `#RRGGBB` values.
 Highlight entries are complete `nvim_set_hl` definitions: a variant entry
 replaces an entry with the same name from `all`. `on_highlights` runs afterward
 and can mutate existing definitions. Both callbacks mutate their arguments in
-place and receive an explicit `dark` or `light` background.
+place and receive an explicit `dark` or `light` background followed by the
+active `token` or `token-flint` colorscheme name. Existing callbacks that omit
+the trailing argument remain compatible.
 
 Transparency clears Token's base surfaces while retaining cursor-line,
 selection, search, diff, diagnostic, and accent backgrounds. Highlight
@@ -168,10 +175,11 @@ pre-compile the theme into bytecode:
 :TokenCompile
 ```
 
-This writes configuration-keyed dark and light variants to
-`stdpath('cache')/token/`. On next load, matching cached bytecode is used instead
-of the dynamic highlight path. Compiled output contains only enabled
-integrations and omits terminal assignments when `terminal_colors = false`.
+This writes four configuration-keyed variants to `stdpath('cache')/token/`:
+classic and Flint, each in dark and light. On next load, matching appearance and
+background bytecode is used instead of the dynamic highlight path. Compiled
+output contains only enabled integrations and omits terminal assignments when
+`terminal_colors = false`.
 
 Rerun `:TokenCompile` after changing Token's source or any global, captured, or
 external inputs read by callbacks. Static configuration and callback-body
@@ -209,36 +217,37 @@ require('blink.indent').setup({
 ## Contrib themes
 
 Pre-generated themes for external tools and apps. Auto-generated from the
-palette; rebuild after palette changes with `make contrib`.
+registered appearance palettes; rebuild after palette changes with `make contrib`.
 
-| Tool                                                                                     | Files                                                     | Usage                                                                                                            |
-| ---------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [bat](https://github.com/sharkdp/bat)                                                    | `contrib/bat/token-{dark,light}.tmTheme`                  | Copy to bat themes dir, run `bat cache --build`                                                                  |
-| [Blink Shell](https://blink.sh/)                                                         | `contrib/blink/token-{dark,light}.js`                     | Paste the raw `token-dark.js` or `token-light.js` URL in Appearance > Themes > New Theme                         |
-| [Carapace](https://carapace-sh.github.io/carapace-bin/)                                  | `contrib/carapace/token-{dark,light}.json`                | Merge the selected `carapace` object into `~/.config/carapace/styles.json`                                       |
-| [ChatGPT desktop](https://chatgpt.com/download/)                                         | `contrib/chatgpt/token-{dark,light}.txt`                  | Paste the share string into Settings > Appearance > Import for the matching theme variant                        |
-| [delta](https://github.com/dandavison/delta)                                             | `contrib/delta/token.gitconfig`                           | Include from `~/.gitconfig`, set `features = token-dark` in `[delta]`                                            |
-| [emacs](https://www.gnu.org/software/emacs/)                                             | `contrib/emacs/token-{dark,light}-theme.el`               | Copy to `~/.emacs.d/themes/`, then `(load-theme 'token-dark t)`                                                  |
-| [fish](https://fishshell.com/)                                                           | `contrib/fish/token.theme`                                | Copy to `~/.config/fish/themes/`, then run `fish_config theme choose token`                                      |
-| [fzf](https://github.com/junegunn/fzf)                                                   | `contrib/fzf/token-{dark,light}.{fish,zsh}`               | Source the matching Fish or Zsh file to append theme colors to `FZF_DEFAULT_OPTS`                                |
-| [ghostty](https://ghostty.org/)                                                          | `contrib/ghostty/token-{dark,light}`                      | Copy to `~/.config/ghostty/themes/`, then set `theme = dark:token-dark,light:token-light`                        |
-| [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview) (gedit, GNOME Text Editor) | `contrib/gtksourceview/token-{dark,light}.xml`            | Copy to `~/.local/share/gtksourceview-{4,5}/styles/`, then pick the scheme in the editor's preferences           |
-| [iTerm2](https://iterm2.com/)                                                            | `contrib/iterm2/token-{dark,light}.itermcolors`           | Import from Profiles > Colors > Color Presets                                                                    |
-| [kitty](https://sw.kovidgoyal.net/kitty/)                                                | `contrib/kitty/token-{dark,light}.conf`                   | `include /path/to/token-dark.conf` in `kitty.conf`                                                               |
-| [lazygit](https://github.com/jesseduffield/lazygit)                                      | `contrib/lazygit/token-{dark,light}.yml`                  | Merge into `~/.config/lazygit/config.yml`                                                                        |
-| [Obsidian](https://obsidian.md/)                                                         | `contrib/obsidian/`                                       | Copy to `<vault>/.obsidian/themes/Token`, restart Obsidian, select Token, then set the accent color to `#bc6a49` |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)                                         | `contrib/ripgrep/token-{dark,light}.ripgreprc`            | `RIPGREP_CONFIG_PATH=/path/to/token-dark.ripgreprc`                                                              |
-| [starship](https://starship.rs/)                                                         | `contrib/starship/token-{dark,light}.toml`                | Append to `starship.toml`, set `palette = "token"`                                                               |
-| [Sublime Text](https://www.sublimetext.com/)                                             | `contrib/sublime/token-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/`, set `"color_scheme"` in Preferences                                                    |
-| [tmux](https://github.com/tmux/tmux)                                                     | `contrib/tmux/token-{dark,light}.conf`                    | `source-file /path/to/token-dark.conf` in tmux.conf                                                              |
-| [VS Code](https://code.visualstudio.com/)                                                | `contrib/vscode/`                                         | Run `scripts/install_vscode_theme.sh`, then select `Token Dark` or `Token Light`                                 |
-| [Windows Terminal](https://github.com/microsoft/terminal)                                | `contrib/windows-terminal/token.json`                     | Copy schemes into settings/fragments, then set `"colorScheme": { "dark": "Token Dark", "light": "Token Light" }` |
-| [Xcode](https://developer.apple.com/xcode/)                                              | `contrib/xcode/token-{dark,light}.xccolortheme`           | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/`, then select Token Dark or Token Light           |
-| [Zsh](https://www.zsh.org/)                                                              | `contrib/zsh/token-{dark,light}.zsh`                      | Source the selected file from `.zshrc` for matching ZLE selection/paste, `ls`, completion, fzf-tab, and prompts  |
+| Tool | Files | Usage |
+| --- | --- | --- |
+| [bat](https://github.com/sharkdp/bat) | `contrib/bat/{token,token-flint}-{dark,light}.tmTheme` | Copy to the bat themes directory, then run `bat cache --build` |
+| [Blink Shell](https://blink.sh/) | `contrib/blink/{token,token-flint}-{dark,light}.js` | Paste the selected raw file URL in Appearance > Themes > New Theme |
+| [Carapace](https://carapace-sh.github.io/carapace-bin/) | `contrib/carapace/{token,token-flint}-{dark,light}.json` | Merge the selected `carapace` object into `styles.json` |
+| [ChatGPT desktop](https://chatgpt.com/download/) | `contrib/chatgpt/{token,token-flint}-{dark,light}.txt` | Import the share string for the matching variant |
+| [delta](https://github.com/dandavison/delta) | `contrib/delta/{token,token-flint}.gitconfig` | Include one file and select its named dark or light feature |
+| [Emacs](https://www.gnu.org/software/emacs/) | `contrib/emacs/{token,token-flint}-{dark,light}-theme.el` | Copy to the themes directory and load the selected theme name |
+| [fish](https://fishshell.com/) | `contrib/fish/{token,token-flint}.theme` | Copy to the fish themes directory and choose `token` or `token-flint` |
+| [fzf](https://github.com/junegunn/fzf) | `contrib/fzf/{token,token-flint}-{dark,light}.{fish,zsh}` | Source the matching shell file |
+| [Ghostty](https://ghostty.org/) | `contrib/ghostty/{token,token-flint}-{dark,light}` | Copy to the Ghostty themes directory and select the matching pair |
+| [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview) | `contrib/gtksourceview/{token,token-flint}-{dark,light}.xml` | Copy to the GtkSourceView styles directory and select the scheme |
+| [iTerm2](https://iterm2.com/) | `contrib/iterm2/{token,token-flint}-{dark,light}.itermcolors` | Import from Profiles > Colors > Color Presets |
+| [kitty](https://sw.kovidgoyal.net/kitty/) | `contrib/kitty/{token,token-flint}-{dark,light}.conf` | Include the selected file in `kitty.conf` |
+| [lazygit](https://github.com/jesseduffield/lazygit) | `contrib/lazygit/{token,token-flint}-{dark,light}.yml` | Merge the selected file into `config.yml` |
+| [Obsidian](https://obsidian.md/) | `contrib/obsidian/`, `contrib/obsidian/token-flint/` | Install the selected directory as `Token` or `Token Flint` |
+| [ripgrep](https://github.com/BurntSushi/ripgrep) | `contrib/ripgrep/{token,token-flint}-{dark,light}.ripgreprc` | Point `RIPGREP_CONFIG_PATH` at the selected file |
+| [Starship](https://starship.rs/) | `contrib/starship/{token,token-flint}-{dark,light}.toml` | Append the file and select the matching palette name |
+| [Sublime Text](https://www.sublimetext.com/) | `contrib/sublime/{token,token-flint}-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/` and select the scheme |
+| [tmux](https://github.com/tmux/tmux) | `contrib/tmux/{token,token-flint}-{dark,light}.conf` | Source the selected file from `tmux.conf` |
+| [VS Code](https://code.visualstudio.com/) | `contrib/vscode/` | Run `scripts/install_vscode_theme.sh`, then select a Token or Token Flint theme |
+| [Windows Terminal](https://github.com/microsoft/terminal) | `contrib/windows-terminal/{token,token-flint}.json` | Copy the selected schemes into settings or fragments |
+| [Xcode](https://developer.apple.com/xcode/) | `contrib/xcode/{token,token-flint}-{dark,light}.xccolortheme` | Copy to the Xcode theme directory and select the visible name |
+| [Zsh](https://www.zsh.org/) | `contrib/zsh/{token,token-flint}-{dark,light}.zsh` | Source the selected file from `.zshrc` |
 
-The recommended Obsidian accent, `#bc6a49`, is deliberately a compromise
-between Token's light and dark accents. Keeping one user-level accent avoids
-having to change the Obsidian setting whenever macOS switches appearance.
+The recommended classic Token Obsidian accent, `#bc6a49`, is deliberately a
+compromise between its light and dark accents. Keeping one user-level accent
+avoids having to change the Obsidian setting whenever macOS switches
+appearance. Token Flint is independently installable as `Token Flint`.
 
 ## License
 

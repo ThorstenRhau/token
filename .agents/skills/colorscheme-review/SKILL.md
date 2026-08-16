@@ -12,8 +12,8 @@ Before starting, read these files to understand the project:
 
 1. `AGENTS.md` (project conventions)
 2. `README.md` (public API, integrations, contrib inventory, and installation)
-3. `colors/token.lua`, `plugin/token.lua`, `lua/token/init.lua`, `lua/token/config.lua`, `lua/token/theme.lua`, and `lua/token/compile.lua`
-4. `lua/token/palette.lua`, `lua/token/terminal.lua`, and `lua/lualine/themes/token.lua`
+3. Both `colors/token*.lua` entry points, `plugin/token.lua`, `lua/token/init.lua`, `lua/token/config.lua`, `lua/token/theme.lua`, and `lua/token/compile.lua`
+4. `lua/token/appearance.lua`, every registered palette and appearance-profile module, `lua/token/terminal.lua`, `lua/token/lualine.lua`, and all matching `lua/lualine/themes/token*.lua` wrappers
 5. `lua/token/groups/init.lua` and `lua/token/groups/plugins/init.lua`
 6. `Makefile`, `.stylua.toml`, `selene.toml`, `neovim.yaml`, `taplo.toml`, `.editorconfig`, and `.prettierrc.toml`
 7. `scripts/*.lua` and `scripts/install_vscode_theme.sh`
@@ -83,13 +83,14 @@ Execute all 10 phases in order. For each finding, record a severity, an ID tag, 
 
 ### Phase 2: Palette Integrity
 
-1. Parse `lua/token/palette.lua`. Extract the key sets of both the dark and light tables.
-   - Asymmetric key sets → Critical (list missing/extra keys on each side).
-2. Verify every value in both tables matches `^#[0-9a-fA-F]{6}$`.
+1. Parse `lua/token/appearance.lua`, then parse every registered palette module. Extract the key sets of each module's dark and light tables.
+   - Asymmetric key sets within any appearance → Critical (list missing/extra keys on each side).
+   - Registered palette module missing or unparseable → Critical.
+2. Verify every value in every registered dark and light table matches `^#[0-9a-fA-F]{6}$`.
    - Malformed hex → Critical.
-3. Grep for the pattern `#[0-9a-fA-F]{6}` under `lua/`, `colors/`, `plugin/`. Any hit outside `lua/token/palette.lua` and `lua/token/terminal.lua` → Warning (colors should flow through the palette).
+3. Grep for the pattern `#[0-9a-fA-F]{6}` under `lua/`, `colors/`, `plugin/`. Any hit outside the registered palette modules and `lua/token/terminal.lua` → Warning (colors should flow through an appearance palette).
    - Guard: `scripts/` and `contrib/` are allowed to embed hex — they generate external theme files. Do not scan those directories.
-4. **Unused palette keys**: for each key in the dark palette, grep `p\.<key>\b` across `lua/token/groups/**/*.lua`, `lua/token/terminal.lua`, and `lua/lualine/themes/token.lua`.
+4. **Unused palette keys**: for each key in every registered palette, grep `p\.<key>\b` across group modules, appearance profiles, `lua/token/terminal.lua`, `lua/token/lualine.lua`, and generator scripts.
    - Zero references anywhere → Info.
    - Guard: verify with LSP that the grep has searched every file that consumes the palette. Do not flag keys that appear only in indexed form (e.g., `palette[name]`) — check for dynamic access before flagging.
 
@@ -122,25 +123,25 @@ Do not report every optional group as missing. Report only renamed, removed, sta
 
 ### Phase 6: Load Path & Compile Cache
 
-1. `colors/token.lua`: must be a thin entry that calls `require('token').load()`. Anything else → Warning.
+1. Every `colors/token*.lua` entry point must be thin and call `require('token').load()` with its registered appearance name; the classic entry may omit its default name. A missing entry for a registered appearance, an unregistered entry, or additional entry-point behavior → Warning.
 2. `plugin/token.lua`: must register the `:TokenCompile` user command and wire it to `require('token.compile').compile()`. Missing → Warning.
 3. `lua/token/init.lua` dynamic-fallback path must:
    (a) call `vim.cmd('hi clear')` (or equivalent),
-   (b) bust `token.*` (except `token.compile`) and `lualine.themes.token` from `package.loaded`,
-   (c) load the palette for the current `vim.o.background`,
+   (b) preserve configured state while busting reloadable `token.*` modules and every Token Lualine wrapper from `package.loaded`,
+   (c) resolve the selected appearance and load its palette for the current `vim.o.background`,
    (d) merge groups via `require('token.groups')(p)`,
    (e) apply via `vim.api.nvim_set_hl`,
    (f) set terminal colors via `require('token.terminal').set(p, is_dark)`.
    - Any missing step → Critical (colorscheme won't reload cleanly after `:TokenCompile`).
-4. `lua/token/compile.lua`: `load(bg)` must recover from a missing or corrupt bytecode cache (delete the stale file, fall back to dynamic load). Missing recovery → Warning.
+4. `lua/token/compile.lua`: compilation must produce distinct configuration-keyed caches for every registered appearance in dark and light. `load(bg, appearance)` must recover from a missing or corrupt bytecode cache (delete the stale file, fall back to dynamic load). Missing coverage or recovery → Warning.
 
 ### Phase 7: Terminal & Lualine Coverage
 
 1. `lua/token/terminal.lua`: verify the `colors(p, is_dark)` function returns a table with all 16 indices (0–15) populated for both `is_dark = true` and `is_dark = false`. Any nil slot → Critical.
-2. `lua/lualine/themes/token.lua`: verify all 7 lualine modes are present: `normal`, `insert`, `visual`, `replace`, `command`, `terminal`, `inactive`. Each must have `a`, `b`, `c` sections.
+2. For every registered appearance, load its `lua/lualine/themes/<appearance>.lua` wrapper through `lua/token/lualine.lua`. Verify all 7 modes are present: `normal`, `insert`, `visual`, `replace`, `command`, `terminal`, `inactive`. Each must have `a`, `b`, `c` sections.
    - Missing mode → Warning.
    - Missing section within a mode → Warning.
-3. Verify the lualine theme loads colors via `require('token.palette')(vim.o.background)` (not a hardcoded palette copy). Hardcoded hex in the lualine theme → Warning.
+3. Verify the shared Lualine builder resolves colors through the appearance-aware theme palette API, and each wrapper selects the correct registered appearance. Hardcoded hex or a classic-only palette path → Warning.
 
 ### Phase 8: Standard Neovim Group Coverage
 
@@ -158,8 +159,8 @@ Guard: only flag a group if it is absent **and** not targeted via `link = '<Grou
 2. For every contribution, record the current official documentation, schema, release, or source revision and access date.
 3. Validate every available JSON, XML/plist, CSS, TOML, YAML, Git config, and shell format with a native parser or published schema.
 4. Exercise installed CLI applications with temporary profiles. Put unavailable or state-changing GUI imports into a separate manual dark/light checklist.
-5. Trace rendered colors to `lua/token/palette.lua`, terminal slots, or documented format encodings. Do not report intentional low contrast or aesthetics as defects.
-6. Verify generator parity, deterministic output, dark/light identity, and stale-file detection. Recommend generator-source changes, not edits to generated files.
+5. Trace rendered colors to the matching registered appearance palette, terminal slots, or documented format encodings. Do not report intentional low contrast or aesthetics as defects.
+6. Verify generator parity, deterministic output, appearance and dark/light identity, and stale-file detection. Recommend generator-source changes, not edits to generated files.
 
 The live contribution families are: bat, Blink Shell, Carapace, ChatGPT desktop, delta, Emacs, fish, fzf, Ghostty, GtkSourceView, iTerm2, Kitty, lazygit, Obsidian, ripgrep, Starship, Sublime Text, tmux, VS Code, Windows Terminal, Xcode, and Zsh.
 
@@ -232,7 +233,7 @@ Produce a single markdown report printed to the conversation. Include a coverage
 5. Be specific: always include `file:line` references.
 6. Do not flag intentional design choices:
    - `scripts/` and `contrib/` may contain hex literals (they generate external theme files).
-   - Some palette keys exist primarily for terminal colors or lualine and may look unused from a narrow grep.
+   - Some registered palette keys exist primarily for terminal colors, Lualine, appearance profiles, or generators and may look unused from a narrow grep.
    - `ibl.lua` and `hlchunk.lua` coexist by design (different indentation plugins supported in parallel).
    - Both `neo_tree.lua` and `nvimtree.lua` coexist by design (two file tree plugins supported in parallel).
    - README's Obsidian accent `#bc6a49` is an intentional light/dark compromise so automatic macOS appearance changes do not require a user-setting change.

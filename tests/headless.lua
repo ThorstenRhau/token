@@ -27,9 +27,9 @@ local function hl(name)
   return vim.api.nvim_get_hl(0, { name = name, link = false })
 end
 
-local function load(background)
+local function load(background, colorscheme)
   vim.o.background = background or 'dark'
-  token.load()
+  token.load(colorscheme)
 end
 
 local function loaded(plugin)
@@ -51,32 +51,58 @@ end
 
 -- Generated schemas and visible shell roles stay aligned with their supported tools.
 for _, path in ipairs({
-  'contrib/carapace/token-dark.json',
-  'contrib/carapace/token-light.json',
   'contrib/obsidian/manifest.json',
+  'contrib/obsidian/token-flint/manifest.json',
   'contrib/vscode/package.json',
-  'contrib/vscode/themes/token-dark-color-theme.json',
-  'contrib/vscode/themes/token-light-color-theme.json',
   'contrib/windows-terminal/token.json',
+  'contrib/windows-terminal/token-flint.json',
 }) do
   truthy(vim.json.decode(read_text(path)), 'invalid generated JSON: ' .. path)
 end
-for _, variant in ipairs({ 'dark', 'light' }) do
-  local share = read_text('contrib/chatgpt/token-' .. variant .. '.txt')
-  local payload = share:match('^codex%-theme%-v1:(.+)%s*$')
-  truthy(payload and vim.json.decode(payload), 'invalid ChatGPT share payload for ' .. variant)
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    for _, path in ipairs({
+      'contrib/carapace/' .. appearance.slug .. '-' .. variant .. '.json',
+      'contrib/vscode/themes/' .. appearance.slug .. '-' .. variant .. '-color-theme.json',
+    }) do
+      truthy(vim.json.decode(read_text(path)), 'invalid generated JSON: ' .. path)
+    end
 
-  local sublime = read_text('contrib/sublime/token-' .. variant .. '.sublime-color-scheme')
-  sublime = sublime:gsub('^//[^\n]*\n', '', 1)
-  truthy(vim.json.decode(sublime), 'invalid Sublime scheme for ' .. variant)
+    local share = read_text('contrib/chatgpt/' .. appearance.slug .. '-' .. variant .. '.txt')
+    local payload = share:match('^codex%-theme%-v1:(.+)%s*$')
+    truthy(
+      payload and vim.json.decode(payload),
+      'invalid ChatGPT share payload for ' .. appearance.name .. ' ' .. variant
+    )
+
+    local sublime = read_text('contrib/sublime/' .. appearance.slug .. '-' .. variant .. '.sublime-color-scheme')
+    sublime = sublime:gsub('^//[^\n]*\n', '', 1)
+    truthy(vim.json.decode(sublime), 'invalid Sublime scheme for ' .. appearance.name .. ' ' .. variant)
+  end
 end
 
-local git_config = vim
-  .system({ 'git', 'config', '--file', root .. '/contrib/delta/token.gitconfig', '--list' }, {
-    text = true,
-  })
-  :wait()
-equal(git_config.code, 0, 'invalid delta Git config: ' .. (git_config.stderr or ''))
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-flint-' .. variant .. '-color-theme.json'))
+  local accent = require('token.palettes.flint')(variant).accent
+  for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      equal(
+        theme.semanticTokenColors[token_type .. '.' .. modifier],
+        { foreground = accent, bold = true, italic = false },
+        'Flint VS Code semantic type role for ' .. token_type .. '.' .. modifier .. ' ' .. variant
+      )
+    end
+  end
+end
+
+for _, appearance in ipairs(require('token.appearance').all()) do
+  local git_config = vim
+    .system({ 'git', 'config', '--file', root .. '/contrib/delta/' .. appearance.slug .. '.gitconfig', '--list' }, {
+      text = true,
+    })
+    :wait()
+  equal(git_config.code, 0, 'invalid delta Git config: ' .. (git_config.stderr or ''))
+end
 local installer_syntax = vim
   .system({ 'bash', '-n', root .. '/scripts/install_vscode_theme.sh' }, { text = true })
   :wait()
@@ -116,9 +142,15 @@ local carapace_keys = {
   'Value',
 }
 table.sort(carapace_keys)
-for _, variant in ipairs({ 'dark', 'light' }) do
-  local decoded = vim.json.decode(read_text('contrib/carapace/token-' .. variant .. '.json'))
-  equal(sorted_keys(decoded.carapace), carapace_keys, 'Carapace schema drift for ' .. variant)
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local decoded = vim.json.decode(read_text('contrib/carapace/' .. appearance.slug .. '-' .. variant .. '.json'))
+    equal(
+      sorted_keys(decoded.carapace),
+      carapace_keys,
+      'Carapace schema drift for ' .. appearance.name .. ' ' .. variant
+    )
+  end
 end
 
 local function fish_sections(content)
@@ -139,30 +171,63 @@ local function fish_sections(content)
   return sections
 end
 
-local fish = fish_sections(read_text('contrib/fish/token.theme'))
-for _, variant in ipairs({ 'dark', 'light', 'unknown' }) do
-  local palette_variant = variant == 'unknown' and 'dark' or variant
-  local palette = require('token.palette')(palette_variant)
-  equal(fish[variant].fish_color_cwd_root, palette.red:sub(2), 'Fish root cwd color for ' .. variant)
-  equal(fish[variant].fish_color_status, palette.red:sub(2), 'Fish status color for ' .. variant)
-  equal(fish[variant].fish_color_history_current, palette.accent:sub(2), 'Fish history color for ' .. variant)
-end
+for _, appearance in ipairs(require('token.appearance').all()) do
+  local fish = fish_sections(read_text('contrib/fish/' .. appearance.slug .. '.theme'))
+  local palette_fn = require(appearance.palette)
+  for _, variant in ipairs({ 'dark', 'light', 'unknown' }) do
+    local palette_variant = variant == 'unknown' and 'dark' or variant
+    local palette = palette_fn(palette_variant)
+    equal(fish[variant].fish_color_cwd_root, palette.red:sub(2), 'Fish root cwd color for ' .. appearance.name)
+    equal(fish[variant].fish_color_status, palette.red:sub(2), 'Fish status color for ' .. appearance.name)
+    equal(fish[variant].fish_color_history_current, palette.accent:sub(2), 'Fish history color for ' .. appearance.name)
+  end
 
-for _, variant in ipairs({ 'dark', 'light' }) do
-  local palette = require('token.palette')(variant)
-  local zsh = read_text('contrib/zsh/token-' .. variant .. '.zsh')
-  local styles = {
-    ['exec-descriptor'] = 'fg=#' .. palette.accent2:sub(2),
-    ['subtle-bg'] = 'bg=#' .. palette.match:sub(2),
-    ['optarg-string'] = 'fg=#' .. palette.green:sub(2),
-    ['optarg-number'] = 'fg=#' .. palette.purple:sub(2),
-    ['recursive-base'] = 'none',
-  }
-  for name, style in pairs(styles) do
-    local assignment = 'FAST_HIGHLIGHT_STYLES[' .. name .. "]='" .. style .. "'"
-    truthy(zsh:find(assignment, 1, true), 'missing Zsh style ' .. name .. ' for ' .. variant)
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local palette = palette_fn(variant)
+    local zsh = read_text('contrib/zsh/' .. appearance.slug .. '-' .. variant .. '.zsh')
+    local styles = {
+      ['exec-descriptor'] = 'fg=#' .. palette.accent2:sub(2),
+      ['subtle-bg'] = 'bg=#' .. palette.match:sub(2),
+      ['optarg-string'] = 'fg=#' .. palette.green:sub(2),
+      ['optarg-number'] = 'fg=#' .. palette.purple:sub(2),
+      ['recursive-base'] = 'none',
+    }
+    for name, style in pairs(styles) do
+      local assignment = 'FAST_HIGHLIGHT_STYLES[' .. name .. "]='" .. style .. "'"
+      truthy(zsh:find(assignment, 1, true), 'missing Zsh style ' .. name .. ' for ' .. appearance.name)
+    end
   end
 end
+
+local vscode_package = vim.json.decode(read_text('contrib/vscode/package.json'))
+equal(#vscode_package.contributes.themes, 4, 'VS Code package does not inventory four themes')
+equal(vscode_package.contributes.themes[3].label, 'Token Flint Dark', 'VS Code Flint dark label')
+equal(vscode_package.contributes.themes[4].label, 'Token Flint Light', 'VS Code Flint light label')
+local vscode_flint = vim.json.decode(read_text('contrib/vscode/themes/token-flint-dark-color-theme.json'))
+local vscode_rules = {}
+for _, rule in ipairs(vscode_flint.tokenColors) do
+  vscode_rules[rule.name] = rule.settings
+end
+equal(vscode_rules['Function definition'].fontStyle, 'bold', 'VS Code Flint definition typography')
+equal(vscode_rules['Function call'].fontStyle, nil, 'VS Code Flint call typography')
+equal(vscode_rules['Type reference'].fontStyle, 'italic', 'VS Code Flint reference typography')
+equal(
+  vim.json.decode(read_text('contrib/obsidian/token-flint/manifest.json')).name,
+  'Token Flint',
+  'Obsidian Flint name'
+)
+local windows_flint = vim.json.decode(read_text('contrib/windows-terminal/token-flint.json')).schemes
+equal(windows_flint[1].name, 'Token Flint Dark', 'Windows Terminal Flint dark name')
+equal(windows_flint[2].name, 'Token Flint Light', 'Windows Terminal Flint light name')
+local emacs_flint = read_text('contrib/emacs/token-flint-dark-theme.el')
+truthy(
+  emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
+  'Emacs Flint definition typography'
+)
+truthy(
+  emacs_flint:find('font-lock-function-call-face      ((,class (:foreground ,accent)))', 1, true),
+  'Emacs Flint call typography'
+)
 
 -- Generated output helpers reject path escapes and symlinks, and publish ordinary files correctly.
 local gen_lib = require('gen_lib')
@@ -225,6 +290,171 @@ equal(vim.fn.delete(temporary, 'rf'), 0, 'failed to remove generated-output fixt
 if not helper_ok then
   error(helper_error, 0)
 end
+
+-- Classic and Flint expose the same complete palette contract, with approved anchors and contrast.
+local function luminance(hex)
+  local channels = {}
+  for _, index in ipairs({ 2, 4, 6 }) do
+    local channel = tonumber(hex:sub(index, index + 1), 16) / 255
+    channels[#channels + 1] = channel <= 0.04045 and channel / 12.92 or ((channel + 0.055) / 1.055) ^ 2.4
+  end
+  return 0.2126 * channels[1] + 0.7152 * channels[2] + 0.0722 * channels[3]
+end
+
+local function contrast(left, right)
+  local a, b = luminance(left), luminance(right)
+  if a < b then
+    a, b = b, a
+  end
+  return (a + 0.05) / (b + 0.05)
+end
+
+local flint_anchors = {
+  dark = {
+    bg3 = '#272C33',
+    bg1 = '#1C2127',
+    bg5 = '#373E47',
+    fg0 = '#DCE1E6',
+    fg1 = '#C2C9D0',
+    fg2 = '#929BA5',
+    fg3 = '#626C77',
+    accent = '#D58A6F',
+    accent2 = '#C6A15A',
+    green = '#94A477',
+    blue = '#7FA2BA',
+    red = '#D47A7F',
+  },
+  light = {
+    bg3 = '#F5F7F8',
+    bg1 = '#E7EBEF',
+    bg5 = '#E0E5EA',
+    fg0 = '#28313A',
+    fg1 = '#3D4853',
+    fg2 = '#65717D',
+    fg3 = '#828E9A',
+    accent = '#B64E2E',
+    accent2 = '#946409',
+    green = '#5A772B',
+    blue = '#34779D',
+    red = '#BE3E50',
+  },
+}
+for _, background in ipairs({ 'dark', 'light' }) do
+  local classic = require('token.palette')(background)
+  local flint = require('token.palettes.flint')(background)
+  equal(sorted_keys(flint), sorted_keys(classic), 'Flint palette keys for ' .. background)
+  equal(vim.tbl_count(flint), 49, 'Flint palette key count for ' .. background)
+  for key, color in pairs(flint) do
+    truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Flint color ' .. key .. ' for ' .. background)
+  end
+  for key, color in pairs(flint_anchors[background]) do
+    equal(flint[key], color, 'Flint anchor ' .. key .. ' for ' .. background)
+  end
+  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'green', 'blue', 'red' }) do
+    truthy(contrast(flint[key], flint.bg3) >= 4.5, 'insufficient Flint contrast for ' .. key .. ' ' .. background)
+  end
+end
+
+-- Both colorscheme entry points select their appearance while background selects the variant.
+token.setup()
+for _, colorscheme in ipairs({ 'token', 'token-flint' }) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    vim.o.background = background
+    vim.cmd.colorscheme(colorscheme)
+    equal(vim.g.colors_name, colorscheme, 'colors_name for ' .. colorscheme .. ' ' .. background)
+    equal(
+      hl('Normal').bg,
+      tonumber(require('token.theme').palette(background, colorscheme).bg3:sub(2), 16),
+      'Normal background for ' .. colorscheme .. ' ' .. background
+    )
+  end
+end
+fails('unknown internal colorscheme name', function()
+  token.load('unknown')
+end)
+
+-- Flint's default grammar uses typography to distinguish definitions, calls, references, and built-ins.
+token.setup()
+load('dark', 'token-flint')
+local flint = require('token.palettes.flint')('dark')
+truthy(hl('@function').bold, 'Flint function definition is not bold')
+equal(hl('@function').fg, tonumber(flint.accent:sub(2), 16), 'Flint function definition color')
+equal(hl('@function.call').bold, nil, 'Flint function call is bold')
+equal(hl('@function.call').fg, tonumber(flint.accent:sub(2), 16), 'Flint function call color')
+truthy(hl('@function.method').bold, 'Flint method definition is not bold')
+equal(hl('@function.method.call').bold, nil, 'Flint method call is bold')
+truthy(hl('@type').italic, 'Flint type reference is not italic')
+equal(hl('@type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint type reference color')
+truthy(hl('@type.definition').bold, 'Flint type definition is not bold')
+equal(hl('@type.definition').fg, tonumber(flint.accent:sub(2), 16), 'Flint type definition color')
+truthy(hl('@function.builtin').italic, 'Flint built-in is not italic')
+equal(hl('@function.builtin').fg, tonumber(flint.fg1:sub(2), 16), 'Flint built-in color')
+equal(hl('@lsp.type.function').bold, nil, 'Flint LSP function reference is bold')
+equal(hl('@lsp.type.function').fg, tonumber(flint.accent:sub(2), 16), 'Flint LSP function reference color')
+truthy(hl('@lsp.type.type').italic, 'Flint LSP type reference is not italic')
+equal(hl('@lsp.type.type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint LSP type reference color')
+truthy(hl('@lsp.typemod.function.definition').bold, 'Flint LSP function definition is not bold')
+equal(
+  hl('@lsp.typemod.function.definition').fg,
+  tonumber(flint.accent:sub(2), 16),
+  'Flint LSP function definition color'
+)
+equal(hl('@keyword').fg, tonumber(flint.accent2:sub(2), 16), 'Flint keyword color')
+equal(hl('@string').fg, tonumber(flint.green:sub(2), 16), 'Flint literal color')
+truthy(hl('@markup.link').underline, 'Flint link is not underlined')
+equal(hl('@markup.link').fg, tonumber(flint.blue:sub(2), 16), 'Flint link color')
+truthy(hl('@lsp.mod.deprecated').strikethrough, 'Flint deprecated modifier is not struck through')
+truthy(hl('DiagnosticUnderlineError').undercurl, 'Flint diagnostic is not undercurled')
+
+token.setup({ plugins = { markview = true, render_markdown = true } })
+load('dark', 'token-flint')
+equal(hl('RenderMarkdownH3').fg, tonumber(flint.fg1:sub(2), 16), 'Flint render-markdown headings are rainbowed')
+equal(hl('MarkviewHeading3').fg, tonumber(flint.fg1:sub(2), 16), 'Flint Markview headings are rainbowed')
+
+local flint_styles = {
+  functions = { bold = false, underline = true },
+  types = { bold = false, underline = true },
+}
+token.setup({ styles = flint_styles })
+for _, background in ipairs({ 'dark', 'light' }) do
+  load(background, 'token-flint')
+  equal(hl('@function').bold, nil, 'user style did not remove Flint definition weight ' .. background)
+  truthy(hl('@function').underline, 'user style did not augment Flint definition ' .. background)
+  truthy(hl('@lsp.type.function').underline, 'user style did not reach Flint LSP function references ' .. background)
+  for _, token_type in ipairs({ 'function', 'method' }) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
+      equal(hl(name).bold, nil, 'user style did not remove Flint LSP function weight for ' .. name .. ' ' .. background)
+      truthy(hl(name).underline, 'user style did not reach Flint LSP function role ' .. name .. ' ' .. background)
+    end
+  end
+  for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
+      equal(hl(name).bold, nil, 'user style did not remove Flint LSP type weight for ' .. name .. ' ' .. background)
+      truthy(hl(name).underline, 'user style did not reach Flint LSP type role ' .. name .. ' ' .. background)
+    end
+  end
+end
+
+-- Shared user customization follows the appearance overlay and receives the active colorscheme.
+local callback_colorscheme
+token.setup({
+  styles = { functions = { underline = true } },
+  highlights = { all = { ['@function'] = { fg = '#112233' } } },
+  on_colors = function(_, _, colorscheme)
+    callback_colorscheme = 'colors:' .. colorscheme
+  end,
+  on_highlights = function(groups, _, _, colorscheme)
+    callback_colorscheme = callback_colorscheme .. ',highlights:' .. colorscheme
+    groups.TokenAppearanceCallback = { bold = true }
+  end,
+})
+load('dark', 'token-flint')
+equal(callback_colorscheme, 'colors:token-flint,highlights:token-flint', 'callback colorscheme arguments')
+equal(hl('@function').fg, tonumber('112233', 16), 'user highlight did not replace Flint profile')
+equal(hl('@function').bold, nil, 'user highlight did not completely replace Flint profile')
+truthy(hl('TokenAppearanceCallback').bold, 'Flint callback highlight missing')
 
 -- Defaults are core-only.
 token.setup()
@@ -368,11 +598,16 @@ token.setup({
   },
   plugins = { markview = true },
 })
-load()
+load('dark', 'token-flint')
 local gated = hl('TokenGated')
 for _, attribute in ipairs({ 'bold', 'italic', 'underline', 'undercurl', 'strikethrough' }) do
   equal(gated[attribute], nil, 'attribute gate failed for ' .. attribute)
 end
+equal(hl('@function').bold, nil, 'bold gate did not remove Flint definition weight')
+equal(hl('@type').italic, nil, 'italic gate did not remove Flint reference slant')
+equal(hl('@markup.link').underline, nil, 'underline gate did not remove Flint link underline')
+equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Flint deprecation')
+equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Flint diagnostic')
 equal(hl('TokenGatedLink').bold, nil, 'attribute gate did not resolve a user link')
 equal(hl('TokenCtermGated').cterm, nil, 'attribute gate did not disable a cterm attribute')
 equal(
@@ -405,6 +640,18 @@ local lualine = require('lualine.themes.token')
 equal(lualine.normal.b.bg, 'NONE', 'Lualine base is not transparent')
 equal(lualine.inactive.a.bg, 'NONE', 'Lualine inactive section is not transparent')
 equal(lualine.inactive.a.fg, require('token.theme').palette('dark').fg3, 'Lualine inactive text is not muted')
+local flint_lualine = require('lualine.themes.token-flint')
+equal(flint_lualine.normal.b.bg, 'NONE', 'Flint Lualine base is not transparent')
+equal(
+  flint_lualine.inactive.a.fg,
+  require('token.theme').palette('dark', 'token-flint').fg3,
+  'Flint Lualine inactive text is not muted'
+)
+
+token.setup({ attributes = { bold = false } })
+load('dark', 'token-flint')
+equal(require('lualine.themes.token').normal.a.gui, nil, 'classic Lualine ignored bold gate')
+equal(require('lualine.themes.token-flint').normal.a.gui, nil, 'Flint Lualine ignored bold gate')
 
 -- Invalid callback output is rejected.
 token.setup({
@@ -422,8 +669,12 @@ load()
 equal(vim.g.colors_name, 'token', 'non-dumpable callback blocked dynamic loading')
 
 -- Dynamic and compiled variants, keyed misses, terminal opt-out, and corrupt fallback.
-local callback = function(groups, colors, background)
-  groups.TokenCompiled = { fg = colors.accent, bold = background == 'dark' }
+local fail_flint_compile = false
+local callback = function(groups, colors, background, colorscheme)
+  if fail_flint_compile and colorscheme == 'token-flint' then
+    error('injected Flint compile failure')
+  end
+  groups.TokenCompiled = { fg = colors.accent, bold = background == 'dark', italic = colorscheme == 'token-flint' }
 end
 token.setup({
   terminal_colors = false,
@@ -435,19 +686,46 @@ local compile = require('token.compile')
 compile.compile()
 local dark_path = compile.path('dark')
 local light_path = compile.path('light')
+local flint_dark_path = compile.path('dark', 'token-flint')
+local flint_light_path = compile.path('light', 'token-flint')
 truthy(vim.uv.fs_stat(dark_path), 'dark cache missing')
 truthy(vim.uv.fs_stat(light_path), 'light cache missing')
+truthy(vim.uv.fs_stat(flint_dark_path), 'Flint dark cache missing')
+truthy(vim.uv.fs_stat(flint_light_path), 'Flint light cache missing')
+equal(
+  vim.tbl_count({ [dark_path] = true, [light_path] = true, [flint_dark_path] = true, [flint_light_path] = true }),
+  4,
+  'cache paths collide'
+)
+fail_flint_compile = true
+local compile_ok, compile_error = pcall(compile.compile)
+equal(compile_ok, false, 'injected Flint compilation unexpectedly succeeded')
+truthy(tostring(compile_error):match('injected Flint compile failure'), 'unexpected Flint compilation failure')
+for _, path in ipairs({ dark_path, light_path, flint_dark_path, flint_light_path }) do
+  truthy(vim.uv.fs_stat(path), 'failed Flint rebuild removed existing cache: ' .. path)
+end
+equal(#vim.fn.glob(vim.fn.stdpath('cache') .. '/token/*.tmp', false, true), 0, 'failed rebuild left cache temporaries')
+fail_flint_compile = false
 vim.g.terminal_color_0 = 'sentinel'
 load('dark')
+equal(vim.g.colors_name, 'token', 'compiled classic colors_name')
 equal(vim.g.terminal_color_0, 'sentinel', 'compiled terminal opt-out failed')
 truthy(hl('TokenCompiled').bold, 'compiled dark callback missing')
+equal(hl('TokenCompiled').italic, nil, 'classic cache used Flint callback result')
 truthy(hl('TokenCterm').cterm.bold, 'compiled cterm highlight missing')
 load('light')
 equal(hl('TokenCompiled').bold, nil, 'compiled light callback result incorrect')
 equal(loaded('gitsigns'), false, 'compiled output loaded disabled integration')
+load('dark', 'token-flint')
+equal(vim.g.colors_name, 'token-flint', 'compiled Flint colors_name')
+truthy(hl('TokenCompiled').bold and hl('TokenCompiled').italic, 'compiled Flint callback result incorrect')
+load('light', 'token-flint')
+equal(vim.g.colors_name, 'token-flint', 'compiled Flint light colors_name')
+truthy(hl('TokenCompiled').italic and not hl('TokenCompiled').bold, 'compiled Flint light callback result incorrect')
 
 token.setup({ transparent = true })
 equal(compile.load('dark'), false, 'configuration change reused stale cache')
+equal(compile.load('dark', 'token-flint'), false, 'configuration change reused stale Flint cache')
 
 token.setup({
   terminal_colors = false,
@@ -455,6 +733,13 @@ token.setup({
   highlights = { all = { TokenCterm = { fg = '#abcdef', cterm = { bold = true } } } },
   on_highlights = callback,
 })
+local flint_file = assert(io.open(flint_dark_path, 'wb'))
+assert(flint_file:write('corrupt'))
+assert(flint_file:close())
+equal(compile.load('dark', 'token-flint'), false, 'corrupt Flint cache did not fall back')
+equal(vim.uv.fs_stat(flint_dark_path), nil, 'corrupt Flint cache was not removed')
+truthy(compile.load('dark'), 'corrupt Flint cache affected classic Token')
+
 local file = assert(io.open(dark_path, 'wb'))
 assert(file:write('corrupt'))
 assert(file:close())
@@ -491,39 +776,65 @@ end
 local function parity(config, label)
   token.setup(config)
   local expected = {}
-  for _, background in ipairs({ 'dark', 'light' }) do
-    local _, groups = require('token.theme').build(background)
-    expected[background] = groups
-    os.remove(compile.path(background))
+  for _, appearance in ipairs(require('token.appearance').all()) do
+    expected[appearance.name] = {}
+    for _, background in ipairs({ 'dark', 'light' }) do
+      local _, groups = require('token.theme').build(background, appearance.name)
+      expected[appearance.name][background] = groups
+      os.remove(compile.path(background, appearance.name))
+    end
   end
 
   local dynamic = {}
-  for _, background in ipairs({ 'dark', 'light' }) do
-    for index = 0, 15 do
-      vim.g['terminal_color_' .. index] = nil
+  for _, appearance in ipairs(require('token.appearance').all()) do
+    dynamic[appearance.name] = {}
+    for _, background in ipairs({ 'dark', 'light' }) do
+      for index = 0, 15 do
+        vim.g['terminal_color_' .. index] = nil
+      end
+      equal(
+        compile.load(background, appearance.name),
+        false,
+        label .. ' unexpectedly found a compiled cache for ' .. appearance.name
+      )
+      load(background, appearance.name)
+      equal(vim.g.colors_name, appearance.name, label .. ' dynamic colors_name for ' .. appearance.name)
+      dynamic[appearance.name][background] = {
+        groups = applied_groups(expected[appearance.name][background]),
+        terminal = terminal_colors(),
+      }
     end
-    equal(compile.load(background), false, label .. ' unexpectedly found a compiled cache')
-    load(background)
-    dynamic[background] = {
-      groups = applied_groups(expected[background]),
-      terminal = terminal_colors(),
-    }
   end
 
   compile.compile()
-  for _, background in ipairs({ 'dark', 'light' }) do
-    for index = 0, 15 do
-      vim.g['terminal_color_' .. index] = nil
+  for _, appearance in ipairs(require('token.appearance').all()) do
+    for _, background in ipairs({ 'dark', 'light' }) do
+      for index = 0, 15 do
+        vim.g['terminal_color_' .. index] = nil
+      end
+      truthy(
+        vim.uv.fs_stat(compile.path(background, appearance.name)),
+        label .. ' compiled cache is missing for ' .. appearance.name
+      )
+      vim.o.background = background
+      truthy(compile.load(background, appearance.name), label .. ' compiled cache did not load for ' .. appearance.name)
+      equal(vim.g.colors_name, appearance.name, label .. ' compiled colors_name for ' .. appearance.name)
+      equal(
+        applied_groups(expected[appearance.name][background]),
+        dynamic[appearance.name][background].groups,
+        label .. ' group parity for ' .. appearance.name .. ' ' .. background
+      )
+      equal(
+        terminal_colors(),
+        dynamic[appearance.name][background].terminal,
+        label .. ' terminal parity for ' .. appearance.name .. ' ' .. background
+      )
     end
-    truthy(vim.uv.fs_stat(compile.path(background)), label .. ' compiled cache is missing')
-    vim.o.background = background
-    truthy(compile.load(background), label .. ' compiled cache did not load')
-    equal(applied_groups(expected[background]), dynamic[background].groups, label .. ' group parity for ' .. background)
-    equal(terminal_colors(), dynamic[background].terminal, label .. ' terminal parity for ' .. background)
   end
 end
 
 parity({}, 'core-only')
 parity({ plugins = { all = true } }, 'all-plugin')
+parity({ styles = flint_styles }, 'styled')
 
 print('token: headless tests passed')
