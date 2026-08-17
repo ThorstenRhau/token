@@ -22,12 +22,39 @@ matching appearance palette, so everything stays consistent without extra work.
 
 ## Showcase
 
-| Appearance | Dark | Light |
-| --- | --- | --- |
-| **Token Ultra**<br><br>Copper definitions, ochre control flow, teal literals, and quiet italic type roles. | ![Token Ultra dark](https://rhau.se/token-ultra-dark.png) | ![Token Ultra light](https://rhau.se/token-ultra-light.png) |
-| **Token**<br><br>A warm, muted palette with earthy accents and familiar syntax roles. | ![Token dark](https://rhau.se/token-dark.png) | ![Token light](https://rhau.se/token-light.png) |
-| **Token Flint**<br><br>A restrained cool-gray foundation with softly desaturated rust, gold, blue, and green. | ![Token Flint dark](https://rhau.se/token-flint-dark.png) | ![Token Flint light](https://rhau.se/token-flint-light.png) |
-| **Token Temper**<br><br>A cool-gray foundation reduced to a focused teal-and-purple syntax grammar. | ![Token Temper dark](https://rhau.se/token-temper-dark.png) | ![Token Temper light](https://rhau.se/token-temper-light.png) |
+### Token Ultra
+
+Copper definitions, ochre control flow, teal literals, and quiet italic type
+roles.
+
+| Dark                                                                                              | Light                                                                                                |
+| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
+| [![Token Ultra dark](https://rhau.se/token-ultra-dark.png)](https://rhau.se/token-ultra-dark.png) | [![Token Ultra light](https://rhau.se/token-ultra-light.png)](https://rhau.se/token-ultra-light.png) |
+
+### Token
+
+A warm, muted palette with earthy accents and familiar syntax roles.
+
+| Dark                                                                            | Light                                                                              |
+| :-----------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
+| [![Token dark](https://rhau.se/token-dark.png)](https://rhau.se/token-dark.png) | [![Token light](https://rhau.se/token-light.png)](https://rhau.se/token-light.png) |
+
+### Token Flint
+
+A restrained cool-gray foundation with softly desaturated rust, gold, blue, and
+green.
+
+| Dark                                                                                              | Light                                                                                                |
+| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
+| [![Token Flint dark](https://rhau.se/token-flint-dark.png)](https://rhau.se/token-flint-dark.png) | [![Token Flint light](https://rhau.se/token-flint-light.png)](https://rhau.se/token-flint-light.png) |
+
+### Token Temper
+
+A cool-gray foundation reduced to a focused teal-and-purple syntax grammar.
+
+| Dark                                                                                                 | Light                                                                                                   |
+| :--------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
+| [![Token Temper dark](https://rhau.se/token-temper-dark.png)](https://rhau.se/token-temper-dark.png) | [![Token Temper light](https://rhau.se/token-temper-light.png)](https://rhau.se/token-temper-light.png) |
 
 ## Install
 
