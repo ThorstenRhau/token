@@ -105,10 +105,10 @@
   --color-base-100: #292a24;
   --color-red: #aa4e55;
   --color-red-rgb: 170, 78, 85;
-  --color-orange: #356f69;
-  --color-orange-rgb: 53, 111, 105;
-  --color-yellow: #806021;
-  --color-yellow-rgb: 128, 96, 33;
+  --color-orange: #2c706a;
+  --color-orange-rgb: 44, 112, 106;
+  --color-yellow: #835f10;
+  --color-yellow-rgb: 131, 95, 16;
   --color-green: #4f714b;
   --color-green-rgb: 79, 113, 75;
   --color-cyan: #2d6c6c;
@@ -144,7 +144,7 @@
   --text-on-accent: #fbf9f4;
   --text-on-accent-inverted: #fbf9f4;
   --text-success: #4f714b;
-  --text-warning: #806021;
+  --text-warning: #835f10;
   --text-error: #aa4e55;
   --text-selection: #dedbd3;
   --text-highlight-bg: #eadab6;
@@ -154,16 +154,16 @@
   --link-color-hover: #a44e31;
   --link-external-color: #536f88;
   --link-external-color-hover: #a44e31;
-  --tag-color: #846128;
+  --tag-color: #87601b;
   --tag-color-hover: #a44e31;
   --tag-background: #f0ede6;
   --tag-background-hover: #eae9e5;
 
   --h1-color: #a44e31;
-  --h2-color: #846128;
+  --h2-color: #87601b;
   --h3-color: #536f88;
   --h4-color: #a44e31;
-  --h5-color: #846128;
+  --h5-color: #87601b;
   --h6-color: #536f88;
 
   --code-normal: #292a24;
@@ -171,11 +171,11 @@
   --code-comment: #6d675f;
   --code-function: #a44e31;
   --code-important: #aa4e55;
-  --code-keyword: #846128;
+  --code-keyword: #87601b;
   --code-operator: #3d3929;
   --code-property: #292a24;
   --code-punctuation: #3d3929;
-  --code-string: #356f69;
+  --code-string: #2c706a;
   --code-tag: #3d3929;
-  --code-value: #356f69;
+  --code-value: #2c706a;
 }

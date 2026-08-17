@@ -10,7 +10,7 @@ gui:
     inactiveBorderColor:
       - "#888177"
     searchingActiveBorderColor:
-      - "#806021"
+      - "#835f10"
       - bold
     optionsTextColor:
       - "#536f88"
