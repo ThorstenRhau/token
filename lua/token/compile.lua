@@ -84,7 +84,7 @@ local function build_source(background, colorscheme)
   end
 
   if require('token.config').get().terminal_colors then
-    local terminal = require('token.terminal').colors(p, is_dark)
+    local terminal = require('token.terminal').colors(p, is_dark, colorscheme)
     for i = 0, 15 do
       lines[#lines + 1] = 'vim.g.terminal_color_' .. i .. '=' .. string.format('%q', terminal[i])
     end

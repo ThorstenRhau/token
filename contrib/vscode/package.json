@@ -41,6 +41,16 @@
         "label": "Token Temper Light",
         "uiTheme": "vs",
         "path": "./themes/token-temper-light-color-theme.json"
+      },
+      {
+        "label": "Token Ultra Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/token-ultra-dark-color-theme.json"
+      },
+      {
+        "label": "Token Ultra Light",
+        "uiTheme": "vs",
+        "path": "./themes/token-ultra-light-color-theme.json"
       }
     ]
   }
