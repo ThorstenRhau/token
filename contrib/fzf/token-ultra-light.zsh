@@ -6,7 +6,7 @@ export _FZF_THEME_OPTS="\
 --color=fg:#292a24,bg:#fbf9f4,hl:#a44e31 \
 --color=fg+:#292a24,bg+:#dedbd3,hl+:#a44e31 \
 --color=border:#888177,header:#536f88,gutter:#fbf9f4 \
---color=spinner:#846128,info:#6d675f \
+--color=spinner:#87601b,info:#6d675f \
 --color=pointer:#a44e31,marker:#4f714b,prompt:#a44e31
 "
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+${FZF_DEFAULT_OPTS} }${_FZF_THEME_OPTS}"

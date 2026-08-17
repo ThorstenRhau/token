@@ -41,7 +41,7 @@ fish_pager_color_selected_description 979189
 # preferred_background: fbf9f4
 fish_color_normal 292a24
 fish_color_command 536f88
-fish_color_keyword 846128
+fish_color_keyword 87601b
 fish_color_quote 4f714b
 fish_color_redirection 7c619a
 fish_color_end 6d675f
@@ -56,7 +56,7 @@ fish_color_cwd 536f88
 fish_color_cwd_root aa4e55
 fish_color_user 4f714b
 fish_color_host 536f88
-fish_color_host_remote 846128
+fish_color_host_remote 87601b
 fish_color_status aa4e55
 fish_color_cancel aa4e55
 fish_color_search_match --background=eadab6
