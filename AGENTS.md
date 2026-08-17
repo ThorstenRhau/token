@@ -210,8 +210,9 @@ that need formatting or contrib regeneration. Enable it with
   audit, or promote durable knowledge for this repository.
 - Keep always-applicable architecture and operating rules in `AGENTS.md`. Keep
   the public feature and configuration contract in `README.md`, and keep the
-  repeatable colorscheme audit procedure in
-  `.agents/skills/colorscheme-review/`.
+  repeatable colorscheme audit and screenshot procedures in
+  `.agents/skills/colorscheme-review/` and
+  `.agents/skills/create-theme-screenshots/`.
 - Record accepted, non-obvious rationale under `docs/decisions/` only when it
   meets the workflow's capture threshold. Add `docs/index.md` only when the
   repository has multiple durable knowledge sources that need routing.
