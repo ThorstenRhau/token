@@ -1,0 +1,6 @@
+interface:
+  display_name: "Create Theme Screenshots"
+  short_description: "Capture matching Token theme screenshots"
+  default_prompt:
+    "Use $create-theme-screenshots to capture matching dark and light
+    screenshots for a Token appearance."
