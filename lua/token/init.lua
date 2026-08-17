@@ -49,7 +49,7 @@ function M.load(colorscheme)
   end
 
   if require('token.config').get().terminal_colors then
-    require('token.terminal').set(p, bg == 'dark')
+    require('token.terminal').set(p, bg == 'dark', appearance.name)
   end
 end
 

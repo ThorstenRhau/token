@@ -131,17 +131,18 @@ Do not report every optional group as missing. Report only renamed, removed, sta
    (c) resolve the selected appearance and load its palette for the current `vim.o.background`,
    (d) merge groups via `require('token.groups')(p)`,
    (e) apply via `vim.api.nvim_set_hl`,
-   (f) set terminal colors via `require('token.terminal').set(p, is_dark)`.
+   (f) resolve an optional appearance role profile after configured palette callbacks,
+   (g) set terminal colors via `require('token.terminal').set(p, is_dark, appearance)`.
    - Any missing step → Critical (colorscheme won't reload cleanly after `:TokenCompile`).
 4. `lua/token/compile.lua`: compilation must produce distinct configuration-keyed caches for every registered appearance in dark and light. `load(bg, appearance)` must recover from a missing or corrupt bytecode cache (delete the stale file, fall back to dynamic load). Missing coverage or recovery → Warning.
 
 ### Phase 7: Terminal & Lualine Coverage
 
-1. `lua/token/terminal.lua`: verify the `colors(p, is_dark)` function returns a table with all 16 indices (0–15) populated for both `is_dark = true` and `is_dark = false`. Any nil slot → Critical.
+1. `lua/token/terminal.lua`: verify `colors(p, is_dark, appearance?)` returns all 16 indices (0–15) for both backgrounds and every registered appearance. Verify two-argument calls retain the shared fallback. Any nil slot → Critical.
 2. For every registered appearance, load its `lua/lualine/themes/<appearance>.lua` wrapper through `lua/token/lualine.lua`. Verify all 7 modes are present: `normal`, `insert`, `visual`, `replace`, `command`, `terminal`, `inactive`. Each must have `a`, `b`, `c` sections.
    - Missing mode → Warning.
    - Missing section within a mode → Warning.
-3. Verify the shared Lualine builder resolves colors through the appearance-aware theme palette API, and each wrapper selects the correct registered appearance. Hardcoded hex or a classic-only palette path → Warning.
+3. Verify the shared Lualine builder resolves colors and any optional role profile through the appearance-aware APIs after configured palette callbacks, and each wrapper selects the correct registered appearance. Hardcoded hex or a classic-only palette path → Warning.
 
 ### Phase 8: Standard Neovim Group Coverage
 

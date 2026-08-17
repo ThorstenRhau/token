@@ -1321,7 +1321,83 @@ local function temper_face(entry)
   return result
 end
 
-local function gen_emacs(p, variant, appearance)
+local function palette_key(p, color, context)
+  for _, key in ipairs(EMACS_LET_KEYS) do
+    if p[key] == color then
+      return key
+    end
+  end
+  error('emacs: role "' .. context .. '" references color outside the palette: ' .. tostring(color))
+end
+
+local function role_face(name, p, role)
+  local result = { name }
+  if role.fg then
+    result.fg = palette_key(p, role.fg, name)
+  end
+  for _, attribute in ipairs({ 'bold', 'italic', 'underline' }) do
+    if role[attribute] ~= nil then
+      result[attribute] = role[attribute]
+    end
+  end
+  return result
+end
+
+local function profile_face(entry, p, profile)
+  if entry.section then
+    return entry
+  end
+
+  local result = {}
+  for key, value in pairs(entry) do
+    result[key] = value
+  end
+
+  local r = profile.syntax
+  local overrides = {
+    ['font-lock-comment-face'] = r.comment,
+    ['font-lock-comment-delimiter-face'] = r.comment,
+    ['font-lock-doc-face'] = r.comment,
+    ['font-lock-doc-markup-face'] = r.comment,
+    ['font-lock-keyword-face'] = r.control,
+    ['font-lock-builtin-face'] = r.builtin,
+    ['font-lock-function-name-face'] = r.definition,
+    ['font-lock-function-call-face'] = r.call,
+    ['font-lock-type-face'] = r.type,
+    ['font-lock-constant-face'] = r.literal,
+    ['font-lock-preprocessor-face'] = r.control,
+    ['font-lock-regexp-grouping-backslash'] = r.literal,
+    ['font-lock-regexp-grouping-construct'] = r.literal,
+    ['font-lock-escape-face'] = r.literal,
+    ['font-lock-number-face'] = r.literal,
+    ['font-lock-reference-face'] = r.type,
+    ['font-lock-string-face'] = r.literal,
+    link = r.link,
+    ['link-visited'] = r.link,
+    ['org-link'] = r.link,
+    ['org-roam-link'] = r.link,
+    ['markdown-link-face'] = r.link,
+    ['markdown-url-face'] = r.link,
+    ['markdown-plain-url-face'] = r.link,
+    ['shr-link'] = r.link,
+    ['shr-visited-link'] = r.link,
+  }
+  local override = overrides[entry[1]]
+  if override then
+    return role_face(entry[1], p, override)
+  end
+
+  local heading = entry[1]:match('^outline%-(%d)$')
+    or entry[1]:match('^org%-level%-(%d)$')
+    or entry[1]:match('^markdown%-header%-face%-(%d)$')
+  if heading then
+    local index = (tonumber(heading) - 1) % #profile.headings + 1
+    result.fg = palette_key(p, profile.headings[index], entry[1])
+  end
+  return result
+end
+
+local function gen_emacs(p, variant, appearance, profile)
   -- Fail fast if palette is missing any key the let block needs.
   for _, key in ipairs(EMACS_LET_KEYS) do
     if p[key] == nil then
@@ -1357,6 +1433,8 @@ local function gen_emacs(p, variant, appearance)
       entry = flint_face(entry)
     elseif appearance.name == 'token-temper' then
       entry = temper_face(entry)
+    elseif profile then
+      entry = profile_face(entry, p, profile)
     end
     if entry.section then
       lines[#lines + 1] = ''

@@ -1,7 +1,7 @@
 # AGENTS.md - token
 
-Standalone Neovim colorscheme plugin with classic, Flint, and Temper appearances,
-each with dark and light variants. Requires **Neovim 0.12+**.
+Standalone Neovim colorscheme plugin with classic, Flint, Temper, and Ultra
+appearances, each with dark and light variants. Requires **Neovim 0.12+**.
 
 ## Structure
 
@@ -10,25 +10,30 @@ token/
 ├── colors/
 │   ├── token.lua              # Classic entry point
 │   ├── token-flint.lua        # Flint entry point
-│   └── token-temper.lua       # Temper entry point
+│   ├── token-temper.lua       # Temper entry point
+│   └── token-ultra.lua        # Ultra entry point
 ├── lua/
 │   ├── lualine/themes/
 │   │   ├── token.lua          # Classic Lualine wrapper
 │   │   ├── token-flint.lua    # Flint Lualine wrapper
-│   │   └── token-temper.lua   # Temper Lualine wrapper
+│   │   ├── token-temper.lua   # Temper Lualine wrapper
+│   │   └── token-ultra.lua    # Ultra Lualine wrapper
 │   └── token/
 │       ├── appearance.lua      # Appearance registry and metadata
 │       ├── appearances/
 │       │   ├── flint.lua       # Flint typography and semantic overrides
-│       │   └── temper.lua      # Temper typography and semantic overrides
-│       ├── compile.lua         # Six-variant bytecode compilation and cache loading
+│       │   ├── temper.lua      # Temper typography and semantic overrides
+│       │   ├── ultra.lua       # Ultra typography and semantic overrides
+│       │   └── ultra_roles.lua # Ultra syntax, Lualine, ANSI, and generator roles
+│       ├── compile.lua         # Eight-variant bytecode compilation and cache loading
 │       ├── config.lua          # Persistent normalized configuration
 │       ├── init.lua            # Public API: setup(), load()
 │       ├── lualine.lua         # Shared appearance-aware Lualine builder
 │       ├── palette.lua         # Classic dark/light colors
 │       ├── palettes/
 │       │   ├── flint.lua       # Flint dark/light colors
-│       │   └── temper.lua      # Temper dark/light colors
+│       │   ├── temper.lua      # Temper dark/light colors
+│       │   └── ultra.lua       # Ultra dark/light colors
 │       ├── theme.lua           # Shared configured appearance builder
 │       ├── terminal.lua        # ANSI terminal colors 0..15
 │       └── groups/
@@ -110,30 +115,40 @@ token/
 
 ## Architecture
 
-- `colors/token.lua`, `colors/token-flint.lua`, and `colors/token-temper.lua` are
-  the Neovim entry points discovered by their matching `:colorscheme` names
-- `appearance.lua` registers classic Token, Flint, and Temper, including their
-  palette, optional highlight profile, generated slug, and compile-cache identity
+- `colors/token.lua`, `colors/token-flint.lua`, `colors/token-temper.lua`, and
+  `colors/token-ultra.lua` are the Neovim entry points discovered by their
+  matching `:colorscheme` names
+- `appearance.lua` registers classic Token, Flint, Temper, and Ultra, including
+  their palette, optional highlight and role profiles, generated slug, and
+  compile-cache identity
 - `init.lua` orchestrates loading: tries compiled bytecode cache first, falls
   back to the dynamic configured appearance path
 - `config.lua` validates options and persists normalized configuration across
   Token's runtime module cache clearing
 - `theme.lua` applies palette overrides, enabled integrations, styles, surfaces,
   user highlights, callbacks, and global attribute gates in shared order
-- `compile.lua` handles `:TokenCompile` (generates classic, Flint, and Temper
-  dark/light bytecode under `stdpath('cache')/token/`) and configuration-fingerprinted loading
-- `palette.lua`, `palettes/flint.lua`, and `palettes/temper.lua` each take
-  `'dark'|'light'` and return the same flat semantic hex color key set
-- `appearances/flint.lua` and `appearances/temper.lua` overlay their color grammar
-  and semantic typography before shared user styles are applied
+- `compile.lua` handles `:TokenCompile` (generates classic, Flint, Temper, and
+  Ultra dark/light bytecode under `stdpath('cache')/token/`) and
+  configuration-fingerprinted loading
+- `palette.lua`, `palettes/flint.lua`, `palettes/temper.lua`, and
+  `palettes/ultra.lua` each take `'dark'|'light'` and return the same flat
+  semantic hex color key set
+- `appearances/flint.lua`, `appearances/temper.lua`, and `appearances/ultra.lua`
+  overlay their color grammar and semantic typography before shared user styles
+  are applied
+- An optional appearance role profile may define syntax adapter, heading,
+  Lualine, and ANSI roles after configured palette callbacks run. Ultra uses
+  `appearances/ultra_roles.lua`; existing appearances retain their fallbacks
 - `groups/init.lua` loads and merges: editor, syntax, treesitter, lsp,
   diagnostics, diff, plugins
 - `groups/plugins/init.lua` exposes a keyed registry and requires enabled plugin
   modules in sorted order
 - Each group module exports a function `(palette) -> { [group] = hl_opts }`
-- `terminal.lua` exports `{ colors, set }`: `colors(p, is_dark)` returns the
-  0..15 ANSI color table (pure Lua), `set(p, is_dark)` applies it via `vim.g`
-- `lualine.lua` builds all modes from the active appearance palette; the three
+- `terminal.lua` exports `{ colors, set }`: `colors(p, is_dark, appearance?)`
+  returns the 0..15 ANSI color table (pure Lua), and
+  `set(p, is_dark, appearance?)` applies it via `vim.g`; two-argument calls
+  retain the shared fallback
+- `lualine.lua` builds all modes from the active appearance palette; the four
   files under `lua/lualine/themes/` are thin wrappers
 - The registered palette modules are the source of truth for runtime highlights
   and generated contrib themes; some keys are intentionally generator-only
@@ -146,16 +161,21 @@ token/
   `palettes/flint.lua`; preserve approved colors unless the user approves a change
 - **Add or change a Temper color**: edit both dark and light tables in
   `palettes/temper.lua`; preserve approved anchors unless the user approves a change
+- **Add or change an Ultra color**: edit both dark and light tables in
+  `palettes/ultra.lua`; preserve approved anchors unless the user approves a change
 - **Change Flint's semantic grammar**: edit `appearances/flint.lua`, then verify
   shared `styles` still override both base and higher-priority LSP typemod groups
 - **Change Temper's semantic grammar**: edit `appearances/temper.lua`, then verify
   shared `styles` still override both base and higher-priority LSP typemod groups
+- **Change Ultra's semantic grammar**: edit `appearances/ultra.lua` and
+  `appearances/ultra_roles.lua`, then verify shared styles, Lualine, Terminal,
+  and syntax-sensitive generators use the configured role values
 - **Add plugin support**: create `groups/plugins/<name>.lua`, add its filename
   and module path to the registry in `groups/plugins/init.lua`
 - **Regenerate contrib themes**: `make contrib` (run after changing
   either palette, appearance-specific generated semantics, or a generator)
 - **Compile for faster loading**: `:TokenCompile` (rerun after updating the
-  plugin; it writes classic, Flint, and Temper dark/light caches)
+  plugin; it writes classic, Flint, Temper, and Ultra dark/light caches)
 - Prefer `{ link = 'GroupName' }` over duplicating color values
 - Intentional same-file duplicate highlight tables are allowed when they
   preserve future per-group tuning without introducing cross-module link

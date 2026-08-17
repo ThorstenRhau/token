@@ -22,9 +22,18 @@ local appearances = {
     palette = 'token.palettes.temper',
     highlights = 'token.appearances.temper',
   },
+  ['token-ultra'] = {
+    name = 'token-ultra',
+    display_name = 'Token Ultra',
+    slug = 'token-ultra',
+    cache_prefix = 'ultra-',
+    palette = 'token.palettes.ultra',
+    highlights = 'token.appearances.ultra',
+    roles = 'token.appearances.ultra_roles',
+  },
 }
 
-local order = { 'token', 'token-flint', 'token-temper' }
+local order = { 'token', 'token-flint', 'token-temper', 'token-ultra' }
 
 local M = {}
 
@@ -46,6 +55,18 @@ function M.all()
     result[#result + 1] = appearances[name]
   end
   return result
+end
+
+---@param name? string
+---@param p TokenPalette
+---@param is_dark boolean
+---@return table?
+function M.roles(name, p, is_dark)
+  local appearance = M.get(name)
+  if not appearance.roles then
+    return nil
+  end
+  return require(appearance.roles)(p, is_dark)
 end
 
 return M

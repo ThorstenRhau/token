@@ -37,6 +37,13 @@ local function variant_name(appearance, variant)
   return appearance.display_name .. ' ' .. (variant == 'dark' and 'Dark' or 'Light')
 end
 
+local function role_profile(p, variant, appearance)
+  if not appearance.roles then
+    return nil
+  end
+  return appearance_registry.roles(appearance.name, p, variant == 'dark')
+end
+
 local function json_escape(s)
   return s:gsub('[%z\1-\31\\"]', function(c)
     local escapes = {
@@ -220,8 +227,91 @@ local function tmtheme_entry(name, scope, fg, style)
   return table.concat(lines, '\n')
 end
 
-local function textmate_scope_rules(p, appearance)
-  if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+local function textmate_scope_rules(p, appearance, variant)
+  local profile = role_profile(p, variant, appearance)
+  if profile then
+    local r = profile.syntax
+    return {
+      { 'Comment', 'comment, punctuation.definition.comment', r.comment.fg, 'italic' },
+      { 'Keyword', 'keyword, keyword.control, keyword.other, storage.modifier', r.control.fg, nil },
+      { 'Operator', 'keyword.operator', r.operator.fg, nil },
+      { 'Function definition', 'entity.name.function, meta.function.definition entity.name', r.definition.fg, 'bold' },
+      { 'Function call', 'meta.function-call, variable.function', r.call.fg, nil },
+      { 'Built-in function', 'support.function', r.builtin.fg, 'italic' },
+      { 'String', 'string, punctuation.definition.string', r.literal.fg, nil },
+      { 'Literal', 'constant, constant.language, constant.numeric, variable.other.constant', r.literal.fg, nil },
+      { 'Type definition', 'entity.name.type, entity.name.class, entity.name.type.class', r.definition.fg, 'bold' },
+      {
+        'Type reference',
+        'storage.type, support.type, support.class, entity.other.inherited-class',
+        r.type.fg,
+        'italic',
+      },
+      { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', r.type.fg, 'italic' },
+      {
+        'Preprocessor',
+        'keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using',
+        r.control.fg,
+        nil,
+      },
+      { 'Macro', 'entity.name.function.preprocessor', r.control.fg, nil },
+      { 'Tag', 'entity.name.tag', r.tag.fg, nil },
+      { 'Tag attribute', 'entity.other.attribute-name', r.attribute.fg, 'italic' },
+      { 'Attribute', 'meta.annotation, storage.type.annotation', r.attribute.fg, 'italic' },
+      { 'Label', 'entity.name.label, constant.other.label', r.control.fg, nil },
+      { 'Built-in symbol', 'variable.language', r.builtin.fg, 'italic' },
+      { 'Debug', 'keyword.other.debugger', r.control.fg, nil },
+      { 'Exception', 'keyword.control.exception, keyword.control.trycatch', r.control.fg, nil },
+      { 'Identifier', 'variable, support.variable, meta.definition.variable', r.variable.fg, nil },
+      {
+        'Property',
+        'variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key',
+        r.property.fg,
+        nil,
+      },
+      { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', r.punctuation.fg, nil },
+      { 'Parameter', 'variable.parameter', r.parameter.fg, nil },
+      { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', profile.headings[1], 'bold' },
+      { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', profile.headings[2], 'bold' },
+      { 'Heading 3', 'heading.3.markdown', profile.headings[3], 'bold' },
+      { 'Heading 4', 'heading.4.markdown', profile.headings[4], 'bold' },
+      { 'Heading 5', 'heading.5.markdown', profile.headings[5], 'bold' },
+      { 'Heading 6', 'heading.6.markdown', profile.headings[6], 'bold' },
+      { 'Heading delimiter', 'punctuation.definition.heading.markdown', r.comment.fg, nil },
+      { 'Markup link', 'markup.underline.link, string.other.link', r.link.fg, 'underline' },
+      {
+        'Markup link text',
+        'string.other.link.title.markdown, constant.other.reference.link.markdown',
+        r.link.fg,
+        'underline',
+      },
+      {
+        'Markup code',
+        'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw',
+        r.literal.fg,
+        nil,
+      },
+      {
+        'Markup code delimiter',
+        'punctuation.definition.markdown, punctuation.definition.raw.markdown',
+        r.comment.fg,
+        nil,
+      },
+      { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', r.control.fg, nil },
+      { 'Markup bold', 'markup.bold', nil, 'bold' },
+      { 'Markup italic', 'markup.italic', nil, 'italic' },
+      { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
+      { 'Markup quote', 'markup.quote', r.quote.fg, 'italic' },
+      { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
+      { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
+      { 'Diff changed', 'markup.changed', p.yellow, nil },
+      { 'GitGutter inserted', 'markup.inserted.git_gutter', p.green, nil },
+      { 'GitGutter deleted', 'markup.deleted.git_gutter', p.red, nil },
+      { 'GitGutter changed', 'markup.changed.git_gutter', p.yellow, nil },
+      { 'GitGutter untracked', 'markup.untracked.git_gutter', p.fg3, nil },
+      { 'GitGutter ignored', 'markup.ignored.git_gutter', p.fg3, nil },
+    }
+  elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
     local is_temper = appearance.name == 'token-temper'
     local literal = is_temper and p.accent or p.green
     local literal_style = is_temper and 'italic' or nil
@@ -372,7 +462,7 @@ local function gen_bat(p, variant, _term, appearance)
   local name = appearance.slug .. '-' .. variant
 
   local scopes = {}
-  for _, rule in ipairs(textmate_scope_rules(p, appearance)) do
+  for _, rule in ipairs(textmate_scope_rules(p, appearance, variant)) do
     scopes[#scopes + 1] = tmtheme_entry(rule[1], rule[2], rule[3], rule[4])
   end
 
@@ -425,7 +515,7 @@ local function gen_sublime(p, variant, _term, appearance)
   local name = variant_name(appearance, variant)
 
   local rules = {}
-  for _, rule in ipairs(textmate_scope_rules(p, appearance)) do
+  for _, rule in ipairs(textmate_scope_rules(p, appearance, variant)) do
     local entries = {
       { 'name', rule[1] },
       { 'scope', rule[2] },
@@ -584,7 +674,45 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     { 'diff:special-case', { fg = p.purple } },
   }
 
-  if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+  local profile = role_profile(p, variant, appearance)
+  if profile then
+    local r = profile.syntax
+    local literal = { fg = r.literal.fg }
+    local link = {
+      fg = r.link.fg,
+      bold = r.link.bold,
+      italic = r.link.italic,
+      underline = r.link.underline,
+    }
+    local profile_styles = {
+      ['def:constant'] = literal,
+      ['def:special-constant'] = literal,
+      ['def:number'] = literal,
+      ['def:decimal'] = literal,
+      ['def:base-n-integer'] = literal,
+      ['def:floating-point'] = literal,
+      ['def:complex'] = literal,
+      ['def:boolean'] = literal,
+      ['def:character'] = literal,
+      ['def:string'] = literal,
+      ['def:special-char'] = literal,
+      ['def:function'] = { fg = r.definition.fg, bold = true },
+      ['def:builtin'] = { fg = r.builtin.fg, italic = true },
+      ['def:type'] = { fg = r.type.fg, italic = true },
+      ['def:preprocessor'] = { fg = r.control.fg },
+      ['def:inline-code'] = literal,
+      ['def:net-address'] = link,
+      ['def:link-destination'] = link,
+      ['def:link-text'] = link,
+      ['def:heading3'] = { fg = profile.headings[3], bold = true },
+      ['def:heading4'] = { fg = profile.headings[4], bold = true },
+      ['def:heading5'] = { fg = profile.headings[5], bold = true },
+      ['def:heading6'] = { fg = profile.headings[6], bold = true },
+    }
+    for _, style in ipairs(styles) do
+      style[2] = profile_styles[style[1]] or style[2]
+    end
+  elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
     local is_temper = appearance.name == 'token-temper'
     local literal = is_temper and { fg = p.accent, italic = true } or { fg = p.green }
     local profile_styles = {
@@ -961,6 +1089,7 @@ local function xcode_entry(lines, key, value, indent)
 end
 
 local function gen_xcode(p, variant, _term, appearance)
+  local profile = role_profile(p, variant, appearance)
   local lines = {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
@@ -999,16 +1128,19 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'DVTMarkupTextCodeFont', 'SFMono-Regular - 10.0' },
     { 'DVTMarkupTextEmphasisColor', xcode_rgba(p.fg0) },
     { 'DVTMarkupTextEmphasisFont', '.AppleSystemUIFontItalic - 10.0' },
-    { 'DVTMarkupTextInlineCodeColor', xcode_rgba(p.fg1, 0.7) },
-    { 'DVTMarkupTextLinkColor', xcode_rgba(p.blue) },
+    {
+      'DVTMarkupTextInlineCodeColor',
+      xcode_rgba(profile and profile.syntax.literal.fg or p.fg1, 0.7),
+    },
+    { 'DVTMarkupTextLinkColor', xcode_rgba(profile and profile.syntax.link.fg or p.blue) },
     { 'DVTMarkupTextLinkFont', '.AppleSystemUIFont - 10.0' },
     { 'DVTMarkupTextNormalColor', xcode_rgba(p.fg0) },
     { 'DVTMarkupTextNormalFont', '.AppleSystemUIFont - 10.0' },
-    { 'DVTMarkupTextOtherHeadingColor', xcode_rgba(p.fg2) },
+    { 'DVTMarkupTextOtherHeadingColor', xcode_rgba(profile and profile.headings[3] or p.fg2) },
     { 'DVTMarkupTextOtherHeadingFont', '.AppleSystemUIFont - 14.0' },
-    { 'DVTMarkupTextPrimaryHeadingColor', xcode_rgba(p.accent) },
+    { 'DVTMarkupTextPrimaryHeadingColor', xcode_rgba(profile and profile.headings[1] or p.accent) },
     { 'DVTMarkupTextPrimaryHeadingFont', '.AppleSystemUIFont - 24.0' },
-    { 'DVTMarkupTextSecondaryHeadingColor', xcode_rgba(p.accent2) },
+    { 'DVTMarkupTextSecondaryHeadingColor', xcode_rgba(profile and profile.headings[2] or p.accent2) },
     { 'DVTMarkupTextSecondaryHeadingFont', '.AppleSystemUIFont - 18.0' },
     { 'DVTMarkupTextStrongColor', xcode_rgba(p.fg0) },
     { 'DVTMarkupTextStrongFont', '.AppleSystemUIFontBold - 10.0' },
@@ -1073,7 +1205,34 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'xcode.syntax.url', p.blue },
   }
 
-  if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+  if profile then
+    local r = profile.syntax
+    local profile_colors = {
+      ['xcode.syntax.attribute'] = r.attribute.fg,
+      ['xcode.syntax.character'] = r.literal.fg,
+      ['xcode.syntax.declaration.type'] = r.definition.fg,
+      ['xcode.syntax.identifier.class'] = r.type.fg,
+      ['xcode.syntax.identifier.class.system'] = r.builtin.fg,
+      ['xcode.syntax.identifier.constant'] = r.literal.fg,
+      ['xcode.syntax.identifier.constant.system'] = r.literal.fg,
+      ['xcode.syntax.identifier.function'] = r.call.fg,
+      ['xcode.syntax.identifier.function.system'] = r.builtin.fg,
+      ['xcode.syntax.identifier.macro'] = r.control.fg,
+      ['xcode.syntax.identifier.macro.system'] = r.control.fg,
+      ['xcode.syntax.identifier.type'] = r.type.fg,
+      ['xcode.syntax.identifier.type.system'] = r.builtin.fg,
+      ['xcode.syntax.identifier.variable.system'] = r.builtin.fg,
+      ['xcode.syntax.keyword'] = r.control.fg,
+      ['xcode.syntax.markup.code'] = r.literal.fg,
+      ['xcode.syntax.number'] = r.literal.fg,
+      ['xcode.syntax.preprocessor'] = r.control.fg,
+      ['xcode.syntax.string'] = r.literal.fg,
+      ['xcode.syntax.url'] = r.link.fg,
+    }
+    for _, role in ipairs(syntax_roles) do
+      role[2] = profile_colors[role[1]] or role[2]
+    end
+  elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
     local is_temper = appearance.name == 'token-temper'
     local profile_colors = {
       ['xcode.syntax.attribute'] = p.fg1,
@@ -1122,7 +1281,25 @@ local function gen_xcode(p, variant, _term, appearance)
     elseif role[1] == 'xcode.syntax.keyword' then
       font = keyword_font
     end
-    if appearance.name == 'token-flint' or appearance.name == 'token-temper' then
+    if profile then
+      if role[1] == 'xcode.syntax.comment' or role[1] == 'xcode.syntax.comment.doc' then
+        font = 'SFMono-RegularItalic - 12.0'
+      elseif role[1] == 'xcode.syntax.declaration.other' or role[1] == 'xcode.syntax.declaration.type' then
+        font = 'SFMono-Bold - 12.0'
+      elseif
+        role[1] == 'xcode.syntax.attribute'
+        or role[1] == 'xcode.syntax.identifier.class'
+        or role[1] == 'xcode.syntax.identifier.class.system'
+        or role[1] == 'xcode.syntax.identifier.function.system'
+        or role[1] == 'xcode.syntax.identifier.type'
+        or role[1] == 'xcode.syntax.identifier.type.system'
+        or role[1] == 'xcode.syntax.identifier.variable.system'
+      then
+        font = 'SFMono-RegularItalic - 12.0'
+      elseif role[1] == 'xcode.syntax.keyword' then
+        font = regular_font
+      end
+    elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
       local is_temper = appearance.name == 'token-temper'
       if role[1] == 'xcode.syntax.comment' or role[1] == 'xcode.syntax.comment.doc' then
         font = 'SFMono-RegularItalic - 12.0'
@@ -1224,9 +1401,9 @@ end
 -- VS Code (local color theme extension)
 -- ---------------------------------------------------------------------------
 
-local function vscode_token_colors(p, appearance)
+local function vscode_token_colors(p, appearance, variant)
   local rules = {}
-  for _, rule in ipairs(textmate_scope_rules(p, appearance)) do
+  for _, rule in ipairs(textmate_scope_rules(p, appearance, variant)) do
     local settings = {}
     if rule[3] then
       settings[#settings + 1] = { 'foreground', rule[3] }
@@ -1454,13 +1631,60 @@ local function gen_vscode_theme(p, variant, term, appearance)
         }
       end
     end
+  elseif appearance.roles then
+    local profile = role_profile(p, variant, appearance)
+    local r = profile.syntax
+    semantic_colors = {
+      { 'class', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
+      { 'enum', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
+      { 'interface', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
+      { 'struct', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
+      { 'type', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
+      { 'typeParameter', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
+      { 'namespace', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
+      { 'function', r.call.fg },
+      { 'method', r.call.fg },
+      { 'macro', r.control.fg },
+      { 'keyword', r.control.fg },
+      { 'string', r.literal.fg },
+      { 'number', r.literal.fg },
+      { 'enumMember', r.literal.fg },
+      { 'variable.readonly', r.literal.fg },
+      { 'property.readonly', r.literal.fg },
+      { 'parameter', r.parameter.fg },
+      { '*.deprecated', json_object({ { 'strikethrough', true } }) },
+      { '*.readonly', json_object({ { 'foreground', r.literal.fg } }) },
+      { '*.async', json_object({ { 'italic', true } }) },
+      { '*.static', json_object({ { 'italic', true } }) },
+      { '*.abstract', json_object({ { 'italic', true } }) },
+      { '*.defaultLibrary', json_object({ { 'foreground', r.builtin.fg }, { 'italic', true } }) },
+      { '*.declaration', json_object({ { 'bold', true } }) },
+      { '*.definition', json_object({ { 'bold', true } }) },
+    }
+    for _, token_type in ipairs({
+      'type',
+      'class',
+      'enum',
+      'interface',
+      'struct',
+      'typeParameter',
+      'function',
+      'method',
+    }) do
+      for _, modifier in ipairs({ 'declaration', 'definition' }) do
+        semantic_colors[#semantic_colors + 1] = {
+          token_type .. '.' .. modifier,
+          json_object({ { 'foreground', r.definition.fg }, { 'bold', true }, { 'italic', false } }),
+        }
+      end
+    end
   end
 
   local theme = json_object({
     { 'name', variant_name(appearance, variant) },
     { 'type', is_dark and 'dark' or 'light' },
     { 'colors', json_object(colors) },
-    { 'tokenColors', vscode_token_colors(p, appearance) },
+    { 'tokenColors', vscode_token_colors(p, appearance, variant) },
     { 'semanticHighlighting', true },
     {
       'semanticTokenColors',
@@ -1554,6 +1778,18 @@ local function obsidian_hsl(hex)
 end
 
 local function obsidian_theme_block(p, variant, appearance)
+  local profile = role_profile(p, variant, appearance)
+  local headings = profile and profile.headings
+    or {
+      p.accent,
+      p.accent2,
+      appearance.name ~= 'token' and p.fg1 or p.olive,
+      appearance.name ~= 'token' and p.accent or p.blue,
+      appearance.name ~= 'token' and p.accent2 or p.green,
+      appearance.name ~= 'token' and p.fg1 or p.purple,
+    }
+  local code_literal = profile and profile.syntax.literal.fg or p.green
+  local code_tag = profile and profile.syntax.tag.fg or p.purple
   local base = variant == 'dark'
       and {
         p.bg0,
@@ -1647,12 +1883,12 @@ local function obsidian_theme_block(p, variant, appearance)
     '  --tag-background: ' .. p.bg4 .. ';',
     '  --tag-background-hover: ' .. p.bg5 .. ';',
     '',
-    '  --h1-color: ' .. p.accent .. ';',
-    '  --h2-color: ' .. p.accent2 .. ';',
-    '  --h3-color: ' .. (appearance.name ~= 'token' and p.fg1 or p.olive) .. ';',
-    '  --h4-color: ' .. (appearance.name ~= 'token' and p.accent or p.blue) .. ';',
-    '  --h5-color: ' .. (appearance.name ~= 'token' and p.accent2 or p.green) .. ';',
-    '  --h6-color: ' .. (appearance.name ~= 'token' and p.fg1 or p.purple) .. ';',
+    '  --h1-color: ' .. headings[1] .. ';',
+    '  --h2-color: ' .. headings[2] .. ';',
+    '  --h3-color: ' .. headings[3] .. ';',
+    '  --h4-color: ' .. headings[4] .. ';',
+    '  --h5-color: ' .. headings[5] .. ';',
+    '  --h6-color: ' .. headings[6] .. ';',
     '',
     '  --code-normal: ' .. p.fg0 .. ';',
     '  --code-background: ' .. p.bg1 .. ';',
@@ -1663,9 +1899,9 @@ local function obsidian_theme_block(p, variant, appearance)
     '  --code-operator: ' .. p.fg1 .. ';',
     '  --code-property: ' .. p.fg0 .. ';',
     '  --code-punctuation: ' .. p.fg1 .. ';',
-    '  --code-string: ' .. p.green .. ';',
-    '  --code-tag: ' .. p.purple .. ';',
-    '  --code-value: ' .. p.orange .. ';',
+    '  --code-string: ' .. code_literal .. ';',
+    '  --code-tag: ' .. code_tag .. ';',
+    '  --code-value: ' .. (profile and profile.syntax.literal.fg or p.orange) .. ';',
     '}',
   })
 
@@ -2037,8 +2273,8 @@ local function main()
     local palette_fn = require(appearance.palette)
     local dark = palette_fn('dark')
     local light = palette_fn('light')
-    local dark_term = terminal.colors(dark, true)
-    local light_term = terminal.colors(light, false)
+    local dark_term = terminal.colors(dark, true, appearance.name)
+    local light_term = terminal.colors(light, false, appearance.name)
 
     for _, variant in ipairs({ 'dark', 'light' }) do
       local p = variant == 'dark' and dark or light
@@ -2049,7 +2285,7 @@ local function main()
       files[#files + 1] = gen_blink(p, variant, term, appearance)
       files[#files + 1] = gen_carapace(p, variant, term, appearance)
       files[#files + 1] = gen_chatgpt(p, variant, appearance)
-      files[#files + 1] = gen_emacs(p, variant, appearance)
+      files[#files + 1] = gen_emacs(p, variant, appearance, role_profile(p, variant, appearance))
       files[#files + 1] = gen_fzf(p, variant, term, appearance)
       files[#files + 1] = gen_fzf_zsh(p, variant, term, appearance)
       files[#files + 1] = gen_ghostty(p, variant, term, appearance)

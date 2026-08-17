@@ -130,6 +130,28 @@ for _, variant in ipairs({ 'dark', 'light' }) do
   end
 end
 
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-ultra-' .. variant .. '-color-theme.json'))
+  local palette = require('token.palettes.ultra')(variant)
+  equal(
+    theme.semanticTokenColors.type,
+    { foreground = palette.fg1, italic = true },
+    'Ultra VS Code semantic type reference ' .. variant
+  )
+  equal(theme.semanticTokenColors.string, palette.orange, 'Ultra VS Code semantic literal ' .. variant)
+  equal(theme.semanticTokenColors.keyword, palette.accent2, 'Ultra VS Code semantic keyword ' .. variant)
+  equal(theme.semanticTokenColors['*.readonly'], { foreground = palette.orange }, 'Ultra VS Code readonly ' .. variant)
+  for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter', 'function', 'method' }) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      equal(
+        theme.semanticTokenColors[token_type .. '.' .. modifier],
+        { foreground = palette.accent, bold = true, italic = false },
+        'Ultra VS Code semantic definition for ' .. token_type .. '.' .. modifier .. ' ' .. variant
+      )
+    end
+  end
+end
+
 for _, appearance in ipairs(require('token.appearance').all()) do
   local git_config = vim
     .system({ 'git', 'config', '--file', root .. '/contrib/delta/' .. appearance.slug .. '.gitconfig', '--list' }, {
@@ -235,11 +257,13 @@ for _, appearance in ipairs(require('token.appearance').all()) do
 end
 
 local vscode_package = vim.json.decode(read_text('contrib/vscode/package.json'))
-equal(#vscode_package.contributes.themes, 6, 'VS Code package does not inventory six themes')
+equal(#vscode_package.contributes.themes, 8, 'VS Code package does not inventory eight themes')
 equal(vscode_package.contributes.themes[3].label, 'Token Flint Dark', 'VS Code Flint dark label')
 equal(vscode_package.contributes.themes[4].label, 'Token Flint Light', 'VS Code Flint light label')
 equal(vscode_package.contributes.themes[5].label, 'Token Temper Dark', 'VS Code Temper dark label')
 equal(vscode_package.contributes.themes[6].label, 'Token Temper Light', 'VS Code Temper light label')
+equal(vscode_package.contributes.themes[7].label, 'Token Ultra Dark', 'VS Code Ultra dark label')
+equal(vscode_package.contributes.themes[8].label, 'Token Ultra Light', 'VS Code Ultra light label')
 local vscode_flint = vim.json.decode(read_text('contrib/vscode/themes/token-flint-dark-color-theme.json'))
 local vscode_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
@@ -303,6 +327,86 @@ truthy(
   emacs_temper:find('font-lock-string-face             ((,class (:foreground ,accent :slant italic)))', 1, true),
   'Emacs Temper literal grammar'
 )
+local ultra_dark = require('token.palettes.ultra')('dark')
+local vscode_ultra = vim.json.decode(read_text('contrib/vscode/themes/token-ultra-dark-color-theme.json'))
+local ultra_rules = {}
+for _, rule in ipairs(vscode_ultra.tokenColors) do
+  ultra_rules[rule.name] = rule.settings
+end
+equal(ultra_rules['Function definition'].fontStyle, 'bold', 'VS Code Ultra definition typography')
+equal(ultra_rules['Function call'].fontStyle, nil, 'VS Code Ultra call typography')
+equal(ultra_rules.String.fontStyle, nil, 'VS Code Ultra literal typography')
+equal(ultra_rules.String.foreground, ultra_dark.orange, 'VS Code Ultra literal color')
+equal(ultra_rules['Type reference'].fontStyle, 'italic', 'VS Code Ultra reference typography')
+equal(ultra_rules['Type reference'].foreground, ultra_dark.fg1, 'VS Code Ultra type reference color')
+equal(ultra_rules.Exception.foreground, ultra_dark.accent2, 'VS Code Ultra exception color')
+equal(
+  vim.json.decode(read_text('contrib/obsidian/token-ultra/manifest.json')).name,
+  'Token Ultra',
+  'Obsidian Ultra name'
+)
+local obsidian_ultra = read_text('contrib/obsidian/token-ultra/theme.css')
+truthy(obsidian_ultra:find('%-%-code%-string: #72a59e;', 1, false), 'Obsidian Ultra literal grammar')
+truthy(obsidian_ultra:find('%-%-h3%-color: #829db2;', 1, false), 'Obsidian Ultra heading cycle')
+local windows_ultra = vim.json.decode(read_text('contrib/windows-terminal/token-ultra.json')).schemes
+equal(windows_ultra[1].name, 'Token Ultra Dark', 'Windows Terminal Ultra dark name')
+equal(windows_ultra[2].name, 'Token Ultra Light', 'Windows Terminal Ultra light name')
+local emacs_ultra = read_text('contrib/emacs/token-ultra-dark-theme.el')
+truthy(
+  emacs_ultra:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
+  'Emacs Ultra definition typography'
+)
+truthy(
+  emacs_ultra:find('font-lock-type-face               ((,class (:foreground ,fg1 :slant italic)))', 1, true),
+  'Emacs Ultra type grammar'
+)
+truthy(
+  emacs_ultra:find('font-lock-string-face             ((,class (:foreground ,orange)))', 1, true),
+  'Emacs Ultra literal grammar'
+)
+truthy(
+  emacs_ultra:find('markdown-url-face                 ((,class (:foreground ,blue :underline t)))', 1, true),
+  'Emacs Ultra link role'
+)
+local gtk_ultra = read_text('contrib/gtksourceview/token-ultra-dark.xml')
+truthy(gtk_ultra:find('name="def:string" foreground="#72a59e"', 1, true), 'GtkSourceView Ultra literal grammar')
+truthy(
+  gtk_ultra:find('name="def:function" foreground="#d98262" bold="true"', 1, true),
+  'GtkSourceView Ultra definition grammar'
+)
+truthy(
+  gtk_ultra:find('name="def:link-text" foreground="#829db2" underline="single"', 1, true),
+  'GtkSourceView Ultra link role'
+)
+
+local function xcode_rgba(hex, alpha)
+  return string.format(
+    '%.6f %.6f %.6f %g',
+    tonumber(hex:sub(2, 3), 16) / 255,
+    tonumber(hex:sub(4, 5), 16) / 255,
+    tonumber(hex:sub(6, 7), 16) / 255,
+    alpha or 1
+  )
+end
+
+local function xcode_value(content, key)
+  return content:match('<key>' .. key .. '</key>%s*<string>([^<]+)</string>')
+end
+
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local palette = require('token.palettes.ultra')(variant)
+  local xcode = read_text('contrib/xcode/token-ultra-' .. variant .. '.xccolortheme')
+  equal(
+    xcode_value(xcode, 'DVTMarkupTextInlineCodeColor'),
+    xcode_rgba(palette.orange, 0.7),
+    'Xcode Ultra inline-code role for ' .. variant
+  )
+  equal(
+    xcode_value(xcode, 'DVTMarkupTextOtherHeadingColor'),
+    xcode_rgba(palette.blue),
+    'Xcode Ultra heading cycle for ' .. variant
+  )
+end
 
 -- Generated output helpers reject path escapes and symlinks, and publish ordinary files correctly.
 local gen_lib = require('gen_lib')
@@ -467,6 +571,65 @@ for _, background in ipairs({ 'dark', 'light' }) do
   end
 end
 
+local ultra_anchors = {
+  dark = {
+    bg0 = '#181817',
+    bg3 = '#272724',
+    bg4 = '#30302c',
+    fg0 = '#e7e2d9',
+    fg2 = '#979189',
+    fg3 = '#65615c',
+    accent = '#d98262',
+    accent2 = '#c79b5b',
+    orange = '#72a59e',
+    blue = '#829db2',
+    red = '#cf7778',
+    yellow = '#c7a35b',
+    green = '#86a17a',
+    sel = '#3c3b36',
+    match = '#4d4231',
+  },
+  light = {
+    bg0 = '#e7e3dc',
+    bg3 = '#fbf9f4',
+    bg4 = '#f0ede6',
+    fg0 = '#292a24',
+    fg2 = '#6d675f',
+    fg3 = '#888177',
+    accent = '#a44e31',
+    accent2 = '#846128',
+    orange = '#356f69',
+    blue = '#536f88',
+    red = '#aa4e55',
+    yellow = '#806021',
+    green = '#4f714b',
+    sel = '#dedbd3',
+    match = '#eadab6',
+  },
+}
+for _, background in ipairs({ 'dark', 'light' }) do
+  local classic = require('token.palette')(background)
+  local ultra = require('token.palettes.ultra')(background)
+  equal(sorted_keys(ultra), sorted_keys(classic), 'Ultra palette keys for ' .. background)
+  equal(vim.tbl_count(ultra), 49, 'Ultra palette key count for ' .. background)
+  for key, color in pairs(ultra) do
+    truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Ultra color ' .. key .. ' for ' .. background)
+    if not ultra_anchors[background][key] then
+      equal(color, classic[key], 'Ultra copied classic key ' .. key .. ' for ' .. background)
+    end
+  end
+  for key, color in pairs(ultra_anchors[background]) do
+    equal(ultra[key], color, 'Ultra anchor ' .. key .. ' for ' .. background)
+  end
+  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'orange', 'blue', 'red', 'yellow', 'green' }) do
+    truthy(contrast(ultra[key], ultra.bg3) >= 4.5, 'insufficient Ultra contrast for ' .. key .. ' ' .. background)
+  end
+  truthy(
+    contrast(ultra.fg3, ultra.bg3) < 4.5,
+    'Ultra structural foreground is not intentionally subdued ' .. background
+  )
+end
+
 -- Every colorscheme entry point selects its appearance while background selects the variant.
 token.setup()
 for _, appearance in ipairs(require('token.appearance').all()) do
@@ -587,6 +750,59 @@ load('dark', 'token-flint')
 equal(hl('RenderMarkdownH3').fg, tonumber(flint.fg1:sub(2), 16), 'Flint render-markdown headings are rainbowed')
 equal(hl('MarkviewHeading3').fg, tonumber(flint.fg1:sub(2), 16), 'Flint Markview headings are rainbowed')
 
+-- Ultra uses copper definitions, ochre control flow, teal data, and neutral typography.
+token.setup()
+load('dark', 'token-ultra')
+local ultra = require('token.palettes.ultra')('dark')
+truthy(hl('@function').bold, 'Ultra function definition is not bold')
+equal(hl('@function').fg, tonumber(ultra.accent:sub(2), 16), 'Ultra function definition color')
+equal(hl('@function.call').bold, nil, 'Ultra function call is bold')
+equal(hl('@function.call').fg, tonumber(ultra.accent:sub(2), 16), 'Ultra function call color')
+truthy(hl('@type').italic, 'Ultra type reference is not italic')
+equal(hl('@type').fg, tonumber(ultra.fg1:sub(2), 16), 'Ultra type reference color')
+truthy(hl('@type.definition').bold, 'Ultra type definition is not bold')
+equal(hl('@type.definition').fg, tonumber(ultra.accent:sub(2), 16), 'Ultra type definition color')
+truthy(hl('@function.builtin').italic, 'Ultra built-in is not italic')
+equal(hl('@function.builtin').fg, tonumber(ultra.fg1:sub(2), 16), 'Ultra built-in color')
+for _, name in ipairs({ '@module', '@constructor', '@attribute' }) do
+  truthy(hl(name).italic, 'Ultra neutral reference is not italic for ' .. name)
+  equal(hl(name).fg, tonumber(ultra.fg1:sub(2), 16), 'Ultra neutral reference color for ' .. name)
+end
+for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+  for _, modifier in ipairs({ 'declaration', 'definition' }) do
+    local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
+    truthy(hl(name).bold, 'Ultra LSP definition is not bold for ' .. name)
+    equal(hl(name).fg, tonumber(ultra.accent:sub(2), 16), 'Ultra LSP definition color for ' .. name)
+  end
+end
+for _, name in ipairs({
+  '@keyword',
+  '@keyword.exception',
+  '@keyword.debug',
+  '@keyword.import',
+  '@function.macro',
+  '@keyword.directive',
+}) do
+  equal(hl(name).fg, tonumber(ultra.accent2:sub(2), 16), 'Ultra control role color for ' .. name)
+end
+for _, name in ipairs({ '@string', '@number', '@boolean', '@constant', '@markup.raw', '@lsp.mod.readonly' }) do
+  equal(hl(name).fg, tonumber(ultra.orange:sub(2), 16), 'Ultra literal color for ' .. name)
+  equal(hl(name).italic, nil, 'Ultra literal is italic for ' .. name)
+end
+truthy(hl('Comment').italic, 'Ultra comment is not italic')
+equal(hl('Comment').fg, tonumber(ultra.fg2:sub(2), 16), 'Ultra comment color')
+truthy(hl('@markup.link').underline, 'Ultra link is not underlined')
+equal(hl('@markup.link').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra link color')
+equal(hl('@keyword.exception').fg, tonumber(ultra.accent2:sub(2), 16), 'Ultra exception borrowed diagnostic red')
+equal(hl('DiagnosticError').fg, tonumber(ultra.red:sub(2), 16), 'Ultra diagnostic error color')
+truthy(hl('DiagnosticUnderlineError').undercurl, 'Ultra diagnostic is not undercurled')
+truthy(hl('@lsp.mod.deprecated').strikethrough, 'Ultra deprecated modifier is not struck through')
+
+token.setup({ plugins = { markview = true, render_markdown = true } })
+load('dark', 'token-ultra')
+equal(hl('RenderMarkdownH3').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra render-markdown heading cycle')
+equal(hl('MarkviewHeading3').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra Markview heading cycle')
+
 local flint_styles = {
   functions = { bold = false, underline = true },
   types = { bold = false, underline = true },
@@ -629,6 +845,23 @@ for _, background in ipairs({ 'dark', 'light' }) do
     end
   end
 end
+for _, background in ipairs({ 'dark', 'light' }) do
+  load(background, 'token-ultra')
+  equal(hl('@function').bold, nil, 'user style did not remove Ultra definition weight ' .. background)
+  truthy(hl('@function').underline, 'user style did not augment Ultra definition ' .. background)
+  truthy(hl('@lsp.type.function').underline, 'user style did not reach Ultra LSP function references ' .. background)
+  for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
+      equal(
+        hl(name).bold,
+        nil,
+        'user style did not remove Ultra LSP definition weight for ' .. name .. ' ' .. background
+      )
+      truthy(hl(name).underline, 'user style did not reach Ultra LSP definition role ' .. name .. ' ' .. background)
+    end
+  end
+end
 
 -- Shared user customization follows the appearance overlay and receives the active colorscheme.
 local callback_colorscheme
@@ -667,6 +900,26 @@ equal(hl('@function.call').fg, tonumber('445566', 16), 'user color did not overr
 equal(hl('@function').fg, tonumber('112233', 16), 'user highlight did not replace Temper profile')
 equal(hl('@function').bold, nil, 'user highlight did not completely replace Temper profile')
 equal(hl('TokenAppearanceCallback').fg, tonumber('665544', 16), 'Temper callback highlight missing')
+
+token.setup({
+  colors = { all = { accent = '#445566' } },
+  highlights = { all = { ['@function'] = { fg = '#112233' } } },
+  on_colors = function(colors, _, colorscheme)
+    callback_colorscheme = 'colors:' .. colorscheme
+    colors.orange = '#337766'
+  end,
+  on_highlights = function(groups, colors, _, colorscheme)
+    callback_colorscheme = callback_colorscheme .. ',highlights:' .. colorscheme
+    groups.TokenAppearanceCallback = { fg = colors.orange }
+  end,
+})
+load('dark', 'token-ultra')
+equal(callback_colorscheme, 'colors:token-ultra,highlights:token-ultra', 'Ultra callback colorscheme arguments')
+equal(hl('@function.call').fg, tonumber('445566', 16), 'user color did not override Ultra definition role')
+equal(hl('@string').fg, tonumber('337766', 16), 'on_colors did not update Ultra literal role')
+equal(hl('@function').fg, tonumber('112233', 16), 'user highlight did not replace Ultra profile')
+equal(hl('@function').bold, nil, 'user highlight did not completely replace Ultra profile')
+equal(hl('TokenAppearanceCallback').fg, tonumber('337766', 16), 'Ultra callback highlight missing')
 
 -- Defaults are core-only.
 token.setup()
@@ -827,6 +1080,12 @@ equal(hl('@string').italic, nil, 'italic gate did not remove Temper literal slan
 equal(hl('@markup.link').underline, nil, 'underline gate did not remove Temper link underline')
 equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Temper deprecation')
 equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Temper diagnostic')
+load('dark', 'token-ultra')
+equal(hl('@function').bold, nil, 'bold gate did not remove Ultra definition weight')
+equal(hl('@type').italic, nil, 'italic gate did not remove Ultra reference slant')
+equal(hl('@markup.link').underline, nil, 'underline gate did not remove Ultra link underline')
+equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Ultra deprecation')
+equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Ultra diagnostic')
 equal(hl('TokenGatedLink').bold, nil, 'attribute gate did not resolve a user link')
 equal(hl('TokenCtermGated').cterm, nil, 'attribute gate did not disable a cterm attribute')
 equal(
@@ -873,12 +1132,77 @@ equal(
   require('token.theme').palette('dark', 'token-temper').fg3,
   'Temper Lualine inactive text is not muted'
 )
+local ultra_lualine = require('lualine.themes.token-ultra')
+local ultra_palette = require('token.theme').palette('dark', 'token-ultra')
+equal(ultra_lualine.normal.b.bg, 'NONE', 'Ultra Lualine base is not transparent')
+equal(ultra_lualine.normal.a.bg, ultra_palette.fg2, 'Ultra Lualine normal mode color')
+equal(ultra_lualine.insert.a.bg, ultra_palette.green, 'Ultra Lualine insert mode color')
+equal(ultra_lualine.visual.a.bg, ultra_palette.blue, 'Ultra Lualine visual mode color')
+equal(ultra_lualine.replace.a.bg, ultra_palette.red, 'Ultra Lualine replace mode color')
+equal(ultra_lualine.command.a.bg, ultra_palette.yellow, 'Ultra Lualine command mode color')
+equal(ultra_lualine.terminal.a.bg, ultra_palette.cyan, 'Ultra Lualine terminal mode color')
+equal(ultra_lualine.inactive.a.fg, ultra_palette.fg3, 'Ultra Lualine inactive text is not muted')
+
+local ultra_terminal = require('token.terminal').colors(ultra_palette, true, 'token-ultra')
+equal(ultra_terminal, {
+  [0] = ultra_palette.bg1,
+  [1] = ultra_palette.red,
+  [2] = ultra_palette.green,
+  [3] = ultra_palette.yellow,
+  [4] = ultra_palette.blue,
+  [5] = ultra_palette.purple,
+  [6] = ultra_palette.cyan,
+  [7] = ultra_palette.fg1,
+  [8] = ultra_palette.fg3,
+  [9] = ultra_palette.accent,
+  [10] = ultra_palette.bright_green,
+  [11] = ultra_palette.accent2,
+  [12] = ultra_palette.bright_blue,
+  [13] = ultra_palette.bright_purple,
+  [14] = ultra_palette.bright_cyan,
+  [15] = ultra_palette.fg0,
+}, 'Ultra ANSI dark roles')
+equal(
+  require('token.terminal').colors(ultra_palette, true),
+  ultra_terminal,
+  'two-argument terminal compatibility changed'
+)
+
+load('light', 'token-ultra')
+local ultra_light_lualine = require('lualine.themes.token-ultra')
+local ultra_light_palette = require('token.theme').palette('light', 'token-ultra')
+equal(ultra_light_lualine.normal.a.bg, ultra_light_palette.fg2, 'Ultra light Lualine normal mode color')
+equal(ultra_light_lualine.insert.a.bg, ultra_light_palette.green, 'Ultra light Lualine insert mode color')
+equal(ultra_light_lualine.visual.a.bg, ultra_light_palette.blue, 'Ultra light Lualine visual mode color')
+equal(ultra_light_lualine.replace.a.bg, ultra_light_palette.red, 'Ultra light Lualine replace mode color')
+equal(ultra_light_lualine.command.a.bg, ultra_light_palette.yellow, 'Ultra light Lualine command mode color')
+equal(ultra_light_lualine.terminal.a.bg, ultra_light_palette.cyan, 'Ultra light Lualine terminal mode color')
+equal(ultra_light_lualine.inactive.a.fg, ultra_light_palette.fg3, 'Ultra light Lualine inactive mode color')
+equal(require('token.terminal').colors(ultra_light_palette, false, 'token-ultra'), {
+  [0] = ultra_light_palette.fg0,
+  [1] = ultra_light_palette.red,
+  [2] = ultra_light_palette.green,
+  [3] = ultra_light_palette.yellow,
+  [4] = ultra_light_palette.blue,
+  [5] = ultra_light_palette.purple,
+  [6] = ultra_light_palette.cyan,
+  [7] = ultra_light_palette.line_nr,
+  [8] = ultra_light_palette.fg2,
+  [9] = ultra_light_palette.accent,
+  [10] = ultra_light_palette.bright_green,
+  [11] = ultra_light_palette.accent2,
+  [12] = ultra_light_palette.bright_blue,
+  [13] = ultra_light_palette.bright_purple,
+  [14] = ultra_light_palette.bright_cyan,
+  [15] = ultra_light_palette.bg3,
+}, 'Ultra ANSI light roles')
 
 token.setup({ attributes = { bold = false } })
 load('dark', 'token-flint')
 equal(require('lualine.themes.token').normal.a.gui, nil, 'classic Lualine ignored bold gate')
 equal(require('lualine.themes.token-flint').normal.a.gui, nil, 'Flint Lualine ignored bold gate')
 equal(require('lualine.themes.token-temper').normal.a.gui, nil, 'Temper Lualine ignored bold gate')
+equal(require('lualine.themes.token-ultra').normal.a.gui, nil, 'Ultra Lualine ignored bold gate')
 
 -- Invalid callback output is rejected.
 token.setup({
@@ -906,6 +1230,7 @@ local callback = function(groups, colors, background, colorscheme)
     bold = background == 'dark',
     italic = colorscheme == 'token-flint',
     underline = colorscheme == 'token-temper',
+    undercurl = colorscheme == 'token-ultra',
   }
 end
 token.setup({
@@ -922,12 +1247,16 @@ local flint_dark_path = compile.path('dark', 'token-flint')
 local flint_light_path = compile.path('light', 'token-flint')
 local temper_dark_path = compile.path('dark', 'token-temper')
 local temper_light_path = compile.path('light', 'token-temper')
+local ultra_dark_path = compile.path('dark', 'token-ultra')
+local ultra_light_path = compile.path('light', 'token-ultra')
 truthy(vim.uv.fs_stat(dark_path), 'dark cache missing')
 truthy(vim.uv.fs_stat(light_path), 'light cache missing')
 truthy(vim.uv.fs_stat(flint_dark_path), 'Flint dark cache missing')
 truthy(vim.uv.fs_stat(flint_light_path), 'Flint light cache missing')
 truthy(vim.uv.fs_stat(temper_dark_path), 'Temper dark cache missing')
 truthy(vim.uv.fs_stat(temper_light_path), 'Temper light cache missing')
+truthy(vim.uv.fs_stat(ultra_dark_path), 'Ultra dark cache missing')
+truthy(vim.uv.fs_stat(ultra_light_path), 'Ultra light cache missing')
 equal(
   vim.tbl_count({
     [dark_path] = true,
@@ -936,15 +1265,26 @@ equal(
     [flint_light_path] = true,
     [temper_dark_path] = true,
     [temper_light_path] = true,
+    [ultra_dark_path] = true,
+    [ultra_light_path] = true,
   }),
-  6,
+  8,
   'cache paths collide'
 )
 fail_flint_compile = true
 local compile_ok, compile_error = pcall(compile.compile)
 equal(compile_ok, false, 'injected Flint compilation unexpectedly succeeded')
 truthy(tostring(compile_error):match('injected Flint compile failure'), 'unexpected Flint compilation failure')
-for _, path in ipairs({ dark_path, light_path, flint_dark_path, flint_light_path, temper_dark_path, temper_light_path }) do
+for _, path in ipairs({
+  dark_path,
+  light_path,
+  flint_dark_path,
+  flint_light_path,
+  temper_dark_path,
+  temper_light_path,
+  ultra_dark_path,
+  ultra_light_path,
+}) do
   truthy(vim.uv.fs_stat(path), 'failed Flint rebuild removed existing cache: ' .. path)
 end
 equal(#vim.fn.glob(vim.fn.stdpath('cache') .. '/token/*.tmp', false, true), 0, 'failed rebuild left cache temporaries')
@@ -975,11 +1315,19 @@ truthy(
   hl('TokenCompiled').underline and not hl('TokenCompiled').bold,
   'compiled Temper light callback result incorrect'
 )
+load('dark', 'token-ultra')
+equal(vim.g.colors_name, 'token-ultra', 'compiled Ultra colors_name')
+truthy(hl('TokenCompiled').bold and hl('TokenCompiled').undercurl, 'compiled Ultra callback result incorrect')
+equal(hl('TokenCompiled').italic, nil, 'Ultra cache used Flint callback result')
+load('light', 'token-ultra')
+equal(vim.g.colors_name, 'token-ultra', 'compiled Ultra light colors_name')
+truthy(hl('TokenCompiled').undercurl and not hl('TokenCompiled').bold, 'compiled Ultra light callback result incorrect')
 
 token.setup({ transparent = true })
 equal(compile.load('dark'), false, 'configuration change reused stale cache')
 equal(compile.load('dark', 'token-flint'), false, 'configuration change reused stale Flint cache')
 equal(compile.load('dark', 'token-temper'), false, 'configuration change reused stale Temper cache')
+equal(compile.load('dark', 'token-ultra'), false, 'configuration change reused stale Ultra cache')
 
 token.setup({
   terminal_colors = false,
@@ -987,6 +1335,15 @@ token.setup({
   highlights = { all = { TokenCterm = { fg = '#abcdef', cterm = { bold = true } } } },
   on_highlights = callback,
 })
+local ultra_file = assert(io.open(ultra_dark_path, 'wb'))
+assert(ultra_file:write('corrupt'))
+assert(ultra_file:close())
+equal(compile.load('dark', 'token-ultra'), false, 'corrupt Ultra cache did not fall back')
+equal(vim.uv.fs_stat(ultra_dark_path), nil, 'corrupt Ultra cache was not removed')
+truthy(compile.load('dark'), 'corrupt Ultra cache affected classic Token')
+truthy(compile.load('dark', 'token-flint'), 'corrupt Ultra cache affected Flint')
+truthy(compile.load('dark', 'token-temper'), 'corrupt Ultra cache affected Temper')
+
 local temper_file = assert(io.open(temper_dark_path, 'wb'))
 assert(temper_file:write('corrupt'))
 assert(temper_file:close())

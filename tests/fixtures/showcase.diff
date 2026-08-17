@@ -1,0 +1,9 @@
+diff --git a/theme.lua b/theme.lua
+index 1a2b3c4..5d6e7f8 100644
+--- a/theme.lua
++++ b/theme.lua
+@@ -18,4 +18,5 @@ function ThemeProfile:classify(value)
+-  return 'pending'
++  local score = math.min(value, 1.0)
++  return score >= self.threshold and 'approved' or 'review'
+ end

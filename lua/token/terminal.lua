@@ -2,8 +2,13 @@ local M = {}
 
 ---@param p TokenPalette
 ---@param is_dark boolean
+---@param colorscheme? string
 ---@return table<integer,string> colors 0..15 ANSI terminal colors
-function M.colors(p, is_dark)
+function M.colors(p, is_dark, colorscheme)
+  local roles = colorscheme and require('token.appearance').roles(colorscheme, p, is_dark) or nil
+  if roles and roles.terminal then
+    return roles.terminal
+  end
   return {
     [0] = is_dark and p.bg1 or p.fg0,
     [1] = p.red,
@@ -26,8 +31,9 @@ end
 
 ---@param p TokenPalette
 ---@param is_dark boolean
-function M.set(p, is_dark)
-  local c = M.colors(p, is_dark)
+---@param colorscheme? string
+function M.set(p, is_dark, colorscheme)
+  local c = M.colors(p, is_dark, colorscheme)
   for i = 0, 15 do
     vim.g['terminal_color_' .. i] = c[i]
   end
