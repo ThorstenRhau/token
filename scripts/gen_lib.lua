@@ -62,6 +62,56 @@ function M.sgr_bg_rgb(hex)
   return string.format('48;2;%d;%d;%d', r, g, b)
 end
 
+local base64_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+
+function M.base64(input)
+  local chunks = {}
+  for index = 1, #input, 3 do
+    local a, b, c = input:byte(index, index + 2)
+    local group = a * 0x10000 + (b or 0) * 0x100 + (c or 0)
+    local sextets = {}
+    for shift = 18, 0, -6 do
+      local sextet = math.floor(group / 2 ^ shift) % 64
+      sextets[#sextets + 1] = base64_chars:sub(sextet + 1, sextet + 1)
+    end
+    local remaining = #input - index + 1
+    if remaining == 1 then
+      sextets[3], sextets[4] = '=', '='
+    elseif remaining == 2 then
+      sextets[4] = '='
+    end
+    chunks[#chunks + 1] = table.concat(sextets)
+  end
+  return table.concat(chunks)
+end
+
+-- macOS stores a colour in a property list as an NSColor archived by
+-- NSKeyedArchiver, embedded as a base64 blob. NSColorSpace 2 is NSDeviceRGB,
+-- which is what Apple's own generated profiles use and which round-trips the hex
+-- exactly. The archive is emitted as a minimal XML plist because CFPropertyList
+-- accepts either encoding inside the blob.
+function M.ns_color_archive(hex)
+  local r, g, b = hex_to_rgb(hex)
+  local components = string.format('%.10f %.10f %.10f\0', r / 255, g / 255, b / 255)
+  local archive = table.concat({
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<plist version="1.0"><dict>',
+    '<key>$archiver</key><string>NSKeyedArchiver</string>',
+    '<key>$objects</key><array>',
+    '<string>$null</string>',
+    '<dict><key>$class</key><dict><key>CF$UID</key><integer>2</integer></dict>',
+    '<key>NSColorSpace</key><integer>2</integer>',
+    '<key>NSRGB</key><data>' .. M.base64(components) .. '</data></dict>',
+    '<dict><key>$classes</key><array><string>NSColor</string><string>NSObject</string></array>',
+    '<key>$classname</key><string>NSColor</string></dict>',
+    '</array>',
+    '<key>$top</key><dict><key>root</key><dict><key>CF$UID</key><integer>1</integer></dict></dict>',
+    '<key>$version</key><integer>100000</integer>',
+    '</dict></plist>',
+  })
+  return M.base64(archive)
+end
+
 function M.read_file(path)
   local f, open_error = io.open(path, 'rb')
   if not f then

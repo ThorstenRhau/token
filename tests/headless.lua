@@ -410,6 +410,47 @@ end
 
 -- Generated output helpers reject path escapes and symlinks, and publish ordinary files correctly.
 local gen_lib = require('gen_lib')
+
+-- Apple Terminal stores every colour as an archived NSColor blob, so the base64
+-- encoder is pinned to the RFC 4648 vectors before the profiles are read.
+equal(gen_lib.base64(''), '', 'base64 of empty input')
+equal(gen_lib.base64('f'), 'Zg==', 'base64 of one byte')
+equal(gen_lib.base64('fo'), 'Zm8=', 'base64 of two bytes')
+equal(gen_lib.base64('foo'), 'Zm9v', 'base64 of three bytes')
+equal(gen_lib.base64('foob'), 'Zm9vYg==', 'base64 of four bytes')
+equal(gen_lib.base64('fooba'), 'Zm9vYmE=', 'base64 of five bytes')
+equal(gen_lib.base64('foobar'), 'Zm9vYmFy', 'base64 of six bytes')
+
+local terminal_colors = require('token.terminal').colors
+for _, appearance in ipairs(require('token.appearance').all()) do
+  local palette_fn = require(appearance.palette)
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local palette = palette_fn(variant)
+    local term = terminal_colors(palette, variant == 'dark', appearance.name)
+    local name = appearance.slug .. '-' .. variant
+    local profile = read_text('contrib/apple-terminal/' .. name .. '.terminal')
+    truthy(profile:find('<string>' .. name .. '</string>', 1, true), 'Apple Terminal profile name for ' .. name)
+    truthy(profile:find('<string>Window Settings</string>', 1, true), 'Apple Terminal profile type for ' .. name)
+    truthy(
+      profile:find('<key>CursorType</key>\n    <integer>1</integer>', 1, true),
+      'Apple Terminal cursor for ' .. name
+    )
+    local colors = {
+      BackgroundColor = palette.bg3,
+      TextColor = palette.fg0,
+      TextBoldColor = palette.fg0,
+      CursorColor = palette.fg0,
+      SelectionColor = palette.sel,
+      ANSIBlackColor = term[0],
+      ANSIRedColor = term[1],
+      ANSIBrightWhiteColor = term[15],
+    }
+    for key, hex in pairs(colors) do
+      local entry = '<key>' .. key .. '</key>\n    <data>' .. gen_lib.ns_color_archive(hex) .. '</data>'
+      truthy(profile:find(entry, 1, true), 'Apple Terminal ' .. key .. ' for ' .. name)
+    end
+  end
+end
 equal(
   gen_lib.unexpected_paths(
     { 'contrib/expected', 'contrib/stale', 'contrib/emacs/README.md' },

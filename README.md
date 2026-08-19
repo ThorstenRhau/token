@@ -249,6 +249,7 @@ registered appearance palettes; rebuild after palette changes with `make contrib
 
 | Tool | Files | Usage |
 | --- | --- | --- |
+| [Apple Terminal](https://support.apple.com/guide/terminal/) | `contrib/apple-terminal/{token,token-flint,token-temper,token-ultra}-{dark,light}.terminal` | Open the file to import it, then pick the profile in Settings > Profiles |
 | [bat](https://github.com/sharkdp/bat) | `contrib/bat/{token,token-flint,token-temper,token-ultra}-{dark,light}.tmTheme` | Copy to the bat themes directory, then run `bat cache --build` |
 | [Blink Shell](https://blink.sh/) | `contrib/blink/{token,token-flint,token-temper,token-ultra}-{dark,light}.js` | Paste the selected raw file URL in Appearance > Themes > New Theme |
 | [Carapace](https://carapace-sh.github.io/carapace-bin/) | `contrib/carapace/{token,token-flint,token-temper,token-ultra}-{dark,light}.json` | Merge the selected `carapace` object into `styles.json` |
