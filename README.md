@@ -269,7 +269,7 @@ registered appearance palettes; rebuild after palette changes with `make contrib
 | [tmux](https://github.com/tmux/tmux) | `contrib/tmux/{token,token-flint,token-temper,token-ultra}-{dark,light}.conf` | Source the selected file from `tmux.conf` |
 | [VS Code](https://code.visualstudio.com/) | `contrib/vscode/` | Run `scripts/install_vscode_theme.sh`, then select any Token appearance |
 | [Windows Terminal](https://github.com/microsoft/terminal) | `contrib/windows-terminal/{token,token-flint,token-temper,token-ultra}.json` | Copy the selected schemes into settings or fragments |
-| [Xcode](https://developer.apple.com/xcode/) | `contrib/xcode/{token,token-flint,token-temper,token-ultra}-{dark,light}.xccolortheme` | Copy to the Xcode theme directory and select the visible name |
+| [Xcode](https://developer.apple.com/xcode/) | `contrib/xcode/{token,token-flint,token-temper,token-ultra}-{dark,light}.xccolortheme` | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/` and select the visible name |
 | [Zsh](https://www.zsh.org/) | `contrib/zsh/{token,token-flint,token-temper,token-ultra}-{dark,light}.zsh` | Source the selected file from `.zshrc` |
 
 The recommended classic Token Obsidian accent, `#bc6a49`, is deliberately a
