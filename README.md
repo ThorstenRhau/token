@@ -58,12 +58,20 @@ A cool-gray foundation reduced to a focused teal-and-purple syntax grammar.
 
 ## Install
 
+To install the latest tagged release instead of following untagged commits on
+the default branch:
+
 ```lua
 -- vim.pack (Neovim 0.12+)
-vim.pack.add({ 'https://github.com/ThorstenRhau/token' })
+vim.pack.add({
+  {
+    src = 'https://github.com/ThorstenRhau/token',
+    version = vim.version.range('*'),
+  },
+})
 
 -- lazy.nvim
-{ 'ThorstenRhau/token' }
+{ 'ThorstenRhau/token', version = '*' }
 ```
 
 ## Usage
