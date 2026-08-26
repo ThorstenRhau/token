@@ -18,14 +18,16 @@ end
 local function ultra(p, roles)
   roles = roles or require('token.appearances.ultra_roles')(p, false)
   local r = roles.syntax
+  local number = r.number or r.literal
+  local property = r.property or r.variable
   local groups = {
     Comment = copy(r.comment),
     Constant = copy(r.literal),
     String = copy(r.literal),
     Character = copy(r.literal),
-    Number = copy(r.literal),
-    Boolean = copy(r.literal),
-    Float = copy(r.literal),
+    Number = copy(number),
+    Boolean = copy(number),
+    Float = copy(number),
     Identifier = copy(r.variable),
     Function = copy(r.definition),
     Statement = copy(r.control),
@@ -57,7 +59,7 @@ local function ultra(p, roles)
     ['@variable.builtin'] = copy(r.builtin),
     ['@variable.parameter'] = copy(r.parameter),
     ['@variable.parameter.builtin'] = copy(r.builtin),
-    ['@variable.member'] = copy(r.property),
+    ['@variable.member'] = copy(property),
     ['@constant'] = copy(r.literal),
     ['@constant.builtin'] = copy(r.literal),
     ['@constant.macro'] = copy(r.control),
@@ -74,14 +76,14 @@ local function ultra(p, roles)
     ['@character'] = copy(r.literal),
     ['@character.special'] = copy(r.literal),
     ['@boolean'] = copy(r.literal),
-    ['@number'] = copy(r.literal),
-    ['@number.float'] = copy(r.literal),
+    ['@number'] = copy(number),
+    ['@number.float'] = copy(number),
     ['@type'] = copy(r.type),
     ['@type.builtin'] = copy(r.type),
     ['@type.definition'] = copy(r.definition),
     ['@attribute'] = copy(r.attribute),
     ['@attribute.builtin'] = copy(r.attribute),
-    ['@property'] = copy(r.property),
+    ['@property'] = copy(property),
     ['@function'] = copy(r.definition),
     ['@function.builtin'] = copy(r.builtin),
     ['@function.call'] = copy(r.call),

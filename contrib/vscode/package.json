@@ -51,6 +51,16 @@
         "label": "Token Ultra Light",
         "uiTheme": "vs",
         "path": "./themes/token-ultra-light-color-theme.json"
+      },
+      {
+        "label": "Token Meridian Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/token-meridian-dark-color-theme.json"
+      },
+      {
+        "label": "Token Meridian Light",
+        "uiTheme": "vs",
+        "path": "./themes/token-meridian-light-color-theme.json"
       }
     ]
   }

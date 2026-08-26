@@ -1,0 +1,50 @@
+{
+  "schemes": [
+    {
+      "name": "Token Meridian Dark",
+      "background": "#272724",
+      "foreground": "#c9c0b1",
+      "cursorColor": "#c9c0b1",
+      "selectionBackground": "#3c3b36",
+      "black": "#1d1d1c",
+      "red": "#db8935",
+      "green": "#8cbb62",
+      "yellow": "#d99148",
+      "blue": "#66abc6",
+      "purple": "#b991db",
+      "cyan": "#66abc6",
+      "white": "#aba195",
+      "brightBlack": "#91887d",
+      "brightRed": "#ea9d49",
+      "brightGreen": "#8cbb62",
+      "brightYellow": "#f8c88f",
+      "brightBlue": "#66abc6",
+      "brightPurple": "#de88a6",
+      "brightCyan": "#66abc6",
+      "brightWhite": "#c9c0b1"
+    },
+    {
+      "name": "Token Meridian Light",
+      "background": "#fbf9f4",
+      "foreground": "#28323a",
+      "cursorColor": "#28323a",
+      "selectionBackground": "#dedbd3",
+      "black": "#28323a",
+      "red": "#843900",
+      "green": "#005f2f",
+      "yellow": "#843900",
+      "blue": "#0048b3",
+      "purple": "#7a1f7a",
+      "cyan": "#095b62",
+      "white": "#b5b2ab",
+      "brightBlack": "#524b42",
+      "brightRed": "#843900",
+      "brightGreen": "#005f2f",
+      "brightYellow": "#843900",
+      "brightBlue": "#0048b3",
+      "brightPurple": "#4b1fa3",
+      "brightCyan": "#095b62",
+      "brightWhite": "#fbf9f4"
+    }
+  ]
+}

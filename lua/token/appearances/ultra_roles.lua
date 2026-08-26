@@ -7,7 +7,6 @@ local function ultra_roles(p, is_dark)
       comment = { fg = p.fg2, italic = true },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
-      property = { fg = p.fg0 },
       definition = { fg = p.accent, bold = true },
       call = { fg = p.accent },
       control = { fg = p.accent2 },

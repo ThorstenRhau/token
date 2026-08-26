@@ -152,6 +152,33 @@ for _, variant in ipairs({ 'dark', 'light' }) do
   end
 end
 
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-meridian-' .. variant .. '-color-theme.json'))
+  local palette = require('token.palettes.meridian')(variant)
+  local roles = require('token.appearance').roles('token-meridian', palette, variant == 'dark')
+  equal(theme.semanticTokenColors.type.foreground, roles.syntax.type.fg, 'Meridian VS Code type color ' .. variant)
+  equal(
+    theme.semanticTokenColors.keyword.foreground,
+    roles.syntax.control.fg,
+    'Meridian VS Code keyword color ' .. variant
+  )
+  truthy(theme.semanticTokenColors.keyword.bold, 'Meridian VS Code keyword weight ' .. variant)
+  equal(theme.semanticTokenColors.string, roles.syntax.literal.fg, 'Meridian VS Code string color ' .. variant)
+  equal(theme.semanticTokenColors.number, roles.syntax.number.fg, 'Meridian VS Code number color ' .. variant)
+  equal(theme.semanticTokenColors.type.italic, nil, 'Meridian VS Code type italic ' .. variant)
+  equal(theme.semanticTokenColors['function.definition'].bold, nil, 'Meridian VS Code definition weight ' .. variant)
+  equal(
+    theme.semanticTokenColors['function.definition'].italic,
+    false,
+    'Meridian VS Code definition italic ' .. variant
+  )
+  equal(
+    theme.semanticTokenColors['property.readonly'],
+    roles.syntax.property.fg,
+    'Meridian VS Code property color ' .. variant
+  )
+end
+
 for _, appearance in ipairs(require('token.appearance').all()) do
   local git_config = vim
     .system({ 'git', 'config', '--file', root .. '/contrib/delta/' .. appearance.slug .. '.gitconfig', '--list' }, {
@@ -257,13 +284,15 @@ for _, appearance in ipairs(require('token.appearance').all()) do
 end
 
 local vscode_package = vim.json.decode(read_text('contrib/vscode/package.json'))
-equal(#vscode_package.contributes.themes, 8, 'VS Code package does not inventory eight themes')
+equal(#vscode_package.contributes.themes, 10, 'VS Code package does not inventory ten themes')
 equal(vscode_package.contributes.themes[3].label, 'Token Flint Dark', 'VS Code Flint dark label')
 equal(vscode_package.contributes.themes[4].label, 'Token Flint Light', 'VS Code Flint light label')
 equal(vscode_package.contributes.themes[5].label, 'Token Temper Dark', 'VS Code Temper dark label')
 equal(vscode_package.contributes.themes[6].label, 'Token Temper Light', 'VS Code Temper light label')
 equal(vscode_package.contributes.themes[7].label, 'Token Ultra Dark', 'VS Code Ultra dark label')
 equal(vscode_package.contributes.themes[8].label, 'Token Ultra Light', 'VS Code Ultra light label')
+equal(vscode_package.contributes.themes[9].label, 'Token Meridian Dark', 'VS Code Meridian dark label')
+equal(vscode_package.contributes.themes[10].label, 'Token Meridian Light', 'VS Code Meridian light label')
 local vscode_flint = vim.json.decode(read_text('contrib/vscode/themes/token-flint-dark-color-theme.json'))
 local vscode_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
@@ -378,6 +407,30 @@ truthy(
   gtk_ultra:find('name="def:link-text" foreground="#829db2" underline="single"', 1, true),
   'GtkSourceView Ultra link role'
 )
+
+local meridian_dark = require('token.palettes.meridian')('dark')
+local vscode_meridian = vim.json.decode(read_text('contrib/vscode/themes/token-meridian-dark-color-theme.json'))
+local meridian_rules = {}
+for _, rule in ipairs(vscode_meridian.tokenColors) do
+  meridian_rules[rule.name] = rule.settings
+end
+equal(meridian_rules.Keyword.foreground, meridian_dark.blue, 'VS Code Meridian keyword color')
+equal(meridian_rules.Keyword.fontStyle, 'bold', 'VS Code Meridian keyword typography')
+equal(meridian_rules.String.foreground, meridian_dark.green, 'VS Code Meridian string color')
+equal(meridian_rules.Number.foreground, meridian_dark.yellow, 'VS Code Meridian number color')
+equal(meridian_rules.Property.foreground, meridian_dark.orange, 'VS Code Meridian property color')
+equal(meridian_rules['Function definition'].fontStyle, nil, 'VS Code Meridian definition typography')
+equal(meridian_rules['Type definition'].fontStyle, nil, 'VS Code Meridian type definition typography')
+equal(meridian_rules['Type reference'].fontStyle, nil, 'VS Code Meridian type typography')
+equal(meridian_rules['Built-in function'].fontStyle, nil, 'VS Code Meridian built-in typography')
+equal(
+  vim.json.decode(read_text('contrib/obsidian/token-meridian/manifest.json')).name,
+  'Token Meridian',
+  'Obsidian Meridian name'
+)
+local obsidian_meridian = read_text('contrib/obsidian/token-meridian/theme.css')
+truthy(obsidian_meridian:find('%-%-background%-primary: #272724;', 1, false), 'Obsidian Meridian Ultra background')
+truthy(obsidian_meridian:find('%-%-h3%-color: #ea9d49;', 1, false), 'Obsidian Meridian heading color')
 
 local function xcode_rgba(hex, alpha)
   return string.format(
@@ -671,6 +724,87 @@ for _, background in ipairs({ 'dark', 'light' }) do
   )
 end
 
+local meridian_anchors = {
+  dark = {
+    fg0 = '#c9c0b1',
+    fg1 = '#aba195',
+    fg2 = '#a69c91',
+    fg3 = '#91887d',
+    accent = '#e89a49',
+    blue = '#66abc6',
+    green = '#8cbb62',
+    yellow = '#d99148',
+    purple = '#b991db',
+    orange = '#de88a6',
+    olive = '#d9a86e',
+  },
+  light = {
+    fg0 = '#28323a',
+    fg1 = '#46535f',
+    fg2 = '#524b42',
+    fg3 = '#43505c',
+    accent = '#0048b3',
+    blue = '#0048b3',
+    green = '#005f2f',
+    cyan = '#095b62',
+    purple = '#7a1f7a',
+    orange = '#4b1fa3',
+    olive = '#843900',
+  },
+}
+for _, background in ipairs({ 'dark', 'light' }) do
+  local ultra = require('token.palettes.ultra')(background)
+  local meridian = require('token.palettes.meridian')(background)
+  equal(sorted_keys(meridian), sorted_keys(ultra), 'Meridian palette keys for ' .. background)
+  equal(vim.tbl_count(meridian), 49, 'Meridian palette key count for ' .. background)
+  for index = 0, 5 do
+    local key = 'bg' .. index
+    equal(meridian[key], ultra[key], 'Meridian preserved Ultra ' .. key .. ' for ' .. background)
+  end
+  for _, key in ipairs({
+    'diff_add',
+    'diff_del',
+    'diff_add_inline',
+    'diff_del_inline',
+    'diff_add_strong',
+    'diff_del_strong',
+    'diff_change',
+    'diff_text',
+    'diag_error',
+    'diag_warn',
+    'diag_info',
+    'diag_hint',
+    'sel',
+    'match',
+    'indent',
+    'indent_active',
+    'line_nr',
+  }) do
+    equal(meridian[key], ultra[key], 'Meridian preserved Ultra state color ' .. key .. ' for ' .. background)
+  end
+  for key, color in pairs(meridian_anchors[background]) do
+    equal(meridian[key], color, 'Meridian anchor ' .. key .. ' for ' .. background)
+  end
+  local roles = require('token.appearance').roles('token-meridian', meridian, background == 'dark')
+  for _, color in ipairs({
+    meridian.fg0,
+    meridian.fg1,
+    roles.syntax.comment.fg,
+    roles.syntax.control.fg,
+    roles.syntax.type.fg,
+    roles.syntax.definition.fg,
+    roles.syntax.property.fg,
+    roles.syntax.literal.fg,
+    roles.syntax.number.fg,
+    roles.syntax.tag.fg,
+  }) do
+    truthy(contrast(color, meridian.bg3) >= 4.5, 'insufficient Meridian contrast for ' .. color .. ' ' .. background)
+  end
+  if background == 'dark' then
+    truthy(contrast(meridian.fg3, meridian.bg3) < 4.5, 'Meridian structural foreground is not subdued')
+  end
+end
+
 -- Every colorscheme entry point selects its appearance while background selects the variant.
 token.setup()
 for _, appearance in ipairs(require('token.appearance').all()) do
@@ -843,6 +977,23 @@ token.setup({ plugins = { markview = true, render_markdown = true } })
 load('dark', 'token-ultra')
 equal(hl('RenderMarkdownH3').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra render-markdown heading cycle')
 equal(hl('MarkviewHeading3').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra Markview heading cycle')
+
+-- Meridian uses Circadia grammar and heading colors on Ultra surfaces.
+token.setup({ plugins = { markview = true, render_markdown = true } })
+load('dark', 'token-meridian')
+local meridian = require('token.palettes.meridian')('dark')
+truthy(hl('@keyword').bold, 'Meridian keyword is not bold')
+equal(hl('@keyword').fg, tonumber(meridian.blue:sub(2), 16), 'Meridian keyword color')
+equal(hl('@function').fg, tonumber(meridian.purple:sub(2), 16), 'Meridian function color')
+equal(hl('@type').fg, tonumber(meridian.olive:sub(2), 16), 'Meridian type color')
+equal(hl('@property').fg, tonumber(meridian.orange:sub(2), 16), 'Meridian property color')
+equal(hl('@string').fg, tonumber(meridian.green:sub(2), 16), 'Meridian string color')
+equal(hl('@number').fg, tonumber(meridian.yellow:sub(2), 16), 'Meridian number color')
+equal(hl('@tag').fg, tonumber(meridian.blue:sub(2), 16), 'Meridian tag color')
+truthy(hl('Comment').italic, 'Meridian comment is not italic')
+equal(hl('Comment').fg, tonumber(meridian.fg2:sub(2), 16), 'Meridian comment color')
+equal(hl('RenderMarkdownH3').fg, tonumber('ea9d49', 16), 'Meridian render-markdown heading color')
+equal(hl('MarkviewHeading3').fg, tonumber('ea9d49', 16), 'Meridian Markview heading color')
 
 local flint_styles = {
   functions = { bold = false, underline = true },
@@ -1238,12 +1389,74 @@ equal(require('token.terminal').colors(ultra_light_palette, false, 'token-ultra'
   [15] = ultra_light_palette.bg3,
 }, 'Ultra ANSI light roles')
 
+load('dark', 'token-meridian')
+local meridian_lualine = require('lualine.themes.token-meridian')
+local meridian_palette = require('token.theme').palette('dark', 'token-meridian')
+equal(meridian_lualine.normal.a.bg, meridian_palette.fg2, 'Meridian Lualine normal mode color')
+equal(meridian_lualine.insert.a.bg, meridian_palette.green, 'Meridian Lualine insert mode color')
+equal(meridian_lualine.visual.a.bg, meridian_palette.blue, 'Meridian Lualine visual mode color')
+equal(meridian_lualine.replace.a.bg, meridian_palette.red, 'Meridian Lualine replace mode color')
+equal(meridian_lualine.command.a.bg, meridian_palette.yellow, 'Meridian Lualine command mode color')
+equal(meridian_lualine.terminal.a.bg, meridian_palette.cyan, 'Meridian Lualine terminal mode color')
+equal(meridian_lualine.inactive.a.fg, meridian_palette.fg3, 'Meridian Lualine inactive text is not muted')
+equal(require('token.terminal').colors(meridian_palette, true, 'token-meridian'), {
+  [0] = '#1d1d1c',
+  [1] = '#db8935',
+  [2] = '#8cbb62',
+  [3] = '#d99148',
+  [4] = '#66abc6',
+  [5] = '#b991db',
+  [6] = '#66abc6',
+  [7] = '#aba195',
+  [8] = '#91887d',
+  [9] = '#ea9d49',
+  [10] = '#8cbb62',
+  [11] = '#f8c88f',
+  [12] = '#66abc6',
+  [13] = '#de88a6',
+  [14] = '#66abc6',
+  [15] = '#c9c0b1',
+}, 'Meridian ANSI dark roles')
+
+load('light', 'token-meridian')
+local meridian_light_palette = require('token.theme').palette('light', 'token-meridian')
+equal(require('lualine.themes.token-meridian').normal.a.bg, meridian_light_palette.fg2, 'Meridian light Lualine mode')
+equal(require('token.terminal').colors(meridian_light_palette, false, 'token-meridian'), {
+  [0] = '#28323a',
+  [1] = '#843900',
+  [2] = '#005f2f',
+  [3] = '#843900',
+  [4] = '#0048b3',
+  [5] = '#7a1f7a',
+  [6] = '#095b62',
+  [7] = '#b5b2ab',
+  [8] = '#524b42',
+  [9] = '#843900',
+  [10] = '#005f2f',
+  [11] = '#843900',
+  [12] = '#0048b3',
+  [13] = '#4b1fa3',
+  [14] = '#095b62',
+  [15] = '#fbf9f4',
+}, 'Meridian ANSI light roles')
+
+token.setup({
+  on_colors = function(colors, _, colorscheme)
+    if colorscheme == 'token-meridian' then
+      colors.blue = '#123456'
+    end
+  end,
+})
+load('dark', 'token-meridian')
+equal(vim.g.terminal_color_4, '#123456', 'Meridian ANSI colors ignored on_colors override')
+
 token.setup({ attributes = { bold = false } })
 load('dark', 'token-flint')
 equal(require('lualine.themes.token').normal.a.gui, nil, 'classic Lualine ignored bold gate')
 equal(require('lualine.themes.token-flint').normal.a.gui, nil, 'Flint Lualine ignored bold gate')
 equal(require('lualine.themes.token-temper').normal.a.gui, nil, 'Temper Lualine ignored bold gate')
 equal(require('lualine.themes.token-ultra').normal.a.gui, nil, 'Ultra Lualine ignored bold gate')
+equal(require('lualine.themes.token-meridian').normal.a.gui, nil, 'Meridian Lualine ignored bold gate')
 
 -- Invalid callback output is rejected.
 token.setup({
@@ -1272,6 +1485,7 @@ local callback = function(groups, colors, background, colorscheme)
     italic = colorscheme == 'token-flint',
     underline = colorscheme == 'token-temper',
     undercurl = colorscheme == 'token-ultra',
+    strikethrough = colorscheme == 'token-meridian',
   }
 end
 token.setup({
@@ -1290,6 +1504,8 @@ local temper_dark_path = compile.path('dark', 'token-temper')
 local temper_light_path = compile.path('light', 'token-temper')
 local ultra_dark_path = compile.path('dark', 'token-ultra')
 local ultra_light_path = compile.path('light', 'token-ultra')
+local meridian_dark_path = compile.path('dark', 'token-meridian')
+local meridian_light_path = compile.path('light', 'token-meridian')
 truthy(vim.uv.fs_stat(dark_path), 'dark cache missing')
 truthy(vim.uv.fs_stat(light_path), 'light cache missing')
 truthy(vim.uv.fs_stat(flint_dark_path), 'Flint dark cache missing')
@@ -1298,6 +1514,8 @@ truthy(vim.uv.fs_stat(temper_dark_path), 'Temper dark cache missing')
 truthy(vim.uv.fs_stat(temper_light_path), 'Temper light cache missing')
 truthy(vim.uv.fs_stat(ultra_dark_path), 'Ultra dark cache missing')
 truthy(vim.uv.fs_stat(ultra_light_path), 'Ultra light cache missing')
+truthy(vim.uv.fs_stat(meridian_dark_path), 'Meridian dark cache missing')
+truthy(vim.uv.fs_stat(meridian_light_path), 'Meridian light cache missing')
 equal(
   vim.tbl_count({
     [dark_path] = true,
@@ -1308,8 +1526,10 @@ equal(
     [temper_light_path] = true,
     [ultra_dark_path] = true,
     [ultra_light_path] = true,
+    [meridian_dark_path] = true,
+    [meridian_light_path] = true,
   }),
-  8,
+  10,
   'cache paths collide'
 )
 fail_flint_compile = true
@@ -1325,6 +1545,8 @@ for _, path in ipairs({
   temper_light_path,
   ultra_dark_path,
   ultra_light_path,
+  meridian_dark_path,
+  meridian_light_path,
 }) do
   truthy(vim.uv.fs_stat(path), 'failed Flint rebuild removed existing cache: ' .. path)
 end
@@ -1363,12 +1585,22 @@ equal(hl('TokenCompiled').italic, nil, 'Ultra cache used Flint callback result')
 load('light', 'token-ultra')
 equal(vim.g.colors_name, 'token-ultra', 'compiled Ultra light colors_name')
 truthy(hl('TokenCompiled').undercurl and not hl('TokenCompiled').bold, 'compiled Ultra light callback result incorrect')
+load('dark', 'token-meridian')
+equal(vim.g.colors_name, 'token-meridian', 'compiled Meridian colors_name')
+truthy(hl('TokenCompiled').bold and hl('TokenCompiled').strikethrough, 'compiled Meridian callback result incorrect')
+load('light', 'token-meridian')
+equal(vim.g.colors_name, 'token-meridian', 'compiled Meridian light colors_name')
+truthy(
+  hl('TokenCompiled').strikethrough and not hl('TokenCompiled').bold,
+  'compiled Meridian light callback result incorrect'
+)
 
 token.setup({ transparent = true })
 equal(compile.load('dark'), false, 'configuration change reused stale cache')
 equal(compile.load('dark', 'token-flint'), false, 'configuration change reused stale Flint cache')
 equal(compile.load('dark', 'token-temper'), false, 'configuration change reused stale Temper cache')
 equal(compile.load('dark', 'token-ultra'), false, 'configuration change reused stale Ultra cache')
+equal(compile.load('dark', 'token-meridian'), false, 'configuration change reused stale Meridian cache')
 
 token.setup({
   terminal_colors = false,
@@ -1376,6 +1608,16 @@ token.setup({
   highlights = { all = { TokenCterm = { fg = '#abcdef', cterm = { bold = true } } } },
   on_highlights = callback,
 })
+local meridian_file = assert(io.open(meridian_dark_path, 'wb'))
+assert(meridian_file:write('corrupt'))
+assert(meridian_file:close())
+equal(compile.load('dark', 'token-meridian'), false, 'corrupt Meridian cache did not fall back')
+equal(vim.uv.fs_stat(meridian_dark_path), nil, 'corrupt Meridian cache was not removed')
+truthy(compile.load('dark'), 'corrupt Meridian cache affected classic Token')
+truthy(compile.load('dark', 'token-flint'), 'corrupt Meridian cache affected Flint')
+truthy(compile.load('dark', 'token-temper'), 'corrupt Meridian cache affected Temper')
+truthy(compile.load('dark', 'token-ultra'), 'corrupt Meridian cache affected Ultra')
+
 local ultra_file = assert(io.open(ultra_dark_path, 'wb'))
 assert(ultra_file:write('corrupt'))
 assert(ultra_file:close())

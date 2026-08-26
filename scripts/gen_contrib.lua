@@ -232,23 +232,62 @@ local function textmate_scope_rules(p, appearance, variant)
   local profile = role_profile(p, variant, appearance)
   if profile then
     local r = profile.syntax
-    return {
-      { 'Comment', 'comment, punctuation.definition.comment', r.comment.fg, 'italic' },
-      { 'Keyword', 'keyword, keyword.control, keyword.other, storage.modifier', r.control.fg, nil },
+    local number = r.number or r.literal
+    local property = r.property or r.variable
+
+    local function style(role, attributes)
+      local result = {}
+      for _, attribute in ipairs(attributes) do
+        if role[attribute] then
+          result[#result + 1] = attribute
+        end
+      end
+      return #result > 0 and table.concat(result, ' ') or nil
+    end
+
+    local rules = {
+      { 'Comment', 'comment, punctuation.definition.comment', r.comment.fg, style(r.comment, { 'italic' }) },
+      {
+        'Keyword',
+        'keyword, keyword.control, keyword.other, storage.modifier',
+        r.control.fg,
+        style(r.control, { 'bold' }),
+      },
       { 'Operator', 'keyword.operator', r.operator.fg, nil },
-      { 'Function definition', 'entity.name.function, meta.function.definition entity.name', r.definition.fg, 'bold' },
+      {
+        'Function definition',
+        'entity.name.function, meta.function.definition entity.name',
+        r.definition.fg,
+        style(r.definition, { 'bold' }),
+      },
       { 'Function call', 'meta.function-call, variable.function', r.call.fg, nil },
-      { 'Built-in function', 'support.function', r.builtin.fg, 'italic' },
+      { 'Built-in function', 'support.function', r.builtin.fg, style(r.builtin, { 'italic' }) },
       { 'String', 'string, punctuation.definition.string', r.literal.fg, nil },
-      { 'Literal', 'constant, constant.language, constant.numeric, variable.other.constant', r.literal.fg, nil },
-      { 'Type definition', 'entity.name.type, entity.name.class, entity.name.type.class', r.definition.fg, 'bold' },
+      {
+        'Literal',
+        r.number and 'constant, constant.language, variable.other.constant'
+          or 'constant, constant.language, constant.numeric, variable.other.constant',
+        r.literal.fg,
+        nil,
+      },
+      {
+        'Type definition',
+        'entity.name.type, entity.name.class, entity.name.type.class',
+        r.definition.fg,
+        style(r.definition, { 'bold' }),
+      },
       {
         'Type reference',
         'storage.type, support.type, support.class, entity.other.inherited-class',
         r.type.fg,
-        'italic',
+        style(r.type, { 'italic' }),
       },
-      { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', r.type.fg, 'italic' },
+      {
+        'Module',
+        'entity.name.namespace, entity.name.type.module, support.module',
+        r.type.fg,
+        style(r.type, { 'italic' }),
+      },
       {
         'Preprocessor',
         'keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using',
@@ -257,17 +296,32 @@ local function textmate_scope_rules(p, appearance, variant)
       },
       { 'Macro', 'entity.name.function.preprocessor', r.control.fg, nil },
       { 'Tag', 'entity.name.tag', r.tag.fg, nil },
-      { 'Tag attribute', 'entity.other.attribute-name', r.attribute.fg, 'italic' },
-      { 'Attribute', 'meta.annotation, storage.type.annotation', r.attribute.fg, 'italic' },
-      { 'Label', 'entity.name.label, constant.other.label', r.control.fg, nil },
-      { 'Built-in symbol', 'variable.language', r.builtin.fg, 'italic' },
-      { 'Debug', 'keyword.other.debugger', r.control.fg, nil },
-      { 'Exception', 'keyword.control.exception, keyword.control.trycatch', r.control.fg, nil },
+      {
+        'Tag attribute',
+        'entity.other.attribute-name',
+        r.attribute.fg,
+        style(r.attribute, { 'italic' }),
+      },
+      {
+        'Attribute',
+        'meta.annotation, storage.type.annotation',
+        r.attribute.fg,
+        style(r.attribute, { 'italic' }),
+      },
+      { 'Label', 'entity.name.label, constant.other.label', r.control.fg, style(r.control, { 'bold' }) },
+      { 'Built-in symbol', 'variable.language', r.builtin.fg, style(r.builtin, { 'italic' }) },
+      { 'Debug', 'keyword.other.debugger', r.control.fg, style(r.control, { 'bold' }) },
+      {
+        'Exception',
+        'keyword.control.exception, keyword.control.trycatch',
+        r.control.fg,
+        style(r.control, { 'bold' }),
+      },
       { 'Identifier', 'variable, support.variable, meta.definition.variable', r.variable.fg, nil },
       {
         'Property',
         'variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key',
-        r.property.fg,
+        property.fg,
         nil,
       },
       { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', r.punctuation.fg, nil },
@@ -279,12 +333,12 @@ local function textmate_scope_rules(p, appearance, variant)
       { 'Heading 5', 'heading.5.markdown', profile.headings[5], 'bold' },
       { 'Heading 6', 'heading.6.markdown', profile.headings[6], 'bold' },
       { 'Heading delimiter', 'punctuation.definition.heading.markdown', r.comment.fg, nil },
-      { 'Markup link', 'markup.underline.link, string.other.link', r.link.fg, 'underline' },
+      { 'Markup link', 'markup.underline.link, string.other.link', r.link.fg, style(r.link, { 'underline' }) },
       {
         'Markup link text',
         'string.other.link.title.markdown, constant.other.reference.link.markdown',
         r.link.fg,
-        'underline',
+        style(r.link, { 'underline' }),
       },
       {
         'Markup code',
@@ -298,11 +352,16 @@ local function textmate_scope_rules(p, appearance, variant)
         r.comment.fg,
         nil,
       },
-      { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', r.control.fg, nil },
+      {
+        'Markup list',
+        'punctuation.definition.list.begin.markdown, markup.list',
+        r.control.fg,
+        style(r.control, { 'bold' }),
+      },
       { 'Markup bold', 'markup.bold', nil, 'bold' },
       { 'Markup italic', 'markup.italic', nil, 'italic' },
       { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
-      { 'Markup quote', 'markup.quote', r.quote.fg, 'italic' },
+      { 'Markup quote', 'markup.quote', r.quote.fg, style(r.quote, { 'italic' }) },
       { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
       { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
       { 'Diff changed', 'markup.changed', p.yellow, nil },
@@ -312,6 +371,10 @@ local function textmate_scope_rules(p, appearance, variant)
       { 'GitGutter untracked', 'markup.untracked.git_gutter', p.fg3, nil },
       { 'GitGutter ignored', 'markup.ignored.git_gutter', p.fg3, nil },
     }
+    if r.number then
+      table.insert(rules, 9, { 'Number', 'constant.numeric, constant.language.boolean', number.fg, nil })
+    end
+    return rules
   elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
     local is_temper = appearance.name == 'token-temper'
     local literal = is_temper and p.accent or p.green
@@ -1707,33 +1770,63 @@ local function gen_vscode_theme(p, variant, term, appearance)
   elseif appearance.roles then
     local profile = role_profile(p, variant, appearance)
     local r = profile.syntax
+    local number = r.number or r.literal
+    local property = r.property or r.literal
+
+    local function semantic_role(role, attributes, force_object)
+      local entries = { { 'foreground', role.fg } }
+      local styled = false
+      for _, attribute in ipairs(attributes or {}) do
+        if role[attribute] ~= nil then
+          entries[#entries + 1] = { attribute, role[attribute] }
+          styled = true
+        end
+      end
+      return (force_object or styled) and json_object(entries) or role.fg
+    end
+
+    local function definition_role()
+      local entries = { { 'foreground', r.definition.fg } }
+      if r.definition.bold ~= nil then
+        entries[#entries + 1] = { 'bold', r.definition.bold }
+      end
+      local italic = r.definition.italic
+      if italic == nil then
+        italic = false
+      end
+      entries[#entries + 1] = { 'italic', italic }
+      return json_object(entries)
+    end
+
     semantic_colors = {
-      { 'class', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
-      { 'enum', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
-      { 'interface', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
-      { 'struct', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
-      { 'type', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
-      { 'typeParameter', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
-      { 'namespace', json_object({ { 'foreground', r.type.fg }, { 'italic', true } }) },
-      { 'function', r.call.fg },
-      { 'method', r.call.fg },
-      { 'macro', r.control.fg },
-      { 'keyword', r.control.fg },
-      { 'string', r.literal.fg },
-      { 'number', r.literal.fg },
+      { 'class', semantic_role(r.type, { 'italic' }, true) },
+      { 'enum', semantic_role(r.type, { 'italic' }, true) },
+      { 'interface', semantic_role(r.type, { 'italic' }, true) },
+      { 'struct', semantic_role(r.type, { 'italic' }, true) },
+      { 'type', semantic_role(r.type, { 'italic' }, true) },
+      { 'typeParameter', semantic_role(r.type, { 'italic' }, true) },
+      { 'namespace', semantic_role(r.type, { 'italic' }, true) },
+      { 'function', semantic_role(r.call, { 'bold', 'italic' }) },
+      { 'method', semantic_role(r.call, { 'bold', 'italic' }) },
+      { 'macro', semantic_role(r.control, { 'bold', 'italic' }) },
+      { 'keyword', semantic_role(r.control, { 'bold', 'italic' }) },
+      { 'string', semantic_role(r.literal, { 'italic' }) },
+      { 'number', semantic_role(number, { 'italic' }) },
       { 'enumMember', r.literal.fg },
       { 'variable.readonly', r.literal.fg },
-      { 'property.readonly', r.literal.fg },
+      { 'property.readonly', semantic_role(property, { 'italic' }) },
       { 'parameter', r.parameter.fg },
       { '*.deprecated', json_object({ { 'strikethrough', true } }) },
       { '*.readonly', json_object({ { 'foreground', r.literal.fg } }) },
       { '*.async', json_object({ { 'italic', true } }) },
       { '*.static', json_object({ { 'italic', true } }) },
       { '*.abstract', json_object({ { 'italic', true } }) },
-      { '*.defaultLibrary', json_object({ { 'foreground', r.builtin.fg }, { 'italic', true } }) },
-      { '*.declaration', json_object({ { 'bold', true } }) },
-      { '*.definition', json_object({ { 'bold', true } }) },
+      { '*.defaultLibrary', semantic_role(r.builtin, { 'italic' }) },
     }
+    if r.definition.bold ~= nil then
+      semantic_colors[#semantic_colors + 1] = { '*.declaration', json_object({ { 'bold', r.definition.bold } }) }
+      semantic_colors[#semantic_colors + 1] = { '*.definition', json_object({ { 'bold', r.definition.bold } }) }
+    end
     for _, token_type in ipairs({
       'type',
       'class',
@@ -1747,7 +1840,7 @@ local function gen_vscode_theme(p, variant, term, appearance)
       for _, modifier in ipairs({ 'declaration', 'definition' }) do
         semantic_colors[#semantic_colors + 1] = {
           token_type .. '.' .. modifier,
-          json_object({ { 'foreground', r.definition.fg }, { 'bold', true }, { 'italic', false } }),
+          definition_role(),
         }
       end
     end
