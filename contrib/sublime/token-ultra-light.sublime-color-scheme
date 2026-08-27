@@ -29,7 +29,8 @@
     {
       "name": "Keyword",
       "scope": "keyword, keyword.control, keyword.other, storage.modifier",
-      "foreground": "#87601b"
+      "foreground": "#87601b",
+      "font_style": "bold"
     },
     {
       "name": "Operator",
@@ -39,8 +40,7 @@
     {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
-      "foreground": "#a44e31",
-      "font_style": "bold"
+      "foreground": "#a44e31"
     },
     {
       "name": "Function call",
@@ -50,8 +50,7 @@
     {
       "name": "Built-in function",
       "scope": "support.function",
-      "foreground": "#3d3929",
-      "font_style": "italic"
+      "foreground": "#3d3929"
     },
     {
       "name": "String",
@@ -66,30 +65,29 @@
     {
       "name": "Type definition",
       "scope": "entity.name.type, entity.name.class, entity.name.type.class",
-      "foreground": "#a44e31",
-      "font_style": "bold"
+      "foreground": "#a44e31"
     },
     {
       "name": "Type reference",
       "scope": "storage.type, support.type, support.class, entity.other.inherited-class",
-      "foreground": "#3d3929",
-      "font_style": "italic"
+      "foreground": "#3d3929"
     },
     {
       "name": "Module",
       "scope": "entity.name.namespace, entity.name.type.module, support.module",
-      "foreground": "#3d3929",
-      "font_style": "italic"
+      "foreground": "#3d3929"
     },
     {
       "name": "Preprocessor",
       "scope": "keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using",
-      "foreground": "#87601b"
+      "foreground": "#87601b",
+      "font_style": "bold"
     },
     {
       "name": "Macro",
       "scope": "entity.name.function.preprocessor",
-      "foreground": "#87601b"
+      "foreground": "#87601b",
+      "font_style": "bold"
     },
     {
       "name": "Tag",
@@ -99,35 +97,35 @@
     {
       "name": "Tag attribute",
       "scope": "entity.other.attribute-name",
-      "foreground": "#3d3929",
-      "font_style": "italic"
+      "foreground": "#3d3929"
     },
     {
       "name": "Attribute",
       "scope": "meta.annotation, storage.type.annotation",
-      "foreground": "#3d3929",
-      "font_style": "italic"
+      "foreground": "#3d3929"
     },
     {
       "name": "Label",
       "scope": "entity.name.label, constant.other.label",
-      "foreground": "#87601b"
+      "foreground": "#87601b",
+      "font_style": "bold"
     },
     {
       "name": "Built-in symbol",
       "scope": "variable.language",
-      "foreground": "#3d3929",
-      "font_style": "italic"
+      "foreground": "#3d3929"
     },
     {
       "name": "Debug",
       "scope": "keyword.other.debugger",
-      "foreground": "#87601b"
+      "foreground": "#87601b",
+      "font_style": "bold"
     },
     {
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
-      "foreground": "#87601b"
+      "foreground": "#87601b",
+      "font_style": "bold"
     },
     {
       "name": "Identifier",
@@ -215,7 +213,8 @@
     {
       "name": "Markup list",
       "scope": "punctuation.definition.list.begin.markdown, markup.list",
-      "foreground": "#87601b"
+      "foreground": "#87601b",
+      "font_style": "bold"
     },
     {
       "name": "Markup bold",

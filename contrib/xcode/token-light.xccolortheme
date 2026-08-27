@@ -56,15 +56,15 @@
     <key>DVTMarkupTextOtherHeadingColor</key>
     <string>0.423529 0.403922 0.372549 1</string>
     <key>DVTMarkupTextOtherHeadingFont</key>
-    <string>.AppleSystemUIFont - 14.0</string>
+    <string>.AppleSystemUIFontBold - 14.0</string>
     <key>DVTMarkupTextPrimaryHeadingColor</key>
     <string>0.603922 0.286275 0.160784 1</string>
     <key>DVTMarkupTextPrimaryHeadingFont</key>
-    <string>.AppleSystemUIFont - 24.0</string>
+    <string>.AppleSystemUIFontBold - 24.0</string>
     <key>DVTMarkupTextSecondaryHeadingColor</key>
     <string>0.529412 0.376471 0.196078 1</string>
     <key>DVTMarkupTextSecondaryHeadingFont</key>
-    <string>.AppleSystemUIFont - 18.0</string>
+    <string>.AppleSystemUIFontBold - 18.0</string>
     <key>DVTMarkupTextStrongColor</key>
     <string>0.164706 0.160784 0.125490 1</string>
     <key>DVTMarkupTextStrongFont</key>
@@ -161,9 +161,9 @@
       <key>xcode.syntax.character</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.comment</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-RegularItalic - 12.0</string>
       <key>xcode.syntax.comment.doc</key>
-      <string>HelveticaNeue - 12.0</string>
+      <string>SFMono-RegularItalic - 12.0</string>
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.other</key>
@@ -183,9 +183,9 @@
       <key>xcode.syntax.identifier.function.system</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.identifier.macro</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.identifier.macro.system</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.identifier.type</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.identifier.type.system</key>
@@ -195,11 +195,11 @@
       <key>xcode.syntax.identifier.variable.system</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.keyword</key>
-      <string>SFMono-Semibold - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.mark</key>
       <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.markup.aside.kind</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.markup.code</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.number</key>
@@ -207,7 +207,7 @@
       <key>xcode.syntax.plain</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.preprocessor</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.string</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.url</key>

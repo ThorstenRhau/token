@@ -91,92 +91,107 @@ for _, appearance in ipairs(require('token.appearance').all()) do
   end
 end
 
-for _, variant in ipairs({ 'dark', 'light' }) do
-  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-flint-' .. variant .. '-color-theme.json'))
-  local accent = require('token.palettes.flint')(variant).accent
-  for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
-    for _, modifier in ipairs({ 'declaration', 'definition' }) do
-      equal(
-        theme.semanticTokenColors[token_type .. '.' .. modifier],
-        { foreground = accent, bold = true, italic = false },
-        'Flint VS Code semantic type role for ' .. token_type .. '.' .. modifier .. ' ' .. variant
-      )
-    end
+local typography = require('token.typography')
+local typography_valid, typography_error = typography.validate()
+truthy(typography_valid, 'duplicate runtime typography mapping: ' .. (typography_error or 'unknown'))
+
+local function expected_semantic_colors(appearance, palette, variant)
+  local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
+  if profile then
+    local syntax = profile.syntax
+    return {
+      comment = syntax.comment.fg,
+      control = syntax.control.fg,
+      definition = syntax.definition.fg,
+      call = syntax.call.fg,
+      type = syntax.type.fg,
+      builtin = syntax.builtin.fg,
+      property = (syntax.property or syntax.variable).fg,
+      string = syntax.literal.fg,
+      literal = syntax.literal.fg,
+      number = (syntax.number or syntax.literal).fg,
+      link = syntax.link.fg,
+      heading = profile.headings[1],
+    }
   end
+
+  local is_temper = appearance.name == 'token-temper'
+  local is_variant = appearance.name == 'token-flint' or is_temper
+  local literal = is_temper and palette.accent or (is_variant and palette.green or palette.purple)
+  return {
+    comment = palette.fg2,
+    control = palette.accent2,
+    definition = palette.accent,
+    call = palette.accent,
+    type = is_variant and palette.fg1 or palette.blue,
+    builtin = is_variant and palette.fg1 or palette.accent,
+    property = palette.fg0,
+    string = is_temper and palette.accent or palette.green,
+    literal = literal,
+    number = is_temper and palette.accent or (is_variant and palette.green or palette.orange),
+    link = is_temper and palette.accent or palette.blue,
+    heading = palette.accent,
+  }
 end
 
-for _, variant in ipairs({ 'dark', 'light' }) do
-  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-temper-' .. variant .. '-color-theme.json'))
-  local palette = require('token.palettes.temper')(variant)
-  equal(
-    theme.semanticTokenColors.type,
-    { foreground = palette.fg1, italic = true },
-    'Temper VS Code semantic type reference ' .. variant
-  )
-  equal(
-    theme.semanticTokenColors.string,
-    { foreground = palette.accent, italic = true },
-    'Temper VS Code semantic literal ' .. variant
-  )
-  equal(theme.semanticTokenColors.keyword, palette.accent2, 'Temper VS Code semantic keyword ' .. variant)
-  for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter', 'function', 'method' }) do
-    for _, modifier in ipairs({ 'declaration', 'definition' }) do
-      equal(
-        theme.semanticTokenColors[token_type .. '.' .. modifier],
-        { foreground = palette.accent, bold = true, italic = false },
-        'Temper VS Code semantic definition for ' .. token_type .. '.' .. modifier .. ' ' .. variant
-      )
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local palette = require(appearance.palette)(variant)
+    local expected = expected_semantic_colors(appearance, palette, variant)
+    local theme =
+      vim.json.decode(read_text('contrib/vscode/themes/' .. appearance.slug .. '-' .. variant .. '-color-theme.json'))
+    for _, name in ipairs({ 'keyword', 'macro', 'type', 'function', 'string', 'number', 'property.readonly' }) do
+      local role = typography.role('vscode', name)
+      local semantic = theme.semanticTokenColors[name]
+      truthy(type(semantic) == 'table' and type(semantic.foreground) == 'string', 'VS Code color missing for ' .. name)
+      for attribute, enabled in pairs(typography.attributes(role)) do
+        equal(
+          semantic[attribute],
+          enabled,
+          'VS Code ' .. name .. ' typography for ' .. appearance.name .. ' ' .. variant
+        )
+      end
     end
-  end
-end
-
-for _, variant in ipairs({ 'dark', 'light' }) do
-  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-ultra-' .. variant .. '-color-theme.json'))
-  local palette = require('token.palettes.ultra')(variant)
-  equal(
-    theme.semanticTokenColors.type,
-    { foreground = palette.fg1, italic = true },
-    'Ultra VS Code semantic type reference ' .. variant
-  )
-  equal(theme.semanticTokenColors.string, palette.orange, 'Ultra VS Code semantic literal ' .. variant)
-  equal(theme.semanticTokenColors.keyword, palette.accent2, 'Ultra VS Code semantic keyword ' .. variant)
-  equal(theme.semanticTokenColors['*.readonly'], { foreground = palette.orange }, 'Ultra VS Code readonly ' .. variant)
-  for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter', 'function', 'method' }) do
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
-      equal(
-        theme.semanticTokenColors[token_type .. '.' .. modifier],
-        { foreground = palette.accent, bold = true, italic = false },
-        'Ultra VS Code semantic definition for ' .. token_type .. '.' .. modifier .. ' ' .. variant
-      )
+      local semantic = theme.semanticTokenColors['*.' .. modifier]
+      for attribute, enabled in pairs(typography.attributes('regular')) do
+        equal(semantic[attribute], enabled, 'VS Code definition typography for ' .. appearance.name .. ' ' .. variant)
+      end
     end
+    for _, selector in ipairs(typography.vscode_exact_selectors()) do
+      local semantic = theme.semanticTokenColors[selector]
+      truthy(
+        semantic,
+        'VS Code exact semantic selector missing for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
+      )
+      equal(
+        semantic.bold,
+        false,
+        'VS Code exact semantic bold for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
+      )
+      equal(
+        semantic.italic,
+        false,
+        'VS Code exact semantic italic for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
+      )
+      equal(
+        semantic.underline,
+        false,
+        'VS Code exact semantic underline for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
+      )
+      if selector:match('^(type|class|enum|interface|struct|typeParameter|function|method)%.') then
+        equal(
+          semantic.foreground,
+          appearance.name == 'token' and nil or expected.definition,
+          'VS Code exact semantic foreground for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
+        )
+      end
+    end
+    truthy(theme.semanticTokenColors['*.deprecated'].strikethrough, 'VS Code deprecated state missing')
+    truthy(theme.semanticTokenColors['*.async'].italic, 'VS Code async state missing')
+    truthy(theme.semanticTokenColors['*.static'].italic, 'VS Code static state missing')
+    truthy(theme.semanticTokenColors['*.abstract'].italic, 'VS Code abstract state missing')
   end
-end
-
-for _, variant in ipairs({ 'dark', 'light' }) do
-  local theme = vim.json.decode(read_text('contrib/vscode/themes/token-meridian-' .. variant .. '-color-theme.json'))
-  local palette = require('token.palettes.meridian')(variant)
-  local roles = require('token.appearance').roles('token-meridian', palette, variant == 'dark')
-  equal(theme.semanticTokenColors.type.foreground, roles.syntax.type.fg, 'Meridian VS Code type color ' .. variant)
-  equal(
-    theme.semanticTokenColors.keyword.foreground,
-    roles.syntax.control.fg,
-    'Meridian VS Code keyword color ' .. variant
-  )
-  truthy(theme.semanticTokenColors.keyword.bold, 'Meridian VS Code keyword weight ' .. variant)
-  equal(theme.semanticTokenColors.string, roles.syntax.literal.fg, 'Meridian VS Code string color ' .. variant)
-  equal(theme.semanticTokenColors.number, roles.syntax.number.fg, 'Meridian VS Code number color ' .. variant)
-  equal(theme.semanticTokenColors.type.italic, nil, 'Meridian VS Code type italic ' .. variant)
-  equal(theme.semanticTokenColors['function.definition'].bold, nil, 'Meridian VS Code definition weight ' .. variant)
-  equal(
-    theme.semanticTokenColors['function.definition'].italic,
-    false,
-    'Meridian VS Code definition italic ' .. variant
-  )
-  equal(
-    theme.semanticTokenColors['property.readonly'],
-    roles.syntax.property.fg,
-    'Meridian VS Code property color ' .. variant
-  )
 end
 
 for _, appearance in ipairs(require('token.appearance').all()) do
@@ -298,9 +313,9 @@ local vscode_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
   vscode_rules[rule.name] = rule.settings
 end
-equal(vscode_rules['Function definition'].fontStyle, 'bold', 'VS Code Flint definition typography')
+equal(vscode_rules['Function definition'].fontStyle, nil, 'VS Code Flint definition typography')
 equal(vscode_rules['Function call'].fontStyle, nil, 'VS Code Flint call typography')
-equal(vscode_rules['Type reference'].fontStyle, 'italic', 'VS Code Flint reference typography')
+equal(vscode_rules['Type reference'].fontStyle, nil, 'VS Code Flint reference typography')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-flint/manifest.json')).name,
   'Token Flint',
@@ -311,7 +326,7 @@ equal(windows_flint[1].name, 'Token Flint Dark', 'Windows Terminal Flint dark na
 equal(windows_flint[2].name, 'Token Flint Light', 'Windows Terminal Flint light name')
 local emacs_flint = read_text('contrib/emacs/token-flint-dark-theme.el')
 truthy(
-  emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
+  emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent)))', 1, true),
   'Emacs Flint definition typography'
 )
 truthy(
@@ -324,11 +339,11 @@ local temper_rules = {}
 for _, rule in ipairs(vscode_temper.tokenColors) do
   temper_rules[rule.name] = rule.settings
 end
-equal(temper_rules['Function definition'].fontStyle, 'bold', 'VS Code Temper definition typography')
+equal(temper_rules['Function definition'].fontStyle, nil, 'VS Code Temper definition typography')
 equal(temper_rules['Function call'].fontStyle, nil, 'VS Code Temper call typography')
-equal(temper_rules['String'].fontStyle, 'italic', 'VS Code Temper literal typography')
+equal(temper_rules['String'].fontStyle, nil, 'VS Code Temper literal typography')
 equal(temper_rules['String'].foreground, temper_dark.accent, 'VS Code Temper literal color')
-equal(temper_rules['Type reference'].fontStyle, 'italic', 'VS Code Temper reference typography')
+equal(temper_rules['Type reference'].fontStyle, nil, 'VS Code Temper reference typography')
 equal(temper_rules['Type reference'].foreground, temper_dark.fg1, 'VS Code Temper type reference color')
 equal(temper_rules.Exception.foreground, temper_dark.accent2, 'VS Code Temper exception color')
 equal(
@@ -341,7 +356,7 @@ equal(windows_temper[1].name, 'Token Temper Dark', 'Windows Terminal Temper dark
 equal(windows_temper[2].name, 'Token Temper Light', 'Windows Terminal Temper light name')
 local emacs_temper = read_text('contrib/emacs/token-temper-dark-theme.el')
 truthy(
-  emacs_temper:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
+  emacs_temper:find('font-lock-function-name-face      ((,class (:foreground ,accent)))', 1, true),
   'Emacs Temper definition typography'
 )
 truthy(
@@ -349,11 +364,11 @@ truthy(
   'Emacs Temper call typography'
 )
 truthy(
-  emacs_temper:find('font-lock-type-face               ((,class (:foreground ,fg1 :slant italic)))', 1, true),
+  emacs_temper:find('font-lock-type-face               ((,class (:foreground ,fg1)))', 1, true),
   'Emacs Temper type grammar'
 )
 truthy(
-  emacs_temper:find('font-lock-string-face             ((,class (:foreground ,accent :slant italic)))', 1, true),
+  emacs_temper:find('font-lock-string-face             ((,class (:foreground ,accent)))', 1, true),
   'Emacs Temper literal grammar'
 )
 local ultra_dark = require('token.palettes.ultra')('dark')
@@ -362,11 +377,11 @@ local ultra_rules = {}
 for _, rule in ipairs(vscode_ultra.tokenColors) do
   ultra_rules[rule.name] = rule.settings
 end
-equal(ultra_rules['Function definition'].fontStyle, 'bold', 'VS Code Ultra definition typography')
+equal(ultra_rules['Function definition'].fontStyle, nil, 'VS Code Ultra definition typography')
 equal(ultra_rules['Function call'].fontStyle, nil, 'VS Code Ultra call typography')
 equal(ultra_rules.String.fontStyle, nil, 'VS Code Ultra literal typography')
 equal(ultra_rules.String.foreground, ultra_dark.orange, 'VS Code Ultra literal color')
-equal(ultra_rules['Type reference'].fontStyle, 'italic', 'VS Code Ultra reference typography')
+equal(ultra_rules['Type reference'].fontStyle, nil, 'VS Code Ultra reference typography')
 equal(ultra_rules['Type reference'].foreground, ultra_dark.fg1, 'VS Code Ultra type reference color')
 equal(ultra_rules.Exception.foreground, ultra_dark.accent2, 'VS Code Ultra exception color')
 equal(
@@ -382,11 +397,11 @@ equal(windows_ultra[1].name, 'Token Ultra Dark', 'Windows Terminal Ultra dark na
 equal(windows_ultra[2].name, 'Token Ultra Light', 'Windows Terminal Ultra light name')
 local emacs_ultra = read_text('contrib/emacs/token-ultra-dark-theme.el')
 truthy(
-  emacs_ultra:find('font-lock-function-name-face      ((,class (:foreground ,accent :weight bold)))', 1, true),
+  emacs_ultra:find('font-lock-function-name-face      ((,class (:foreground ,accent)))', 1, true),
   'Emacs Ultra definition typography'
 )
 truthy(
-  emacs_ultra:find('font-lock-type-face               ((,class (:foreground ,fg1 :slant italic)))', 1, true),
+  emacs_ultra:find('font-lock-type-face               ((,class (:foreground ,fg1)))', 1, true),
   'Emacs Ultra type grammar'
 )
 truthy(
@@ -399,10 +414,7 @@ truthy(
 )
 local gtk_ultra = read_text('contrib/gtksourceview/token-ultra-dark.xml')
 truthy(gtk_ultra:find('name="def:string" foreground="#72a59e"', 1, true), 'GtkSourceView Ultra literal grammar')
-truthy(
-  gtk_ultra:find('name="def:function" foreground="#d98262" bold="true"', 1, true),
-  'GtkSourceView Ultra definition grammar'
-)
+truthy(gtk_ultra:find('name="def:function" foreground="#d98262"', 1, true), 'GtkSourceView Ultra definition grammar')
 truthy(
   gtk_ultra:find('name="def:link-text" foreground="#829db2" underline="single"', 1, true),
   'GtkSourceView Ultra link role'
@@ -459,6 +471,174 @@ for _, variant in ipairs({ 'dark', 'light' }) do
     xcode_rgba(palette.blue),
     'Xcode Ultra heading cycle for ' .. variant
   )
+end
+
+-- Role-aware exports take their font attributes from the shared profile while
+-- retaining the active appearance's foreground values.
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local label = appearance.name .. ' ' .. variant
+    local palette = require(appearance.palette)(variant)
+    local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
+    local expected = expected_semantic_colors(appearance, palette, variant)
+    local generated_link = profile and expected.link or palette.blue
+    local vscode =
+      vim.json.decode(read_text('contrib/vscode/themes/' .. appearance.slug .. '-' .. variant .. '-color-theme.json'))
+    local vscode_rules = {}
+    for _, rule in ipairs(vscode.tokenColors) do
+      vscode_rules[rule.name] = rule.settings
+    end
+    equal(vscode_rules.Keyword.fontStyle, 'bold', 'VS Code keyword typography ' .. label)
+    equal(vscode_rules.Comment.fontStyle, 'italic', 'VS Code comment typography ' .. label)
+    equal(vscode_rules.Keyword.foreground, expected.control, 'VS Code keyword color ' .. label)
+    equal(vscode_rules.Comment.foreground, expected.comment, 'VS Code comment color ' .. label)
+    equal(
+      (vscode_rules['Function definition'] or vscode_rules.Function).foreground,
+      expected.definition,
+      'VS Code definition color ' .. label
+    )
+    equal(
+      (vscode_rules['Function definition'] or vscode_rules.Function).fontStyle,
+      nil,
+      'VS Code definition typography ' .. label
+    )
+    equal((vscode_rules['Type reference'] or vscode_rules.Type).fontStyle, nil, 'VS Code type typography ' .. label)
+    equal(
+      (vscode_rules['Type reference'] or vscode_rules.Type).foreground,
+      expected.type,
+      'VS Code type color ' .. label
+    )
+    equal(
+      (vscode_rules.Literal or vscode_rules.Constant).foreground,
+      expected.literal,
+      'VS Code literal color ' .. label
+    )
+    equal(vscode_rules['Markup link'].foreground, expected.link, 'VS Code link color ' .. label)
+    local vscode_preprocessor = vscode_rules.Preprocessor or vscode_rules.PreProc
+    equal(vscode_preprocessor.fontStyle, 'bold', 'VS Code preprocessor typography ' .. label)
+    equal(vscode_rules['Markup code'].fontStyle, nil, 'VS Code markup code typography ' .. label)
+
+    local sublime_source = read_text('contrib/sublime/' .. appearance.slug .. '-' .. variant .. '.sublime-color-scheme')
+    sublime_source = sublime_source:gsub('^//[^\n]*\n', '', 1)
+    local sublime = vim.json.decode(sublime_source)
+    local sublime_rules = {}
+    for _, rule in ipairs(sublime.rules) do
+      sublime_rules[rule.name] = rule
+    end
+    equal(sublime_rules.Keyword.font_style, 'bold', 'Sublime keyword typography ' .. label)
+    equal(sublime_rules.Comment.font_style, 'italic', 'Sublime comment typography ' .. label)
+    equal(sublime_rules.Keyword.foreground, expected.control, 'Sublime keyword color ' .. label)
+    equal(sublime_rules.Comment.foreground, expected.comment, 'Sublime comment color ' .. label)
+    equal(
+      (sublime_rules['Function definition'] or sublime_rules.Function).foreground,
+      expected.definition,
+      'Sublime definition color ' .. label
+    )
+    equal(
+      (sublime_rules['Function definition'] or sublime_rules.Function).font_style,
+      nil,
+      'Sublime definition typography ' .. label
+    )
+    equal(
+      (sublime_rules['Type reference'] or sublime_rules.Type).foreground,
+      expected.type,
+      'Sublime type color ' .. label
+    )
+    equal(
+      (sublime_rules.Literal or sublime_rules.Constant).foreground,
+      expected.literal,
+      'Sublime literal color ' .. label
+    )
+    equal(sublime_rules['Markup link'].foreground, expected.link, 'Sublime link color ' .. label)
+    local sublime_preprocessor = sublime_rules.Preprocessor or sublime_rules.PreProc
+    equal(sublime_preprocessor.font_style, 'bold', 'Sublime preprocessor typography ' .. label)
+    equal(sublime_rules['Markup code'].font_style, nil, 'Sublime markup code typography ' .. label)
+
+    local gtk = read_text('contrib/gtksourceview/' .. appearance.slug .. '-' .. variant .. '.xml')
+    truthy(gtk:find('name="def:keyword"[^>]*bold="true"'), 'GtkSourceView keyword typography ' .. label)
+    truthy(gtk:find('name="def:comment"[^>]*italic="true"'), 'GtkSourceView comment typography ' .. label)
+    truthy(not gtk:find('name="def:function"[^>]*bold="true"'), 'GtkSourceView definition typography ' .. label)
+    truthy(
+      gtk:find('name="def:keyword"[^>]*foreground="' .. palette.accent2 .. '"'),
+      'GtkSourceView keyword color ' .. label
+    )
+    truthy(
+      gtk:find('name="def:comment"[^>]*foreground="' .. expected.comment .. '"'),
+      'GtkSourceView comment color ' .. label
+    )
+    truthy(
+      gtk:find('name="def:function"[^>]*foreground="' .. expected.definition .. '"'),
+      'GtkSourceView definition color ' .. label
+    )
+    truthy(gtk:find('name="def:type"[^>]*foreground="' .. expected.type .. '"'), 'GtkSourceView type color ' .. label)
+    truthy(
+      gtk:find('name="def:constant"[^>]*foreground="' .. expected.literal .. '"'),
+      'GtkSourceView literal color ' .. label
+    )
+    truthy(
+      gtk:find('name="def:link%-destination"[^>]*foreground="' .. generated_link .. '"'),
+      'GtkSourceView link color ' .. label
+    )
+
+    local emacs = read_text('contrib/emacs/' .. appearance.slug .. '-' .. variant .. '-theme.el')
+    truthy(emacs:find('font%-lock%-keyword%-face[^\n]*:weight bold'), 'Emacs keyword typography ' .. label)
+    truthy(emacs:find('font%-lock%-comment%-face[^\n]*:slant italic'), 'Emacs comment typography ' .. label)
+    truthy(emacs:find('markdown%-list%-face[^\n]*:weight bold'), 'Emacs list typography ' .. label)
+    truthy(
+      not emacs:find('font%-lock%-function%-name%-face[^\n]*:weight bold'),
+      'Emacs definition typography ' .. label
+    )
+
+    local xcode = read_text('contrib/xcode/' .. appearance.slug .. '-' .. variant .. '.xccolortheme')
+    local xcode_fonts = assert(xcode:match('<key>DVTSourceTextSyntaxFonts</key>%s*<dict>(.-)</dict>'))
+    equal(xcode_value(xcode_fonts, 'xcode.syntax.keyword'), 'SFMono-Bold - 12.0', 'Xcode keyword typography ' .. label)
+    equal(
+      xcode_value(xcode_fonts, 'xcode.syntax.comment'),
+      'SFMono-RegularItalic - 12.0',
+      'Xcode comment typography ' .. label
+    )
+    equal(
+      xcode_value(xcode_fonts, 'xcode.syntax.identifier.function'),
+      variant == 'dark' and 'SFMono-Medium - 12.0' or 'SFMono-Regular - 12.0',
+      'Xcode definition typography ' .. label
+    )
+    equal(xcode_value(xcode, 'xcode.syntax.keyword'), xcode_rgba(expected.control), 'Xcode keyword color ' .. label)
+    equal(xcode_value(xcode, 'xcode.syntax.comment'), xcode_rgba(expected.comment), 'Xcode comment color ' .. label)
+    equal(
+      xcode_value(xcode, 'xcode.syntax.identifier.function'),
+      xcode_rgba(profile and profile.syntax.call.fg or palette.accent),
+      'Xcode definition color ' .. label
+    )
+    equal(xcode_value(xcode, 'xcode.syntax.identifier.type'), xcode_rgba(expected.type), 'Xcode type color ' .. label)
+    equal(xcode_value(xcode, 'xcode.syntax.string'), xcode_rgba(expected.string), 'Xcode literal color ' .. label)
+    equal(xcode_value(xcode, 'xcode.syntax.url'), xcode_rgba(generated_link), 'Xcode link color ' .. label)
+    equal(
+      xcode_value(xcode, 'DVTMarkupTextPrimaryHeadingFont'),
+      '.AppleSystemUIFontBold - 24.0',
+      'Xcode primary heading typography ' .. label
+    )
+    equal(
+      xcode_value(xcode, 'DVTMarkupTextSecondaryHeadingFont'),
+      '.AppleSystemUIFontBold - 18.0',
+      'Xcode secondary heading typography ' .. label
+    )
+    equal(
+      xcode_value(xcode, 'DVTMarkupTextOtherHeadingFont'),
+      '.AppleSystemUIFontBold - 14.0',
+      'Xcode other heading typography ' .. label
+    )
+
+    local bat = read_text('contrib/bat/' .. appearance.slug .. '-' .. variant .. '.tmTheme')
+    truthy(bat:find('<string>Keyword</string>.-<string>bold</string>'), 'Bat keyword typography ' .. label)
+    truthy(bat:find('<string>Comment</string>.-<string>italic</string>'), 'Bat comment typography ' .. label)
+    local bat_preprocessor = bat:find('<string>Preprocessor</string>', 1, true) and 'Preprocessor' or 'PreProc'
+    truthy(
+      bat:find('<string>' .. bat_preprocessor .. '</string>.-<string>bold</string>'),
+      'Bat preprocessor typography ' .. label
+    )
+    local bat_markup_code = assert(bat:match('<string>Markup code</string>.-<key>settings</key>%s*<dict>(.-)</dict>'))
+    truthy(not bat_markup_code:find('<key>fontStyle</key>', 1, true), 'Bat markup code typography ' .. label)
+  end
 end
 
 -- Generated output helpers reject path escapes and symlinks, and publish ordinary files correctly.
@@ -845,215 +1025,167 @@ for _, appearance in ipairs(require('token.appearance').all()) do
   end
 end
 
--- Flint's default grammar uses typography to distinguish definitions, calls, references, and built-ins.
+-- Shared typography covers every appearance while preserving each appearance's semantic colors.
 token.setup()
-load('dark', 'token-flint')
-local flint = require('token.palettes.flint')('dark')
-truthy(hl('@function').bold, 'Flint function definition is not bold')
-equal(hl('@function').fg, tonumber(flint.accent:sub(2), 16), 'Flint function definition color')
-equal(hl('@function.call').bold, nil, 'Flint function call is bold')
-equal(hl('@function.call').fg, tonumber(flint.accent:sub(2), 16), 'Flint function call color')
-truthy(hl('@function.method').bold, 'Flint method definition is not bold')
-equal(hl('@function.method.call').bold, nil, 'Flint method call is bold')
-truthy(hl('@type').italic, 'Flint type reference is not italic')
-equal(hl('@type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint type reference color')
-truthy(hl('@type.definition').bold, 'Flint type definition is not bold')
-equal(hl('@type.definition').fg, tonumber(flint.accent:sub(2), 16), 'Flint type definition color')
-truthy(hl('@function.builtin').italic, 'Flint built-in is not italic')
-equal(hl('@function.builtin').fg, tonumber(flint.fg1:sub(2), 16), 'Flint built-in color')
-equal(hl('@lsp.type.function').bold, nil, 'Flint LSP function reference is bold')
-equal(hl('@lsp.type.function').fg, tonumber(flint.accent:sub(2), 16), 'Flint LSP function reference color')
-truthy(hl('@lsp.type.type').italic, 'Flint LSP type reference is not italic')
-equal(hl('@lsp.type.type').fg, tonumber(flint.fg1:sub(2), 16), 'Flint LSP type reference color')
-truthy(hl('@lsp.typemod.function.definition').bold, 'Flint LSP function definition is not bold')
-equal(
-  hl('@lsp.typemod.function.definition').fg,
-  tonumber(flint.accent:sub(2), 16),
-  'Flint LSP function definition color'
-)
-equal(hl('@keyword').fg, tonumber(flint.accent2:sub(2), 16), 'Flint keyword color')
-equal(hl('@string').fg, tonumber(flint.green:sub(2), 16), 'Flint literal color')
-truthy(hl('@markup.link').underline, 'Flint link is not underlined')
-equal(hl('@markup.link').fg, tonumber(flint.blue:sub(2), 16), 'Flint link color')
-truthy(hl('@lsp.mod.deprecated').strikethrough, 'Flint deprecated modifier is not struck through')
-truthy(hl('DiagnosticUnderlineError').undercurl, 'Flint diagnostic is not undercurled')
-
--- Temper uses teal and purple plus typography for routine syntax roles.
-token.setup()
-load('dark', 'token-temper')
-local temper = require('token.palettes.temper')('dark')
-truthy(hl('@function').bold, 'Temper function definition is not bold')
-equal(hl('@function').fg, tonumber(temper.accent:sub(2), 16), 'Temper function definition color')
-equal(hl('@function.call').bold, nil, 'Temper function call is bold')
-equal(hl('@function.call').fg, tonumber(temper.accent:sub(2), 16), 'Temper function call color')
-truthy(hl('@function.method').bold, 'Temper method definition is not bold')
-equal(hl('@function.method.call').bold, nil, 'Temper method call is bold')
-truthy(hl('@type').italic, 'Temper type reference is not italic')
-equal(hl('@type').fg, tonumber(temper.fg1:sub(2), 16), 'Temper type reference color')
-truthy(hl('@type.definition').bold, 'Temper type definition is not bold')
-equal(hl('@type.definition').fg, tonumber(temper.accent:sub(2), 16), 'Temper type definition color')
-truthy(hl('@function.builtin').italic, 'Temper built-in is not italic')
-equal(hl('@function.builtin').fg, tonumber(temper.fg1:sub(2), 16), 'Temper built-in color')
-truthy(hl('@lsp.type.type').italic, 'Temper LSP type reference is not italic')
-equal(hl('@lsp.type.type').fg, tonumber(temper.fg1:sub(2), 16), 'Temper LSP type reference color')
-for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
-  for _, modifier in ipairs({ 'declaration', 'definition' }) do
-    local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
-    truthy(hl(name).bold, 'Temper LSP definition is not bold for ' .. name)
-    equal(hl(name).fg, tonumber(temper.accent:sub(2), 16), 'Temper LSP definition color for ' .. name)
-  end
-end
-for _, name in ipairs({ '@keyword', '@keyword.exception', '@keyword.debug', '@function.macro', '@keyword.directive' }) do
-  equal(hl(name).fg, tonumber(temper.accent2:sub(2), 16), 'Temper purple role color for ' .. name)
-end
-for _, name in ipairs({ '@string', '@number', '@boolean', '@constant' }) do
-  equal(hl(name).fg, tonumber(temper.accent:sub(2), 16), 'Temper literal color for ' .. name)
-  truthy(hl(name).italic, 'Temper literal is not italic for ' .. name)
-end
-truthy(hl('@markup.link').underline, 'Temper link is not underlined')
-equal(hl('@markup.link').fg, tonumber(temper.accent:sub(2), 16), 'Temper link color')
-truthy(hl('@lsp.mod.deprecated').strikethrough, 'Temper deprecated modifier is not struck through')
-truthy(hl('DiagnosticUnderlineError').undercurl, 'Temper diagnostic is not undercurled')
-
-token.setup({ plugins = { markview = true, render_markdown = true } })
-load('dark', 'token-temper')
-equal(hl('RenderMarkdownH3').fg, tonumber(temper.fg1:sub(2), 16), 'Temper render-markdown headings are rainbowed')
-equal(hl('MarkviewHeading3').fg, tonumber(temper.fg1:sub(2), 16), 'Temper Markview headings are rainbowed')
-
-token.setup({ plugins = { markview = true, render_markdown = true } })
-load('dark', 'token-flint')
-equal(hl('RenderMarkdownH3').fg, tonumber(flint.fg1:sub(2), 16), 'Flint render-markdown headings are rainbowed')
-equal(hl('MarkviewHeading3').fg, tonumber(flint.fg1:sub(2), 16), 'Flint Markview headings are rainbowed')
-
--- Ultra uses copper definitions, ochre control flow, teal data, and neutral typography.
-token.setup()
-load('dark', 'token-ultra')
-local ultra = require('token.palettes.ultra')('dark')
-truthy(hl('@function').bold, 'Ultra function definition is not bold')
-equal(hl('@function').fg, tonumber(ultra.accent:sub(2), 16), 'Ultra function definition color')
-equal(hl('@function.call').bold, nil, 'Ultra function call is bold')
-equal(hl('@function.call').fg, tonumber(ultra.accent:sub(2), 16), 'Ultra function call color')
-truthy(hl('@type').italic, 'Ultra type reference is not italic')
-equal(hl('@type').fg, tonumber(ultra.fg1:sub(2), 16), 'Ultra type reference color')
-truthy(hl('@type.definition').bold, 'Ultra type definition is not bold')
-equal(hl('@type.definition').fg, tonumber(ultra.accent:sub(2), 16), 'Ultra type definition color')
-truthy(hl('@function.builtin').italic, 'Ultra built-in is not italic')
-equal(hl('@function.builtin').fg, tonumber(ultra.fg1:sub(2), 16), 'Ultra built-in color')
-for _, name in ipairs({ '@module', '@constructor', '@attribute' }) do
-  truthy(hl(name).italic, 'Ultra neutral reference is not italic for ' .. name)
-  equal(hl(name).fg, tonumber(ultra.fg1:sub(2), 16), 'Ultra neutral reference color for ' .. name)
-end
-for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
-  for _, modifier in ipairs({ 'declaration', 'definition' }) do
-    local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
-    truthy(hl(name).bold, 'Ultra LSP definition is not bold for ' .. name)
-    equal(hl(name).fg, tonumber(ultra.accent:sub(2), 16), 'Ultra LSP definition color for ' .. name)
-  end
-end
-for _, name in ipairs({
-  '@keyword',
-  '@keyword.exception',
-  '@keyword.debug',
-  '@keyword.import',
-  '@function.macro',
-  '@keyword.directive',
-}) do
-  equal(hl(name).fg, tonumber(ultra.accent2:sub(2), 16), 'Ultra control role color for ' .. name)
-end
-for _, name in ipairs({ '@string', '@number', '@boolean', '@constant', '@markup.raw', '@lsp.mod.readonly' }) do
-  equal(hl(name).fg, tonumber(ultra.orange:sub(2), 16), 'Ultra literal color for ' .. name)
-  equal(hl(name).italic, nil, 'Ultra literal is italic for ' .. name)
-end
-truthy(hl('Comment').italic, 'Ultra comment is not italic')
-equal(hl('Comment').fg, tonumber(ultra.fg2:sub(2), 16), 'Ultra comment color')
-truthy(hl('@markup.link').underline, 'Ultra link is not underlined')
-equal(hl('@markup.link').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra link color')
-equal(hl('@keyword.exception').fg, tonumber(ultra.accent2:sub(2), 16), 'Ultra exception borrowed diagnostic red')
-equal(hl('DiagnosticError').fg, tonumber(ultra.red:sub(2), 16), 'Ultra diagnostic error color')
-truthy(hl('DiagnosticUnderlineError').undercurl, 'Ultra diagnostic is not undercurled')
-truthy(hl('@lsp.mod.deprecated').strikethrough, 'Ultra deprecated modifier is not struck through')
-
-token.setup({ plugins = { markview = true, render_markdown = true } })
-load('dark', 'token-ultra')
-equal(hl('RenderMarkdownH3').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra render-markdown heading cycle')
-equal(hl('MarkviewHeading3').fg, tonumber(ultra.blue:sub(2), 16), 'Ultra Markview heading cycle')
-
--- Meridian uses Circadia grammar and heading colors on Ultra surfaces.
-token.setup({ plugins = { markview = true, render_markdown = true } })
-load('dark', 'token-meridian')
-local meridian = require('token.palettes.meridian')('dark')
-truthy(hl('@keyword').bold, 'Meridian keyword is not bold')
-equal(hl('@keyword').fg, tonumber(meridian.blue:sub(2), 16), 'Meridian keyword color')
-equal(hl('@function').fg, tonumber(meridian.purple:sub(2), 16), 'Meridian function color')
-equal(hl('@type').fg, tonumber(meridian.olive:sub(2), 16), 'Meridian type color')
-equal(hl('@property').fg, tonumber(meridian.orange:sub(2), 16), 'Meridian property color')
-equal(hl('@string').fg, tonumber(meridian.green:sub(2), 16), 'Meridian string color')
-equal(hl('@number').fg, tonumber(meridian.yellow:sub(2), 16), 'Meridian number color')
-equal(hl('@tag').fg, tonumber(meridian.blue:sub(2), 16), 'Meridian tag color')
-truthy(hl('Comment').italic, 'Meridian comment is not italic')
-equal(hl('Comment').fg, tonumber(meridian.fg2:sub(2), 16), 'Meridian comment color')
-equal(hl('RenderMarkdownH3').fg, tonumber('ea9d49', 16), 'Meridian render-markdown heading color')
-equal(hl('MarkviewHeading3').fg, tonumber('ea9d49', 16), 'Meridian Markview heading color')
-
-local flint_styles = {
-  functions = { bold = false, underline = true },
-  types = { bold = false, underline = true },
+local runtime_roles = {
+  { '@keyword', 'control', 'control' },
+  { 'Debug', 'control' },
+  { 'StorageClass', 'control' },
+  { '@comment', 'comment', 'comment' },
+  { '@string.documentation', 'comment' },
+  { '@markup.quote', 'comment' },
+  { '@markup.link', 'link', 'link' },
+  { '@markup.heading', 'heading', 'heading' },
+  { '@function', 'regular', 'definition' },
+  { '@function.call', 'regular', 'call' },
+  { '@type', 'regular', 'type' },
+  { '@function.builtin', 'regular', 'builtin' },
+  { '@property', 'regular', 'property' },
+  { '@string', 'regular', 'string' },
+  { '@constant', 'regular', 'literal' },
+  { '@number', 'regular', 'number' },
+  { 'Special', 'regular' },
+  { 'SpecialChar', 'regular' },
+  { '@lsp.typemod.function.definition', 'regular' },
+  { '@lsp.mod.declaration', 'regular' },
+  { '@lsp.mod.definition', 'regular' },
+  { '@lsp.mod.modification', 'regular' },
+  { '@lsp.mod.defaultLibrary', 'regular' },
 }
-token.setup({ styles = flint_styles })
+token.setup()
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    local palette = require(appearance.palette)(background)
+    local expected = expected_semantic_colors(appearance, palette, background)
+    for _, runtime_role in ipairs(runtime_roles) do
+      local name, role, color = unpack(runtime_role)
+      local group = hl(name)
+      if color then
+        equal(
+          group.fg,
+          tonumber(expected[color]:sub(2), 16),
+          name .. ' foreground for ' .. appearance.name .. ' ' .. background
+        )
+      end
+      for attribute, enabled in pairs(typography.attributes(role)) do
+        equal(group[attribute], enabled or nil, name .. ' typography for ' .. appearance.name .. ' ' .. background)
+      end
+    end
+    truthy(hl('@markup.strong').bold, 'markup strong missing')
+    truthy(hl('@markup.italic').italic, 'markup emphasis missing')
+    truthy(hl('@lsp.mod.deprecated').strikethrough, 'deprecated state missing')
+    truthy(hl('@lsp.mod.async').italic, 'async state missing')
+    truthy(hl('@lsp.mod.static').italic, 'static state missing')
+    truthy(hl('@lsp.mod.abstract').italic, 'abstract state missing')
+  end
+end
+
+-- User styles override shared defaults, including regular roles and LSP declarations.
+token.setup({
+  styles = {
+    comments = { italic = false },
+    functions = { bold = true },
+    keywords = { bold = false },
+    types = { italic = true },
+  },
+})
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    equal(
+      hl('@comment').italic,
+      nil,
+      'user style did not suppress comment italic for ' .. appearance.name .. ' ' .. background
+    )
+    equal(
+      hl('@keyword').bold,
+      nil,
+      'user style did not suppress control bold for ' .. appearance.name .. ' ' .. background
+    )
+    truthy(
+      hl('@function').bold,
+      'user style did not restore function bold for ' .. appearance.name .. ' ' .. background
+    )
+    truthy(hl('@type').italic, 'user style did not restore type italic for ' .. appearance.name .. ' ' .. background)
+    if appearance.name ~= 'token' then
+      for _, modifier in ipairs({ 'declaration', 'definition' }) do
+        truthy(
+          hl('@lsp.typemod.function.' .. modifier).bold,
+          'user style did not restore LSP function bold for ' .. appearance.name .. ' ' .. modifier .. ' ' .. background
+        )
+        truthy(
+          hl('@lsp.typemod.type.' .. modifier).italic,
+          'user style did not restore LSP type italic for ' .. appearance.name .. ' ' .. modifier .. ' ' .. background
+        )
+      end
+    end
+  end
+end
+
+local style_reach = {
+  functions = { underline = true },
+  types = { underline = true },
+}
+token.setup({ styles = style_reach })
 for _, background in ipairs({ 'dark', 'light' }) do
   load(background, 'token-flint')
-  equal(hl('@function').bold, nil, 'user style did not remove Flint definition weight ' .. background)
-  truthy(hl('@function').underline, 'user style did not augment Flint definition ' .. background)
+  truthy(hl('@function').underline, 'user style did not add Flint function underline ' .. background)
   truthy(hl('@lsp.type.function').underline, 'user style did not reach Flint LSP function references ' .. background)
   for _, token_type in ipairs({ 'function', 'method' }) do
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
       local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
-      equal(hl(name).bold, nil, 'user style did not remove Flint LSP function weight for ' .. name .. ' ' .. background)
       truthy(hl(name).underline, 'user style did not reach Flint LSP function role ' .. name .. ' ' .. background)
     end
   end
   for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
       local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
-      equal(hl(name).bold, nil, 'user style did not remove Flint LSP type weight for ' .. name .. ' ' .. background)
       truthy(hl(name).underline, 'user style did not reach Flint LSP type role ' .. name .. ' ' .. background)
     end
   end
 end
 for _, background in ipairs({ 'dark', 'light' }) do
   load(background, 'token-temper')
-  equal(hl('@function').bold, nil, 'user style did not remove Temper definition weight ' .. background)
-  truthy(hl('@function').underline, 'user style did not augment Temper definition ' .. background)
+  truthy(hl('@function').underline, 'user style did not add Temper function underline ' .. background)
   truthy(hl('@lsp.type.function').underline, 'user style did not reach Temper LSP function references ' .. background)
   for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
       local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
-      equal(
-        hl(name).bold,
-        nil,
-        'user style did not remove Temper LSP definition weight for ' .. name .. ' ' .. background
-      )
       truthy(hl(name).underline, 'user style did not reach Temper LSP definition role ' .. name .. ' ' .. background)
     end
   end
 end
 for _, background in ipairs({ 'dark', 'light' }) do
   load(background, 'token-ultra')
-  equal(hl('@function').bold, nil, 'user style did not remove Ultra definition weight ' .. background)
-  truthy(hl('@function').underline, 'user style did not augment Ultra definition ' .. background)
+  truthy(hl('@function').underline, 'user style did not add Ultra function underline ' .. background)
   truthy(hl('@lsp.type.function').underline, 'user style did not reach Ultra LSP function references ' .. background)
   for _, token_type in ipairs({ 'function', 'method', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
       local name = '@lsp.typemod.' .. token_type .. '.' .. modifier
-      equal(
-        hl(name).bold,
-        nil,
-        'user style did not remove Ultra LSP definition weight for ' .. name .. ' ' .. background
-      )
       truthy(hl(name).underline, 'user style did not reach Ultra LSP definition role ' .. name .. ' ' .. background)
     end
   end
 end
+
+-- Typography preserves same-role links so later target overrides continue to propagate.
+token.setup({
+  highlights = {
+    all = {
+      Function = { fg = '#112233', bold = false, italic = false, underline = false },
+    },
+  },
+  on_highlights = function(groups)
+    groups.Comment = { fg = '#445566', bold = false, italic = true, underline = false }
+  end,
+})
+load('dark', 'token')
+equal(vim.api.nvim_get_hl(0, { name = '@function', link = true }).link, 'Function', 'function alias lost its link')
+equal(vim.api.nvim_get_hl(0, { name = '@comment', link = true }).link, 'Comment', 'comment alias lost its link')
+equal(hl('@function').fg, tonumber('112233', 16), 'function alias ignored target override')
+equal(hl('@comment').fg, tonumber('445566', 16), 'comment alias ignored callback override')
+equal(hl('@function').bold, nil, 'function alias regular typography changed')
+truthy(hl('@comment').italic, 'comment alias typography changed')
 
 -- Shared user customization follows the appearance overlay and receives the active colorscheme.
 local callback_colorscheme
@@ -1260,21 +1392,20 @@ local gated = hl('TokenGated')
 for _, attribute in ipairs({ 'bold', 'italic', 'underline', 'undercurl', 'strikethrough' }) do
   equal(gated[attribute], nil, 'attribute gate failed for ' .. attribute)
 end
-equal(hl('@function').bold, nil, 'bold gate did not remove Flint definition weight')
-equal(hl('@type').italic, nil, 'italic gate did not remove Flint reference slant')
+equal(hl('@keyword').bold, nil, 'bold gate did not suppress Flint control bold')
+equal(hl('@comment').italic, nil, 'italic gate did not suppress Flint comment italic')
 equal(hl('@markup.link').underline, nil, 'underline gate did not remove Flint link underline')
 equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Flint deprecation')
 equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Flint diagnostic')
 load('dark', 'token-temper')
-equal(hl('@function').bold, nil, 'bold gate did not remove Temper definition weight')
-equal(hl('@type').italic, nil, 'italic gate did not remove Temper reference slant')
-equal(hl('@string').italic, nil, 'italic gate did not remove Temper literal slant')
+equal(hl('@keyword').bold, nil, 'bold gate did not suppress Temper control bold')
+equal(hl('@comment').italic, nil, 'italic gate did not suppress Temper comment italic')
 equal(hl('@markup.link').underline, nil, 'underline gate did not remove Temper link underline')
 equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Temper deprecation')
 equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Temper diagnostic')
 load('dark', 'token-ultra')
-equal(hl('@function').bold, nil, 'bold gate did not remove Ultra definition weight')
-equal(hl('@type').italic, nil, 'italic gate did not remove Ultra reference slant')
+equal(hl('@keyword').bold, nil, 'bold gate did not suppress Ultra control bold')
+equal(hl('@comment').italic, nil, 'italic gate did not suppress Ultra comment italic')
 equal(hl('@markup.link').underline, nil, 'underline gate did not remove Ultra link underline')
 equal(hl('@lsp.mod.deprecated').strikethrough, nil, 'strikethrough gate did not remove Ultra deprecation')
 equal(hl('DiagnosticUnderlineError').undercurl, nil, 'undercurl gate did not remove Ultra diagnostic')
@@ -1737,6 +1868,6 @@ end
 
 parity({}, 'core-only')
 parity({ plugins = { all = true } }, 'all-plugin')
-parity({ styles = flint_styles }, 'styled')
+parity({ styles = style_reach }, 'styled')
 
 print('token: headless tests passed')

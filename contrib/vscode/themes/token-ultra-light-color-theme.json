@@ -103,7 +103,8 @@
       "name": "Keyword",
       "scope": "keyword, keyword.control, keyword.other, storage.modifier",
       "settings": {
-        "foreground": "#87601b"
+        "foreground": "#87601b",
+        "fontStyle": "bold"
       }
     },
     {
@@ -117,8 +118,7 @@
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "settings": {
-        "foreground": "#a44e31",
-        "fontStyle": "bold"
+        "foreground": "#a44e31"
       }
     },
     {
@@ -132,8 +132,7 @@
       "name": "Built-in function",
       "scope": "support.function",
       "settings": {
-        "foreground": "#3d3929",
-        "fontStyle": "italic"
+        "foreground": "#3d3929"
       }
     },
     {
@@ -154,38 +153,37 @@
       "name": "Type definition",
       "scope": "entity.name.type, entity.name.class, entity.name.type.class",
       "settings": {
-        "foreground": "#a44e31",
-        "fontStyle": "bold"
+        "foreground": "#a44e31"
       }
     },
     {
       "name": "Type reference",
       "scope": "storage.type, support.type, support.class, entity.other.inherited-class",
       "settings": {
-        "foreground": "#3d3929",
-        "fontStyle": "italic"
+        "foreground": "#3d3929"
       }
     },
     {
       "name": "Module",
       "scope": "entity.name.namespace, entity.name.type.module, support.module",
       "settings": {
-        "foreground": "#3d3929",
-        "fontStyle": "italic"
+        "foreground": "#3d3929"
       }
     },
     {
       "name": "Preprocessor",
       "scope": "keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using",
       "settings": {
-        "foreground": "#87601b"
+        "foreground": "#87601b",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Macro",
       "scope": "entity.name.function.preprocessor",
       "settings": {
-        "foreground": "#87601b"
+        "foreground": "#87601b",
+        "fontStyle": "bold"
       }
     },
     {
@@ -199,45 +197,45 @@
       "name": "Tag attribute",
       "scope": "entity.other.attribute-name",
       "settings": {
-        "foreground": "#3d3929",
-        "fontStyle": "italic"
+        "foreground": "#3d3929"
       }
     },
     {
       "name": "Attribute",
       "scope": "meta.annotation, storage.type.annotation",
       "settings": {
-        "foreground": "#3d3929",
-        "fontStyle": "italic"
+        "foreground": "#3d3929"
       }
     },
     {
       "name": "Label",
       "scope": "entity.name.label, constant.other.label",
       "settings": {
-        "foreground": "#87601b"
+        "foreground": "#87601b",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Built-in symbol",
       "scope": "variable.language",
       "settings": {
-        "foreground": "#3d3929",
-        "fontStyle": "italic"
+        "foreground": "#3d3929"
       }
     },
     {
       "name": "Debug",
       "scope": "keyword.other.debugger",
       "settings": {
-        "foreground": "#87601b"
+        "foreground": "#87601b",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
       "settings": {
-        "foreground": "#87601b"
+        "foreground": "#87601b",
+        "fontStyle": "bold"
       }
     },
     {
@@ -357,7 +355,8 @@
       "name": "Markup list",
       "scope": "punctuation.definition.list.begin.markdown, markup.list",
       "settings": {
-        "foreground": "#87601b"
+        "foreground": "#87601b",
+        "fontStyle": "bold"
       }
     },
     {
@@ -450,47 +449,114 @@
   "semanticTokenColors": {
     "class": {
       "foreground": "#3d3929",
-      "italic": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "enum": {
       "foreground": "#3d3929",
-      "italic": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "interface": {
       "foreground": "#3d3929",
-      "italic": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "struct": {
       "foreground": "#3d3929",
-      "italic": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "type": {
       "foreground": "#3d3929",
-      "italic": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "typeParameter": {
       "foreground": "#3d3929",
-      "italic": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "namespace": {
       "foreground": "#3d3929",
-      "italic": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
-    "function": "#a44e31",
-    "method": "#a44e31",
-    "macro": "#87601b",
-    "keyword": "#87601b",
-    "string": "#2c706a",
-    "number": "#2c706a",
-    "enumMember": "#2c706a",
-    "variable.readonly": "#2c706a",
-    "property.readonly": "#2c706a",
-    "parameter": "#3d3929",
+    "function": {
+      "foreground": "#a44e31",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "method": {
+      "foreground": "#a44e31",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "macro": {
+      "foreground": "#87601b",
+      "bold": true,
+      "italic": false,
+      "underline": false
+    },
+    "keyword": {
+      "foreground": "#87601b",
+      "bold": true,
+      "italic": false,
+      "underline": false
+    },
+    "string": {
+      "foreground": "#2c706a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "number": {
+      "foreground": "#2c706a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enumMember": {
+      "foreground": "#2c706a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly": {
+      "foreground": "#2c706a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "property.readonly": {
+      "foreground": "#2c706a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "parameter": {
+      "foreground": "#3d3929",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
     "*.deprecated": {
       "strikethrough": true
     },
     "*.readonly": {
-      "foreground": "#2c706a"
+      "foreground": "#2c706a",
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "*.async": {
       "italic": true
@@ -503,93 +569,255 @@
     },
     "*.defaultLibrary": {
       "foreground": "#3d3929",
-      "italic": true
-    },
-    "*.declaration": {
-      "bold": true
-    },
-    "*.definition": {
-      "bold": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "type.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "type.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "class.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "class.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "enum.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "enum.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "interface.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "interface.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "struct.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "struct.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "typeParameter.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "typeParameter.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "function.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "function.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "method.declaration": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "method.definition": {
       "foreground": "#a44e31",
-      "bold": true,
-      "italic": false
+      "italic": false,
+      "bold": false,
+      "underline": false
+    },
+    "*.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.modification": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.documentation": {
+      "bold": false,
+      "italic": true,
+      "underline": false
+    },
+    "decorator.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "decorator.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enumMember.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enumMember.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "event.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "event.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "macro.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "macro.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "modifier.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "modifier.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "namespace.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "namespace.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "number.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "number.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "operator.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "operator.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "parameter.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "parameter.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "property.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "property.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "regexp.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "regexp.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "string.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "string.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
     }
   }
 }

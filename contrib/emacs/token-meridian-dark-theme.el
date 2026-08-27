@@ -790,7 +790,7 @@
    `(markdown-pre-face                 ((,class (:foreground ,fg0 :background ,bg2))))
    `(markdown-language-keyword-face    ((,class (:foreground ,fg3))))
    `(markdown-blockquote-face          ((,class (:foreground ,fg2 :slant italic))))
-   `(markdown-list-face                ((,class (:foreground ,accent2))))
+   `(markdown-list-face                ((,class (:foreground ,accent2 :weight bold))))
    `(markdown-link-face                ((,class (:foreground ,accent :underline t))))
    `(markdown-url-face                 ((,class (:foreground ,accent :underline t))))
    `(markdown-plain-url-face           ((,class (:foreground ,accent :underline t))))

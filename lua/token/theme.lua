@@ -279,6 +279,9 @@ function M.build(background, colorscheme)
       end
     end
   end
+  require('token.typography').apply(groups, function(name)
+    return resolved(groups, name)
+  end)
   apply_styles(groups, config.styles)
   apply_surfaces(groups, p, config)
   groups =

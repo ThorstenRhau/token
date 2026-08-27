@@ -34,13 +34,13 @@
     <style name="def:string" foreground="#5A772B"/>
     <style name="def:special-char" foreground="#5A772B"/>
     <style name="def:identifier" foreground="#28313A"/>
-    <style name="def:function" foreground="#B64E2E" bold="true"/>
-    <style name="def:builtin" foreground="#3D4853" italic="true"/>
-    <style name="def:keyword" foreground="#946409"/>
-    <style name="def:statement" foreground="#946409"/>
-    <style name="def:type" foreground="#3D4853" italic="true"/>
+    <style name="def:function" foreground="#B64E2E"/>
+    <style name="def:builtin" foreground="#3D4853"/>
+    <style name="def:keyword" foreground="#946409" bold="true"/>
+    <style name="def:statement" foreground="#946409" bold="true"/>
+    <style name="def:type" foreground="#3D4853"/>
     <style name="def:operator" foreground="#3D4853"/>
-    <style name="def:preprocessor" foreground="#946409"/>
+    <style name="def:preprocessor" foreground="#946409" bold="true"/>
     <style name="def:error" foreground="#BE3E50" bold="true"/>
     <style name="def:warning" foreground="#946409"/>
     <style name="def:note" foreground="#34779D" bold="true"/>
@@ -56,9 +56,9 @@
     <style name="def:thematic-break" foreground="#65717D" bold="true"/>
     <style name="def:preformatted-section" foreground="#28313A" background="#EEF1F3"/>
     <style name="def:link-destination" foreground="#34779D" underline="single"/>
-    <style name="def:link-text" foreground="#34779D"/>
+    <style name="def:link-text" foreground="#34779D" underline="single"/>
     <style name="def:link-symbol" foreground="#946409"/>
-    <style name="def:list-marker" foreground="#946409"/>
+    <style name="def:list-marker" foreground="#946409" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>
     <style name="def:emphasis" italic="true"/>
     <style name="def:inline-code" foreground="#5A772B"/>

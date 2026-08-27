@@ -8,13 +8,13 @@ local function meridian_roles(p, is_dark)
 
   return {
     syntax = {
-      comment = { fg = p.fg2, italic = true },
+      comment = { fg = p.fg2 },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
       property = { fg = p.orange },
       definition = { fg = p.purple },
       call = { fg = p.purple },
-      control = { fg = p.blue, bold = true },
+      control = { fg = p.blue },
       literal = { fg = p.green },
       number = { fg = is_dark and p.yellow or p.cyan },
       type = { fg = is_dark and p.cyan or p.accent2 },
@@ -24,8 +24,8 @@ local function meridian_roles(p, is_dark)
       punctuation = { fg = p.fg1 },
       tag = { fg = p.blue },
       tag_delimiter = { fg = p.fg1 },
-      link = { fg = p.accent, underline = true },
-      quote = { fg = p.fg1, italic = true },
+      link = { fg = p.accent },
+      quote = { fg = p.fg1 },
     },
     headings = headings,
     lualine = {

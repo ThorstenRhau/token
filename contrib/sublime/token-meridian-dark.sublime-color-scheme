@@ -85,12 +85,14 @@
     {
       "name": "Preprocessor",
       "scope": "keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using",
-      "foreground": "#66abc6"
+      "foreground": "#66abc6",
+      "font_style": "bold"
     },
     {
       "name": "Macro",
       "scope": "entity.name.function.preprocessor",
-      "foreground": "#66abc6"
+      "foreground": "#66abc6",
+      "font_style": "bold"
     },
     {
       "name": "Tag",

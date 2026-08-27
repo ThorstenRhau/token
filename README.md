@@ -12,6 +12,7 @@ matching appearance palette, so everything stays consistent without extra work.
 - Token Ultra, Token Meridian, classic Token, Token Flint, and Token Temper appearances, each with dark and light variants
 - Treesitter capture groups for accurate syntax highlighting
 - LSP semantic token highlights
+- Shared semantic typography: bold control flow and headings, italic comments and quotes, underlined links
 - LSP diagnostic signs, virtual text, and underlines
 - Diff highlights for buffers and signs
 - Legacy syntax group coverage for non-Treesitter filetypes
@@ -24,8 +25,8 @@ matching appearance palette, so everything stays consistent without extra work.
 
 ### Token Ultra
 
-Copper definitions, ochre control flow, teal literals, and quiet italic type
-roles.
+Copper definitions, ochre control flow, teal literals, and shared semantic
+typography.
 
 | Dark                                                                                              | Light                                                                                                |
 | :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
@@ -42,7 +43,7 @@ surfaces. Palette and token-role inspiration: [Circadia 2.0](https://github.com/
 
 ### Token
 
-A warm, muted palette with earthy accents and familiar syntax roles.
+A warm, muted palette with earthy accents and the shared Token semantic typography.
 
 | Dark                                                                            | Light                                                                              |
 | :-----------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
@@ -51,7 +52,7 @@ A warm, muted palette with earthy accents and familiar syntax roles.
 ### Token Flint
 
 A restrained cool-gray foundation with softly desaturated rust, gold, blue, and
-green.
+green under the shared Token semantic typography.
 
 | Dark                                                                                              | Light                                                                                                |
 | :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
@@ -59,7 +60,8 @@ green.
 
 ### Token Temper
 
-A cool-gray foundation reduced to a focused teal-and-purple syntax grammar.
+A cool-gray foundation reduced to a focused teal-and-purple syntax grammar and
+the shared Token semantic typography.
 
 | Dark                                                                                                 | Light                                                                                                   |
 | :--------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
@@ -262,7 +264,8 @@ require('blink.indent').setup({
 ## Contrib themes
 
 Pre-generated themes for external tools and apps. Auto-generated from the
-registered appearance palettes; rebuild after palette changes with `make contrib`.
+registered appearance palettes and shared semantic typography; rebuild after
+palette or typography changes with `make contrib`.
 
 | Tool | Files | Usage |
 | --- | --- | --- |

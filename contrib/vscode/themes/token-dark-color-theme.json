@@ -103,14 +103,16 @@
       "name": "Keyword",
       "scope": "keyword, keyword.control, keyword.other",
       "settings": {
-        "foreground": "#c4956a"
+        "foreground": "#c4956a",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Storage",
       "scope": "storage, storage.modifier",
       "settings": {
-        "foreground": "#c4956a"
+        "foreground": "#c4956a",
+        "fontStyle": "bold"
       }
     },
     {
@@ -187,21 +189,24 @@
       "name": "PreProc",
       "scope": "keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor",
       "settings": {
-        "foreground": "#a68bbf"
+        "foreground": "#a68bbf",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Include",
       "scope": "keyword.other.import, keyword.other.package, keyword.other.using",
       "settings": {
-        "foreground": "#a68bbf"
+        "foreground": "#a68bbf",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Macro",
       "scope": "entity.name.function.preprocessor",
       "settings": {
-        "foreground": "#a68bbf"
+        "foreground": "#a68bbf",
+        "fontStyle": "bold"
       }
     },
     {
@@ -215,8 +220,7 @@
       "name": "Tag attribute",
       "scope": "entity.other.attribute-name",
       "settings": {
-        "foreground": "#c4956a",
-        "fontStyle": "italic"
+        "foreground": "#c4956a"
       }
     },
     {
@@ -230,7 +234,8 @@
       "name": "Label",
       "scope": "entity.name.label, constant.other.label",
       "settings": {
-        "foreground": "#c4956a"
+        "foreground": "#c4956a",
+        "fontStyle": "bold"
       }
     },
     {
@@ -244,14 +249,16 @@
       "name": "Debug",
       "scope": "keyword.other.debugger",
       "settings": {
-        "foreground": "#c67777"
+        "foreground": "#c67777",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
       "settings": {
-        "foreground": "#c67777"
+        "foreground": "#c67777",
+        "fontStyle": "bold"
       }
     },
     {
@@ -349,7 +356,8 @@
       "name": "Markup link text",
       "scope": "string.other.link.title.markdown, constant.other.reference.link.markdown",
       "settings": {
-        "foreground": "#7b9ebd"
+        "foreground": "#7b9ebd",
+        "fontStyle": "underline"
       }
     },
     {
@@ -370,7 +378,8 @@
       "name": "Markup list",
       "scope": "punctuation.definition.list.begin.markdown, markup.list",
       "settings": {
-        "foreground": "#c4956a"
+        "foreground": "#c4956a",
+        "fontStyle": "bold"
       }
     },
     {
@@ -461,28 +470,116 @@
   ],
   "semanticHighlighting": true,
   "semanticTokenColors": {
-    "class": "#7b9ebd",
-    "enum": "#7b9ebd",
-    "interface": "#7b9ebd",
-    "struct": "#7b9ebd",
-    "type": "#7b9ebd",
-    "typeParameter": "#7b9ebd",
-    "namespace": "#7b9ebd",
-    "function": "#d97757",
-    "method": "#d97757",
-    "macro": "#a68bbf",
-    "keyword": "#c4956a",
-    "string": "#7da47a",
-    "number": "#a68bbf",
-    "enumMember": "#a68bbf",
-    "variable.readonly": "#a68bbf",
-    "property.readonly": "#a68bbf",
-    "parameter": "#d4cfc6",
+    "class": {
+      "foreground": "#7b9ebd",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enum": {
+      "foreground": "#7b9ebd",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "interface": {
+      "foreground": "#7b9ebd",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "struct": {
+      "foreground": "#7b9ebd",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "type": {
+      "foreground": "#7b9ebd",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "typeParameter": {
+      "foreground": "#7b9ebd",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "namespace": {
+      "foreground": "#7b9ebd",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "function": {
+      "foreground": "#d97757",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "method": {
+      "foreground": "#d97757",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "macro": {
+      "foreground": "#a68bbf",
+      "bold": true,
+      "italic": false,
+      "underline": false
+    },
+    "keyword": {
+      "foreground": "#c4956a",
+      "bold": true,
+      "italic": false,
+      "underline": false
+    },
+    "string": {
+      "foreground": "#7da47a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "number": {
+      "foreground": "#a68bbf",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enumMember": {
+      "foreground": "#a68bbf",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly": {
+      "foreground": "#a68bbf",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "property.readonly": {
+      "foreground": "#a68bbf",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "parameter": {
+      "foreground": "#d4cfc6",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
     "*.deprecated": {
       "strikethrough": true
     },
     "*.readonly": {
-      "foreground": "#a68bbf"
+      "foreground": "#a68bbf",
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "*.async": {
       "italic": true
@@ -494,13 +591,239 @@
       "italic": true
     },
     "*.defaultLibrary": {
-      "italic": true
+      "italic": false,
+      "bold": false,
+      "underline": false
     },
     "*.declaration": {
-      "bold": true
+      "bold": false,
+      "italic": false,
+      "underline": false
     },
     "*.definition": {
-      "bold": true
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.modification": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.documentation": {
+      "bold": false,
+      "italic": true,
+      "underline": false
+    },
+    "class.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "class.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "decorator.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "decorator.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enum.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enum.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enumMember.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "enumMember.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "event.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "event.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "function.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "function.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "interface.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "interface.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "macro.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "macro.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "method.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "method.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "modifier.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "modifier.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "namespace.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "namespace.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "number.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "number.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "operator.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "operator.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "parameter.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "parameter.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "property.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "property.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "regexp.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "regexp.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "string.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "string.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "struct.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "struct.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "type.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "type.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "typeParameter.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "typeParameter.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
     }
   }
 }

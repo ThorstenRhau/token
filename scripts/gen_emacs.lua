@@ -2,6 +2,7 @@
 
 local lib = require('gen_lib')
 local extend_lines = lib.extend_lines
+local typography = require('token.typography')
 
 -- ---------------------------------------------------------------------------
 -- Emacs (.el)
@@ -1397,6 +1398,24 @@ local function profile_face(entry, p, profile)
   return result
 end
 
+local function typography_face(entry)
+  if entry.section then
+    return entry
+  end
+  local role = typography.role('emacs', entry[1])
+  if not role then
+    return entry
+  end
+  local result = {}
+  for key, value in pairs(entry) do
+    result[key] = value
+  end
+  for attribute, enabled in pairs(typography.attributes(role)) do
+    result[attribute] = enabled or nil
+  end
+  return result
+end
+
 local function gen_emacs(p, variant, appearance, profile)
   -- Fail fast if palette is missing any key the let block needs.
   for _, key in ipairs(EMACS_LET_KEYS) do
@@ -1436,6 +1455,7 @@ local function gen_emacs(p, variant, appearance, profile)
     elseif profile then
       entry = profile_face(entry, p, profile)
     end
+    entry = typography_face(entry)
     if entry.section then
       lines[#lines + 1] = ''
       lines[#lines + 1] = emacs_section_comment(entry.section)

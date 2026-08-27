@@ -29,12 +29,14 @@
     {
       "name": "Keyword",
       "scope": "keyword, keyword.control, keyword.other",
-      "foreground": "#c4956a"
+      "foreground": "#c4956a",
+      "font_style": "bold"
     },
     {
       "name": "Storage",
       "scope": "storage, storage.modifier",
-      "foreground": "#c4956a"
+      "foreground": "#c4956a",
+      "font_style": "bold"
     },
     {
       "name": "Operator",
@@ -89,17 +91,20 @@
     {
       "name": "PreProc",
       "scope": "keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor",
-      "foreground": "#a68bbf"
+      "foreground": "#a68bbf",
+      "font_style": "bold"
     },
     {
       "name": "Include",
       "scope": "keyword.other.import, keyword.other.package, keyword.other.using",
-      "foreground": "#a68bbf"
+      "foreground": "#a68bbf",
+      "font_style": "bold"
     },
     {
       "name": "Macro",
       "scope": "entity.name.function.preprocessor",
-      "foreground": "#a68bbf"
+      "foreground": "#a68bbf",
+      "font_style": "bold"
     },
     {
       "name": "Tag",
@@ -109,8 +114,7 @@
     {
       "name": "Tag attribute",
       "scope": "entity.other.attribute-name",
-      "foreground": "#c4956a",
-      "font_style": "italic"
+      "foreground": "#c4956a"
     },
     {
       "name": "Attribute",
@@ -120,7 +124,8 @@
     {
       "name": "Label",
       "scope": "entity.name.label, constant.other.label",
-      "foreground": "#c4956a"
+      "foreground": "#c4956a",
+      "font_style": "bold"
     },
     {
       "name": "Special",
@@ -130,12 +135,14 @@
     {
       "name": "Debug",
       "scope": "keyword.other.debugger",
-      "foreground": "#c67777"
+      "foreground": "#c67777",
+      "font_style": "bold"
     },
     {
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
-      "foreground": "#c67777"
+      "foreground": "#c67777",
+      "font_style": "bold"
     },
     {
       "name": "Identifier",
@@ -207,7 +214,8 @@
     {
       "name": "Markup link text",
       "scope": "string.other.link.title.markdown, constant.other.reference.link.markdown",
-      "foreground": "#7b9ebd"
+      "foreground": "#7b9ebd",
+      "font_style": "underline"
     },
     {
       "name": "Markup code",
@@ -222,7 +230,8 @@
     {
       "name": "Markup list",
       "scope": "punctuation.definition.list.begin.markdown, markup.list",
-      "foreground": "#c4956a"
+      "foreground": "#c4956a",
+      "font_style": "bold"
     },
     {
       "name": "Markup bold",

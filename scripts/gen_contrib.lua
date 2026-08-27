@@ -22,6 +22,7 @@ package.path = 'lua/?.lua;lua/?/init.lua;scripts/?.lua;' .. package.path
 local appearance_registry = require('token.appearance')
 local gen_emacs = require('gen_emacs')
 local terminal = require('token.terminal')
+local typography = require('token.typography')
 
 local lib = require('gen_lib')
 local strip = lib.strip
@@ -43,6 +44,42 @@ local function role_profile(p, variant, appearance)
     return nil
   end
   return appearance_registry.roles(appearance.name, p, variant == 'dark')
+end
+
+local function textmate_style(role)
+  local attributes = typography.attributes(role)
+  local styles = {}
+  for _, attribute in ipairs({ 'italic', 'bold', 'underline' }) do
+    if attributes[attribute] then
+      styles[#styles + 1] = attribute
+    end
+  end
+  return #styles > 0 and table.concat(styles, ' ') or nil
+end
+
+local function apply_textmate_typography(rules)
+  for _, rule in ipairs(rules) do
+    local role = typography.role('textmate', rule[1])
+    if role then
+      rule[4] = textmate_style(role)
+    end
+  end
+  return rules
+end
+
+local function decorated_options(options, format, name)
+  local role = typography.role(format, name)
+  if not role then
+    return options
+  end
+  local result = {}
+  for key, value in pairs(options) do
+    result[key] = value
+  end
+  for attribute, value in pairs(typography.attributes(role)) do
+    result[attribute] = value or nil
+  end
+  return result
 end
 
 local function json_escape(s)
@@ -526,7 +563,7 @@ local function gen_bat(p, variant, _term, appearance)
   local name = appearance.slug .. '-' .. variant
 
   local scopes = {}
-  for _, rule in ipairs(textmate_scope_rules(p, appearance, variant)) do
+  for _, rule in ipairs(apply_textmate_typography(textmate_scope_rules(p, appearance, variant))) do
     scopes[#scopes + 1] = tmtheme_entry(rule[1], rule[2], rule[3], rule[4])
   end
 
@@ -579,7 +616,7 @@ local function gen_sublime(p, variant, _term, appearance)
   local name = variant_name(appearance, variant)
 
   local rules = {}
-  for _, rule in ipairs(textmate_scope_rules(p, appearance, variant)) do
+  for _, rule in ipairs(apply_textmate_typography(textmate_scope_rules(p, appearance, variant))) do
     local entries = {
       { 'name', rule[1] },
       { 'scope', rule[2] },
@@ -804,6 +841,10 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     for _, style in ipairs(styles) do
       style[2] = profile_styles[style[1]] or style[2]
     end
+  end
+
+  for _, style in ipairs(styles) do
+    style[2] = decorated_options(style[2], 'gtk', style[1])
   end
 
   local lines = {
@@ -1224,6 +1265,30 @@ local function xcode_entry(lines, key, value, indent)
   lines[#lines + 1] = indent .. '<string>' .. value .. '</string>'
 end
 
+local function xcode_font(name, regular_font)
+  local role = typography.role('xcode', name)
+  if not role then
+    return regular_font
+  end
+  local attributes = typography.attributes(role)
+  if attributes.bold then
+    return 'SFMono-Bold - 12.0'
+  end
+  if attributes.italic then
+    return 'SFMono-RegularItalic - 12.0'
+  end
+  return regular_font
+end
+
+local function xcode_system_font(name, size)
+  local attributes = typography.attributes(typography.role('xcode', name))
+  local family = attributes.bold and '.AppleSystemUIFontBold' or '.AppleSystemUIFont'
+  if attributes.italic then
+    family = family .. 'Italic'
+  end
+  return family .. ' - ' .. size
+end
+
 local function gen_xcode(p, variant, _term, appearance)
   local profile = role_profile(p, variant, appearance)
   local lines = {
@@ -1273,11 +1338,11 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'DVTMarkupTextNormalColor', xcode_rgba(p.fg0) },
     { 'DVTMarkupTextNormalFont', '.AppleSystemUIFont - 10.0' },
     { 'DVTMarkupTextOtherHeadingColor', xcode_rgba(profile and profile.headings[3] or p.fg2) },
-    { 'DVTMarkupTextOtherHeadingFont', '.AppleSystemUIFont - 14.0' },
+    { 'DVTMarkupTextOtherHeadingFont', xcode_system_font('DVTMarkupTextOtherHeadingFont', '14.0') },
     { 'DVTMarkupTextPrimaryHeadingColor', xcode_rgba(profile and profile.headings[1] or p.accent) },
-    { 'DVTMarkupTextPrimaryHeadingFont', '.AppleSystemUIFont - 24.0' },
+    { 'DVTMarkupTextPrimaryHeadingFont', xcode_system_font('DVTMarkupTextPrimaryHeadingFont', '24.0') },
     { 'DVTMarkupTextSecondaryHeadingColor', xcode_rgba(profile and profile.headings[2] or p.accent2) },
-    { 'DVTMarkupTextSecondaryHeadingFont', '.AppleSystemUIFont - 18.0' },
+    { 'DVTMarkupTextSecondaryHeadingFont', xcode_system_font('DVTMarkupTextSecondaryHeadingFont', '18.0') },
     { 'DVTMarkupTextStrongColor', xcode_rgba(p.fg0) },
     { 'DVTMarkupTextStrongFont', '.AppleSystemUIFontBold - 10.0' },
   }
@@ -1403,71 +1468,10 @@ local function gen_xcode(p, variant, _term, appearance)
   lines[#lines + 1] = '    </dict>'
 
   local regular_font = variant == 'dark' and 'SFMono-Medium - 12.0' or 'SFMono-Regular - 12.0'
-  local keyword_font = variant == 'dark' and 'SFMono-Bold - 12.0' or 'SFMono-Semibold - 12.0'
-  local documentation_font = variant == 'dark' and 'Helvetica - 12.0' or 'HelveticaNeue - 12.0'
-
   lines[#lines + 1] = '    <key>DVTSourceTextSyntaxFonts</key>'
   lines[#lines + 1] = '    <dict>'
   for _, role in ipairs(syntax_roles) do
-    local font = regular_font
-    if role[1] == 'xcode.syntax.comment.doc' then
-      font = documentation_font
-    elseif role[1] == 'xcode.syntax.comment.doc.keyword' or role[1] == 'xcode.syntax.mark' then
-      font = 'SFMono-Bold - 12.0'
-    elseif role[1] == 'xcode.syntax.keyword' then
-      font = keyword_font
-    end
-    if profile then
-      if role[1] == 'xcode.syntax.comment' or role[1] == 'xcode.syntax.comment.doc' then
-        font = 'SFMono-RegularItalic - 12.0'
-      elseif role[1] == 'xcode.syntax.declaration.other' or role[1] == 'xcode.syntax.declaration.type' then
-        font = 'SFMono-Bold - 12.0'
-      elseif
-        role[1] == 'xcode.syntax.attribute'
-        or role[1] == 'xcode.syntax.identifier.class'
-        or role[1] == 'xcode.syntax.identifier.class.system'
-        or role[1] == 'xcode.syntax.identifier.function.system'
-        or role[1] == 'xcode.syntax.identifier.type'
-        or role[1] == 'xcode.syntax.identifier.type.system'
-        or role[1] == 'xcode.syntax.identifier.variable.system'
-      then
-        font = 'SFMono-RegularItalic - 12.0'
-      elseif role[1] == 'xcode.syntax.keyword' then
-        font = regular_font
-      end
-    elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
-      local is_temper = appearance.name == 'token-temper'
-      if role[1] == 'xcode.syntax.comment' or role[1] == 'xcode.syntax.comment.doc' then
-        font = 'SFMono-RegularItalic - 12.0'
-      elseif role[1] == 'xcode.syntax.declaration.other' or role[1] == 'xcode.syntax.declaration.type' then
-        font = 'SFMono-Bold - 12.0'
-      elseif
-        role[1] == 'xcode.syntax.attribute'
-        or role[1] == 'xcode.syntax.identifier.class'
-        or role[1] == 'xcode.syntax.identifier.class.system'
-        or role[1] == 'xcode.syntax.identifier.function.system'
-        or role[1] == 'xcode.syntax.identifier.type'
-        or role[1] == 'xcode.syntax.identifier.type.system'
-        or role[1] == 'xcode.syntax.identifier.variable.system'
-      then
-        font = 'SFMono-RegularItalic - 12.0'
-      elseif role[1] == 'xcode.syntax.keyword' then
-        font = regular_font
-      elseif
-        is_temper
-        and (
-          role[1] == 'xcode.syntax.character'
-          or role[1] == 'xcode.syntax.identifier.constant'
-          or role[1] == 'xcode.syntax.identifier.constant.system'
-          or role[1] == 'xcode.syntax.markup.code'
-          or role[1] == 'xcode.syntax.number'
-          or role[1] == 'xcode.syntax.string'
-        )
-      then
-        font = 'SFMono-RegularItalic - 12.0'
-      end
-    end
-    xcode_entry(lines, role[1], font, '      ')
+    xcode_entry(lines, role[1], xcode_font(role[1], regular_font), '      ')
   end
   lines[#lines + 1] = '    </dict>'
   lines[#lines + 1] = '  </dict>'
@@ -1539,7 +1543,7 @@ end
 
 local function vscode_token_colors(p, appearance, variant)
   local rules = {}
-  for _, rule in ipairs(textmate_scope_rules(p, appearance, variant)) do
+  for _, rule in ipairs(apply_textmate_typography(textmate_scope_rules(p, appearance, variant))) do
     local settings = {}
     if rule[3] then
       settings[#settings + 1] = { 'foreground', rule[3] }
@@ -1580,6 +1584,37 @@ local function vscode_terminal_colors(term)
     colors[#colors + 1] = { name, term[i - 1] }
   end
   return colors
+end
+
+local function decorated_semantic_color(name, value)
+  local role = typography.role('vscode', name)
+  if not role then
+    return value
+  end
+  local entries = {}
+  if type(value) == 'string' then
+    entries[#entries + 1] = { 'foreground', value }
+  else
+    for _, entry in ipairs(value.__json_object) do
+      entries[#entries + 1] = { entry[1], entry[2] }
+    end
+  end
+  local positions = {}
+  for index, entry in ipairs(entries) do
+    positions[entry[1]] = index
+  end
+  local attributes = typography.attributes(role)
+  for _, attribute in ipairs({ 'bold', 'italic', 'underline' }) do
+    local enabled = attributes[attribute]
+    if enabled ~= nil then
+      if positions[attribute] then
+        entries[positions[attribute]][2] = enabled
+      else
+        entries[#entries + 1] = { attribute, enabled }
+      end
+    end
+  end
+  return json_object(entries)
 end
 
 local function gen_vscode_theme(p, variant, term, appearance)
@@ -1844,6 +1879,24 @@ local function gen_vscode_theme(p, variant, term, appearance)
         }
       end
     end
+  end
+
+  local semantic_names = {}
+  for _, entry in ipairs(semantic_colors) do
+    semantic_names[entry[1]] = true
+  end
+  for _, name in ipairs({ '*.declaration', '*.definition', '*.modification', '*.defaultLibrary', '*.documentation' }) do
+    if not semantic_names[name] then
+      semantic_colors[#semantic_colors + 1] = { name, json_object({}) }
+    end
+  end
+  for _, name in ipairs(typography.vscode_exact_selectors()) do
+    if not semantic_names[name] then
+      semantic_colors[#semantic_colors + 1] = { name, json_object({}) }
+    end
+  end
+  for _, entry in ipairs(semantic_colors) do
+    entry[2] = decorated_semantic_color(entry[1], entry[2])
   end
 
   local theme = json_object({

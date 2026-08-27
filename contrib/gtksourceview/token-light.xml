@@ -36,11 +36,11 @@
     <style name="def:identifier" foreground="#2a2920"/>
     <style name="def:function" foreground="#9a4929"/>
     <style name="def:builtin" foreground="#527594"/>
-    <style name="def:keyword" foreground="#876032"/>
-    <style name="def:statement" foreground="#876032"/>
+    <style name="def:keyword" foreground="#876032" bold="true"/>
+    <style name="def:statement" foreground="#876032" bold="true"/>
     <style name="def:type" foreground="#527594"/>
     <style name="def:operator" foreground="#3d3929"/>
-    <style name="def:preprocessor" foreground="#7c619a"/>
+    <style name="def:preprocessor" foreground="#7c619a" bold="true"/>
     <style name="def:error" foreground="#b05555" bold="true"/>
     <style name="def:warning" foreground="#6e5c20"/>
     <style name="def:note" foreground="#527594" bold="true"/>
@@ -56,9 +56,9 @@
     <style name="def:thematic-break" foreground="#6c675f" bold="true"/>
     <style name="def:preformatted-section" foreground="#2a2920" background="#f6f5f1"/>
     <style name="def:link-destination" foreground="#527594" underline="single"/>
-    <style name="def:link-text" foreground="#527594"/>
+    <style name="def:link-text" foreground="#527594" underline="single"/>
     <style name="def:link-symbol" foreground="#876032"/>
-    <style name="def:list-marker" foreground="#876032"/>
+    <style name="def:list-marker" foreground="#876032" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>
     <style name="def:emphasis" italic="true"/>
     <style name="def:inline-code" foreground="#3f643c"/>

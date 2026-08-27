@@ -34,13 +34,13 @@
     <style name="def:string" foreground="#72a59e"/>
     <style name="def:special-char" foreground="#72a59e"/>
     <style name="def:identifier" foreground="#e7e2d9"/>
-    <style name="def:function" foreground="#d98262" bold="true"/>
-    <style name="def:builtin" foreground="#d4cfc6" italic="true"/>
-    <style name="def:keyword" foreground="#c79b5b"/>
-    <style name="def:statement" foreground="#c79b5b"/>
-    <style name="def:type" foreground="#d4cfc6" italic="true"/>
+    <style name="def:function" foreground="#d98262"/>
+    <style name="def:builtin" foreground="#d4cfc6"/>
+    <style name="def:keyword" foreground="#c79b5b" bold="true"/>
+    <style name="def:statement" foreground="#c79b5b" bold="true"/>
+    <style name="def:type" foreground="#d4cfc6"/>
     <style name="def:operator" foreground="#d4cfc6"/>
-    <style name="def:preprocessor" foreground="#c79b5b"/>
+    <style name="def:preprocessor" foreground="#c79b5b" bold="true"/>
     <style name="def:error" foreground="#cf7778" bold="true"/>
     <style name="def:warning" foreground="#c7a35b"/>
     <style name="def:note" foreground="#829db2" bold="true"/>
@@ -58,7 +58,7 @@
     <style name="def:link-destination" foreground="#829db2" underline="single"/>
     <style name="def:link-text" foreground="#829db2" underline="single"/>
     <style name="def:link-symbol" foreground="#c79b5b"/>
-    <style name="def:list-marker" foreground="#c79b5b"/>
+    <style name="def:list-marker" foreground="#c79b5b" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>
     <style name="def:emphasis" italic="true"/>
     <style name="def:inline-code" foreground="#72a59e"/>

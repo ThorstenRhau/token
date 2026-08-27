@@ -22,25 +22,25 @@
     <style name="def:shebang" foreground="#65717D" italic="true"/>
     <style name="def:doc-comment" foreground="#65717D" italic="true"/>
     <style name="def:doc-comment-element" foreground="#65717D" italic="true"/>
-    <style name="def:constant" foreground="#007D72" italic="true"/>
-    <style name="def:special-constant" foreground="#007D72" italic="true"/>
-    <style name="def:number" foreground="#007D72" italic="true"/>
-    <style name="def:decimal" foreground="#007D72" italic="true"/>
-    <style name="def:base-n-integer" foreground="#007D72" italic="true"/>
-    <style name="def:floating-point" foreground="#007D72" italic="true"/>
-    <style name="def:complex" foreground="#007D72" italic="true"/>
-    <style name="def:boolean" foreground="#007D72" italic="true"/>
-    <style name="def:character" foreground="#007D72" italic="true"/>
-    <style name="def:string" foreground="#007D72" italic="true"/>
-    <style name="def:special-char" foreground="#007D72" italic="true"/>
+    <style name="def:constant" foreground="#007D72"/>
+    <style name="def:special-constant" foreground="#007D72"/>
+    <style name="def:number" foreground="#007D72"/>
+    <style name="def:decimal" foreground="#007D72"/>
+    <style name="def:base-n-integer" foreground="#007D72"/>
+    <style name="def:floating-point" foreground="#007D72"/>
+    <style name="def:complex" foreground="#007D72"/>
+    <style name="def:boolean" foreground="#007D72"/>
+    <style name="def:character" foreground="#007D72"/>
+    <style name="def:string" foreground="#007D72"/>
+    <style name="def:special-char" foreground="#007D72"/>
     <style name="def:identifier" foreground="#28313A"/>
-    <style name="def:function" foreground="#007D72" bold="true"/>
-    <style name="def:builtin" foreground="#3D4853" italic="true"/>
-    <style name="def:keyword" foreground="#7845A7"/>
-    <style name="def:statement" foreground="#7845A7"/>
-    <style name="def:type" foreground="#3D4853" italic="true"/>
+    <style name="def:function" foreground="#007D72"/>
+    <style name="def:builtin" foreground="#3D4853"/>
+    <style name="def:keyword" foreground="#7845A7" bold="true"/>
+    <style name="def:statement" foreground="#7845A7" bold="true"/>
+    <style name="def:type" foreground="#3D4853"/>
     <style name="def:operator" foreground="#3D4853"/>
-    <style name="def:preprocessor" foreground="#7845A7"/>
+    <style name="def:preprocessor" foreground="#7845A7" bold="true"/>
     <style name="def:error" foreground="#BE3E50" bold="true"/>
     <style name="def:warning" foreground="#89610D"/>
     <style name="def:note" foreground="#007D72" bold="true"/>
@@ -56,9 +56,9 @@
     <style name="def:thematic-break" foreground="#65717D" bold="true"/>
     <style name="def:preformatted-section" foreground="#28313A" background="#EEF1F3"/>
     <style name="def:link-destination" foreground="#007D72" underline="single"/>
-    <style name="def:link-text" foreground="#007D72"/>
+    <style name="def:link-text" foreground="#007D72" underline="single"/>
     <style name="def:link-symbol" foreground="#7845A7"/>
-    <style name="def:list-marker" foreground="#7845A7"/>
+    <style name="def:list-marker" foreground="#7845A7" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>
     <style name="def:emphasis" italic="true"/>
     <style name="def:inline-code" foreground="#007D72" italic="true"/>
