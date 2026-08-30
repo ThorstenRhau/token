@@ -390,8 +390,8 @@ equal(
   'Obsidian Ultra name'
 )
 local obsidian_ultra = read_text('contrib/obsidian/token-ultra/theme.css')
-truthy(obsidian_ultra:find('%-%-code%-string: #72a59e;', 1, false), 'Obsidian Ultra literal grammar')
-truthy(obsidian_ultra:find('%-%-h3%-color: #829db2;', 1, false), 'Obsidian Ultra heading cycle')
+truthy(obsidian_ultra:find('--code-string: ' .. ultra_dark.orange .. ';', 1, true), 'Obsidian Ultra literal grammar')
+truthy(obsidian_ultra:find('--h3-color: ' .. ultra_dark.blue .. ';', 1, true), 'Obsidian Ultra heading cycle')
 local windows_ultra = vim.json.decode(read_text('contrib/windows-terminal/token-ultra.json')).schemes
 equal(windows_ultra[1].name, 'Token Ultra Dark', 'Windows Terminal Ultra dark name')
 equal(windows_ultra[2].name, 'Token Ultra Light', 'Windows Terminal Ultra light name')
@@ -413,10 +413,16 @@ truthy(
   'Emacs Ultra link role'
 )
 local gtk_ultra = read_text('contrib/gtksourceview/token-ultra-dark.xml')
-truthy(gtk_ultra:find('name="def:string" foreground="#72a59e"', 1, true), 'GtkSourceView Ultra literal grammar')
-truthy(gtk_ultra:find('name="def:function" foreground="#d98262"', 1, true), 'GtkSourceView Ultra definition grammar')
 truthy(
-  gtk_ultra:find('name="def:link-text" foreground="#829db2" underline="single"', 1, true),
+  gtk_ultra:find('name="def:string" foreground="' .. ultra_dark.orange .. '"', 1, true),
+  'GtkSourceView Ultra literal grammar'
+)
+truthy(
+  gtk_ultra:find('name="def:function" foreground="' .. ultra_dark.accent .. '"', 1, true),
+  'GtkSourceView Ultra definition grammar'
+)
+truthy(
+  gtk_ultra:find('name="def:link-text" foreground="' .. ultra_dark.blue .. '" underline="single"', 1, true),
   'GtkSourceView Ultra link role'
 )
 
@@ -481,7 +487,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     local palette = require(appearance.palette)(variant)
     local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
     local expected = expected_semantic_colors(appearance, palette, variant)
-    local generated_link = profile and expected.link or palette.blue
+    local generic_link = profile and expected.link or palette.blue
     local vscode =
       vim.json.decode(read_text('contrib/vscode/themes/' .. appearance.slug .. '-' .. variant .. '-color-theme.json'))
     local vscode_rules = {}
@@ -576,7 +582,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       'GtkSourceView literal color ' .. label
     )
     truthy(
-      gtk:find('name="def:link%-destination"[^>]*foreground="' .. generated_link .. '"'),
+      gtk:find('name="def:link%-destination"[^>]*foreground="' .. generic_link .. '"'),
       'GtkSourceView link color ' .. label
     )
 
@@ -611,7 +617,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     )
     equal(xcode_value(xcode, 'xcode.syntax.identifier.type'), xcode_rgba(expected.type), 'Xcode type color ' .. label)
     equal(xcode_value(xcode, 'xcode.syntax.string'), xcode_rgba(expected.string), 'Xcode literal color ' .. label)
-    equal(xcode_value(xcode, 'xcode.syntax.url'), xcode_rgba(generated_link), 'Xcode link color ' .. label)
+    equal(xcode_value(xcode, 'xcode.syntax.url'), xcode_rgba(expected.link), 'Xcode link color ' .. label)
     equal(
       xcode_value(xcode, 'DVTMarkupTextPrimaryHeadingFont'),
       '.AppleSystemUIFontBold - 24.0',
@@ -762,181 +768,196 @@ local function contrast(left, right)
   return (a + 0.05) / (b + 0.05)
 end
 
-local flint_anchors = {
-  dark = {
-    bg3 = '#272C33',
-    bg1 = '#1C2127',
-    bg5 = '#373E47',
-    fg0 = '#DCE1E6',
-    fg1 = '#C2C9D0',
-    fg2 = '#929BA5',
-    fg3 = '#626C77',
-    accent = '#D58A6F',
-    accent2 = '#C6A15A',
-    green = '#94A477',
-    blue = '#7FA2BA',
-    red = '#D47A7F',
-  },
-  light = {
-    bg3 = '#F5F7F8',
-    bg1 = '#E7EBEF',
-    bg5 = '#E0E5EA',
-    fg0 = '#28313A',
-    fg1 = '#3D4853',
-    fg2 = '#65717D',
-    fg3 = '#828E9A',
-    accent = '#B64E2E',
-    accent2 = '#946409',
-    green = '#5A772B',
-    blue = '#34779D',
-    red = '#BE3E50',
-  },
+local foreground_keys = {
+  'fg0',
+  'fg1',
+  'fg2',
+  'fg3',
+  'accent',
+  'accent2',
+  'blue',
+  'green',
+  'red',
+  'yellow',
+  'purple',
+  'cyan',
+  'orange',
+  'olive',
+  'bright_green',
+  'bright_blue',
+  'indent',
+  'indent_active',
+  'line_nr',
+  'gsign_add',
+  'gsign_change',
+  'gsign_del',
+  'gsign_untracked',
+  'gsign_add_staged',
+  'gsign_change_staged',
+  'gsign_del_staged',
+  'gsign_untracked_staged',
 }
-for _, background in ipairs({ 'dark', 'light' }) do
-  local classic = require('token.palette')(background)
-  local flint = require('token.palettes.flint')(background)
-  equal(sorted_keys(flint), sorted_keys(classic), 'Flint palette keys for ' .. background)
-  equal(vim.tbl_count(flint), 49, 'Flint palette key count for ' .. background)
-  for key, color in pairs(flint) do
-    truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Flint color ' .. key .. ' for ' .. background)
-  end
-  for key, color in pairs(flint_anchors[background]) do
-    equal(flint[key], color, 'Flint anchor ' .. key .. ' for ' .. background)
-  end
-  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'green', 'blue', 'red' }) do
-    truthy(contrast(flint[key], flint.bg3) >= 4.5, 'insufficient Flint contrast for ' .. key .. ' ' .. background)
-  end
-end
 
-local temper_anchors = {
-  dark = {
-    bg3 = '#272C33',
-    bg1 = '#1C2127',
-    fg0 = '#DCE1E6',
-    fg1 = '#C2C9D0',
-    fg2 = '#929BA5',
-    fg3 = '#626C77',
-    accent = '#56BCAE',
-    accent2 = '#B184D5',
-  },
-  light = {
-    bg3 = '#F5F7F8',
-    bg1 = '#E7EBEF',
-    fg0 = '#28313A',
-    fg1 = '#3D4853',
-    fg2 = '#65717D',
-    fg3 = '#828E9A',
-    accent = '#007D72',
-    accent2 = '#7845A7',
-  },
+local palette_loaders = {
+  token = 'token.palette',
+  ['token-flint'] = 'token.palettes.flint',
+  ['token-temper'] = 'token.palettes.temper',
+  ['token-ultra'] = 'token.palettes.ultra',
+  ['token-meridian'] = 'token.palettes.meridian',
 }
-for _, background in ipairs({ 'dark', 'light' }) do
-  local classic = require('token.palette')(background)
-  local temper = require('token.palettes.temper')(background)
-  equal(sorted_keys(temper), sorted_keys(classic), 'Temper palette keys for ' .. background)
-  for key, color in pairs(temper) do
-    truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Temper color ' .. key .. ' for ' .. background)
-  end
-  for key, color in pairs(temper_anchors[background]) do
-    equal(temper[key], color, 'Temper anchor ' .. key .. ' for ' .. background)
-  end
-  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2' }) do
-    truthy(contrast(temper[key], temper.bg3) >= 4.5, 'insufficient Temper contrast for ' .. key .. ' ' .. background)
-  end
-end
 
-local ultra_anchors = {
-  dark = {
-    bg0 = '#181817',
-    bg3 = '#272724',
-    bg4 = '#30302c',
-    fg0 = '#e7e2d9',
-    fg2 = '#979189',
-    fg3 = '#65615c',
-    accent = '#d98262',
-    accent2 = '#c79b5b',
-    orange = '#72a59e',
-    blue = '#829db2',
-    red = '#cf7778',
-    yellow = '#c7a35b',
-    green = '#86a17a',
-    sel = '#3c3b36',
-    match = '#4d4231',
+local palette_anchors = {
+  token = {
+    dark = {
+      bg3 = '#262624',
+      fg0 = '#c3c0b8',
+      accent = '#f4906f',
+      blue = '#81a5c4',
+      bright_purple = '#bea5d4',
+      bright_cyan = '#88c0c0',
+      indent = '#323230',
+      gsign_change = '#c3a753',
+    },
+    light = {
+      bg3 = '#faf9f5',
+      fg0 = '#323128',
+      accent = '#863716',
+      blue = '#315270',
+      bright_green = '#274b24',
+      indent = '#e0ddd8',
+      gsign_change = '#9d6600',
+    },
   },
-  light = {
-    bg0 = '#e7e3dc',
-    bg3 = '#fbf9f4',
-    bg4 = '#f0ede6',
-    fg0 = '#292a24',
-    fg2 = '#6d675f',
-    fg3 = '#888177',
-    accent = '#a44e31',
-    accent2 = '#87601b',
-    orange = '#2c706a',
-    blue = '#536f88',
-    red = '#aa4e55',
-    yellow = '#835f10',
-    green = '#4f714b',
-    sel = '#dedbd3',
-    match = '#eadab6',
+  ['token-flint'] = {
+    dark = {
+      bg3 = '#272C33',
+      fg0 = '#C3C8CC',
+      accent = '#EB9E83',
+      blue = '#88ACC4',
+      bright_purple = '#E29A80',
+      bright_cyan = '#ADCDE3',
+      indent = '#31383F',
+      gsign_change = '#D0AB63',
+    },
+    light = {
+      bg3 = '#F5F7F8',
+      fg0 = '#283039',
+      accent = '#902A03',
+      blue = '#035378',
+      bright_green = '#2F4900',
+      indent = '#D6DCE1',
+      gsign_change = '#93681A',
+    },
+  },
+  ['token-temper'] = {
+    dark = {
+      bg3 = '#272C33',
+      fg0 = '#C3C8CC',
+      accent = '#5CC1B3',
+      accent2 = '#E7CDFF',
+      bright_purple = '#C69AE7',
+      bright_cyan = '#72D1C3',
+      indent = '#31383F',
+      gsign_change = '#D0AB63',
+    },
+    light = {
+      bg3 = '#F5F7F8',
+      fg0 = '#283039',
+      accent = '#005850',
+      accent2 = '#683495',
+      bright_green = '#004A44',
+      indent = '#D6DCE1',
+      gsign_change = '#93681A',
+    },
+  },
+  ['token-ultra'] = {
+    dark = {
+      bg0 = '#181817',
+      bg3 = '#272724',
+      bg4 = '#30302c',
+      fg0 = '#c5c1b8',
+      accent = '#ed9574',
+      blue = '#8aa5bb',
+      bright_purple = '#bea5d4',
+      bright_cyan = '#88c0c0',
+      sel = '#3c3b36',
+      match = '#4d4231',
+    },
+    light = {
+      bg0 = '#e7e3dc',
+      bg3 = '#fbf9f4',
+      bg4 = '#f0ede6',
+      fg0 = '#31312b',
+      accent = '#893517',
+      blue = '#37526a',
+      orange = '#004943',
+      sel = '#dedbd3',
+      match = '#eadab6',
+    },
+  },
+  ['token-meridian'] = {
+    dark = {
+      fg0 = '#c9c0b1',
+      fg1 = '#aba195',
+      fg2 = '#a69c91',
+      fg3 = '#91887d',
+      accent = '#e89a49',
+      blue = '#66abc6',
+      green = '#8cbb62',
+      yellow = '#d99148',
+      purple = '#b991db',
+      orange = '#de88a6',
+      olive = '#d9a86e',
+    },
+    light = {
+      fg0 = '#28323a',
+      fg1 = '#46535f',
+      fg2 = '#524b42',
+      fg3 = '#43505c',
+      accent = '#0048b3',
+      blue = '#0048b3',
+      green = '#005f2f',
+      cyan = '#095b62',
+      purple = '#7a1f7a',
+      orange = '#4b1fa3',
+      olive = '#843900',
+    },
   },
 }
+
 for _, background in ipairs({ 'dark', 'light' }) do
-  local classic = require('token.palette')(background)
-  local ultra = require('token.palettes.ultra')(background)
-  equal(sorted_keys(ultra), sorted_keys(classic), 'Ultra palette keys for ' .. background)
-  equal(vim.tbl_count(ultra), 49, 'Ultra palette key count for ' .. background)
-  for key, color in pairs(ultra) do
-    truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid Ultra color ' .. key .. ' for ' .. background)
-    if not ultra_anchors[background][key] then
-      equal(color, classic[key], 'Ultra copied classic key ' .. key .. ' for ' .. background)
+  local classic = require(palette_loaders.token)(background)
+  local meridian = require(palette_loaders['token-meridian'])(background)
+
+  for name, loader in pairs(palette_loaders) do
+    local palette = require(loader)(background)
+    equal(sorted_keys(palette), sorted_keys(classic), name .. ' palette keys for ' .. background)
+    equal(vim.tbl_count(palette), 49, name .. ' palette key count for ' .. background)
+    for key, color in pairs(palette) do
+      truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid ' .. name .. ' color ' .. key .. ' for ' .. background)
+    end
+    for key, color in pairs(palette_anchors[name][background]) do
+      equal(palette[key], color, name .. ' anchor ' .. key .. ' for ' .. background)
+    end
+
+    if name ~= 'token-meridian' then
+      for _, key in ipairs(foreground_keys) do
+        local target = contrast(meridian[key], meridian.bg3)
+        local actual = contrast(palette[key], palette.bg3)
+        truthy(
+          math.abs(actual - target) <= 0.05,
+          string.format('%s contrast parity for %s %s: expected %.3f, got %.3f', name, key, background, target, actual)
+        )
+      end
+      if background == 'dark' then
+        local terminal = require('token.terminal').colors(palette, true, name)
+        truthy(luminance(terminal[13]) > luminance(terminal[5]), name .. ' ANSI bright purple is not brighter')
+        truthy(luminance(terminal[14]) > luminance(terminal[6]), name .. ' ANSI bright cyan is not brighter')
+      end
     end
   end
-  for key, color in pairs(ultra_anchors[background]) do
-    equal(ultra[key], color, 'Ultra anchor ' .. key .. ' for ' .. background)
-  end
-  for _, key in ipairs({ 'fg0', 'fg1', 'fg2', 'accent', 'accent2', 'orange', 'blue', 'red', 'yellow', 'green' }) do
-    truthy(contrast(ultra[key], ultra.bg3) >= 4.5, 'insufficient Ultra contrast for ' .. key .. ' ' .. background)
-  end
-  truthy(
-    contrast(ultra.fg3, ultra.bg3) < 4.5,
-    'Ultra structural foreground is not intentionally subdued ' .. background
-  )
-end
 
-local meridian_anchors = {
-  dark = {
-    fg0 = '#c9c0b1',
-    fg1 = '#aba195',
-    fg2 = '#a69c91',
-    fg3 = '#91887d',
-    accent = '#e89a49',
-    blue = '#66abc6',
-    green = '#8cbb62',
-    yellow = '#d99148',
-    purple = '#b991db',
-    orange = '#de88a6',
-    olive = '#d9a86e',
-  },
-  light = {
-    fg0 = '#28323a',
-    fg1 = '#46535f',
-    fg2 = '#524b42',
-    fg3 = '#43505c',
-    accent = '#0048b3',
-    blue = '#0048b3',
-    green = '#005f2f',
-    cyan = '#095b62',
-    purple = '#7a1f7a',
-    orange = '#4b1fa3',
-    olive = '#843900',
-  },
-}
-for _, background in ipairs({ 'dark', 'light' }) do
-  local ultra = require('token.palettes.ultra')(background)
-  local meridian = require('token.palettes.meridian')(background)
-  equal(sorted_keys(meridian), sorted_keys(ultra), 'Meridian palette keys for ' .. background)
-  equal(vim.tbl_count(meridian), 49, 'Meridian palette key count for ' .. background)
+  local ultra = require(palette_loaders['token-ultra'])(background)
   for index = 0, 5 do
     local key = 'bg' .. index
     equal(meridian[key], ultra[key], 'Meridian preserved Ultra ' .. key .. ' for ' .. background)
@@ -956,34 +977,11 @@ for _, background in ipairs({ 'dark', 'light' }) do
     'diag_hint',
     'sel',
     'match',
-    'indent',
-    'indent_active',
-    'line_nr',
   }) do
     equal(meridian[key], ultra[key], 'Meridian preserved Ultra state color ' .. key .. ' for ' .. background)
   end
-  for key, color in pairs(meridian_anchors[background]) do
-    equal(meridian[key], color, 'Meridian anchor ' .. key .. ' for ' .. background)
-  end
+
   local roles = require('token.appearance').roles('token-meridian', meridian, background == 'dark')
-  for _, color in ipairs({
-    meridian.fg0,
-    meridian.fg1,
-    roles.syntax.comment.fg,
-    roles.syntax.control.fg,
-    roles.syntax.type.fg,
-    roles.syntax.definition.fg,
-    roles.syntax.property.fg,
-    roles.syntax.literal.fg,
-    roles.syntax.special.fg,
-    roles.syntax.number.fg,
-    roles.syntax.tag.fg,
-  }) do
-    truthy(contrast(color, meridian.bg3) >= 4.5, 'insufficient Meridian contrast for ' .. color .. ' ' .. background)
-  end
-  if background == 'dark' then
-    truthy(contrast(meridian.fg3, meridian.bg3) < 4.5, 'Meridian structural foreground is not subdued')
-  end
   equal(roles.syntax.special.fg, meridian.purple, 'Meridian special role for ' .. background)
 end
 
@@ -1435,7 +1433,11 @@ token.setup({ transparent = true, dim_inactive = true, plugins = { trouble = tru
 load()
 equal(hl('Normal').bg, nil, 'Normal is not transparent')
 equal(hl('NormalNC').bg, nil, 'NormalNC is not transparent')
-equal(hl('NormalNC').fg, tonumber('d4cfc6', 16), 'NormalNC is not dimmed with fg1')
+equal(
+  hl('NormalNC').fg,
+  tonumber(require('token.theme').palette('dark').fg1:sub(2), 16),
+  'NormalNC is not dimmed with fg1'
+)
 equal(hl('TroubleNormalNC').bg, nil, 'plugin NormalNC is not transparent')
 truthy(hl('Visual').bg, 'Visual semantic background was cleared')
 truthy(hl('DiffAdd').bg, 'Diff semantic background was cleared')
