@@ -981,8 +981,10 @@ for _, background in ipairs({ 'dark', 'light' }) do
     equal(meridian[key], ultra[key], 'Meridian preserved Ultra state color ' .. key .. ' for ' .. background)
   end
 
-  local roles = require('token.appearance').roles('token-meridian', meridian, background == 'dark')
-  equal(roles.syntax.special.fg, meridian.purple, 'Meridian special role for ' .. background)
+  local meridian_roles = require('token.appearance').roles('token-meridian', meridian, background == 'dark')
+  equal(meridian_roles.syntax.special.fg, meridian.purple, 'Meridian special role for ' .. background)
+  local ultra_roles = require('token.appearance').roles('token-ultra', ultra, background == 'dark')
+  equal(ultra_roles.syntax.special.fg, ultra.purple, 'Ultra special role for ' .. background)
 end
 
 -- Every colorscheme entry point selects its appearance while background selects the variant.
@@ -992,11 +994,20 @@ for _, appearance in ipairs(require('token.appearance').all()) do
   for _, background in ipairs({ 'dark', 'light' }) do
     vim.o.background = background
     vim.cmd.colorscheme(colorscheme)
+    local palette = require('token.theme').palette(background, colorscheme)
+    local purple = tonumber(palette.purple:sub(2), 16)
     equal(vim.g.colors_name, colorscheme, 'colors_name for ' .. colorscheme .. ' ' .. background)
     equal(
       hl('Normal').bg,
-      tonumber(require('token.theme').palette(background, colorscheme).bg3:sub(2), 16),
+      tonumber(palette.bg3:sub(2), 16),
       'Normal background for ' .. colorscheme .. ' ' .. background
+    )
+    equal(hl('Special').fg, purple, 'Special color for ' .. colorscheme .. ' ' .. background)
+    equal(hl('SpecialChar').fg, purple, 'SpecialChar color for ' .. colorscheme .. ' ' .. background)
+    truthy(hl('Special').fg ~= hl('String').fg, 'Special matches String for ' .. colorscheme .. ' ' .. background)
+    truthy(
+      hl('SpecialChar').fg ~= hl('String').fg,
+      'SpecialChar matches String for ' .. colorscheme .. ' ' .. background
     )
   end
 end
@@ -1527,8 +1538,6 @@ equal(require('token.terminal').colors(ultra_light_palette, false, 'token-ultra'
 load('dark', 'token-meridian')
 local meridian_lualine = require('lualine.themes.token-meridian')
 local meridian_palette = require('token.theme').palette('dark', 'token-meridian')
-equal(hl('Special').fg, tonumber(meridian_palette.purple:sub(2), 16), 'Meridian dark Special color')
-equal(hl('SpecialChar').fg, tonumber(meridian_palette.purple:sub(2), 16), 'Meridian dark SpecialChar color')
 equal(meridian_lualine.normal.a.bg, meridian_palette.fg2, 'Meridian Lualine normal mode color')
 equal(meridian_lualine.insert.a.bg, meridian_palette.green, 'Meridian Lualine insert mode color')
 equal(meridian_lualine.visual.a.bg, meridian_palette.blue, 'Meridian Lualine visual mode color')
@@ -1557,8 +1566,6 @@ equal(require('token.terminal').colors(meridian_palette, true, 'token-meridian')
 
 load('light', 'token-meridian')
 local meridian_light_palette = require('token.theme').palette('light', 'token-meridian')
-equal(hl('Special').fg, tonumber(meridian_light_palette.purple:sub(2), 16), 'Meridian light Special color')
-equal(hl('SpecialChar').fg, tonumber(meridian_light_palette.purple:sub(2), 16), 'Meridian light SpecialChar color')
 equal(require('lualine.themes.token-meridian').normal.a.bg, meridian_light_palette.fg2, 'Meridian light Lualine mode')
 equal(require('token.terminal').colors(meridian_light_palette, false, 'token-meridian'), {
   [0] = '#28323a',

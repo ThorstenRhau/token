@@ -11,6 +11,7 @@ local function ultra_roles(p, is_dark)
       call = { fg = p.accent },
       control = { fg = p.accent2 },
       literal = { fg = p.orange },
+      special = { fg = p.purple },
       type = { fg = p.fg1 },
       builtin = { fg = p.fg1 },
       attribute = { fg = p.fg1 },
