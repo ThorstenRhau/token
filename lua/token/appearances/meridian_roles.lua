@@ -16,6 +16,7 @@ local function meridian_roles(p, is_dark)
       call = { fg = p.purple },
       control = { fg = p.blue },
       literal = { fg = p.green },
+      special = { fg = p.purple },
       number = { fg = is_dark and p.yellow or p.cyan },
       type = { fg = is_dark and p.cyan or p.accent2 },
       builtin = { fg = is_dark and p.cyan or p.accent2 },

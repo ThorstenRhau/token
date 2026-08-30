@@ -20,6 +20,7 @@ local function ultra(p, roles)
   local r = roles.syntax
   local number = r.number or r.literal
   local property = r.property or r.variable
+  local special = r.special or r.literal
   local groups = {
     Comment = copy(r.comment),
     Constant = copy(r.literal),
@@ -46,8 +47,8 @@ local function ultra(p, roles)
     StorageClass = copy(r.control),
     Structure = copy(r.type),
     Typedef = copy(r.type),
-    Special = copy(r.literal),
-    SpecialChar = copy(r.literal),
+    Special = copy(special),
+    SpecialChar = copy(special),
     Tag = copy(r.tag),
     Delimiter = copy(r.punctuation),
     SpecialComment = copy(r.comment),

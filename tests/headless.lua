@@ -975,6 +975,7 @@ for _, background in ipairs({ 'dark', 'light' }) do
     roles.syntax.definition.fg,
     roles.syntax.property.fg,
     roles.syntax.literal.fg,
+    roles.syntax.special.fg,
     roles.syntax.number.fg,
     roles.syntax.tag.fg,
   }) do
@@ -983,6 +984,7 @@ for _, background in ipairs({ 'dark', 'light' }) do
   if background == 'dark' then
     truthy(contrast(meridian.fg3, meridian.bg3) < 4.5, 'Meridian structural foreground is not subdued')
   end
+  equal(roles.syntax.special.fg, meridian.purple, 'Meridian special role for ' .. background)
 end
 
 -- Every colorscheme entry point selects its appearance while background selects the variant.
@@ -1523,6 +1525,8 @@ equal(require('token.terminal').colors(ultra_light_palette, false, 'token-ultra'
 load('dark', 'token-meridian')
 local meridian_lualine = require('lualine.themes.token-meridian')
 local meridian_palette = require('token.theme').palette('dark', 'token-meridian')
+equal(hl('Special').fg, tonumber(meridian_palette.purple:sub(2), 16), 'Meridian dark Special color')
+equal(hl('SpecialChar').fg, tonumber(meridian_palette.purple:sub(2), 16), 'Meridian dark SpecialChar color')
 equal(meridian_lualine.normal.a.bg, meridian_palette.fg2, 'Meridian Lualine normal mode color')
 equal(meridian_lualine.insert.a.bg, meridian_palette.green, 'Meridian Lualine insert mode color')
 equal(meridian_lualine.visual.a.bg, meridian_palette.blue, 'Meridian Lualine visual mode color')
@@ -1551,6 +1555,8 @@ equal(require('token.terminal').colors(meridian_palette, true, 'token-meridian')
 
 load('light', 'token-meridian')
 local meridian_light_palette = require('token.theme').palette('light', 'token-meridian')
+equal(hl('Special').fg, tonumber(meridian_light_palette.purple:sub(2), 16), 'Meridian light Special color')
+equal(hl('SpecialChar').fg, tonumber(meridian_light_palette.purple:sub(2), 16), 'Meridian light SpecialChar color')
 equal(require('lualine.themes.token-meridian').normal.a.bg, meridian_light_palette.fg2, 'Meridian light Lualine mode')
 equal(require('token.terminal').colors(meridian_light_palette, false, 'token-meridian'), {
   [0] = '#28323a',
