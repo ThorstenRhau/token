@@ -67,7 +67,7 @@
 ---@field markview? boolean Enable highlights for markview.nvim.
 ---@field mason? boolean Enable highlights for mason.nvim.
 ---@field matchup? boolean Enable highlights for vim-matchup.
----@field mini? boolean Enable highlights for supported mini.nvim modules.
+---@field mini? boolean Enable highlights for supported mini.nvim modules, including mini.statuscolumn.
 ---@field neo_tree? boolean Enable highlights for neo-tree.nvim.
 ---@field neogit? boolean Enable highlights for neogit.
 ---@field noice? boolean Enable highlights for noice.nvim.

@@ -1059,6 +1059,27 @@ for _, appearance in ipairs(require('token.appearance').all()) do
   end
 end
 
+-- mini.statuscolumn uses native gutter links for every appearance and variant.
+local mini_statuscolumn_links = {
+  { 'MiniStatuscolumnDim', 'LineNr' },
+  { 'MiniStatuscolumnDimCursor', 'MiniStatuscolumnDim' },
+  { 'MiniStatuscolumnSep', 'LineNr' },
+  { 'MiniStatuscolumnSepCursor', 'CursorLineNr' },
+}
+token.setup({ plugins = { mini = true } })
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    for _, group in ipairs(mini_statuscolumn_links) do
+      equal(
+        vim.api.nvim_get_hl(0, { name = group[1], link = true }).link,
+        group[2],
+        'mini.statuscolumn link for ' .. group[1] .. ' in ' .. appearance.name .. ' ' .. background
+      )
+    end
+  end
+end
+
 -- Shared typography covers every appearance while preserving each appearance's semantic colors.
 token.setup()
 local runtime_roles = {
@@ -1890,6 +1911,14 @@ local function parity(config, label)
     expected[appearance.name] = {}
     for _, background in ipairs({ 'dark', 'light' }) do
       local _, groups = require('token.theme').build(background, appearance.name)
+      if label == 'all-plugin' then
+        for _, group in ipairs(mini_statuscolumn_links) do
+          truthy(
+            groups[group[1]],
+            'all-plugin groups omit ' .. group[1] .. ' for ' .. appearance.name .. ' ' .. background
+          )
+        end
+      end
       expected[appearance.name][background] = groups
       os.remove(compile.path(background, appearance.name))
     end

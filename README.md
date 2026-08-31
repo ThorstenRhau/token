@@ -253,6 +253,9 @@ filenames below; Lualine remains available on demand and is not selected here.
 `render_markdown`, `snacks`, `telescope`, `todo_comments`,
 `treesitter_context`, `trouble`, and `whichkey`.
 
+`plugins.mini` includes `mini.statuscolumn`; consequently, `plugins.all` also
+enables its Token highlight fallbacks.
+
 blink.indent defaults to rainbow scope guides. To use Token's muted guides and
 single brighter neutral scope guide, configure it with Token's neutral groups:
 

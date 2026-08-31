@@ -14,6 +14,12 @@ local function mini(p)
     MiniStatuslineFileinfo = { fg = p.fg1, bg = p.bg4 },
     MiniStatuslineInactive = { fg = p.fg3, bg = p.bg1 },
 
+    -- mini.statuscolumn
+    MiniStatuscolumnDim = { link = 'LineNr' },
+    MiniStatuscolumnDimCursor = { link = 'MiniStatuscolumnDim' },
+    MiniStatuscolumnSep = { link = 'LineNr' },
+    MiniStatuscolumnSepCursor = { link = 'CursorLineNr' },
+
     -- mini.icons
     MiniIconsAzure = { fg = p.cyan },
     MiniIconsBlue = { fg = p.blue },
