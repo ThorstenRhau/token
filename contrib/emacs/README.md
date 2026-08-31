@@ -1,6 +1,7 @@
 # token - Emacs themes
 
-Classic Token, Token Flint, and Token Temper dark and light Emacs themes derived from the
+Dark and light Emacs themes for classic Token, Token Flint, Token Temper, Token
+Ultra, and Token Meridian, derived from the
 [token](https://github.com/ThorstenRhau/token) Neovim colorscheme. Each covers
 about 860 faces across syntax, org-mode, magit, completion frameworks,
 diagnostics, diffs, shell, mail, and more.
@@ -19,6 +20,10 @@ diagnostics, diffs, shell, mail, and more.
 | `token-flint-light-theme.el` | `token-flint-light` |
 | `token-temper-dark-theme.el` | `token-temper-dark` |
 | `token-temper-light-theme.el` | `token-temper-light` |
+| `token-ultra-dark-theme.el` | `token-ultra-dark` |
+| `token-ultra-light-theme.el` | `token-ultra-light` |
+| `token-meridian-dark-theme.el` | `token-meridian-dark` |
+| `token-meridian-light-theme.el` | `token-meridian-light` |
 
 ## Requirements
 
@@ -31,16 +36,18 @@ Emacs 27+ (uses `:extend`, `(:style wave)` underlines, and `lexical-binding`).
 1. Copy the `.el` files to a directory on your `custom-theme-load-path`:
 
 ```bash
-cp token{,-flint,-temper}-{dark,light}-theme.el ~/.emacs.d/themes/
+cp token{,-flint,-temper,-ultra,-meridian}-{dark,light}-theme.el ~/.emacs.d/themes/
 ```
 
 2. Add the directory to your init file and load the theme:
 
 ```elisp
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'token-dark t)         ; classic
-(load-theme 'token-flint-dark t)   ; Flint
-(load-theme 'token-temper-dark t)  ; Temper
+(load-theme 'token-dark t)          ; classic
+(load-theme 'token-flint-dark t)    ; Flint
+(load-theme 'token-temper-dark t)   ; Temper
+(load-theme 'token-ultra-dark t)    ; Ultra
+(load-theme 'token-meridian-dark t) ; Meridian
 ```
 
 The files include a `;;;###autoload` cookie, so `package.el`-style installers
@@ -81,7 +88,8 @@ Use the matching pair for the appearance you want. For example, classic Token:
 (load-theme 'token-light t)
 ```
 
-For Flint or Temper, use the matching `token-flint-*` or `token-temper-*` pair.
+For Flint, Temper, Ultra, or Meridian, use the matching `token-flint-*`,
+`token-temper-*`, `token-ultra-*`, or `token-meridian-*` pair.
 
 To follow the system appearance automatically (macOS / Emacs 29+):
 

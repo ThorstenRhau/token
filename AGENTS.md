@@ -89,6 +89,7 @@ token/
 │   ├── gen_lib.lua
 │   └── install_vscode_theme.sh
 ├── contrib/
+│   ├── apple-terminal/
 │   ├── bat/
 │   ├── blink/
 │   ├── carapace/

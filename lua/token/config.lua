@@ -5,10 +5,10 @@
 ---@alias token.HighlightMap table<string, vim.api.keyset.highlight>
 
 ---Callback invoked after declarative palette overrides.
----@alias token.OnColors fun(colors: token.Palette, background: 'dark'|'light', colorscheme: 'token'|'token-flint'|'token-temper'|'token-ultra')
+---@alias token.OnColors fun(colors: token.Palette, background: 'dark'|'light', colorscheme: 'token'|'token-flint'|'token-temper'|'token-ultra'|'token-meridian')
 
 ---Callback invoked after highlight overrides and before global attribute gates.
----@alias token.OnHighlights fun(highlights: token.HighlightMap, colors: token.Palette, background: 'dark'|'light', colorscheme: 'token'|'token-flint'|'token-temper'|'token-ultra')
+---@alias token.OnHighlights fun(highlights: token.HighlightMap, colors: token.Palette, background: 'dark'|'light', colorscheme: 'token'|'token-flint'|'token-temper'|'token-ultra'|'token-meridian')
 
 ---Text attributes accepted by global gates and semantic style overlays.
 ---@class (exact) token.HighlightAttributes

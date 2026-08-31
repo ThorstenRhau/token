@@ -49,6 +49,29 @@ local function sorted_keys(value)
   return keys
 end
 
+-- Public callback and Emacs installation inventories follow the appearance registry.
+local appearances = require('token.appearance').all()
+local config_source = read_text('lua/token/config.lua')
+for _, alias in ipairs({ 'OnColors', 'OnHighlights' }) do
+  local declaration = config_source:match('%-%-%-@alias token%.' .. alias .. ' [^\n]+')
+  truthy(declaration, 'missing token.' .. alias .. ' annotation')
+  for _, appearance in ipairs(appearances) do
+    truthy(declaration:find("'" .. appearance.name .. "'", 1, true), 'token.' .. alias .. ' omits ' .. appearance.name)
+  end
+end
+
+local emacs_readme = read_text('contrib/emacs/README.md')
+local emacs_suffixes = {}
+for _, appearance in ipairs(appearances) do
+  emacs_suffixes[#emacs_suffixes + 1] = appearance.slug:sub(#'token' + 1)
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local filename = appearance.slug .. '-' .. variant .. '-theme.el'
+    truthy(emacs_readme:find('`' .. filename .. '`', 1, true), 'Emacs README omits ' .. filename)
+  end
+end
+local emacs_copy_glob = 'token{' .. table.concat(emacs_suffixes, ',') .. '}-{dark,light}-theme.el'
+truthy(emacs_readme:find(emacs_copy_glob, 1, true), 'Emacs copy command omits a registered appearance')
+
 -- Generated schemas and visible shell roles stay aligned with their supported tools.
 local generated_json = { 'contrib/vscode/package.json' }
 for _, appearance in ipairs(require('token.appearance').all()) do

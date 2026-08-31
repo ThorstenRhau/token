@@ -17,7 +17,7 @@ Before starting, read these files to understand the project:
 5. `lua/token/groups/init.lua` and `lua/token/groups/plugins/init.lua`
 6. `Makefile`, `.stylua.toml`, `selene.toml`, `neovim.yaml`, `tombi.toml`, `.editorconfig`, and `.prettierrc.toml`
 7. `scripts/*.lua` and `scripts/install_vscode_theme.sh`
-8. `tests/*.lua`, `.githooks/*`, and both copies of this skill
+8. `tests/*.lua`, `.githooks/*`, and this skill
 9. Every file under `contrib/`, including `contrib/emacs/README.md`
 
 ## Tool Usage
@@ -163,7 +163,7 @@ Guard: only flag a group if it is absent **and** not targeted via `link = '<Grou
 5. Trace rendered colors to the matching registered appearance palette, terminal slots, or documented format encodings. Do not report intentional low contrast or aesthetics as defects.
 6. Verify generator parity, deterministic output, appearance and dark/light identity, and stale-file detection. Recommend generator-source changes, not edits to generated files.
 
-The live contribution families are: bat, Blink Shell, Carapace, ChatGPT desktop, delta, Emacs, fish, fzf, Ghostty, GtkSourceView, iTerm2, Kitty, lazygit, Obsidian, ripgrep, Starship, Sublime Text, tmux, VS Code, Windows Terminal, Xcode, and Zsh.
+The live contribution families are: Apple Terminal, bat, Blink Shell, Carapace, ChatGPT desktop, delta, Emacs, fish, fzf, Ghostty, GtkSourceView, iTerm2, Kitty, lazygit, Obsidian, ripgrep, Starship, Sublime Text, tmux, VS Code, Windows Terminal, Xcode, and Zsh.
 
 ### Phase 10: Repository Tooling
 
@@ -172,7 +172,7 @@ The live contribution families are: bat, Blink Shell, Carapace, ChatGPT desktop,
 3. Review `scripts/install_vscode_theme.sh` with `bash -n`, ShellCheck, and isolated install/replacement/rollback fixtures.
 4. Review tests for public contracts, both variants, dynamic/compiled parity, registry coverage, generator safety, cleanup, and failure paths.
 5. Confirm the benchmark is isolated, informational, and accurately labels what it measures.
-6. Reconcile StyLua, Selene, Neovim globals, Tombi, EditorConfig, Prettier, ignore rules, hooks, repository documentation, and both audit-skill copies.
+6. Reconcile StyLua, Selene, Neovim globals, Tombi, EditorConfig, Prettier, ignore rules, hooks, repository documentation, and the audit skill.
 
 ## Output Format
 
