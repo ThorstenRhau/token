@@ -114,7 +114,7 @@ token/
 ├── Makefile
 ├── selene.toml
 ├── neovim.yaml
-├── taplo.toml
+├── tombi.toml
 ├── README.md
 └── LICENSE
 ```

@@ -15,7 +15,7 @@ Before starting, read these files to understand the project:
 3. All `colors/token*.lua` entry points, `plugin/token.lua`, `lua/token/init.lua`, `lua/token/config.lua`, `lua/token/theme.lua`, and `lua/token/compile.lua`
 4. `lua/token/appearance.lua`, every registered palette and appearance-profile module, `lua/token/terminal.lua`, `lua/token/lualine.lua`, and all matching `lua/lualine/themes/token*.lua` wrappers
 5. `lua/token/groups/init.lua` and `lua/token/groups/plugins/init.lua`
-6. `Makefile`, `.stylua.toml`, `selene.toml`, `neovim.yaml`, `taplo.toml`, `.editorconfig`, and `.prettierrc.toml`
+6. `Makefile`, `.stylua.toml`, `selene.toml`, `neovim.yaml`, `tombi.toml`, `.editorconfig`, and `.prettierrc.toml`
 7. `scripts/*.lua` and `scripts/install_vscode_theme.sh`
 8. `tests/*.lua`, `.githooks/*`, and both copies of this skill
 9. Every file under `contrib/`, including `contrib/emacs/README.md`
@@ -172,7 +172,7 @@ The live contribution families are: bat, Blink Shell, Carapace, ChatGPT desktop,
 3. Review `scripts/install_vscode_theme.sh` with `bash -n`, ShellCheck, and isolated install/replacement/rollback fixtures.
 4. Review tests for public contracts, both variants, dynamic/compiled parity, registry coverage, generator safety, cleanup, and failure paths.
 5. Confirm the benchmark is isolated, informational, and accurately labels what it measures.
-6. Reconcile StyLua, Selene, Neovim globals, Taplo, EditorConfig, Prettier, ignore rules, hooks, repository documentation, and both audit-skill copies.
+6. Reconcile StyLua, Selene, Neovim globals, Tombi, EditorConfig, Prettier, ignore rules, hooks, repository documentation, and both audit-skill copies.
 
 ## Output Format
 
