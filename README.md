@@ -228,11 +228,17 @@ appearance and background bytecode is used instead of the dynamic highlight
 path. Compiled output contains only enabled integrations and omits terminal
 assignments when `terminal_colors = false`.
 
-Rerun `:TokenCompile` after changing Token's source or any global, captured, or
-external inputs read by callbacks. Static configuration and callback-body
-changes use a different cache key and fall back dynamically until recompiled.
-Legacy unkeyed caches are ignored. A corrupt matching cache is deleted
-automatically and the dynamic path is used as fallback.
+Compiled caches are tied to the Token source that created them. Detached Git
+installs use their commit hash; mutable or non-Git installs use the sorted
+metadata of `lua/token/**/*.lua`. Source-mismatched and legacy caches are
+ignored and deleted before they can apply highlights, then Token uses the
+dynamic path. Static configuration and callback-body changes use a different
+cache key and also fall back dynamically until recompiled. A corrupt matching
+cache is deleted automatically.
+
+Rerun `:TokenCompile` after source or static configuration changes to restore
+compiled loading. Also rerun it after changing callback upvalues, globals, or
+external inputs that cannot be derived from Token's source.
 
 ## Supported plugins
 

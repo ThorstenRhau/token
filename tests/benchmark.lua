@@ -29,6 +29,17 @@ for _, appearance in ipairs(appearances) do
     filtered_groups = filtered_groups,
   }
 end
+token.setup({})
+require('token.compile').compile()
+
+for _, appearance in ipairs(appearances) do
+  local compiled_ms, compiled_groups = run({}, appearance.name)
+  results[appearance.name] = vim.tbl_extend('force', results[appearance.name], {
+    compiled_ms = compiled_ms,
+    compiled_groups = compiled_groups,
+  })
+end
+
 for _, appearance in ipairs(appearances) do
   local all_ms, all_groups = run({ plugins = { all = true } }, appearance.name)
   results[appearance.name] = vim.tbl_extend('force', results[appearance.name], {
@@ -36,9 +47,6 @@ for _, appearance in ipairs(appearances) do
     all_groups = all_groups,
   })
 end
-
-token.setup({})
-require('token.compile').compile()
 
 for _, appearance in ipairs(appearances) do
   local result = results[appearance.name]
@@ -48,8 +56,14 @@ end
 for _, appearance in ipairs(appearances) do
   local result = results[appearance.name]
   local label = appearance.name == 'token' and 'classic' or appearance.display_name:gsub('^Token ', '')
+  print(string.format('%s compiled warm reload: %.3f ms, %d groups', label, result.compiled_ms, result.compiled_groups))
+end
+for _, appearance in ipairs(appearances) do
+  local result = results[appearance.name]
+  local label = appearance.name == 'token' and 'classic' or appearance.display_name:gsub('^Token ', '')
   print(string.format('%s all-plugin warm reload: %.3f ms, %d groups', label, result.all_ms, result.all_groups))
 end
+token.setup({})
 for _, appearance in ipairs(appearances) do
   local label = appearance.name == 'token' and 'classic' or appearance.display_name:gsub('^Token ', '')
   local dark_size = vim.uv.fs_stat(require('token.compile').path('dark', appearance.name)).size

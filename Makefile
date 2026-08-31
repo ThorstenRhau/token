@@ -50,7 +50,7 @@ help:
 	@echo "  format-check   - Check Lua formatting with stylua"
 	@echo "  lint           - Lint Lua files with selene"
 	@echo "  test           - Run dependency-free headless runtime and generator tests"
-	@echo "  benchmark      - Report warm reload medians, group counts, and cache sizes"
+	@echo "  benchmark      - Report dynamic and compiled reload medians, group counts, and cache sizes"
 	@echo "  contrib        - Generate contrib/ theme files"
 	@echo "  contrib-verify - Check contrib/ files are up to date"
 	@echo "  install-hooks  - Enable git pre-commit hook"

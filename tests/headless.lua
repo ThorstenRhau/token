@@ -1777,6 +1777,29 @@ token.setup({
   highlights = { all = { TokenCterm = { fg = '#abcdef', cterm = { bold = true } } } },
   on_highlights = callback,
 })
+
+-- Mutable Token trees use metadata identity and never apply cache output from before a source change.
+local source_identity = compile.source_identity()
+truthy(source_identity:match('^tree:'), 'mutable Token tree did not use metadata identity')
+local source_probe = root .. '/lua/token/token_cache_identity_test.lua'
+local source_probe_file = assert(io.open(source_probe, 'wb'))
+assert(source_probe_file:write('-- cache identity probe\n'))
+assert(source_probe_file:close())
+local changed_identity = compile.source_identity()
+truthy(changed_identity ~= source_identity, 'mutable Token metadata did not change identity')
+compile.compile()
+vim.g.colors_name = 'source-identity-sentinel'
+vim.api.nvim_set_hl(0, 'TokenSourceIdentity', { fg = '#010203' })
+assert(os.remove(source_probe))
+equal(compile.load('dark'), false, 'source-mismatched cache loaded')
+equal(vim.uv.fs_stat(dark_path), nil, 'source-mismatched cache was not removed')
+equal(vim.g.colors_name, 'source-identity-sentinel', 'source-mismatched cache applied stale colorscheme')
+equal(hl('TokenSourceIdentity').fg, 0x010203, 'source-mismatched cache applied stale highlights')
+load('dark')
+equal(vim.g.colors_name, 'token', 'source-mismatched cache did not fall back dynamically')
+truthy(hl('TokenCompiled').bold, 'source-mismatched cache dynamic fallback omitted highlights')
+compile.compile()
+
 local meridian_file = assert(io.open(meridian_dark_path, 'wb'))
 assert(meridian_file:write('corrupt'))
 assert(meridian_file:close())
@@ -1819,12 +1842,28 @@ equal(vim.uv.fs_stat(dark_path), nil, 'corrupt cache was not removed')
 
 file = assert(io.open(dark_path, 'wb'))
 assert(file:write(string.dump(function()
-  error({ message = 'cache execution failed' })
+  vim.g.token_legacy_cache_applied = true
 end)))
 assert(file:close())
+vim.g.token_legacy_cache_applied = nil
+equal(compile.load('dark'), false, 'legacy executable cache did not fall back')
+equal(vim.g.token_legacy_cache_applied, nil, 'legacy executable cache was applied')
+equal(vim.uv.fs_stat(dark_path), nil, 'legacy executable cache was not removed')
+
+local failed_cache = assert(
+  _G.load(
+    string.format(
+      'return { format = 1, source = %q, apply = function() error({ message = "cache execution failed" }) end }',
+      compile.source_identity()
+    )
+  )
+)
+file = assert(io.open(dark_path, 'wb'))
+assert(file:write('token-cache-v1\n' .. string.dump(failed_cache)))
+assert(file:close())
 load('dark')
-truthy(hl('TokenCompiled').bold, 'non-string cache error did not reach dynamic fallback')
-equal(vim.uv.fs_stat(dark_path), nil, 'cache with a non-string error was not removed')
+truthy(hl('TokenCompiled').bold, 'failed compiled cache did not reach dynamic fallback')
+equal(vim.uv.fs_stat(dark_path), nil, 'failed compiled cache was not removed')
 
 -- Complete dynamic and compiled maps, including ANSI colors, must match for both registry modes.
 local function applied_groups(groups)
