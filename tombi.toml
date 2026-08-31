@@ -1,3 +1,7 @@
 [format.rules]
+comment-style                   = "normalize"
 key-value-equals-sign-alignment = true
 trailing-comment-alignment      = true
+
+[lint.rules]
+key-empty = "warn"
