@@ -20,10 +20,11 @@ Neovim windows; do not synthesize, resize, or generatively alter screenshots.
 2. Confirm the colorscheme name and Ghostty slugs. For a scheme named
    `<scheme>`, expect `contrib/ghostty/<scheme>-dark` and
    `contrib/ghostty/<scheme>-light`.
-3. Inspect the destination before writing. Preserve unrelated files and replace
-   existing PNGs only when the user requested that exact output.
-4. Record `git status --short --branch`. Do not edit the repository, upload
-   images, update `README.md`, commit, or push unless separately requested.
+3. Inspect the destination before writing. Preserve unrelated files and create
+   or replace only the exact requested PNG outputs.
+4. Record `git status --short --branch`. Capturing authorizes only the requested
+   PNG outputs. Do not update `README.md`, upload images, commit, or push unless
+   separately requested.
 
 ## Prepare isolated fixtures
 
@@ -54,9 +55,10 @@ Validate each generated Ghostty theme as a standalone config file with:
   --config-file=/absolute/path/to/contrib/ghostty/<scheme>-<background>
 ```
 
-Do not pass normal launch options such as `--config-default-files=false` or
-`--theme` to `+validate-config`. Ghostty 1.3.1 accepts only `--config-file` for
-this subcommand and otherwise exits with status 1 without diagnostic output.
+For `+validate-config`, pass only `--config-file`; do not reuse normal launch
+options such as `--config-default-files=false` or `--theme`. If the installed
+Ghostty rejects this form, inspect its version-specific help or current official
+documentation before adapting the command.
 
 ## Capture each window
 
@@ -177,4 +179,6 @@ Require all of the following for every final PNG:
 Inspect the dark and light files visually side by side. Leave only the requested
 final PNGs in the destination. Move disposable fixtures and rejected drafts to
 Trash so cleanup remains recoverable. Confirm that no capture Ghostty process
-remains and that repository status is unchanged.
+remains. If the destination is inside the repository, final status may differ
+only by the requested PNG outputs; if the destination is outside the repository,
+repository status must be unchanged.
