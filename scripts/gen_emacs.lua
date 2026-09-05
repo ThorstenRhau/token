@@ -1370,7 +1370,7 @@ local function profile_face(entry, p, profile)
     ['font-lock-regexp-grouping-backslash'] = r.literal,
     ['font-lock-regexp-grouping-construct'] = r.literal,
     ['font-lock-escape-face'] = r.literal,
-    ['font-lock-number-face'] = r.literal,
+    ['font-lock-number-face'] = r.number or r.literal,
     ['font-lock-reference-face'] = r.type,
     ['font-lock-string-face'] = r.literal,
     link = r.link,

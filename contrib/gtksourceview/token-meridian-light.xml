@@ -24,11 +24,11 @@
     <style name="def:doc-comment-element" foreground="#524b42" italic="true"/>
     <style name="def:constant" foreground="#005f2f"/>
     <style name="def:special-constant" foreground="#005f2f"/>
-    <style name="def:number" foreground="#005f2f"/>
-    <style name="def:decimal" foreground="#005f2f"/>
-    <style name="def:base-n-integer" foreground="#005f2f"/>
-    <style name="def:floating-point" foreground="#005f2f"/>
-    <style name="def:complex" foreground="#005f2f"/>
+    <style name="def:number" foreground="#095b62"/>
+    <style name="def:decimal" foreground="#095b62"/>
+    <style name="def:base-n-integer" foreground="#095b62"/>
+    <style name="def:floating-point" foreground="#095b62"/>
+    <style name="def:complex" foreground="#095b62"/>
     <style name="def:boolean" foreground="#005f2f"/>
     <style name="def:character" foreground="#005f2f"/>
     <style name="def:string" foreground="#005f2f"/>
@@ -36,8 +36,8 @@
     <style name="def:identifier" foreground="#28323a"/>
     <style name="def:function" foreground="#7a1f7a"/>
     <style name="def:builtin" foreground="#843900"/>
-    <style name="def:keyword" foreground="#843900" bold="true"/>
-    <style name="def:statement" foreground="#843900" bold="true"/>
+    <style name="def:keyword" foreground="#0048b3" bold="true"/>
+    <style name="def:statement" foreground="#0048b3" bold="true"/>
     <style name="def:type" foreground="#843900"/>
     <style name="def:operator" foreground="#46535f"/>
     <style name="def:preprocessor" foreground="#0048b3" bold="true"/>
@@ -45,10 +45,10 @@
     <style name="def:warning" foreground="#2f75c6"/>
     <style name="def:note" foreground="#0048b3" bold="true"/>
     <style name="def:net-address" foreground="#0048b3" underline="single"/>
-    <style name="def:heading" foreground="#0048b3" bold="true"/>
-    <style name="def:heading0" foreground="#0048b3" bold="true"/>
-    <style name="def:heading1" foreground="#0048b3" bold="true"/>
-    <style name="def:heading2" foreground="#843900" bold="true"/>
+    <style name="def:heading" foreground="#1c4470" bold="true"/>
+    <style name="def:heading0" foreground="#1c4470" bold="true"/>
+    <style name="def:heading1" foreground="#1c4470" bold="true"/>
+    <style name="def:heading2" foreground="#20538a" bold="true"/>
     <style name="def:heading3" foreground="#1c60a2" bold="true"/>
     <style name="def:heading4" foreground="#236bb5" bold="true"/>
     <style name="def:heading5" foreground="#286fc0" bold="true"/>

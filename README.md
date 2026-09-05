@@ -270,6 +270,28 @@ require('blink.indent').setup({
 })
 ```
 
+hlchunk sets its own highlight groups during setup and on `ColorScheme`.
+Enable Token's `plugins.hlchunk` (or `plugins.all`) and load the colorscheme
+before setting up hlchunk. Use style callbacks to keep Token's colors when
+switching appearances or backgrounds. Enable only the modules you want:
+
+```lua
+local function token_style(names)
+  return function()
+    return vim.tbl_map(function(name)
+      return vim.api.nvim_get_hl(0, { name = name, link = false })
+    end, names)
+  end
+end
+
+require('hlchunk').setup({
+  chunk = { enable = true, style = token_style({ 'HLChunk1', 'HLChunk2' }) },
+  indent = { enable = true, style = token_style({ 'HLIndent1' }) },
+  line_num = { enable = true, style = token_style({ 'HLLineNum1' }) },
+  blank = { enable = true, style = token_style({ 'HLBlank1' }) },
+})
+```
+
 ## Contrib themes
 
 Pre-generated themes for external tools and apps. Auto-generated from the

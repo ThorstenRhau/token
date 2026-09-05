@@ -157,7 +157,7 @@
    `(font-lock-regexp-grouping-backslash ((,class (:foreground ,green))))
    `(font-lock-regexp-grouping-construct ((,class (:foreground ,green))))
    `(font-lock-escape-face             ((,class (:foreground ,green))))
-   `(font-lock-number-face             ((,class (:foreground ,green))))
+   `(font-lock-number-face             ((,class (:foreground ,yellow))))
    `(font-lock-operator-face           ((,class (:foreground ,fg1))))
    `(font-lock-delimiter-face          ((,class (:foreground ,fg1))))
    `(font-lock-bracket-face            ((,class (:foreground ,fg1))))

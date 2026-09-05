@@ -588,7 +588,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     truthy(gtk:find('name="def:comment"[^>]*italic="true"'), 'GtkSourceView comment typography ' .. label)
     truthy(not gtk:find('name="def:function"[^>]*bold="true"'), 'GtkSourceView definition typography ' .. label)
     truthy(
-      gtk:find('name="def:keyword"[^>]*foreground="' .. palette.accent2 .. '"'),
+      gtk:find('name="def:keyword"[^>]*foreground="' .. expected.control .. '"'),
       'GtkSourceView keyword color ' .. label
     )
     truthy(
@@ -608,8 +608,55 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       gtk:find('name="def:link%-destination"[^>]*foreground="' .. generic_link .. '"'),
       'GtkSourceView link color ' .. label
     )
+    for _, style in ipairs({ 'number', 'decimal', 'base-n-integer', 'floating-point', 'complex' }) do
+      truthy(
+        gtk:find(
+          'name="def:'
+            .. vim.pesc(style)
+            .. '"[^>]*foreground="'
+            .. (profile and expected.number or expected.literal)
+            .. '"'
+        ),
+        'GtkSourceView ' .. style .. ' color ' .. label
+      )
+    end
+    if profile then
+      for style, color in pairs({
+        statement = expected.control,
+        heading = profile.headings[1],
+        heading0 = profile.headings[1],
+        heading1 = profile.headings[1],
+        heading2 = profile.headings[2],
+        heading3 = profile.headings[3],
+        heading4 = profile.headings[4],
+        heading5 = profile.headings[5],
+        heading6 = profile.headings[6],
+      }) do
+        truthy(
+          gtk:find('name="def:' .. style .. '"[^>]*foreground="' .. color .. '"'),
+          'GtkSourceView ' .. style .. ' color ' .. label
+        )
+      end
+    end
+
+    local obsidian_prefix = appearance.name == 'token' and 'contrib/obsidian/'
+      or 'contrib/obsidian/' .. appearance.slug .. '/'
+    local obsidian = read_text(obsidian_prefix .. 'theme.css')
+    local obsidian_block = assert(obsidian:match('%.theme%-' .. variant .. '%s*{(.-)}'))
+    for property, color in pairs({
+      ['code-function'] = expected.call,
+      ['code-keyword'] = expected.control,
+      ['code-property'] = expected.property,
+    }) do
+      truthy(
+        obsidian_block:find('--' .. property .. ': ' .. color:lower() .. ';', 1, true),
+        'Obsidian ' .. property .. ' ' .. label
+      )
+    end
 
     local emacs = read_text('contrib/emacs/' .. appearance.slug .. '-' .. variant .. '-theme.el')
+    local emacs_number = assert(emacs:match('font%-lock%-number%-face[^\n]*:foreground ,([%w_]+)'))
+    equal(palette[emacs_number], expected.number, 'Emacs number color ' .. label)
     truthy(emacs:find('font%-lock%-keyword%-face[^\n]*:weight bold'), 'Emacs keyword typography ' .. label)
     truthy(emacs:find('font%-lock%-comment%-face[^\n]*:slant italic'), 'Emacs comment typography ' .. label)
     truthy(emacs:find('markdown%-list%-face[^\n]*:weight bold'), 'Emacs list typography ' .. label)
@@ -640,6 +687,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     )
     equal(xcode_value(xcode, 'xcode.syntax.identifier.type'), xcode_rgba(expected.type), 'Xcode type color ' .. label)
     equal(xcode_value(xcode, 'xcode.syntax.string'), xcode_rgba(expected.string), 'Xcode literal color ' .. label)
+    equal(xcode_value(xcode, 'xcode.syntax.number'), xcode_rgba(expected.number), 'Xcode number color ' .. label)
     equal(xcode_value(xcode, 'xcode.syntax.url'), xcode_rgba(expected.link), 'Xcode link color ' .. label)
     equal(
       xcode_value(xcode, 'DVTMarkupTextPrimaryHeadingFont'),
@@ -1800,25 +1848,31 @@ token.setup({
 })
 
 -- Mutable Token trees use metadata identity and never apply cache output from before a source change.
-local source_identity = compile.source_identity()
-truthy(source_identity:match('^tree:'), 'mutable Token tree did not use metadata identity')
-local source_probe = root .. '/lua/token/token_cache_identity_test.lua'
-local source_probe_file = assert(io.open(source_probe, 'wb'))
-assert(source_probe_file:write('-- cache identity probe\n'))
-assert(source_probe_file:close())
-local changed_identity = compile.source_identity()
-truthy(changed_identity ~= source_identity, 'mutable Token metadata did not change identity')
-compile.compile()
-vim.g.colors_name = 'source-identity-sentinel'
-vim.api.nvim_set_hl(0, 'TokenSourceIdentity', { fg = '#010203' })
-assert(os.remove(source_probe))
-equal(compile.load('dark'), false, 'source-mismatched cache loaded')
-equal(vim.uv.fs_stat(dark_path), nil, 'source-mismatched cache was not removed')
-equal(vim.g.colors_name, 'source-identity-sentinel', 'source-mismatched cache applied stale colorscheme')
-equal(hl('TokenSourceIdentity').fg, 0x010203, 'source-mismatched cache applied stale highlights')
-load('dark')
-equal(vim.g.colors_name, 'token', 'source-mismatched cache did not fall back dynamically')
-truthy(hl('TokenCompiled').bold, 'source-mismatched cache dynamic fallback omitted highlights')
+local source_fixture = vim.fn.tempname()
+local source_ok, source_err = xpcall(function()
+  vim.fn.mkdir(source_fixture .. '/lua/token', 'p')
+  local fixture_module = source_fixture .. '/lua/token/compile.lua'
+  assert(vim.uv.fs_copyfile(root .. '/lua/token/compile.lua', fixture_module))
+  local fixture_compile = assert(loadfile(fixture_module))()
+  local source_identity = fixture_compile.source_identity()
+  truthy(source_identity:match('^tree:'), 'mutable Token tree did not use metadata identity')
+  local source_probe = source_fixture .. '/lua/token/token_cache_identity_test.lua'
+  vim.fn.writefile({ '-- cache identity probe' }, source_probe)
+  truthy(fixture_compile.source_identity() ~= source_identity, 'mutable Token metadata did not change identity')
+  fixture_compile.compile()
+  vim.g.colors_name = 'source-identity-sentinel'
+  vim.api.nvim_set_hl(0, 'TokenSourceIdentity', { fg = '#010203' })
+  assert(os.remove(source_probe))
+  equal(fixture_compile.load('dark'), false, 'source-mismatched cache loaded')
+  equal(vim.uv.fs_stat(dark_path), nil, 'source-mismatched cache was not removed')
+  equal(vim.g.colors_name, 'source-identity-sentinel', 'source-mismatched cache applied stale colorscheme')
+  equal(hl('TokenSourceIdentity').fg, 0x010203, 'source-mismatched cache applied stale highlights')
+  load('dark')
+  equal(vim.g.colors_name, 'token', 'source-mismatched cache did not fall back dynamically')
+  truthy(hl('TokenCompiled').bold, 'source-mismatched cache dynamic fallback omitted highlights')
+end, debug.traceback)
+vim.fn.delete(source_fixture, 'rf')
+assert(source_ok, source_err)
 compile.compile()
 
 local meridian_file = assert(io.open(meridian_dark_path, 'wb'))
