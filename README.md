@@ -28,44 +28,44 @@ matching appearance palette, so everything stays consistent without extra work.
 Copper definitions, ochre control flow, teal literals, and shared semantic
 typography.
 
-| Dark                                                                                              | Light                                                                                                |
-| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
-| [![Token Ultra dark](https://rhau.se/token-ultra-dark.png)](https://rhau.se/token-ultra-dark.png) | [![Token Ultra light](https://rhau.se/token-ultra-light.png)](https://rhau.se/token-ultra-light.png) |
+| Dark                                                                                                | Light                                                                                                  |
+| :-------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
+| [![Token Ultra dark](https://rhau.se/token-ultra-dark.webp)](https://rhau.se/token-ultra-dark.webp) | [![Token Ultra light](https://rhau.se/token-ultra-light.webp)](https://rhau.se/token-ultra-light.webp) |
 
 ### Token Meridian
 
 Circadia Warm Parchment and Dark Classic semantic colors on Token Ultra's
 surfaces. Palette and token-role inspiration: [Circadia 2.0](https://github.com/tanmaymanojgandhi/circadia).
 
-| Dark                                                                                                    | Light                                                                                                      |
-| :-----------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: |
-| [![Token Meridian dark](https://rhau.se/token-meridian-dark.png)](https://rhau.se/token-meridian-dark.png) | [![Token Meridian light](https://rhau.se/token-meridian-light.png)](https://rhau.se/token-meridian-light.png) |
+| Dark                                                                                                         | Light                                                                                                           |
+| :----------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
+| [![Token Meridian dark](https://rhau.se/token-meridian-dark.webp)](https://rhau.se/token-meridian-dark.webp) | [![Token Meridian light](https://rhau.se/token-meridian-light.webp)](https://rhau.se/token-meridian-light.webp) |
 
 ### Token
 
 A warm, muted palette with earthy accents and the shared Token semantic typography.
 
-| Dark                                                                            | Light                                                                              |
-| :-----------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
-| [![Token dark](https://rhau.se/token-dark.png)](https://rhau.se/token-dark.png) | [![Token light](https://rhau.se/token-light.png)](https://rhau.se/token-light.png) |
+| Dark                                                                              | Light                                                                                |
+| :-------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
+| [![Token dark](https://rhau.se/token-dark.webp)](https://rhau.se/token-dark.webp) | [![Token light](https://rhau.se/token-light.webp)](https://rhau.se/token-light.webp) |
 
 ### Token Flint
 
 A restrained cool-gray foundation with softly desaturated rust, gold, blue, and
 green under the shared Token semantic typography.
 
-| Dark                                                                                              | Light                                                                                                |
-| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
-| [![Token Flint dark](https://rhau.se/token-flint-dark.png)](https://rhau.se/token-flint-dark.png) | [![Token Flint light](https://rhau.se/token-flint-light.png)](https://rhau.se/token-flint-light.png) |
+| Dark                                                                                                | Light                                                                                                  |
+| :-------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
+| [![Token Flint dark](https://rhau.se/token-flint-dark.webp)](https://rhau.se/token-flint-dark.webp) | [![Token Flint light](https://rhau.se/token-flint-light.webp)](https://rhau.se/token-flint-light.webp) |
 
 ### Token Temper
 
 A cool-gray foundation reduced to a focused teal-and-purple syntax grammar and
 the shared Token semantic typography.
 
-| Dark                                                                                                 | Light                                                                                                   |
-| :--------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
-| [![Token Temper dark](https://rhau.se/token-temper-dark.png)](https://rhau.se/token-temper-dark.png) | [![Token Temper light](https://rhau.se/token-temper-light.png)](https://rhau.se/token-temper-light.png) |
+| Dark                                                                                                   | Light                                                                                                     |
+| :----------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: |
+| [![Token Temper dark](https://rhau.se/token-temper-dark.webp)](https://rhau.se/token-temper-dark.webp) | [![Token Temper light](https://rhau.se/token-temper-light.webp)](https://rhau.se/token-temper-light.webp) |
 
 ## Install
 
