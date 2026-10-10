@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Capture Token theme screenshots in real Ghostty and Neovim windows, convert
-# them to standard sRGB, and check the mechanical PNG requirements.
+# them to standard sRGB, and check the mechanical WebP requirements.
 #
 # Usage: capture.sh <scheme> <output-dir> [dark|light]...
-# Writes <output-dir>/<scheme>-<background>.png for each background (default:
+# Writes <output-dir>/<scheme>-<background>.webp for each background (default:
 # dark and light) and replaces only those files.
 
 set -euo pipefail
@@ -11,7 +11,8 @@ set -euo pipefail
 readonly ghostty_app=/Applications/Ghostty.app
 readonly ghostty_bin=$ghostty_app/Contents/MacOS/ghostty
 readonly srgb_profile='/System/Library/ColorSync/Profiles/sRGB Profile.icc'
-readonly expected_chunks='IHDR sRGB gAMA IDAT IEND'
+# A simple-format lossless WebP: one VP8L chunk, no ICC profile or metadata.
+readonly expected_signature=RIFFWEBPVP8L
 # Neovim sets the cursor 100 ms after VimEnter; leave room for the first draw.
 readonly settle_seconds=2
 
@@ -35,6 +36,12 @@ command -v magick >/dev/null || die 'ImageMagick (magick) not found'
 [[ -d $output_dir ]] || die "output directory does not exist: $output_dir"
 output_dir=$(cd "$output_dir" && pwd)
 [[ -f $repo/colors/$scheme.lua ]] || die "unknown colorscheme: $scheme"
+
+# Ghostty silently falls back to another font when a family is missing.
+for family in MonoLisaCode MonoLisaText 'Symbols Nerd Font Mono'; do
+  [[ -n $("$ghostty_bin" +list-fonts --family="$family") ]] ||
+    die "font not installed: $family"
+done
 
 for background in "${backgrounds[@]}"; do
   [[ $background == dark || $background == light ]] ||
@@ -100,7 +107,7 @@ capture() {
   local background=$1 grade pid wid raw srgb
   [[ $background == dark ]] && grade=-15 || grade=15
   raw=$work/$background-raw.png
-  srgb=$work/$background.png
+  srgb=$work/$background.webp
 
   open -na "$ghostty_app" --args \
     --config-default-files=false \
@@ -166,12 +173,14 @@ capture() {
   ! kill -0 "$pid" 2>/dev/null || die "Ghostty PID $pid did not exit"
 
   # Color-managed conversion from the display profile; never -normalize.
-  magick "$raw" -profile "$srgb_profile" \
-    -define png:color-type=6 \
-    -define png:exclude-chunk=date,time,pHYs,bKGD,tEXt,zTXt,iTXt,eXIf,cICP \
+  # Stripping the sRGB profile afterwards leaves a WebP that viewers read as
+  # sRGB. Exact mode keeps the color under transparent pixels.
+  magick "$raw" -profile "$srgb_profile" -strip \
+    -define webp:lossless=true \
+    -define webp:exact=true \
     "$srgb"
 
-  local format alpha_diff chunks
+  local format alpha_diff signature
   format=$(magick identify -format '%z %[channels] %[colorspace]' "$srgb")
   [[ $format == '8 srgba 4.0 sRGB' ]] || die "$background: unexpected format: $format"
   alpha_diff=$(magick compare -metric AE \
@@ -179,21 +188,11 @@ capture() {
     null: 2>&1 || true)
   [[ $alpha_diff == 0 || $alpha_diff == '0 (0)' ]] ||
     die "$background: conversion changed alpha ($alpha_diff)"
-  chunks=$(png_chunks "$srgb")
-  [[ $chunks == "$expected_chunks" ]] || die "$background: unexpected PNG chunks: $chunks"
-}
-
-# Prints the distinct chunk types of a PNG in file order.
-png_chunks() {
-  local file=$1 offset=8 size length
-  size=$(stat -f %z "$file")
-  while ((offset < size)); do
-    length=$(od -An -tu1 -j "$offset" -N4 "$file" |
-      awk 'NF { print $1 * 16777216 + $2 * 65536 + $3 * 256 + $4 }')
-    dd if="$file" bs=1 skip=$((offset + 4)) count=4 2>/dev/null
-    printf '\n'
-    offset=$((offset + 12 + length))
-  done | uniq | paste -sd ' ' -
+  # Skip the 4-byte RIFF size between the RIFF and WEBP tags.
+  signature=$(dd if="$srgb" bs=1 count=4 2>/dev/null
+    dd if="$srgb" bs=1 skip=8 count=8 2>/dev/null)
+  [[ $signature == "$expected_signature" ]] ||
+    die "$background: not a simple lossless WebP"
 }
 
 for background in "${backgrounds[@]}"; do
@@ -201,19 +200,19 @@ for background in "${backgrounds[@]}"; do
 done
 
 if ((${#backgrounds[@]} == 2)); then
-  sizes=$(magick identify -format '%wx%h\n' "$work/dark.png" "$work/light.png" | sort -u | wc -l)
+  sizes=$(magick identify -format '%wx%h\n' "$work/dark.webp" "$work/light.webp" | sort -u | wc -l)
   ((sizes == 1)) || die 'dark and light captures have different dimensions'
 fi
 
 # Replace outputs only after every capture passed. Staging beside the
 # destination keeps each final rename atomic.
 for background in "${backgrounds[@]}"; do
-  stage=$output_dir/.$scheme-$background.png.$$
+  stage=$output_dir/.$scheme-$background.webp.$$
   staged+=("$stage")
-  cp "$work/$background.png" "$stage"
+  cp "$work/$background.webp" "$stage"
 done
 for background in "${backgrounds[@]}"; do
-  final=$output_dir/$scheme-$background.png
-  mv -f "$output_dir/.$scheme-$background.png.$$" "$final"
+  final=$output_dir/$scheme-$background.webp
+  mv -f "$output_dir/.$scheme-$background.webp.$$" "$final"
   printf '%s %s\n' "$final" "$(magick identify -format '%wx%h' "$final")"
 done
