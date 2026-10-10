@@ -86,10 +86,10 @@
    `(variable-pitch                    ((,class (:family "sans-serif"))))
 
    ;; ── Line numbers ─────────────────────────────────────────────────────────
-   `(line-number                       ((,class (:foreground ,fg3 :background ,bg3))))
-   `(line-number-current-line          ((,class (:foreground ,accent2 :background ,bg3 :weight bold))))
-   `(line-number-major-tick            ((,class (:foreground ,fg2 :background ,bg3 :weight bold))))
-   `(line-number-minor-tick            ((,class (:foreground ,fg3 :background ,bg3))))
+   `(line-number                       ((,class (:inherit default :foreground ,fg3 :background ,bg3))))
+   `(line-number-current-line          ((,class (:inherit line-number :foreground ,accent2 :background ,bg3 :weight bold))))
+   `(line-number-major-tick            ((,class (:inherit line-number :foreground ,fg2 :background ,bg3 :weight bold))))
+   `(line-number-minor-tick            ((,class (:inherit line-number :foreground ,fg3 :background ,bg3))))
 
    ;; ── Mode line ────────────────────────────────────────────────────────────
    `(mode-line                         ((,class (:foreground ,fg1 :background ,bg1))))

@@ -67,6 +67,16 @@ for _, appearance in ipairs(appearances) do
   for _, variant in ipairs({ 'dark', 'light' }) do
     local filename = appearance.slug .. '-' .. variant .. '-theme.el'
     truthy(emacs_readme:find('`' .. filename .. '`', 1, true), 'Emacs README omits ' .. filename)
+    -- Line numbers scale with text-scale-mode only through `default`.
+    local emacs_theme = read_text('contrib/emacs/' .. filename)
+    truthy(
+      emacs_theme:find('`(line-number                       ((,class (:inherit default ', 1, true),
+      filename .. ' line-number does not inherit default'
+    )
+    truthy(
+      emacs_theme:find('`(line-number-current-line          ((,class (:inherit line-number ', 1, true),
+      filename .. ' line-number-current-line does not inherit line-number'
+    )
   end
 end
 local emacs_copy_glob = 'token{' .. table.concat(emacs_suffixes, ',') .. '}-{dark,light}-theme.el'

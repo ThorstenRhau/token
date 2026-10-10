@@ -51,9 +51,12 @@ local EMACS_LET_KEYS = {
 
 -- Face table schema:
 --   Face entry (positional [1] is the elisp face name, rest are attributes):
---     { 'face-name', fg = 'palette_key', bg = 'palette_key',
+--     { 'face-name', inherit = 'face-name', fg = 'palette_key', bg = 'palette_key',
 --       bold = true, italic = true, underline = true|false|<table>,
 --       strike = true, extend = true, box = true|<table>, height = N }
+--   `inherit` must name a face defined in this table. A theme spec replaces
+--   the face's defface spec, so restate inheritance the face relies on
+--   (e.g. `default`, which carries text-scale-mode zoom).
 --   Nested tables:
 --     underline = { style = 'wave'|'dots', color = 'palette_key' }
 --     box       = { line_width = N, color = 'palette_key' }
@@ -103,10 +106,10 @@ local EMACS_FACES = {
   { 'variable-pitch', literal = '(:family "sans-serif")' },
 
   { section = 'Line numbers' },
-  { 'line-number', fg = 'fg3', bg = 'bg3' },
-  { 'line-number-current-line', fg = 'accent2', bg = 'bg3', bold = true },
-  { 'line-number-major-tick', fg = 'fg2', bg = 'bg3', bold = true },
-  { 'line-number-minor-tick', fg = 'fg3', bg = 'bg3' },
+  { 'line-number', inherit = 'default', fg = 'fg3', bg = 'bg3' },
+  { 'line-number-current-line', inherit = 'line-number', fg = 'accent2', bg = 'bg3', bold = true },
+  { 'line-number-major-tick', inherit = 'line-number', fg = 'fg2', bg = 'bg3', bold = true },
+  { 'line-number-minor-tick', inherit = 'line-number', fg = 'fg3', bg = 'bg3' },
 
   { section = 'Mode line' },
   { 'mode-line', fg = 'fg1', bg = 'bg1' },
@@ -1053,6 +1056,7 @@ local EMACS_NAME_COL = 34
 
 -- Canonical emission order for face attributes.
 local EMACS_ATTR_ORDER = {
+  'inherit',
   'fg',
   'bg',
   'bold',
@@ -1107,7 +1111,9 @@ local function emacs_attr_part(name, value)
   if value == nil then
     return nil
   end
-  if name == 'fg' then
+  if name == 'inherit' then
+    return ':inherit ' .. value
+  elseif name == 'fg' then
     emacs_check_key(value, 'fg')
     return ':foreground ,' .. emacs_key(value)
   elseif name == 'bg' then
@@ -1197,6 +1203,7 @@ end
 --   1. A palette key referenced in EMACS_FACES but absent from EMACS_LET_KEYS.
 --   2. A palette key in EMACS_LET_KEYS that is never referenced.
 --   3. A duplicate face name in EMACS_FACES.
+--   4. An `inherit` naming a face not defined in EMACS_FACES.
 local function emacs_audit()
   local referenced = {}
   local seen = {}
@@ -1226,6 +1233,11 @@ local function emacs_audit()
       if type(entry.box) == 'table' then
         check(name, 'box.color', entry.box.color)
       end
+    end
+  end
+  for _, entry in ipairs(EMACS_FACES) do
+    if entry.inherit ~= nil and not seen[entry.inherit] then
+      error('emacs: face "' .. entry[1] .. '" inherits undefined face "' .. tostring(entry.inherit) .. '"')
     end
   end
   for _, key in ipairs(EMACS_LET_KEYS) do
