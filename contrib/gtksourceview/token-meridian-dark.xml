@@ -58,7 +58,7 @@
     <style name="def:link-destination" foreground="#e89a49" underline="single"/>
     <style name="def:link-text" foreground="#e89a49" underline="single"/>
     <style name="def:link-symbol" foreground="#f8c88f"/>
-    <style name="def:list-marker" foreground="#f8c88f" bold="true"/>
+    <style name="def:list-marker" foreground="#66abc6" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>
     <style name="def:emphasis" italic="true"/>
     <style name="def:inline-code" foreground="#8cbb62"/>

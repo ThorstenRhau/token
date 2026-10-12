@@ -785,7 +785,7 @@
    `(markdown-italic-face              ((,class (:slant italic))))
    `(markdown-strike-through-face      ((,class (:foreground ,fg2 :strike-through t))))
    `(markdown-code-face                ((,class (:foreground ,fg0 :background ,bg2 :extend t))))
-   `(markdown-inline-code-face         ((,class (:foreground ,green :background ,bg2))))
+   `(markdown-inline-code-face         ((,class (:foreground ,accent :background ,bg2))))
    `(markdown-pre-face                 ((,class (:foreground ,fg0 :background ,bg2))))
    `(markdown-language-keyword-face    ((,class (:foreground ,fg3))))
    `(markdown-blockquote-face          ((,class (:foreground ,fg2 :slant italic))))

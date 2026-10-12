@@ -1329,6 +1329,22 @@ local function profile_face(entry, p, profile)
     return role_face(entry[1], p, override)
   end
 
+  -- These faces keep their other attributes, such as the inline-code
+  -- background, and take only the role's color.
+  local property = r.property or r.variable
+  local recolors = {
+    ['font-lock-property-name-face'] = property,
+    ['font-lock-property-use-face'] = property,
+    ['markdown-inline-code-face'] = r.literal,
+    ['markdown-blockquote-face'] = r.quote,
+    ['markdown-list-face'] = r.control,
+  }
+  local recolor = recolors[entry[1]]
+  if recolor then
+    result.fg = palette_key(p, recolor.fg, entry[1])
+    return result
+  end
+
   local heading = entry[1]:match('^outline%-(%d)$')
     or entry[1]:match('^org%-level%-(%d)$')
     or entry[1]:match('^markdown%-header%-face%-(%d)$')

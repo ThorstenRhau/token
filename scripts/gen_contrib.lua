@@ -711,6 +711,7 @@ local function gen_gtksourceview(p, variant, _term, appearance)
       ['def:keyword'] = { fg = r.control.fg },
       ['def:statement'] = { fg = r.control.fg },
       ['def:inline-code'] = literal,
+      ['def:list-marker'] = { fg = r.control.fg },
       ['def:net-address'] = link,
       ['def:link-destination'] = link,
       ['def:link-text'] = link,
@@ -1473,6 +1474,7 @@ local function gen_xcode(p, variant, _term, appearance)
     local profile_colors = {
       ['xcode.syntax.attribute'] = r.attribute.fg,
       ['xcode.syntax.character'] = r.literal.fg,
+      ['xcode.syntax.declaration.other'] = r.definition.fg,
       ['xcode.syntax.declaration.type'] = r.definition.fg,
       ['xcode.syntax.identifier.class'] = r.type.fg,
       ['xcode.syntax.identifier.class.system'] = r.builtin.fg,

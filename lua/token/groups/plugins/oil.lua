@@ -3,7 +3,7 @@
 local function oil(p)
   return {
     OilDir = { fg = p.blue },
-    OilDirHidden = { link = 'OilDir' },
+    OilDirHidden = { link = 'OilHidden' },
     OilFile = { fg = p.fg0 },
     OilFileHidden = { link = 'OilHidden' },
     OilLink = { fg = p.purple },

@@ -10,6 +10,14 @@ local function noice(p)
     NoiceCmdlinePopupBorder = { fg = p.fg3, bg = p.bg1 },
     NoiceCmdlinePopupBorderSearch = { fg = p.yellow, bg = p.bg1 },
     NoiceCmdlinePopupTitle = { fg = p.accent, bg = p.bg1, bold = true },
+    -- Popups use a title group per default format kind, which noice links to
+    -- that kind's border. Search keeps its yellow border color.
+    NoiceCmdlinePopupTitleCmdline = { link = 'NoiceCmdlinePopupTitle' },
+    NoiceCmdlinePopupTitleFilter = { link = 'NoiceCmdlinePopupTitle' },
+    NoiceCmdlinePopupTitleLua = { link = 'NoiceCmdlinePopupTitle' },
+    NoiceCmdlinePopupTitleHelp = { link = 'NoiceCmdlinePopupTitle' },
+    NoiceCmdlinePopupTitleCalculator = { link = 'NoiceCmdlinePopupTitle' },
+    NoiceCmdlinePopupTitleInput = { link = 'NoiceCmdlinePopupTitle' },
     NoiceCmdlinePrompt = { link = 'MsgArea' },
 
     -- popup and message windows
