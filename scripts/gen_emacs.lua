@@ -10,10 +10,11 @@ local typography = require('token.typography')
 
 -- Palette keys bound in the emacs `let` block. Grouped by semantic category
 -- (bg ramp -> fg ramp -> accents -> syntax -> brights -> diffs -> ui).
--- Only keys referenced by EMACS_FACES are bound: the emacs byte-compiler warns
--- on unused lexical bindings, and `emacs_audit` enforces the invariant both
--- ways (unused key here, or missing key referenced from EMACS_FACES, both
--- error at generation time).
+-- Only keys referenced by EMACS_FACES are listed, and `emacs_audit` enforces
+-- that both ways (unused key here, or missing key referenced from EMACS_FACES,
+-- both error at generation time). Role profiles can replace the only use of a
+-- key, so each theme binds just the keys its final faces reference: the emacs
+-- byte-compiler warns on unused lexical bindings.
 -- To add a new palette key: add it here AND reference it from EMACS_FACES.
 local EMACS_LET_KEYS = {
   'bg0',
@@ -1181,16 +1182,34 @@ local function emacs_section_comment(label)
   return EMACS_SECTION_PREFIX .. label .. ' ' .. string.sub(EMACS_DASH_LINE, 1, dashes * 3)
 end
 
+-- Palette keys a face references through fg, bg, underline, or box colors.
+local function face_keys(entry)
+  local keys = { entry.fg, entry.bg }
+  if type(entry.underline) == 'table' then
+    keys[#keys + 1] = entry.underline.color
+  end
+  if type(entry.box) == 'table' then
+    keys[#keys + 1] = entry.box.color
+  end
+  return keys
+end
+
 -- Return the lines of the `(let (BINDINGS) ...)` opener through the final
--- binding (with its closing `))`). The body of the let is appended by the
--- caller.
-local function emacs_let_block(p)
+-- binding (with its closing `))`), binding the keys in `referenced`. The body
+-- of the let is appended by the caller.
+local function emacs_let_block(p, referenced)
   -- longest hyphenated key is 'diff-add-inline' (15 chars); pad to 16 so
   -- names of the maximum length still get one space before the hex value.
   local key_col = 16
   local lines = { "(let ((class '((class color) (min-colors 89)))" }
-  local n = #EMACS_LET_KEYS
-  for i, key in ipairs(EMACS_LET_KEYS) do
+  local keys = {}
+  for _, key in ipairs(EMACS_LET_KEYS) do
+    if referenced[key] then
+      keys[#keys + 1] = key
+    end
+  end
+  local n = #keys
+  for i, key in ipairs(keys) do
     local ekey = emacs_key(key)
     local pad = string.rep(' ', math.max(1, key_col - #ekey))
     local suffix = (i == n) and '"))' or '")'
@@ -1363,17 +1382,28 @@ local function gen_emacs(p, variant, appearance, profile)
     '',
   }
 
-  extend_lines(lines, emacs_let_block(p))
-  lines[#lines + 1] = ''
-  lines[#lines + 1] = '  (custom-theme-set-faces'
-  lines[#lines + 1] = "   '" .. theme
-
-  local last_face_idx
+  local faces = {}
+  local referenced = {}
   for _, entry in ipairs(EMACS_FACES) do
     if profile then
       entry = profile_face(entry, p, profile)
     end
     entry = typography_face(entry)
+    faces[#faces + 1] = entry
+    for _, key in pairs(face_keys(entry)) do
+      if type(key) == 'string' then
+        referenced[key] = true
+      end
+    end
+  end
+
+  extend_lines(lines, emacs_let_block(p, referenced))
+  lines[#lines + 1] = ''
+  lines[#lines + 1] = '  (custom-theme-set-faces'
+  lines[#lines + 1] = "   '" .. theme
+
+  local last_face_idx
+  for _, entry in ipairs(faces) do
     if entry.section then
       lines[#lines + 1] = ''
       lines[#lines + 1] = emacs_section_comment(entry.section)

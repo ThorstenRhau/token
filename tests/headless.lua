@@ -77,6 +77,12 @@ for _, appearance in ipairs(appearances) do
       emacs_theme:find('`(line-number-current-line          ((,class (:inherit line-number ', 1, true),
       filename .. ' line-number-current-line does not inherit line-number'
     )
+    -- The byte compiler warns about unused lexical bindings.
+    local bindings, body = emacs_theme:match('%(let (%b())(.*)$')
+    for key in bindings:gmatch('%(([%w-]+)%s+"#') do
+      local pattern = ',' .. key:gsub('%-', '%%-') .. '[%s)]'
+      truthy(body:find(pattern), filename .. ' binds unused color ' .. key)
+    end
   end
 end
 local emacs_copy_glob = 'token{' .. table.concat(emacs_suffixes, ',') .. '}-{dark,light}-theme.el'

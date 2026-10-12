@@ -28,7 +28,6 @@
       (yellow          "#2f75c6")
       (purple          "#7a1f7a")
       (cyan            "#095b62")
-      (orange          "#4b1fa3")
       (bright-green    "#1c4470")
       (bright-blue     "#20538a")
       (bright-purple   "#1c60a2")
