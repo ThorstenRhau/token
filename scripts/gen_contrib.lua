@@ -979,10 +979,7 @@ local function gen_pi(p, variant, appearance)
   local profile = role_profile(p, variant, appearance)
   local r = profile and profile.syntax
   local theme = json_object({
-    {
-      '$schema',
-      'https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json',
-    },
+    { '$schema', lib.pi_schema_url },
     { 'name', appearance.slug .. '-' .. variant },
     {
       'vars',

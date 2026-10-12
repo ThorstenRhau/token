@@ -242,11 +242,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     local name = appearance.slug .. '-' .. variant
     local theme = vim.json.decode(read_text('contrib/pi/' .. name .. '.json'))
     local palette = require(appearance.palette)(variant)
-    equal(
-      theme['$schema'],
-      'https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json',
-      name .. ' Pi schema'
-    )
+    equal(theme['$schema'], require('gen_lib').pi_schema_url, name .. ' Pi schema')
     equal(theme.name, name, name .. ' Pi theme name')
     equal(#vim.tbl_keys(theme.vars), #vim.tbl_keys(pi_vars), name .. ' Pi variable coverage')
     for variable, role in pairs(pi_vars) do

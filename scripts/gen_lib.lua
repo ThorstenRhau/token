@@ -2,6 +2,10 @@
 
 local M = {}
 
+-- Pi themes declare this schema; tests assert the same value.
+M.pi_schema_url =
+  'https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/schemas/theme.schema.json'
+
 local function shell_quote(value)
   return "'" .. value:gsub("'", "'\\''") .. "'"
 end
