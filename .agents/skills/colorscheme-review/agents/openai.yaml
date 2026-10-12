@@ -1,0 +1,6 @@
+interface:
+  display_name: "Colorscheme Review"
+  short_description: "Audit Token's themes, integrations, and tooling"
+  default_prompt:
+    "Use $colorscheme-review to audit the Token repository and report the
+    findings."
