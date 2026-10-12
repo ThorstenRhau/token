@@ -62,6 +62,10 @@ configuration.
   fetched upstream sources, probes, and isolated application state in it.
 - When subagents share the work, give each its own subdirectory. Never delete a
   directory another worker may still be using.
+- Run subagents in the foreground and use the result each one returns. When
+  the audit itself runs as a subagent, a background helper's completion notice
+  can go to another session, and waiting for it or on a sleep timer stalls the
+  audit.
 - Delete the audit directory once, at the end, as its own short command with the
   exact path.
 
