@@ -33,7 +33,7 @@ local function neo_tree(p)
     NeoTreeIgnored = { fg = p.fg3 },
     NeoTreeDimText = { fg = p.fg3 },
     NeoTreeMessage = { fg = p.fg2, italic = true },
-    NeoTreeSelected = { bg = p.sel },
+    NeoTreeSelected = { link = 'Question' },
     NeoTreeFilterTerm = { fg = p.accent, bold = true },
 
     -- float window

@@ -345,7 +345,7 @@ their original colors.
 | [Obsidian](https://obsidian.md/) | `contrib/obsidian/`, `contrib/obsidian/{token-flint,token-temper,token-ultra,token-meridian}/` | Install the selected appearance directory |
 | [Pi](https://pi.dev/) | `contrib/pi/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.json` | Copy the selected file to `~/.pi/agent/themes/`, then select its name in `/settings` |
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | `contrib/ripgrep/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.ripgreprc` | Point `RIPGREP_CONFIG_PATH` at the selected file |
-| [Starship](https://starship.rs/) | `contrib/starship/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.toml` | Append the file and select the matching palette name |
+| [Starship](https://starship.rs/) | `contrib/starship/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.toml` | Append the file and set `palette` to its name, such as `token-dark` |
 | [Sublime Text](https://www.sublimetext.com/) | `contrib/sublime/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/` and select the scheme |
 | [tmux](https://github.com/tmux/tmux) | `contrib/tmux/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf` | Source the selected file from `tmux.conf` |
 | [VS Code](https://code.visualstudio.com/) | `contrib/vscode/` | Run `scripts/install_vscode_theme.sh`, then select any Token appearance |

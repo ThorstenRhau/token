@@ -77,7 +77,7 @@ local function overlay(p, roles)
     ['@string.special.url'] = copy(r.link),
     ['@character'] = copy(r.literal),
     ['@character.special'] = copy(r.literal),
-    ['@boolean'] = copy(r.literal),
+    ['@boolean'] = copy(number),
     ['@number'] = copy(number),
     ['@number.float'] = copy(number),
     ['@type'] = copy(r.type),

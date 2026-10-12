@@ -54,7 +54,7 @@
     <key>DVTMarkupTextNormalFont</key>
     <string>.AppleSystemUIFont - 10.0</string>
     <key>DVTMarkupTextOtherHeadingColor</key>
-    <string>0.313725 0.294118 0.266667 1</string>
+    <string>0.274510 0.333333 0.035294 1</string>
     <key>DVTMarkupTextOtherHeadingFont</key>
     <string>.AppleSystemUIFontBold - 14.0</string>
     <key>DVTMarkupTextPrimaryHeadingColor</key>

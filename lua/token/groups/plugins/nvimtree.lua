@@ -11,7 +11,7 @@ local function nvimtree(p)
     NvimTreeCursorLine = { bg = p.bg4 },
     NvimTreeLineNr = { link = 'LineNr' },
     NvimTreePopup = { link = 'Pmenu' },
-    NvimTreeSignColumn = { link = 'SignColumn' },
+    NvimTreeSignColumn = { link = 'NvimTreeNormal' },
     NvimTreeCursorColumn = { link = 'CursorColumn' },
     NvimTreeCursorLineNr = { link = 'CursorLineNr' },
     NvimTreeStatusLine = { link = 'StatusLine' },

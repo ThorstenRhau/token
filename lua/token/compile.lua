@@ -14,6 +14,14 @@ local function cache_stamp(stat)
   }, ':')
 end
 
+-- Error values may be tables, which tostring() renders as an address.
+local function describe(err)
+  if type(err) == 'table' then
+    return type(err.message) == 'string' and err.message or vim.inspect(err)
+  end
+  return tostring(err)
+end
+
 local function discard(path)
   loaded_caches[path] = nil
   os.remove(path)
@@ -269,15 +277,19 @@ function M.load(background, colorscheme)
 
     local ok
     ok, cache = pcall(chunk)
-    if
-      not ok
-      or type(cache) ~= 'table'
-      or cache.format ~= cache_format
-      or type(cache.source) ~= 'string'
-      or type(cache.apply) ~= 'function'
-    then
+    local reason
+    if not ok then
+      reason = describe(cache)
+    elseif type(cache) ~= 'table' then
+      reason = 'cache returned ' .. type(cache)
+    elseif cache.format ~= cache_format then
+      reason = 'cache format ' .. tostring(cache.format) .. ', expected ' .. cache_format
+    elseif type(cache.source) ~= 'string' or type(cache.apply) ~= 'function' then
+      reason = 'cache is missing its source identity or apply function'
+    end
+    if reason then
       discard(path)
-      vim.notify('token: compiled theme error, using dynamic path: ' .. tostring(cache), vim.log.levels.WARN)
+      vim.notify('token: compiled theme error, using dynamic path: ' .. reason, vim.log.levels.WARN)
       return false
     end
     loaded_caches[path] = { stamp = stamp, cache = cache }
@@ -291,7 +303,7 @@ function M.load(background, colorscheme)
   local applied, exec_err = pcall(cache.apply)
   if not applied then
     discard(path)
-    vim.notify('token: compiled theme error, using dynamic path: ' .. tostring(exec_err), vim.log.levels.WARN)
+    vim.notify('token: compiled theme error, using dynamic path: ' .. describe(exec_err), vim.log.levels.WARN)
     return false
   end
   return true

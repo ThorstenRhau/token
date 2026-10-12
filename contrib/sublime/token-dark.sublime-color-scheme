@@ -179,7 +179,7 @@
     {
       "name": "Heading 3",
       "scope": "heading.3.markdown",
-      "foreground": "#b99d4a",
+      "foreground": "#a9b76c",
       "font_style": "bold"
     },
     {

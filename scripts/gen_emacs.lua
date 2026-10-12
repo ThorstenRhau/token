@@ -8,14 +8,12 @@ local typography = require('token.typography')
 -- Emacs (.el)
 -- ---------------------------------------------------------------------------
 
--- Palette keys bound in the emacs `let` block. Grouped by semantic category
--- (bg ramp -> fg ramp -> accents -> syntax -> brights -> diffs -> ui).
--- Only keys referenced by EMACS_FACES are listed, and `emacs_audit` enforces
--- that both ways (unused key here, or missing key referenced from EMACS_FACES,
--- both error at generation time). Role profiles can replace the only use of a
--- key, so each theme binds just the keys its final faces reference: the emacs
--- byte-compiler warns on unused lexical bindings.
--- To add a new palette key: add it here AND reference it from EMACS_FACES.
+-- Palette keys the emacs `let` block may bind, in emission order. Grouped by
+-- semantic category (bg ramp -> fg ramp -> accents -> syntax -> brights ->
+-- diffs -> ui). `emacs_audit` rejects a face that references a key outside
+-- this list. Each theme binds only the keys its final faces reference, after
+-- heading, role, and typography transforms, because the emacs byte-compiler
+-- warns on unused lexical bindings.
 local EMACS_LET_KEYS = {
   'bg0',
   'bg1',
@@ -36,6 +34,7 @@ local EMACS_LET_KEYS = {
   'purple',
   'cyan',
   'orange',
+  'olive',
   'bright_green',
   'bright_blue',
   'bright_purple',
@@ -236,15 +235,17 @@ local EMACS_FACES = {
   { 'rainbow-delimiters-unmatched-face', fg = 'fg0', bg = 'red' },
   { 'paren-face', fg = 'fg3' },
 
+  -- Heading faces take their foreground from the appearance's heading cycle
+  -- (see `heading_face`), so only their other attributes are listed here.
   { section = 'Outline' },
-  { 'outline-1', fg = 'accent', bold = true },
-  { 'outline-2', fg = 'accent2', bold = true },
-  { 'outline-3', fg = 'blue', bold = true },
-  { 'outline-4', fg = 'green', bold = true },
-  { 'outline-5', fg = 'cyan', bold = true },
-  { 'outline-6', fg = 'purple', bold = true },
-  { 'outline-7', fg = 'yellow', bold = true },
-  { 'outline-8', fg = 'red', bold = true },
+  { 'outline-1', bold = true },
+  { 'outline-2', bold = true },
+  { 'outline-3', bold = true },
+  { 'outline-4', bold = true },
+  { 'outline-5', bold = true },
+  { 'outline-6', bold = true },
+  { 'outline-7', bold = true },
+  { 'outline-8', bold = true },
   { 'outline-minor-0', bg = 'bg4' },
   { 'outline-minor-1', fg = 'accent', bold = true },
 
@@ -708,14 +709,14 @@ local EMACS_FACES = {
   { 'pulse-highlight-face', bg = 'bg5', extend = true },
 
   { section = 'Org mode' },
-  { 'org-level-1', fg = 'accent', bold = true },
-  { 'org-level-2', fg = 'accent2', bold = true },
-  { 'org-level-3', fg = 'blue', bold = true },
-  { 'org-level-4', fg = 'green', bold = true },
-  { 'org-level-5', fg = 'cyan', bold = true },
-  { 'org-level-6', fg = 'purple', bold = true },
-  { 'org-level-7', fg = 'yellow', bold = true },
-  { 'org-level-8', fg = 'red', bold = true },
+  { 'org-level-1', bold = true },
+  { 'org-level-2', bold = true },
+  { 'org-level-3', bold = true },
+  { 'org-level-4', bold = true },
+  { 'org-level-5', bold = true },
+  { 'org-level-6', bold = true },
+  { 'org-level-7', bold = true },
+  { 'org-level-8', bold = true },
   { 'org-document-title', fg = 'accent', bold = true },
   { 'org-document-info', fg = 'fg2' },
   { 'org-document-info-keyword', fg = 'fg3' },
@@ -796,12 +797,12 @@ local EMACS_FACES = {
 
   { section = 'Markdown' },
   { 'markdown-header-face', fg = 'accent', bold = true },
-  { 'markdown-header-face-1', fg = 'accent', bold = true },
-  { 'markdown-header-face-2', fg = 'accent2', bold = true },
-  { 'markdown-header-face-3', fg = 'blue', bold = true },
-  { 'markdown-header-face-4', fg = 'green', bold = true },
-  { 'markdown-header-face-5', fg = 'cyan', bold = true },
-  { 'markdown-header-face-6', fg = 'purple', bold = true },
+  { 'markdown-header-face-1', bold = true },
+  { 'markdown-header-face-2', bold = true },
+  { 'markdown-header-face-3', bold = true },
+  { 'markdown-header-face-4', bold = true },
+  { 'markdown-header-face-5', bold = true },
+  { 'markdown-header-face-6', bold = true },
   { 'markdown-header-delimiter-face', fg = 'fg3', bold = true },
   { 'markdown-bold-face', bold = true },
   { 'markdown-italic-face', italic = true },
@@ -1184,12 +1185,16 @@ end
 
 -- Palette keys a face references through fg, bg, underline, or box colors.
 local function face_keys(entry)
-  local keys = { entry.fg, entry.bg }
-  if type(entry.underline) == 'table' then
-    keys[#keys + 1] = entry.underline.color
+  local keys = {}
+  for _, slot in ipairs({ 'fg', 'bg' }) do
+    if entry[slot] ~= nil then
+      keys[#keys + 1] = { slot, entry[slot] }
+    end
   end
-  if type(entry.box) == 'table' then
-    keys[#keys + 1] = entry.box.color
+  for _, slot in ipairs({ 'underline', 'box' }) do
+    if type(entry[slot]) == 'table' then
+      keys[#keys + 1] = { slot .. '.color', entry[slot].color }
+    end
   end
   return keys
 end
@@ -1220,20 +1225,10 @@ end
 
 -- Generator-time sanity check. Errors on:
 --   1. A palette key referenced in EMACS_FACES but absent from EMACS_LET_KEYS.
---   2. A palette key in EMACS_LET_KEYS that is never referenced.
---   3. A duplicate face name in EMACS_FACES.
---   4. An `inherit` naming a face not defined in EMACS_FACES.
+--   2. A duplicate face name in EMACS_FACES.
+--   3. An `inherit` naming a face not defined in EMACS_FACES.
 local function emacs_audit()
-  local referenced = {}
   local seen = {}
-  local function check(face_name, kind, value)
-    if type(value) == 'string' then
-      if not EMACS_KNOWN[value] then
-        error('emacs: face "' .. face_name .. '" references unknown palette key "' .. value .. '" in ' .. kind)
-      end
-      referenced[value] = true
-    end
-  end
   for _, entry in ipairs(EMACS_FACES) do
     if entry.section == nil then
       local name = entry[1]
@@ -1244,24 +1239,18 @@ local function emacs_audit()
         error('emacs: duplicate face name "' .. name .. '"')
       end
       seen[name] = true
-      check(name, 'fg', entry.fg)
-      check(name, 'bg', entry.bg)
-      if type(entry.underline) == 'table' then
-        check(name, 'underline.color', entry.underline.color)
-      end
-      if type(entry.box) == 'table' then
-        check(name, 'box.color', entry.box.color)
+      for _, slot in ipairs(face_keys(entry)) do
+        if not EMACS_KNOWN[slot[2]] then
+          error(
+            'emacs: face "' .. name .. '" references unknown palette key "' .. tostring(slot[2]) .. '" in ' .. slot[1]
+          )
+        end
       end
     end
   end
   for _, entry in ipairs(EMACS_FACES) do
     if entry.inherit ~= nil and not seen[entry.inherit] then
       error('emacs: face "' .. entry[1] .. '" inherits undefined face "' .. tostring(entry.inherit) .. '"')
-    end
-  end
-  for _, key in ipairs(EMACS_LET_KEYS) do
-    if not referenced[key] then
-      error('emacs: EMACS_LET_KEYS contains unused palette key "' .. key .. '"')
     end
   end
 end
@@ -1277,26 +1266,37 @@ local function palette_key(p, color, context)
   error('emacs: role "' .. context .. '" references color outside the palette: ' .. tostring(color))
 end
 
-local function role_face(name, p, role)
-  local result = { name }
-  if role.fg then
-    result.fg = palette_key(p, role.fg, name)
-  end
-  return result
-end
-
-local function profile_face(entry, p, profile)
-  if entry.section then
-    return entry
-  end
-
+local function copy_face(entry)
   local result = {}
   for key, value in pairs(entry) do
     result[key] = value
   end
+  return result
+end
 
+-- Heading faces take their foreground from the appearance's heading cycle:
+-- the role profile's list, or classic Token's Treesitter groups. Levels past
+-- the cycle wrap around.
+local function heading_face(entry, p, headings)
+  local level = entry[1]:match('^outline%-(%d)$')
+    or entry[1]:match('^org%-level%-(%d)$')
+    or entry[1]:match('^markdown%-header%-face%-(%d)$')
+  if not level then
+    return entry
+  end
+  local result = copy_face(entry)
+  local index = (tonumber(level) - 1) % #headings + 1
+  result.fg = palette_key(p, headings[index], entry[1])
+  return result
+end
+
+-- Role profiles replace only the foreground of these faces. Other attributes,
+-- such as the inline-code background, stay, and `typography_face` applies the
+-- shared font attributes afterwards.
+local function profile_face(entry, p, profile)
   local r = profile.syntax
-  local overrides = {
+  local property = r.property or r.variable
+  local roles = {
     ['font-lock-comment-face'] = r.comment,
     ['font-lock-comment-delimiter-face'] = r.comment,
     ['font-lock-doc-face'] = r.comment,
@@ -1323,57 +1323,35 @@ local function profile_face(entry, p, profile)
     ['markdown-plain-url-face'] = r.link,
     ['shr-link'] = r.link,
     ['shr-visited-link'] = r.link,
-  }
-  local override = overrides[entry[1]]
-  if override then
-    return role_face(entry[1], p, override)
-  end
-
-  -- These faces keep their other attributes, such as the inline-code
-  -- background, and take only the role's color.
-  local property = r.property or r.variable
-  local recolors = {
     ['font-lock-property-name-face'] = property,
     ['font-lock-property-use-face'] = property,
     ['markdown-inline-code-face'] = r.literal,
     ['markdown-blockquote-face'] = r.quote,
     ['markdown-list-face'] = r.control,
   }
-  local recolor = recolors[entry[1]]
-  if recolor then
-    result.fg = palette_key(p, recolor.fg, entry[1])
-    return result
+  local role = roles[entry[1]]
+  if not role then
+    return entry
   end
-
-  local heading = entry[1]:match('^outline%-(%d)$')
-    or entry[1]:match('^org%-level%-(%d)$')
-    or entry[1]:match('^markdown%-header%-face%-(%d)$')
-  if heading then
-    local index = (tonumber(heading) - 1) % #profile.headings + 1
-    result.fg = palette_key(p, profile.headings[index], entry[1])
-  end
+  local result = copy_face(entry)
+  result.fg = palette_key(p, role.fg, entry[1])
   return result
 end
 
 local function typography_face(entry)
-  if entry.section then
-    return entry
-  end
   local role = typography.role('emacs', entry[1])
   if not role then
     return entry
   end
-  local result = {}
-  for key, value in pairs(entry) do
-    result[key] = value
-  end
+  local result = copy_face(entry)
   for attribute, enabled in pairs(typography.attributes(role)) do
     result[attribute] = enabled or nil
   end
   return result
 end
 
-local function gen_emacs(p, variant, appearance, profile)
+---@param headings string[] heading colors 1 through 6 for this appearance and variant
+local function gen_emacs(p, variant, appearance, profile, headings)
   -- Fail fast if palette is missing any key the let block needs.
   for _, key in ipairs(EMACS_LET_KEYS) do
     if p[key] == nil then
@@ -1401,16 +1379,17 @@ local function gen_emacs(p, variant, appearance, profile)
   local faces = {}
   local referenced = {}
   for _, entry in ipairs(EMACS_FACES) do
-    if profile then
-      entry = profile_face(entry, p, profile)
-    end
-    entry = typography_face(entry)
-    faces[#faces + 1] = entry
-    for _, key in pairs(face_keys(entry)) do
-      if type(key) == 'string' then
-        referenced[key] = true
+    if not entry.section then
+      entry = heading_face(entry, p, headings)
+      if profile then
+        entry = profile_face(entry, p, profile)
+      end
+      entry = typography_face(entry)
+      for _, slot in ipairs(face_keys(entry)) do
+        referenced[slot[2]] = true
       end
     end
+    faces[#faces + 1] = entry
   end
 
   extend_lines(lines, emacs_let_block(p, referenced))

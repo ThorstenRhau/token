@@ -79,6 +79,7 @@ for _, appearance in ipairs(appearances) do
     )
     -- The byte compiler warns about unused lexical bindings.
     local bindings, body = emacs_theme:match('%(let (%b())(.*)$')
+    truthy(bindings, filename .. ' has no let block')
     for key in bindings:gmatch('%(([%w-]+)%s+"#') do
       local pattern = ',' .. key:gsub('%-', '%%-') .. '[%s)]'
       truthy(body:find(pattern), filename .. ' binds unused color ' .. key)
@@ -840,12 +841,49 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
     local expected = expected_semantic_colors(appearance, palette, variant)
     local generic_link = profile and expected.link or palette.blue
+    -- Heading cycles follow the role profile or, for classic Token, Neovim's
+    -- Treesitter groups, so every format must agree with the runtime.
+    local expected_headings = profile and profile.headings or {}
+    if not profile then
+      local treesitter = require('token.groups.treesitter')(palette)
+      for level = 1, 6 do
+        expected_headings[level] = treesitter['@markup.heading.' .. level].fg
+      end
+    end
+    -- The foreground of the textmate rule that colors booleans: the rule that
+    -- names the boolean scope, or else the one for `constant.language`.
+    local function boolean_foreground(rules, foreground)
+      local fallback
+      for _, rule in ipairs(rules) do
+        if rule.scope:find('constant.language.boolean', 1, true) then
+          return foreground(rule)
+        end
+        if rule.scope:find('constant.language', 1, true) then
+          fallback = rule
+        end
+      end
+      return fallback and foreground(fallback)
+    end
     local vscode =
       vim.json.decode(read_text('contrib/vscode/themes/' .. appearance.slug .. '-' .. variant .. '-color-theme.json'))
     local vscode_rules = {}
     for _, rule in ipairs(vscode.tokenColors) do
       vscode_rules[rule.name] = rule.settings
     end
+    for level = 1, 6 do
+      equal(
+        vscode_rules['Heading ' .. level].foreground,
+        expected_headings[level],
+        'VS Code heading ' .. level .. ' color ' .. label
+      )
+    end
+    equal(
+      boolean_foreground(vscode.tokenColors, function(rule)
+        return rule.settings.foreground
+      end),
+      expected.number,
+      'VS Code boolean color ' .. label
+    )
     equal(vscode_rules.Keyword.fontStyle, 'bold', 'VS Code keyword typography ' .. label)
     equal(vscode_rules.Comment.fontStyle, 'italic', 'VS Code comment typography ' .. label)
     equal(vscode_rules.Keyword.foreground, expected.control, 'VS Code keyword color ' .. label)
@@ -883,6 +921,20 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     for _, rule in ipairs(sublime.rules) do
       sublime_rules[rule.name] = rule
     end
+    for level = 1, 6 do
+      equal(
+        sublime_rules['Heading ' .. level].foreground,
+        expected_headings[level],
+        'Sublime heading ' .. level .. ' color ' .. label
+      )
+    end
+    equal(
+      boolean_foreground(sublime.rules, function(rule)
+        return rule.foreground
+      end),
+      expected.number,
+      'Sublime boolean color ' .. label
+    )
     equal(sublime_rules.Keyword.font_style, 'bold', 'Sublime keyword typography ' .. label)
     equal(sublime_rules.Comment.font_style, 'italic', 'Sublime comment typography ' .. label)
     equal(sublime_rules.Keyword.foreground, expected.control, 'Sublime keyword color ' .. label)
@@ -952,23 +1004,22 @@ for _, appearance in ipairs(require('token.appearance').all()) do
         'GtkSourceView ' .. style .. ' color ' .. label
       )
     end
-    if profile then
-      for style, color in pairs({
-        statement = expected.control,
-        heading = profile.headings[1],
-        heading0 = profile.headings[1],
-        heading1 = profile.headings[1],
-        heading2 = profile.headings[2],
-        heading3 = profile.headings[3],
-        heading4 = profile.headings[4],
-        heading5 = profile.headings[5],
-        heading6 = profile.headings[6],
-      }) do
-        truthy(
-          gtk:find('name="def:' .. style .. '"[^>]*foreground="' .. color .. '"'),
-          'GtkSourceView ' .. style .. ' color ' .. label
-        )
-      end
+    for style, color in pairs({
+      statement = expected.control,
+      boolean = expected.number,
+      heading = expected_headings[1],
+      heading0 = expected_headings[1],
+      heading1 = expected_headings[1],
+      heading2 = expected_headings[2],
+      heading3 = expected_headings[3],
+      heading4 = expected_headings[4],
+      heading5 = expected_headings[5],
+      heading6 = expected_headings[6],
+    }) do
+      truthy(
+        gtk:find('name="def:' .. style .. '"[^>]*foreground="' .. color .. '"'),
+        'GtkSourceView ' .. style .. ' color ' .. label
+      )
     end
 
     local obsidian_prefix = appearance.name == 'token' and 'contrib/obsidian/'
@@ -985,8 +1036,24 @@ for _, appearance in ipairs(require('token.appearance').all()) do
         'Obsidian ' .. property .. ' ' .. label
       )
     end
+    for level = 1, 6 do
+      truthy(
+        obsidian_block:find('--h' .. level .. '-color: ' .. expected_headings[level]:lower() .. ';', 1, true),
+        'Obsidian heading ' .. level .. ' ' .. label
+      )
+    end
 
     local emacs = read_text('contrib/emacs/' .. appearance.slug .. '-' .. variant .. '-theme.el')
+    local emacs_colors = {}
+    for key, value in emacs:gmatch('%(([%w%-]+)%s+"(#%x+)"') do
+      emacs_colors[key] = value
+    end
+    for level = 1, 6 do
+      for _, face in ipairs({ 'outline-', 'org-level-', 'markdown-header-face-' }) do
+        local key = emacs:match('`%(' .. vim.pesc(face .. level) .. '%s+%(%(,class %([^\n]-:foreground ,([%w%-]+)')
+        equal(key and emacs_colors[key], expected_headings[level], 'Emacs ' .. face .. level .. ' color ' .. label)
+      end
+    end
     local emacs_number = assert(emacs:match('font%-lock%-number%-face[^\n]*:foreground ,([%w_]+)'))
     equal(palette[emacs_number], expected.number, 'Emacs number color ' .. label)
     truthy(emacs:find('font%-lock%-keyword%-face[^\n]*:weight bold'), 'Emacs keyword typography ' .. label)
@@ -1036,6 +1103,13 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       '.AppleSystemUIFontBold - 14.0',
       'Xcode other heading typography ' .. label
     )
+    for key, level in pairs({
+      DVTMarkupTextPrimaryHeadingColor = 1,
+      DVTMarkupTextSecondaryHeadingColor = 2,
+      DVTMarkupTextOtherHeadingColor = 3,
+    }) do
+      equal(xcode_value(xcode, key), xcode_rgba(expected_headings[level]), 'Xcode ' .. key .. ' ' .. label)
+    end
 
     local bat = read_text('contrib/bat/' .. appearance.slug .. '-' .. variant .. '.tmTheme')
     truthy(bat:find('<string>Keyword</string>.-<string>bold</string>'), 'Bat keyword typography ' .. label)
@@ -1513,6 +1587,8 @@ local runtime_roles = {
   { '@string', 'regular', 'string' },
   { '@constant', 'regular', 'literal' },
   { '@number', 'regular', 'number' },
+  { '@boolean', 'regular', 'number' },
+  { 'Boolean', 'regular', 'number' },
   { 'Special', 'regular' },
   { 'SpecialChar', 'regular' },
   { '@lsp.typemod.function.definition', 'regular' },

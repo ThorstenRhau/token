@@ -55,11 +55,13 @@ local function snacks(p)
     SnacksNotifierFooterInfo = { fg = p.blue },
     SnacksNotifierFooterWarn = { fg = p.yellow },
     SnacksNotifierFooterError = { fg = p.red },
-    SnacksNotifierTrace = { fg = p.fg3 },
-    SnacksNotifierDebug = { fg = p.fg2 },
-    SnacksNotifierInfo = { fg = p.blue },
-    SnacksNotifierWarn = { fg = p.yellow },
-    SnacksNotifierError = { fg = p.red },
+    -- Snacks uses these as each notification window's Normal, so only the
+    -- icon, border, title, and footer carry the level color.
+    SnacksNotifierTrace = { link = 'NormalFloat' },
+    SnacksNotifierDebug = { link = 'NormalFloat' },
+    SnacksNotifierInfo = { link = 'NormalFloat' },
+    SnacksNotifierWarn = { link = 'NormalFloat' },
+    SnacksNotifierError = { link = 'NormalFloat' },
 
     -- snacks.nvim (diff)
     SnacksDiffAdd = { bg = p.diff_add },
@@ -70,7 +72,8 @@ local function snacks(p)
     SnacksDiffContextLineNr = { fg = p.fg2, bg = p.diff_change },
     SnacksDiffConflict = { bg = p.diff_text },
     SnacksDiffConflictLineNr = { fg = p.yellow, bg = p.diff_text },
-    SnacksDiffHeader = { fg = p.accent, bold = true },
+    -- Painted as a full-width band around the file name.
+    SnacksDiffHeader = { fg = p.blue, bg = p.diag_info, bold = true },
     SnacksDiffLabel = { fg = p.fg2 },
     SnacksHunkHeader = { fg = p.cyan, bg = p.diff_change },
 

@@ -1,7 +1,6 @@
 ---@param p TokenPalette
----@param is_dark boolean
 ---@return table
-local function ultra_roles(p, is_dark)
+local function ultra_roles(p)
   return {
     syntax = {
       comment = { fg = p.fg2 },
@@ -32,24 +31,7 @@ local function ultra_roles(p, is_dark)
       terminal = p.cyan,
       inactive = p.fg3,
     },
-    terminal = {
-      [0] = is_dark and p.bg1 or p.fg0,
-      [1] = p.red,
-      [2] = p.green,
-      [3] = p.yellow,
-      [4] = p.blue,
-      [5] = p.purple,
-      [6] = p.cyan,
-      [7] = is_dark and p.fg1 or p.line_nr,
-      [8] = is_dark and p.fg3 or p.fg2,
-      [9] = p.accent,
-      [10] = p.bright_green,
-      [11] = p.accent2,
-      [12] = p.bright_blue,
-      [13] = p.bright_purple,
-      [14] = p.bright_cyan,
-      [15] = is_dark and p.fg0 or p.bg3,
-    },
+    -- Ultra uses the default ANSI mapping from token.terminal.
   }
 end
 

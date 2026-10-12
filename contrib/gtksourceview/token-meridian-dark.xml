@@ -29,7 +29,7 @@
     <style name="def:base-n-integer" foreground="#d99148"/>
     <style name="def:floating-point" foreground="#d99148"/>
     <style name="def:complex" foreground="#d99148"/>
-    <style name="def:boolean" foreground="#8cbb62"/>
+    <style name="def:boolean" foreground="#d99148"/>
     <style name="def:character" foreground="#8cbb62"/>
     <style name="def:string" foreground="#8cbb62"/>
     <style name="def:special-char" foreground="#8cbb62"/>

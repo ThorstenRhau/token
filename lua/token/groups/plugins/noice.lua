@@ -48,8 +48,9 @@ local function noice(p)
     NoiceFormatEvent = { fg = p.fg2 },
     NoiceFormatKind = { fg = p.blue },
     NoiceFormatDate = { fg = p.fg2 },
-    NoiceFormatConfirm = { fg = p.accent },
-    NoiceFormatConfirmDefault = { fg = p.accent, bold = true },
+    -- Confirm buttons are padded text; noice links them to CursorLine and Visual.
+    NoiceFormatConfirm = { fg = p.fg0, bg = p.bg4 },
+    NoiceFormatConfirmDefault = { fg = p.accent, bg = p.sel, bold = true },
     NoiceFormatLevelError = { fg = p.red },
     NoiceFormatLevelWarn = { fg = p.yellow },
     NoiceFormatLevelInfo = { fg = p.blue },

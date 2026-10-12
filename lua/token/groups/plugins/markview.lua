@@ -46,18 +46,21 @@ local function markview(p)
     -- markview.nvim code blocks
     MarkviewCode = { bg = p.bg2 },
     MarkviewCodeInfo = { fg = p.fg2, bg = p.bg2 },
-    MarkviewCodeFg = { fg = p.fg3 },
+    -- Markview draws frontmatter edges with half blocks in this foreground, so
+    -- it must equal the code background to read as a soft edge.
+    MarkviewCodeFg = { fg = p.bg2 },
     MarkviewInlineCode = { fg = p.green, bg = p.bg2 },
 
-    -- markview.nvim icons and headings
-    MarkviewIcon0 = { link = 'MarkviewPalette0Fg' },
-    MarkviewIcon1 = { link = 'MarkviewPalette1Fg' },
-    MarkviewIcon2 = { link = 'MarkviewPalette2Fg' },
-    MarkviewIcon3 = { link = 'MarkviewPalette3Fg' },
+    -- markview.nvim icons and headings. Icons label code blocks on the code
+    -- background, so they carry it alongside the palette foreground.
+    MarkviewIcon0 = { fg = p.fg2, bg = p.bg2 },
+    MarkviewIcon1 = { fg = p.accent, bg = p.bg2 },
+    MarkviewIcon2 = { fg = p.accent2, bg = p.bg2 },
+    MarkviewIcon3 = { fg = p.olive, bg = p.bg2 },
     MarkviewIcon3Fg = { link = 'MarkviewPalette3Fg' },
-    MarkviewIcon4 = { link = 'MarkviewPalette4Fg' },
-    MarkviewIcon5 = { link = 'MarkviewPalette5Fg' },
-    MarkviewIcon6 = { link = 'MarkviewPalette6Fg' },
+    MarkviewIcon4 = { fg = p.blue, bg = p.bg2 },
+    MarkviewIcon5 = { fg = p.green, bg = p.bg2 },
+    MarkviewIcon6 = { fg = p.purple, bg = p.bg2 },
     MarkviewHeading1 = { fg = p.accent, bg = p.bg4, bold = true },
     MarkviewHeading1Sign = { fg = p.accent, bold = true },
     MarkviewHeading2 = { fg = p.accent2, bg = p.bg4, bold = true },

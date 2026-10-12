@@ -46,6 +46,21 @@ local function role_profile(p, variant, appearance)
   return appearance_registry.roles(appearance.name, p, variant == 'dark')
 end
 
+-- Heading colors 1 through 6 for one appearance and variant. Role profiles own
+-- their cycle; classic Token's cycle is owned by the runtime Treesitter groups,
+-- so generated formats cannot drift from Neovim.
+local function heading_colors(p, profile)
+  if profile then
+    return profile.headings
+  end
+  local groups = require('token.groups.treesitter')(p)
+  local headings = {}
+  for level = 1, 6 do
+    headings[level] = groups['@markup.heading.' .. level].fg
+  end
+  return headings
+end
+
 local function textmate_style(role)
   local attributes = typography.attributes(role)
   local styles = {}
@@ -267,6 +282,7 @@ end
 
 local function textmate_scope_rules(p, appearance, variant)
   local profile = role_profile(p, variant, appearance)
+  local headings = heading_colors(p, profile)
   if profile then
     local r = profile.syntax
     local number = r.number or r.literal
@@ -355,12 +371,12 @@ local function textmate_scope_rules(p, appearance, variant)
       },
       { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', r.punctuation.fg, nil },
       { 'Parameter', 'variable.parameter', r.parameter.fg, nil },
-      { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', profile.headings[1], 'bold' },
-      { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', profile.headings[2], 'bold' },
-      { 'Heading 3', 'heading.3.markdown', profile.headings[3], 'bold' },
-      { 'Heading 4', 'heading.4.markdown', profile.headings[4], 'bold' },
-      { 'Heading 5', 'heading.5.markdown', profile.headings[5], 'bold' },
-      { 'Heading 6', 'heading.6.markdown', profile.headings[6], 'bold' },
+      { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', headings[1], 'bold' },
+      { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', headings[2], 'bold' },
+      { 'Heading 3', 'heading.3.markdown', headings[3], 'bold' },
+      { 'Heading 4', 'heading.4.markdown', headings[4], 'bold' },
+      { 'Heading 5', 'heading.5.markdown', headings[5], 'bold' },
+      { 'Heading 6', 'heading.6.markdown', headings[6], 'bold' },
       { 'Heading delimiter', 'punctuation.definition.heading.markdown', r.comment.fg, nil },
       { 'Markup link', 'markup.underline.link, string.other.link', r.link.fg, nil },
       {
@@ -443,12 +459,12 @@ local function textmate_scope_rules(p, appearance, variant)
     },
     { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil },
     { 'Parameter', 'variable.parameter', p.fg1, nil },
-    { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', p.accent, 'bold' },
-    { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', p.accent2, 'bold' },
-    { 'Heading 3', 'heading.3.markdown', p.yellow, 'bold' },
-    { 'Heading 4', 'heading.4.markdown', p.blue, 'bold' },
-    { 'Heading 5', 'heading.5.markdown', p.green, 'bold' },
-    { 'Heading 6', 'heading.6.markdown', p.purple, 'bold' },
+    { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', headings[1], 'bold' },
+    { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', headings[2], 'bold' },
+    { 'Heading 3', 'heading.3.markdown', headings[3], 'bold' },
+    { 'Heading 4', 'heading.4.markdown', headings[4], 'bold' },
+    { 'Heading 5', 'heading.5.markdown', headings[5], 'bold' },
+    { 'Heading 6', 'heading.6.markdown', headings[6], 'bold' },
     { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil },
     { 'Markup link', 'markup.underline.link, string.other.link', p.blue, 'underline' },
     { 'Markup link text', 'string.other.link.title.markdown, constant.other.reference.link.markdown', p.blue, nil },
@@ -609,6 +625,8 @@ local function gen_gtksourceview(p, variant, _term, appearance)
   local name = variant_name(appearance, variant)
   local description = appearance.name == 'token' and 'Token ' .. variant .. ' - warm, muted theme'
     or appearance.display_name .. ' ' .. variant .. ' theme'
+  local profile = role_profile(p, variant, appearance)
+  local headings = heading_colors(p, profile)
 
   -- name -> style options; ordered for readable output
   local styles = {
@@ -657,14 +675,14 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     { 'def:note', { fg = p.blue, bold = true } },
     { 'def:net-address', { fg = p.blue, underline = true } },
     -- Markup (Markdown, etc.)
-    { 'def:heading', { fg = p.accent, bold = true } },
-    { 'def:heading0', { fg = p.accent, bold = true } },
-    { 'def:heading1', { fg = p.accent, bold = true } },
-    { 'def:heading2', { fg = p.accent2, bold = true } },
-    { 'def:heading3', { fg = p.blue, bold = true } },
-    { 'def:heading4', { fg = p.green, bold = true } },
-    { 'def:heading5', { fg = p.cyan, bold = true } },
-    { 'def:heading6', { fg = p.purple, bold = true } },
+    { 'def:heading', { fg = headings[1], bold = true } },
+    { 'def:heading0', { fg = headings[1], bold = true } },
+    { 'def:heading1', { fg = headings[1], bold = true } },
+    { 'def:heading2', { fg = headings[2], bold = true } },
+    { 'def:heading3', { fg = headings[3], bold = true } },
+    { 'def:heading4', { fg = headings[4], bold = true } },
+    { 'def:heading5', { fg = headings[5], bold = true } },
+    { 'def:heading6', { fg = headings[6], bold = true } },
     { 'def:thematic-break', { fg = p.fg2, bold = true } },
     { 'def:preformatted-section', { fg = p.fg0, bg = p.bg2 } },
     { 'def:link-destination', { fg = p.blue, underline = true } },
@@ -686,7 +704,6 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     { 'diff:special-case', { fg = p.purple } },
   }
 
-  local profile = role_profile(p, variant, appearance)
   if profile then
     local r = profile.syntax
     local literal = { fg = r.literal.fg }
@@ -700,7 +717,7 @@ local function gen_gtksourceview(p, variant, _term, appearance)
       ['def:base-n-integer'] = number,
       ['def:floating-point'] = number,
       ['def:complex'] = number,
-      ['def:boolean'] = literal,
+      ['def:boolean'] = number,
       ['def:character'] = literal,
       ['def:string'] = literal,
       ['def:special-char'] = literal,
@@ -715,14 +732,6 @@ local function gen_gtksourceview(p, variant, _term, appearance)
       ['def:net-address'] = link,
       ['def:link-destination'] = link,
       ['def:link-text'] = link,
-      ['def:heading'] = { fg = profile.headings[1] },
-      ['def:heading0'] = { fg = profile.headings[1] },
-      ['def:heading1'] = { fg = profile.headings[1] },
-      ['def:heading2'] = { fg = profile.headings[2] },
-      ['def:heading3'] = { fg = profile.headings[3] },
-      ['def:heading4'] = { fg = profile.headings[4] },
-      ['def:heading5'] = { fg = profile.headings[5] },
-      ['def:heading6'] = { fg = profile.headings[6] },
     }
     for _, style in ipairs(styles) do
       style[2] = profile_styles[style[1]] or style[2]
@@ -1354,6 +1363,7 @@ end
 
 local function gen_xcode(p, variant, _term, appearance)
   local profile = role_profile(p, variant, appearance)
+  local headings = heading_colors(p, profile)
   local lines = {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
@@ -1400,11 +1410,11 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'DVTMarkupTextLinkFont', '.AppleSystemUIFont - 10.0' },
     { 'DVTMarkupTextNormalColor', xcode_rgba(p.fg0) },
     { 'DVTMarkupTextNormalFont', '.AppleSystemUIFont - 10.0' },
-    { 'DVTMarkupTextOtherHeadingColor', xcode_rgba(profile and profile.headings[3] or p.fg2) },
+    { 'DVTMarkupTextOtherHeadingColor', xcode_rgba(headings[3]) },
     { 'DVTMarkupTextOtherHeadingFont', xcode_system_font('DVTMarkupTextOtherHeadingFont', '14.0') },
-    { 'DVTMarkupTextPrimaryHeadingColor', xcode_rgba(profile and profile.headings[1] or p.accent) },
+    { 'DVTMarkupTextPrimaryHeadingColor', xcode_rgba(headings[1]) },
     { 'DVTMarkupTextPrimaryHeadingFont', xcode_system_font('DVTMarkupTextPrimaryHeadingFont', '24.0') },
-    { 'DVTMarkupTextSecondaryHeadingColor', xcode_rgba(profile and profile.headings[2] or p.accent2) },
+    { 'DVTMarkupTextSecondaryHeadingColor', xcode_rgba(headings[2]) },
     { 'DVTMarkupTextSecondaryHeadingFont', xcode_system_font('DVTMarkupTextSecondaryHeadingFont', '18.0') },
     { 'DVTMarkupTextStrongColor', xcode_rgba(p.fg0) },
     { 'DVTMarkupTextStrongFont', '.AppleSystemUIFontBold - 10.0' },
@@ -1924,15 +1934,7 @@ end
 
 local function obsidian_theme_block(p, variant, appearance)
   local profile = role_profile(p, variant, appearance)
-  local headings = profile and profile.headings
-    or {
-      p.accent,
-      p.accent2,
-      appearance.name ~= 'token' and p.fg1 or p.olive,
-      appearance.name ~= 'token' and p.accent or p.blue,
-      appearance.name ~= 'token' and p.accent2 or p.green,
-      appearance.name ~= 'token' and p.fg1 or p.purple,
-    }
+  local headings = heading_colors(p, profile)
   local code_literal = profile and profile.syntax.literal.fg or p.green
   local code_tag = profile and profile.syntax.tag.fg or p.purple
   local base = variant == 'dark'
@@ -2156,9 +2158,9 @@ end
 local function gen_starship(p, variant, _term, appearance)
   local content = table.concat({
     '# Generated by token colorscheme. Do not edit manually.',
-    '# Add palette = "' .. appearance.slug .. '" to your starship.toml to use these colors.',
+    '# Add palette = "' .. appearance.slug .. '-' .. variant .. '" to your starship.toml to use these colors.',
     '',
-    '[palettes.' .. appearance.slug .. ']',
+    '[palettes.' .. appearance.slug .. '-' .. variant .. ']',
     'bg      = "' .. p.bg3 .. '"',
     'fg      = "' .. p.fg0 .. '"',
     'muted   = "' .. p.fg2 .. '"',
@@ -2516,13 +2518,14 @@ local function main()
     for _, variant in ipairs({ 'dark', 'light' }) do
       local p = variant == 'dark' and dark or light
       local term = variant == 'dark' and dark_term or light_term
+      local profile = role_profile(p, variant, appearance)
       files[#files + 1] = gen_bat(p, variant, term, appearance)
       files[#files + 1] = gen_sublime(p, variant, term, appearance)
       files[#files + 1] = gen_gtksourceview(p, variant, term, appearance)
       files[#files + 1] = gen_blink(p, variant, term, appearance)
       files[#files + 1] = gen_carapace(p, variant, term, appearance)
       files[#files + 1] = gen_chatgpt(p, variant, appearance)
-      files[#files + 1] = gen_emacs(p, variant, appearance, role_profile(p, variant, appearance))
+      files[#files + 1] = gen_emacs(p, variant, appearance, profile, heading_colors(p, profile))
       files[#files + 1] = gen_fzf(p, variant, term, appearance)
       files[#files + 1] = gen_fzf_zsh(p, variant, term, appearance)
       files[#files + 1] = gen_ghostty(p, variant, term, appearance)

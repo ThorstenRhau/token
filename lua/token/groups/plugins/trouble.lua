@@ -4,7 +4,7 @@ local function trouble(p)
   return {
     TroubleNormal = { fg = p.fg0, bg = p.bg1 },
     TroubleNormalNC = { fg = p.fg0, bg = p.bg1 },
-    TroubleCount = { fg = p.accent, bold = true },
+    TroubleCount = { fg = p.accent, bg = p.bg4, bold = true },
     TroubleText = { fg = p.fg0 },
     TroubleCode = { fg = p.fg2 },
     TroubleSource = { fg = p.fg2 },

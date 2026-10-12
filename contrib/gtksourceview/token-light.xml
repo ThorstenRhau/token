@@ -49,9 +49,9 @@
     <style name="def:heading0" foreground="#863716" bold="true"/>
     <style name="def:heading1" foreground="#863716" bold="true"/>
     <style name="def:heading2" foreground="#6d4717" bold="true"/>
-    <style name="def:heading3" foreground="#315270" bold="true"/>
-    <style name="def:heading4" foreground="#365a33" bold="true"/>
-    <style name="def:heading5" foreground="#185b5b" bold="true"/>
+    <style name="def:heading3" foreground="#465509" bold="true"/>
+    <style name="def:heading4" foreground="#315270" bold="true"/>
+    <style name="def:heading5" foreground="#365a33" bold="true"/>
     <style name="def:heading6" foreground="#573c72" bold="true"/>
     <style name="def:thematic-break" foreground="#504b44" bold="true"/>
     <style name="def:preformatted-section" foreground="#323128" background="#f6f5f1"/>

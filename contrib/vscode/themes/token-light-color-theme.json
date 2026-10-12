@@ -309,7 +309,7 @@
       "name": "Heading 3",
       "scope": "heading.3.markdown",
       "settings": {
-        "foreground": "#857238",
+        "foreground": "#465509",
         "fontStyle": "bold"
       }
     },
