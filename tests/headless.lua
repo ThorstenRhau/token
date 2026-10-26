@@ -695,13 +695,13 @@ equal(vscode_package.contributes.themes[8].label, 'Token Ultra Light', 'VS Code 
 equal(vscode_package.contributes.themes[9].label, 'Token Meridian Dark', 'VS Code Meridian dark label')
 equal(vscode_package.contributes.themes[10].label, 'Token Meridian Light', 'VS Code Meridian light label')
 local vscode_flint = vim.json.decode(read_text('contrib/vscode/themes/token-flint-dark-color-theme.json'))
-local vscode_rules = {}
+local flint_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
-  vscode_rules[rule.name] = rule.settings
+  flint_rules[rule.name] = rule.settings
 end
-equal(vscode_rules['Function definition'].fontStyle, nil, 'VS Code Flint definition typography')
-equal(vscode_rules['Function call'].fontStyle, nil, 'VS Code Flint call typography')
-equal(vscode_rules['Type reference'].fontStyle, nil, 'VS Code Flint reference typography')
+equal(flint_rules['Function definition'].fontStyle, nil, 'VS Code Flint definition typography')
+equal(flint_rules['Function call'].fontStyle, nil, 'VS Code Flint call typography')
+equal(flint_rules['Type reference'].fontStyle, nil, 'VS Code Flint reference typography')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-flint/manifest.json')).name,
   'Token Flint',
@@ -1170,12 +1170,12 @@ equal(gen_lib.base64('foob'), 'Zm9vYg==', 'base64 of four bytes')
 equal(gen_lib.base64('fooba'), 'Zm9vYmE=', 'base64 of five bytes')
 equal(gen_lib.base64('foobar'), 'Zm9vYmFy', 'base64 of six bytes')
 
-local terminal_colors = require('token.terminal').colors
+local ansi_colors = require('token.terminal').colors
 for _, appearance in ipairs(require('token.appearance').all()) do
   local palette_fn = require(appearance.palette)
   for _, variant in ipairs({ 'dark', 'light' }) do
     local palette = palette_fn(variant)
-    local term = terminal_colors(palette, variant == 'dark', appearance.name)
+    local term = ansi_colors(palette, variant == 'dark', appearance.name)
     local name = appearance.slug .. '-' .. variant
     local profile = read_text('contrib/apple-terminal/' .. name .. '.terminal')
     truthy(profile:find('<string>' .. name .. '</string>', 1, true), 'Apple Terminal profile name for ' .. name)

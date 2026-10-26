@@ -72,6 +72,8 @@ local function textmate_style(role)
   return #styles > 0 and table.concat(styles, ' ') or nil
 end
 
+-- Rules carry no font style of their own; the fourth slot is filled here from
+-- `token.typography` so the shared profile is the only owner of attributes.
 local function apply_textmate_typography(rules)
   for _, rule in ipairs(rules) do
     local role = typography.role('textmate', rule[1])
@@ -371,12 +373,12 @@ local function textmate_scope_rules(p, appearance, variant)
       },
       { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', r.punctuation.fg, nil },
       { 'Parameter', 'variable.parameter', r.parameter.fg, nil },
-      { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', headings[1], 'bold' },
-      { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', headings[2], 'bold' },
-      { 'Heading 3', 'heading.3.markdown', headings[3], 'bold' },
-      { 'Heading 4', 'heading.4.markdown', headings[4], 'bold' },
-      { 'Heading 5', 'heading.5.markdown', headings[5], 'bold' },
-      { 'Heading 6', 'heading.6.markdown', headings[6], 'bold' },
+      { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', headings[1], nil },
+      { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', headings[2], nil },
+      { 'Heading 3', 'heading.3.markdown', headings[3], nil },
+      { 'Heading 4', 'heading.4.markdown', headings[4], nil },
+      { 'Heading 5', 'heading.5.markdown', headings[5], nil },
+      { 'Heading 6', 'heading.6.markdown', headings[6], nil },
       { 'Heading delimiter', 'punctuation.definition.heading.markdown', r.comment.fg, nil },
       { 'Markup link', 'markup.underline.link, string.other.link', r.link.fg, nil },
       {
@@ -403,9 +405,9 @@ local function textmate_scope_rules(p, appearance, variant)
         r.control.fg,
         nil,
       },
-      { 'Markup bold', 'markup.bold', nil, 'bold' },
-      { 'Markup italic', 'markup.italic', nil, 'italic' },
-      { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
+      { 'Markup bold', 'markup.bold', nil, nil },
+      { 'Markup italic', 'markup.italic', nil, nil },
+      { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, nil },
       { 'Markup quote', 'markup.quote', r.quote.fg, nil },
       { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
       { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
@@ -422,7 +424,7 @@ local function textmate_scope_rules(p, appearance, variant)
     return rules
   end
   return {
-    { 'Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic' },
+    { 'Comment', 'comment, punctuation.definition.comment', p.fg2, nil },
     { 'Keyword', 'keyword, keyword.control, keyword.other', p.accent2, nil },
     { 'Storage', 'storage, storage.modifier', p.accent2, nil },
     { 'Operator', 'keyword.operator', p.fg1, nil },
@@ -444,7 +446,7 @@ local function textmate_scope_rules(p, appearance, variant)
     { 'Include', 'keyword.other.import, keyword.other.package, keyword.other.using', p.purple, nil },
     { 'Macro', 'entity.name.function.preprocessor', p.purple, nil },
     { 'Tag', 'entity.name.tag', p.purple, nil },
-    { 'Tag attribute', 'entity.other.attribute-name', p.accent2, 'italic' },
+    { 'Tag attribute', 'entity.other.attribute-name', p.accent2, nil },
     { 'Attribute', 'meta.annotation, storage.type.annotation', p.purple, nil },
     { 'Label', 'entity.name.label, constant.other.label', p.accent2, nil },
     { 'Special', 'variable.language, constant.language.null, constant.language.undefined', p.purple, nil },
@@ -459,22 +461,22 @@ local function textmate_scope_rules(p, appearance, variant)
     },
     { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil },
     { 'Parameter', 'variable.parameter', p.fg1, nil },
-    { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', headings[1], 'bold' },
-    { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', headings[2], 'bold' },
-    { 'Heading 3', 'heading.3.markdown', headings[3], 'bold' },
-    { 'Heading 4', 'heading.4.markdown', headings[4], 'bold' },
-    { 'Heading 5', 'heading.5.markdown', headings[5], 'bold' },
-    { 'Heading 6', 'heading.6.markdown', headings[6], 'bold' },
+    { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', headings[1], nil },
+    { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', headings[2], nil },
+    { 'Heading 3', 'heading.3.markdown', headings[3], nil },
+    { 'Heading 4', 'heading.4.markdown', headings[4], nil },
+    { 'Heading 5', 'heading.5.markdown', headings[5], nil },
+    { 'Heading 6', 'heading.6.markdown', headings[6], nil },
     { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil },
-    { 'Markup link', 'markup.underline.link, string.other.link', p.blue, 'underline' },
+    { 'Markup link', 'markup.underline.link, string.other.link', p.blue, nil },
     { 'Markup link text', 'string.other.link.title.markdown, constant.other.reference.link.markdown', p.blue, nil },
     { 'Markup code', 'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw', p.green, nil },
     { 'Markup code delimiter', 'punctuation.definition.markdown, punctuation.definition.raw.markdown', p.fg2, nil },
     { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', p.accent2, nil },
-    { 'Markup bold', 'markup.bold', nil, 'bold' },
-    { 'Markup italic', 'markup.italic', nil, 'italic' },
-    { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
-    { 'Markup quote', 'markup.quote', p.fg2, 'italic' },
+    { 'Markup bold', 'markup.bold', nil, nil },
+    { 'Markup italic', 'markup.italic', nil, nil },
+    { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, nil },
+    { 'Markup quote', 'markup.quote', p.fg2, nil },
     { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
     { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
     { 'Diff changed', 'markup.changed', p.yellow, nil },

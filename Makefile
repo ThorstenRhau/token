@@ -31,7 +31,7 @@ format-check:
 
 # Lint Lua files (scripts/ excluded: plain LuaJIT, no vim globals)
 lint:
-	@selene --config "$(SELENEC)" "$(ROOT)/lua" "$(ROOT)/colors" "$(ROOT)/plugin"
+	@selene --config "$(SELENEC)" "$(ROOT)/lua" "$(ROOT)/colors" "$(ROOT)/plugin" "$(ROOT)/tests"
 
 # Generate contrib/ theme files for external tools
 contrib:
