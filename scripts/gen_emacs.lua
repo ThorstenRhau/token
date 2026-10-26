@@ -47,6 +47,7 @@ local EMACS_LET_KEYS = {
   'diff_text',
   'sel',
   'match',
+  'line_nr',
 }
 
 -- Face table schema:
@@ -814,8 +815,8 @@ local EMACS_FACES = {
   { 'markdown-blockquote-face', fg = 'fg2', italic = true },
   { 'markdown-list-face', fg = 'accent2' },
   { 'markdown-link-face', fg = 'blue', underline = true },
-  { 'markdown-url-face', fg = 'cyan' },
-  { 'markdown-plain-url-face', fg = 'cyan', underline = true },
+  { 'markdown-url-face', fg = 'blue' },
+  { 'markdown-plain-url-face', fg = 'blue', underline = true },
   { 'markdown-reference-face', fg = 'fg2' },
   { 'markdown-footnote-marker-face', fg = 'purple' },
   { 'markdown-footnote-text-face', fg = 'fg1' },
@@ -1338,6 +1339,46 @@ local function profile_face(entry, p, profile)
   return result
 end
 
+-- ANSI slot names in order 0 through 15, as used by the `ansi-color-*` and
+-- `vterm-color-*` faces.
+local ANSI_SLOTS = {
+  'black',
+  'red',
+  'green',
+  'yellow',
+  'blue',
+  'magenta',
+  'cyan',
+  'white',
+  'bright-black',
+  'bright-red',
+  'bright-green',
+  'bright-yellow',
+  'bright-blue',
+  'bright-magenta',
+  'bright-cyan',
+  'bright-white',
+}
+
+-- Terminal faces take their colors from Token's ANSI mapping, like every other
+-- generated terminal theme, so light themes keep a dark black and Meridian
+-- keeps its own table.
+local function ansi_face(entry, p, term)
+  local slot = entry[1]:match('^ansi%-color%-(.+)$') or entry[1]:match('^vterm%-color%-(.+)$')
+  if not slot then
+    return entry
+  end
+  for index, name in ipairs(ANSI_SLOTS) do
+    if name == slot then
+      local key = palette_key(p, term[index - 1], entry[1])
+      local result = copy_face(entry)
+      result.fg, result.bg = key, key
+      return result
+    end
+  end
+  return entry
+end
+
 local function typography_face(entry)
   local role = typography.role('emacs', entry[1])
   if not role then
@@ -1351,7 +1392,8 @@ local function typography_face(entry)
 end
 
 ---@param headings string[] heading colors 1 through 6 for this appearance and variant
-local function gen_emacs(p, variant, appearance, profile, headings)
+---@param term table<integer, string> ANSI colors 0 through 15 for this appearance and variant
+local function gen_emacs(p, variant, appearance, profile, headings, term)
   -- Fail fast if palette is missing any key the let block needs.
   for _, key in ipairs(EMACS_LET_KEYS) do
     if p[key] == nil then
@@ -1381,6 +1423,7 @@ local function gen_emacs(p, variant, appearance, profile, headings)
   for _, entry in ipairs(EMACS_FACES) do
     if not entry.section then
       entry = heading_face(entry, p, headings)
+      entry = ansi_face(entry, p, term)
       if profile then
         entry = profile_face(entry, p, profile)
       end

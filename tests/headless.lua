@@ -62,6 +62,24 @@ end
 
 local emacs_readme = read_text('contrib/emacs/README.md')
 local emacs_suffixes = {}
+local ansi_slots = {
+  'black',
+  'red',
+  'green',
+  'yellow',
+  'blue',
+  'magenta',
+  'cyan',
+  'white',
+  'bright-black',
+  'bright-red',
+  'bright-green',
+  'bright-yellow',
+  'bright-blue',
+  'bright-magenta',
+  'bright-cyan',
+  'bright-white',
+}
 for _, appearance in ipairs(appearances) do
   emacs_suffixes[#emacs_suffixes + 1] = appearance.slug:sub(#'token' + 1)
   for _, variant in ipairs({ 'dark', 'light' }) do
@@ -83,6 +101,21 @@ for _, appearance in ipairs(appearances) do
     for key in bindings:gmatch('%(([%w-]+)%s+"#') do
       local pattern = ',' .. key:gsub('%-', '%%-') .. '[%s)]'
       truthy(body:find(pattern), filename .. ' binds unused color ' .. key)
+    end
+    -- Terminal faces follow the same ANSI mapping as every other generated theme.
+    local palette = require(appearance.palette)(variant)
+    local term = require('token.terminal').colors(palette, variant == 'dark', appearance.name)
+    local bound = {}
+    for key, value in bindings:gmatch('%(([%w-]+)%s+"(#%x+)"') do
+      bound[key] = value
+    end
+    for index, slot in ipairs(ansi_slots) do
+      for _, prefix in ipairs({ 'ansi-color-', 'vterm-color-' }) do
+        local face = prefix .. slot
+        local key =
+          body:match('`%(' .. vim.pesc(face) .. '%s+%(%(,class %(:foreground ,([%w%-]+) :background ,([%w%-]+)')
+        equal(key and bound[key], term[index - 1], filename .. ' ' .. face)
+      end
     end
   end
 end
@@ -207,9 +240,9 @@ local pi_colors = {
   toolOutput = 'fg2',
   mdHeading = 'accent',
   mdLink = 'blue',
-  mdLinkUrl = 'fg2',
+  mdLinkUrl = 'blue',
   mdCode = 'green',
-  mdCodeBlock = 'fg0',
+  mdCodeBlock = 'green',
   mdCodeBlockBorder = 'fg3',
   mdQuote = 'fg2',
   mdQuoteBorder = 'fg3',
@@ -1546,12 +1579,41 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       )
       truthy(not vim.tbl_isempty(hl(group[1])), 'empty Markview group ' .. group[1])
     end
+    -- Markview derives palette N from heading N, so icons and palettes follow the heading cycle.
+    for level = 1, 6 do
+      local heading = hl('MarkviewHeading' .. level).fg
+      local label = ' follows heading ' .. level .. ' in ' .. appearance.name .. ' ' .. background
+      equal(hl('MarkviewPalette' .. level .. 'Fg').fg, heading, 'Markview palette' .. label)
+      equal(hl('MarkviewPalette' .. level .. 'Sign').fg, heading, 'Markview palette sign' .. label)
+      equal(hl('MarkviewPalette' .. level).fg, heading, 'Markview palette block' .. label)
+      equal(hl('MarkviewIcon' .. level).fg, heading, 'Markview icon' .. label)
+    end
   end
 end
 
--- mini.statuscolumn uses native gutter links for every appearance and variant.
+-- Snacks picker chrome shares the body background while the preview keeps the float surface.
+token.setup({ plugins = { snacks = true, render_markdown = true } })
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    for _, pair in ipairs({
+      { 'SnacksPickerBorder', 'SnacksPickerList' },
+      { 'SnacksPickerTitle', 'SnacksPickerInput' },
+      { 'SnacksPickerPreviewBorder', 'SnacksPickerPreview' },
+    }) do
+      truthy(hl(pair[1]).bg, pair[1] .. ' has no background in ' .. appearance.name .. ' ' .. background)
+      equal(hl(pair[1]).bg, hl(pair[2]).bg, pair[1] .. ' background in ' .. appearance.name .. ' ' .. background)
+    end
+    equal(
+      hl('RenderMarkdownMath'),
+      hl('@markup.math'),
+      'RenderMarkdownMath in ' .. appearance.name .. ' ' .. background
+    )
+  end
+end
+
+-- mini.statuscolumn keeps native gutter links and dims inactive gutters for every appearance and variant.
 local mini_statuscolumn_links = {
-  { 'MiniStatuscolumnDim', 'LineNr' },
   { 'MiniStatuscolumnDimCursor', 'MiniStatuscolumnDim' },
   { 'MiniStatuscolumnSep', 'LineNr' },
   { 'MiniStatuscolumnSepCursor', 'CursorLineNr' },
@@ -1567,6 +1629,12 @@ for _, appearance in ipairs(require('token.appearance').all()) do
         'mini.statuscolumn link for ' .. group[1] .. ' in ' .. appearance.name .. ' ' .. background
       )
     end
+    local palette = require(appearance.palette)(background)
+    equal(
+      hl('MiniStatuscolumnDim'),
+      { fg = tonumber(palette.indent:sub(2), 16), bg = tonumber(palette.bg2:sub(2), 16) },
+      'mini.statuscolumn dim color in ' .. appearance.name .. ' ' .. background
+    )
   end
 end
 

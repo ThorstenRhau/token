@@ -9,7 +9,8 @@ local function copy(definition)
 end
 
 ---Role-driven highlight overlay shared by every appearance with a role profile.
----Roles supply colors only; `token.typography` owns font attributes.
+---Roles supply colors only. `token.typography` owns font attributes; the plugin
+---heading groups below mirror the bold their plugin modules set.
 ---@param p TokenPalette
 ---@param roles table
 ---@return table<string, vim.api.keyset.highlight>
@@ -178,6 +179,12 @@ local function overlay(p, roles)
     groups['RenderMarkdownH' .. level .. 'Bg'] = { fg = color, bg = p.bg4, bold = true }
     groups['MarkviewHeading' .. level] = { fg = color, bg = p.bg4, bold = true }
     groups['MarkviewHeading' .. level .. 'Sign'] = { fg = color, bold = true }
+    -- Markview derives palette N from heading N and uses it for icons, HTML
+    -- headings, callouts, and list markers, so the palette follows the cycle.
+    groups['MarkviewPalette' .. level] = { fg = color, bg = p.bg4 }
+    groups['MarkviewPalette' .. level .. 'Sign'] = { fg = color }
+    groups['MarkviewPalette' .. level .. 'Fg'] = { fg = color }
+    groups['MarkviewIcon' .. level] = { fg = color, bg = p.bg2 }
   end
 
   return groups

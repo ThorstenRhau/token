@@ -114,6 +114,14 @@ local function snacks(p)
     SnacksPickerPreviewCursorLine = { bg = p.bg4 },
     SnacksPickerPickWin = { link = 'Search' },
     SnacksPickerPickWinCurrent = { link = 'CurSearch' },
+    -- Picker borders and titles sit on the picker body background. The preview
+    -- keeps the float surface, so its chrome keeps the float groups.
+    SnacksPickerBorder = { fg = p.fg3, bg = p.bg1 },
+    SnacksPickerTitle = { fg = p.accent, bg = p.bg1, bold = true },
+    SnacksPickerFooter = { fg = p.fg2, bg = p.bg1 },
+    SnacksPickerPreviewBorder = { link = 'FloatBorder' },
+    SnacksPickerPreviewTitle = { link = 'FloatTitle' },
+    SnacksPickerPreviewFooter = { link = 'FloatFooter' },
 
     -- snacks.nvim (picker files)
     SnacksPickerFile = { fg = p.fg0 },

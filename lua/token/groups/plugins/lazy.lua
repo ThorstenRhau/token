@@ -34,7 +34,7 @@ local function lazy(p)
     LazyDimmed = { fg = p.fg3 },
     LazyProp = { fg = p.fg2 },
     LazyValue = { fg = p.green },
-    LazyNoCond = { fg = p.fg3 },
+    LazyNoCond = { link = 'DiagnosticWarn' },
     LazyLocal = { fg = p.green },
     LazyBold = { bold = true },
     LazyItalic = { italic = true },

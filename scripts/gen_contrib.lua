@@ -1045,9 +1045,9 @@ local function gen_pi(p, variant, appearance)
         { 'toolOutput', 'fg2' },
         { 'mdHeading', profile and profile.headings[1] or 'accent' },
         { 'mdLink', r and r.link.fg or 'blue' },
-        { 'mdLinkUrl', r and r.link.fg or 'fg2' },
+        { 'mdLinkUrl', r and r.link.fg or 'blue' },
         { 'mdCode', r and r.literal.fg or 'green' },
-        { 'mdCodeBlock', r and r.literal.fg or 'fg0' },
+        { 'mdCodeBlock', r and r.literal.fg or 'green' },
         { 'mdCodeBlockBorder', 'fg3' },
         { 'mdQuote', r and r.quote.fg or 'fg2' },
         { 'mdQuoteBorder', 'fg3' },
@@ -2525,7 +2525,7 @@ local function main()
       files[#files + 1] = gen_blink(p, variant, term, appearance)
       files[#files + 1] = gen_carapace(p, variant, term, appearance)
       files[#files + 1] = gen_chatgpt(p, variant, appearance)
-      files[#files + 1] = gen_emacs(p, variant, appearance, profile, heading_colors(p, profile))
+      files[#files + 1] = gen_emacs(p, variant, appearance, profile, heading_colors(p, profile), term)
       files[#files + 1] = gen_fzf(p, variant, term, appearance)
       files[#files + 1] = gen_fzf_zsh(p, variant, term, appearance)
       files[#files + 1] = gen_ghostty(p, variant, term, appearance)

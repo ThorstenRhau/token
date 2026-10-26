@@ -15,7 +15,9 @@ local function mini(p)
     MiniStatuslineInactive = { fg = p.fg3, bg = p.bg1 },
 
     -- mini.statuscolumn
-    MiniStatuscolumnDim = { link = 'LineNr' },
+    -- Inactive gutters dim like mini's own default, which blends LineNr most of
+    -- the way toward its background; `indent` is the palette's closest step.
+    MiniStatuscolumnDim = { fg = p.indent, bg = p.bg2 },
     MiniStatuscolumnDimCursor = { link = 'MiniStatuscolumnDim' },
     MiniStatuscolumnSep = { link = 'LineNr' },
     MiniStatuscolumnSepCursor = { link = 'CursorLineNr' },
