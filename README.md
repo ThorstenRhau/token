@@ -333,7 +333,7 @@ their original colors.
 | [Blink Shell](https://blink.sh/) | `contrib/blink/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.js` | Paste the selected raw file URL in Appearance > Themes > New Theme |
 | [Carapace](https://carapace-sh.github.io/carapace-bin/) | `contrib/carapace/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.json` | Merge the selected `carapace` object into `styles.json` |
 | [ChatGPT desktop](https://chatgpt.com/download/) | `contrib/chatgpt/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.txt` | Import the share string for the matching variant |
-| [delta](https://github.com/dandavison/delta) | `contrib/delta/{token,token-flint,token-temper,token-ultra,token-meridian}.gitconfig` | Include one file and select its named dark or light feature |
+| [delta](https://github.com/dandavison/delta) | `contrib/delta/{token,token-flint,token-temper,token-ultra,token-meridian}.gitconfig` | Install the matching bat theme first (delta reads its syntax theme from bat's cache), then include one file and select its named dark or light feature |
 | [Emacs](https://www.gnu.org/software/emacs/) | `contrib/emacs/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}-theme.el` | Copy to the themes directory and load the selected theme name |
 | [fish](https://fishshell.com/) | `contrib/fish/{token,token-flint,token-temper,token-ultra,token-meridian}.theme` | Copy to the fish themes directory and choose the matching appearance |
 | [fzf](https://github.com/junegunn/fzf) | `contrib/fzf/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.{fish,zsh}` | Source the matching shell file |
