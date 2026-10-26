@@ -5,7 +5,7 @@
     "focusBorder": "#0048b3",
     "foreground": "#28323a",
     "descriptionForeground": "#524b42",
-    "errorForeground": "#286fc0",
+    "errorForeground": "#ae5158",
     "textLink.foreground": "#0048b3",
     "textLink.activeForeground": "#0048b3",
     "selection.background": "#dedbd3",
@@ -27,12 +27,12 @@
     "editorBracketMatch.background": "#eae9e5",
     "editorBracketMatch.border": "#0048b3",
     "editorGutter.addedBackground": "#005f2f",
-    "editorGutter.modifiedBackground": "#2f75c6",
-    "editorGutter.deletedBackground": "#286fc0",
+    "editorGutter.modifiedBackground": "#926e25",
+    "editorGutter.deletedBackground": "#ae5158",
     "diffEditor.insertedTextBackground": "#daf6d5",
     "diffEditor.removedTextBackground": "#ffdada",
-    "editorError.foreground": "#286fc0",
-    "editorWarning.foreground": "#2f75c6",
+    "editorError.foreground": "#ae5158",
+    "editorWarning.foreground": "#926e25",
     "editorInfo.foreground": "#0048b3",
     "editorHint.foreground": "#095b62",
     "activityBar.background": "#f6f5f1",
@@ -74,15 +74,15 @@
     "terminalCursor.foreground": "#28323a",
     "terminal.selectionBackground": "#dedbd3",
     "terminal.ansiBlack": "#28323a",
-    "terminal.ansiRed": "#843900",
+    "terminal.ansiRed": "#ae5158",
     "terminal.ansiGreen": "#005f2f",
-    "terminal.ansiYellow": "#843900",
+    "terminal.ansiYellow": "#926e25",
     "terminal.ansiBlue": "#0048b3",
     "terminal.ansiMagenta": "#7a1f7a",
     "terminal.ansiCyan": "#095b62",
     "terminal.ansiWhite": "#b5b2ab",
     "terminal.ansiBrightBlack": "#524b42",
-    "terminal.ansiBrightRed": "#843900",
+    "terminal.ansiBrightRed": "#ae5158",
     "terminal.ansiBrightGreen": "#005f2f",
     "terminal.ansiBrightYellow": "#843900",
     "terminal.ansiBrightBlue": "#0048b3",
@@ -309,7 +309,7 @@
       "name": "Heading 5",
       "scope": "heading.5.markdown",
       "settings": {
-        "foreground": "#286fc0",
+        "foreground": "#0048b3",
         "fontStyle": "bold"
       }
     },
@@ -317,7 +317,7 @@
       "name": "Heading 6",
       "scope": "heading.6.markdown",
       "settings": {
-        "foreground": "#2f75c6",
+        "foreground": "#4b1fa3",
         "fontStyle": "bold"
       }
     },
@@ -406,14 +406,14 @@
       "name": "Diff deleted",
       "scope": "markup.deleted, meta.diff.header.from-file",
       "settings": {
-        "foreground": "#286fc0"
+        "foreground": "#ae5158"
       }
     },
     {
       "name": "Diff changed",
       "scope": "markup.changed",
       "settings": {
-        "foreground": "#2f75c6"
+        "foreground": "#926e25"
       }
     },
     {
@@ -427,14 +427,14 @@
       "name": "GitGutter deleted",
       "scope": "markup.deleted.git_gutter",
       "settings": {
-        "foreground": "#286fc0"
+        "foreground": "#ae5158"
       }
     },
     {
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
       "settings": {
-        "foreground": "#2f75c6"
+        "foreground": "#926e25"
       }
     },
     {

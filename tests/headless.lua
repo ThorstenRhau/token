@@ -788,7 +788,7 @@ end
 equal(meridian_rules.Keyword.foreground, meridian_dark.blue, 'VS Code Meridian keyword color')
 equal(meridian_rules.Keyword.fontStyle, 'bold', 'VS Code Meridian keyword typography')
 equal(meridian_rules.String.foreground, meridian_dark.green, 'VS Code Meridian string color')
-equal(meridian_rules.Number.foreground, meridian_dark.yellow, 'VS Code Meridian number color')
+equal(meridian_rules.Number.foreground, meridian_dark.accent, 'VS Code Meridian number color')
 equal(meridian_rules.Property.foreground, meridian_dark.orange, 'VS Code Meridian property color')
 equal(meridian_rules['Function definition'].fontStyle, nil, 'VS Code Meridian definition typography')
 equal(meridian_rules['Type definition'].fontStyle, nil, 'VS Code Meridian type definition typography')
@@ -1415,7 +1415,7 @@ local palette_anchors = {
       accent = '#e89a49',
       blue = '#66abc6',
       green = '#8cbb62',
-      yellow = '#d99148',
+      yellow = '#bf9c53',
       purple = '#b991db',
       orange = '#de88a6',
       olive = '#d9a86e',
@@ -1488,6 +1488,8 @@ for _, background in ipairs({ 'dark', 'light' }) do
     'diag_hint',
     'sel',
     'match',
+    'red',
+    'yellow',
   }) do
     equal(meridian[key], ultra[key], 'Meridian preserved Ultra state color ' .. key .. ' for ' .. background)
   end
@@ -2251,9 +2253,9 @@ equal(meridian_lualine.terminal.a.bg, meridian_palette.cyan, 'Meridian Lualine t
 equal(meridian_lualine.inactive.a.fg, meridian_palette.fg3, 'Meridian Lualine inactive text is not muted')
 equal(require('token.terminal').colors(meridian_palette, true, 'token-meridian'), {
   [0] = '#1d1d1c',
-  [1] = '#db8935',
+  [1] = '#dd8384',
   [2] = '#8cbb62',
-  [3] = '#d99148',
+  [3] = '#bf9c53',
   [4] = '#66abc6',
   [5] = '#b991db',
   [6] = '#66abc6',
@@ -2273,15 +2275,15 @@ local meridian_light_palette = require('token.theme').palette('light', 'token-me
 equal(require('lualine.themes.token-meridian').normal.a.bg, meridian_light_palette.fg2, 'Meridian light Lualine mode')
 equal(require('token.terminal').colors(meridian_light_palette, false, 'token-meridian'), {
   [0] = '#28323a',
-  [1] = '#843900',
+  [1] = '#ae5158',
   [2] = '#005f2f',
-  [3] = '#843900',
+  [3] = '#926e25',
   [4] = '#0048b3',
   [5] = '#7a1f7a',
   [6] = '#095b62',
   [7] = '#b5b2ab',
   [8] = '#524b42',
-  [9] = '#843900',
+  [9] = '#ae5158',
   [10] = '#005f2f',
   [11] = '#843900',
   [12] = '#0048b3',

@@ -11,7 +11,7 @@
     "selection": "#dedbd3",
     "selection_border": "#dedbd3",
     "inactive_selection": "#f0ede6",
-    "misspelling": "#286fc0",
+    "misspelling": "#ae5158",
     "find_highlight": "#eadab6",
     "find_highlight_foreground": "#28323a",
     "gutter_foreground": "#b5b2ab",
@@ -179,13 +179,13 @@
     {
       "name": "Heading 5",
       "scope": "heading.5.markdown",
-      "foreground": "#286fc0",
+      "foreground": "#0048b3",
       "font_style": "bold"
     },
     {
       "name": "Heading 6",
       "scope": "heading.6.markdown",
-      "foreground": "#2f75c6",
+      "foreground": "#4b1fa3",
       "font_style": "bold"
     },
     {
@@ -250,12 +250,12 @@
     {
       "name": "Diff deleted",
       "scope": "markup.deleted, meta.diff.header.from-file",
-      "foreground": "#286fc0"
+      "foreground": "#ae5158"
     },
     {
       "name": "Diff changed",
       "scope": "markup.changed",
-      "foreground": "#2f75c6"
+      "foreground": "#926e25"
     },
     {
       "name": "GitGutter inserted",
@@ -265,12 +265,12 @@
     {
       "name": "GitGutter deleted",
       "scope": "markup.deleted.git_gutter",
-      "foreground": "#286fc0"
+      "foreground": "#ae5158"
     },
     {
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
-      "foreground": "#2f75c6"
+      "foreground": "#926e25"
     },
     {
       "name": "GitGutter untracked",

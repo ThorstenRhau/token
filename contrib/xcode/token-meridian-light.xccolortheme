@@ -74,15 +74,15 @@
     <key>DVTScrollbarMarkerBreakpointColor</key>
     <string>0.000000 0.282353 0.701961 1</string>
     <key>DVTScrollbarMarkerDiffColor</key>
-    <string>0.184314 0.458824 0.776471 1</string>
+    <string>0.572549 0.431373 0.145098 1</string>
     <key>DVTScrollbarMarkerDiffConflictColor</key>
-    <string>0.156863 0.435294 0.752941 1</string>
+    <string>0.682353 0.317647 0.345098 1</string>
     <key>DVTScrollbarMarkerErrorColor</key>
-    <string>0.156863 0.435294 0.752941 1</string>
+    <string>0.682353 0.317647 0.345098 1</string>
     <key>DVTScrollbarMarkerRuntimeIssueColor</key>
     <string>0.478431 0.121569 0.478431 1</string>
     <key>DVTScrollbarMarkerWarningColor</key>
-    <string>0.184314 0.458824 0.776471 1</string>
+    <string>0.572549 0.431373 0.145098 1</string>
     <key>DVTSourceTextBackground</key>
     <string>0.984314 0.976471 0.956863 1</string>
     <key>DVTSourceTextBlockDimBackgroundColor</key>
@@ -106,7 +106,7 @@
       <key>xcode.syntax.comment.doc</key>
       <string>0.321569 0.294118 0.258824 1</string>
       <key>xcode.syntax.comment.doc.keyword</key>
-      <string>0.184314 0.458824 0.776471 1</string>
+      <string>0.572549 0.431373 0.145098 1</string>
       <key>xcode.syntax.declaration.other</key>
       <string>0.478431 0.121569 0.478431 1</string>
       <key>xcode.syntax.declaration.type</key>
@@ -138,9 +138,9 @@
       <key>xcode.syntax.keyword</key>
       <string>0.000000 0.282353 0.701961 1</string>
       <key>xcode.syntax.mark</key>
-      <string>0.184314 0.458824 0.776471 1</string>
+      <string>0.572549 0.431373 0.145098 1</string>
       <key>xcode.syntax.markup.aside.kind</key>
-      <string>0.184314 0.458824 0.776471 1</string>
+      <string>0.572549 0.431373 0.145098 1</string>
       <key>xcode.syntax.markup.code</key>
       <string>0.000000 0.372549 0.184314 1</string>
       <key>xcode.syntax.number</key>

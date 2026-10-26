@@ -3,8 +3,10 @@
 ---@param is_dark boolean
 ---@return table
 local function meridian_roles(p, is_dark)
-  local headings = is_dark and { p.accent2, p.bright_green, p.bright_blue, p.red, p.bright_purple, p.bright_cyan }
-    or { p.bright_green, p.bright_blue, p.bright_purple, p.bright_cyan, p.red, p.yellow }
+  -- Heading cycles stay on Circadia's warm ramp and blue ramp; the status hues
+  -- `red` and `yellow` are reserved for errors and warnings.
+  local headings = is_dark and { p.accent2, p.bright_green, p.bright_blue, p.cyan, p.bright_purple, p.bright_cyan }
+    or { p.bright_green, p.bright_blue, p.bright_purple, p.bright_cyan, p.accent, p.orange }
 
   return {
     syntax = {
@@ -17,7 +19,7 @@ local function meridian_roles(p, is_dark)
       control = { fg = p.blue },
       literal = { fg = p.green },
       special = { fg = p.purple },
-      number = { fg = is_dark and p.yellow or p.cyan },
+      number = { fg = is_dark and p.accent or p.cyan },
       type = { fg = is_dark and p.cyan or p.accent2 },
       builtin = { fg = is_dark and p.cyan or p.accent2 },
       attribute = { fg = is_dark and p.cyan or p.accent2 },
@@ -57,15 +59,15 @@ local function meridian_roles(p, is_dark)
       [15] = p.fg0,
     } or {
       [0] = p.fg0,
-      [1] = p.accent2,
+      [1] = p.red,
       [2] = p.green,
-      [3] = p.accent2,
+      [3] = p.yellow,
       [4] = p.blue,
       [5] = p.purple,
       [6] = p.cyan,
       [7] = p.line_nr,
       [8] = p.fg2,
-      [9] = p.accent2,
+      [9] = p.red,
       [10] = p.green,
       [11] = p.accent2,
       [12] = p.blue,

@@ -13,12 +13,12 @@
   --color-base-60: #a69c91;
   --color-base-70: #aba195;
   --color-base-100: #c9c0b1;
-  --color-red: #db8935;
-  --color-red-rgb: 219, 137, 53;
+  --color-red: #dd8384;
+  --color-red-rgb: 221, 131, 132;
   --color-orange: #de88a6;
   --color-orange-rgb: 222, 136, 166;
-  --color-yellow: #d99148;
-  --color-yellow-rgb: 217, 145, 72;
+  --color-yellow: #bf9c53;
+  --color-yellow-rgb: 191, 156, 83;
   --color-green: #8cbb62;
   --color-green-rgb: 140, 187, 98;
   --color-cyan: #d9a86e;
@@ -54,8 +54,8 @@
   --text-on-accent: #272724;
   --text-on-accent-inverted: #272724;
   --text-success: #8cbb62;
-  --text-warning: #d99148;
-  --text-error: #db8935;
+  --text-warning: #bf9c53;
+  --text-error: #dd8384;
   --text-selection: #3c3b36;
   --text-highlight-bg: #4d4231;
   --caret-color: #c9c0b1;
@@ -72,7 +72,7 @@
   --h1-color: #f8c88f;
   --h2-color: #f2b26c;
   --h3-color: #ea9d49;
-  --h4-color: #db8935;
+  --h4-color: #d9a86e;
   --h5-color: #c7792e;
   --h6-color: #b56f2b;
 
@@ -80,7 +80,7 @@
   --code-background: #1d1d1c;
   --code-comment: #a69c91;
   --code-function: #b991db;
-  --code-important: #db8935;
+  --code-important: #dd8384;
   --code-keyword: #66abc6;
   --code-operator: #aba195;
   --code-property: #de88a6;
@@ -103,12 +103,12 @@
   --color-base-60: #524b42;
   --color-base-70: #46535f;
   --color-base-100: #28323a;
-  --color-red: #286fc0;
-  --color-red-rgb: 40, 111, 192;
+  --color-red: #ae5158;
+  --color-red-rgb: 174, 81, 88;
   --color-orange: #4b1fa3;
   --color-orange-rgb: 75, 31, 163;
-  --color-yellow: #2f75c6;
-  --color-yellow-rgb: 47, 117, 198;
+  --color-yellow: #926e25;
+  --color-yellow-rgb: 146, 110, 37;
   --color-green: #005f2f;
   --color-green-rgb: 0, 95, 47;
   --color-cyan: #095b62;
@@ -144,8 +144,8 @@
   --text-on-accent: #fbf9f4;
   --text-on-accent-inverted: #fbf9f4;
   --text-success: #005f2f;
-  --text-warning: #2f75c6;
-  --text-error: #286fc0;
+  --text-warning: #926e25;
+  --text-error: #ae5158;
   --text-selection: #dedbd3;
   --text-highlight-bg: #eadab6;
   --caret-color: #28323a;
@@ -163,14 +163,14 @@
   --h2-color: #20538a;
   --h3-color: #1c60a2;
   --h4-color: #236bb5;
-  --h5-color: #286fc0;
-  --h6-color: #2f75c6;
+  --h5-color: #0048b3;
+  --h6-color: #4b1fa3;
 
   --code-normal: #28323a;
   --code-background: #ecebe7;
   --code-comment: #524b42;
   --code-function: #7a1f7a;
-  --code-important: #286fc0;
+  --code-important: #ae5158;
   --code-keyword: #0048b3;
   --code-operator: #46535f;
   --code-property: #4b1fa3;

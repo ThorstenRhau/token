@@ -1,4 +1,6 @@
 ---Token Meridian combines Circadia's Warm Parchment and Dark Classic colors with Ultra surfaces.
+---`red` and `yellow` are Token Ultra's status hues so errors and warnings stay distinct from
+---info and hint, which share Circadia's blue and tan.
 ---@param background 'dark'|'light'
 ---@return TokenPalette
 local function palette(background)
@@ -22,8 +24,8 @@ local function palette(background)
       accent2 = '#843900',
       blue = '#0048b3',
       green = '#005f2f',
-      red = '#286fc0',
-      yellow = '#2f75c6',
+      red = '#ae5158',
+      yellow = '#926e25',
       purple = '#7a1f7a',
       cyan = '#095b62',
       orange = '#4b1fa3',
@@ -75,8 +77,8 @@ local function palette(background)
     accent2 = '#f8c88f',
     blue = '#66abc6',
     green = '#8cbb62',
-    red = '#db8935',
-    yellow = '#d99148',
+    red = '#dd8384',
+    yellow = '#bf9c53',
     purple = '#b991db',
     cyan = '#d9a86e',
     orange = '#de88a6',

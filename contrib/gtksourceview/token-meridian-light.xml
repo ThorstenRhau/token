@@ -16,7 +16,7 @@
     <style name="background-pattern" background="#f6f5f1"/>
     <style name="right-margin" foreground="#43505c" background="#43505c"/>
     <style name="bracket-match" foreground="#0048b3" background="#eadab6" bold="true"/>
-    <style name="bracket-mismatch" foreground="#286fc0" bold="true"/>
+    <style name="bracket-mismatch" foreground="#ae5158" bold="true"/>
     <style name="search-match" foreground="#28323a" background="#eadab6"/>
     <style name="def:comment" foreground="#524b42" italic="true"/>
     <style name="def:shebang" foreground="#524b42" italic="true"/>
@@ -41,8 +41,8 @@
     <style name="def:type" foreground="#843900"/>
     <style name="def:operator" foreground="#46535f"/>
     <style name="def:preprocessor" foreground="#0048b3" bold="true"/>
-    <style name="def:error" foreground="#286fc0" bold="true"/>
-    <style name="def:warning" foreground="#2f75c6"/>
+    <style name="def:error" foreground="#ae5158" bold="true"/>
+    <style name="def:warning" foreground="#926e25"/>
     <style name="def:note" foreground="#0048b3" bold="true"/>
     <style name="def:net-address" foreground="#0048b3" underline="single"/>
     <style name="def:heading" foreground="#1c4470" bold="true"/>
@@ -51,8 +51,8 @@
     <style name="def:heading2" foreground="#20538a" bold="true"/>
     <style name="def:heading3" foreground="#1c60a2" bold="true"/>
     <style name="def:heading4" foreground="#236bb5" bold="true"/>
-    <style name="def:heading5" foreground="#286fc0" bold="true"/>
-    <style name="def:heading6" foreground="#2f75c6" bold="true"/>
+    <style name="def:heading5" foreground="#0048b3" bold="true"/>
+    <style name="def:heading6" foreground="#4b1fa3" bold="true"/>
     <style name="def:thematic-break" foreground="#524b42" bold="true"/>
     <style name="def:preformatted-section" foreground="#28323a" background="#f6f5f1"/>
     <style name="def:link-destination" foreground="#0048b3" underline="single"/>
@@ -63,11 +63,11 @@
     <style name="def:emphasis" italic="true"/>
     <style name="def:inline-code" foreground="#005f2f"/>
     <style name="def:underlined" underline="single"/>
-    <style name="def:deletion" foreground="#286fc0"/>
+    <style name="def:deletion" foreground="#ae5158"/>
     <style name="def:insertion" foreground="#005f2f"/>
     <style name="diff:added-line" foreground="#005f2f"/>
-    <style name="diff:removed-line" foreground="#286fc0"/>
-    <style name="diff:changed-line" foreground="#2f75c6"/>
+    <style name="diff:removed-line" foreground="#ae5158"/>
+    <style name="diff:changed-line" foreground="#926e25"/>
     <style name="diff:location" foreground="#0048b3"/>
     <style name="diff:diff-file" foreground="#0048b3" bold="true"/>
     <style name="diff:special-case" foreground="#7a1f7a"/>

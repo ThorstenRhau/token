@@ -25,7 +25,7 @@
           <key>findHighlight</key>
           <string>#eadab6</string>
           <key>misspelling</key>
-          <string>#286fc0</string>
+          <string>#ae5158</string>
         </dict>
       </dict>
     <dict>
@@ -377,7 +377,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#286fc0</string>
+        <string>#0048b3</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -390,7 +390,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#2f75c6</string>
+        <string>#4b1fa3</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -532,7 +532,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#286fc0</string>
+        <string>#ae5158</string>
       </dict>
     </dict>
     <dict>
@@ -543,7 +543,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#2f75c6</string>
+        <string>#926e25</string>
       </dict>
     </dict>
     <dict>
@@ -565,7 +565,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#286fc0</string>
+        <string>#ae5158</string>
       </dict>
     </dict>
     <dict>
@@ -576,7 +576,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#2f75c6</string>
+        <string>#926e25</string>
       </dict>
     </dict>
     <dict>

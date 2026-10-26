@@ -8,7 +8,7 @@ zle_highlight=(${zle_highlight:#paste:*} "region:fg=#28323a,bg=#dedbd3" "paste:f
 # fast-syntax-highlighting
 typeset -gA FAST_HIGHLIGHT_STYLES
 FAST_HIGHLIGHT_STYLES[default]='none'
-FAST_HIGHLIGHT_STYLES[unknown-token]='fg=#286fc0'
+FAST_HIGHLIGHT_STYLES[unknown-token]='fg=#ae5158'
 FAST_HIGHLIGHT_STYLES[reserved-word]='fg=#843900'
 FAST_HIGHLIGHT_STYLES[alias]='fg=#0048b3'
 FAST_HIGHLIGHT_STYLES[suffix-alias]='fg=#0048b3'
@@ -32,9 +32,9 @@ FAST_HIGHLIGHT_STYLES[back-quoted-argument]='fg=#524b42'
 FAST_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#005f2f'
 FAST_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#005f2f'
 FAST_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=#005f2f'
-FAST_HIGHLIGHT_STYLES[single-quoted-argument-unclosed]='fg=#286fc0,underline'
-FAST_HIGHLIGHT_STYLES[double-quoted-argument-unclosed]='fg=#286fc0,underline'
-FAST_HIGHLIGHT_STYLES[dollar-quoted-argument-unclosed]='fg=#286fc0,underline'
+FAST_HIGHLIGHT_STYLES[single-quoted-argument-unclosed]='fg=#ae5158,underline'
+FAST_HIGHLIGHT_STYLES[double-quoted-argument-unclosed]='fg=#ae5158,underline'
+FAST_HIGHLIGHT_STYLES[dollar-quoted-argument-unclosed]='fg=#ae5158,underline'
 FAST_HIGHLIGHT_STYLES[back-or-dollar-double-quoted-argument]='fg=#7a1f7a'
 FAST_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=#7a1f7a'
 FAST_HIGHLIGHT_STYLES[assign]='fg=#28323a'
@@ -54,7 +54,7 @@ FAST_HIGHLIGHT_STYLES[here-string-text]='none'
 FAST_HIGHLIGHT_STYLES[here-string-var]='fg=#7a1f7a'
 FAST_HIGHLIGHT_STYLES[mathvar]='fg=#0048b3'
 FAST_HIGHLIGHT_STYLES[mathnum]='fg=#7a1f7a'
-FAST_HIGHLIGHT_STYLES[matherr]='fg=#286fc0'
+FAST_HIGHLIGHT_STYLES[matherr]='fg=#ae5158'
 FAST_HIGHLIGHT_STYLES[case-input]='fg=#005f2f'
 FAST_HIGHLIGHT_STYLES[case-parentheses]='fg=#843900'
 FAST_HIGHLIGHT_STYLES[case-condition]='fg=#0048b3'
@@ -69,7 +69,7 @@ FAST_HIGHLIGHT_STYLES[optarg-string]='fg=#005f2f'
 FAST_HIGHLIGHT_STYLES[optarg-number]='fg=#7a1f7a'
 FAST_HIGHLIGHT_STYLES[recursive-base]='none'
 FAST_HIGHLIGHT_STYLES[correct-subtle]='fg=#0048b3'
-FAST_HIGHLIGHT_STYLES[incorrect-subtle]='fg=#286fc0'
+FAST_HIGHLIGHT_STYLES[incorrect-subtle]='fg=#ae5158'
 FAST_HIGHLIGHT_STYLES[subtle-separator]='fg=#005f2f'
 FAST_HIGHLIGHT_STYLES[subtle-bg]='bg=#eadab6'
 
@@ -77,7 +77,7 @@ FAST_HIGHLIGHT_STYLES[subtle-bg]='bg=#eadab6'
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#b5b2ab'
 
 # LS_COLORS (GNU ls, tree, zsh completion)
-export LS_COLORS='di=1;38;2;0;72;179:ln=38;2;122;31;122:or=38;2;40;111;192:mi=9;38;2;40;111;192:so=38;2;0;95;47:pi=38;2;47;117;198:ex=38;2;0;72;179:bd=38;2;9;91;98:cd=38;2;9;91;98:su=1;38;2;40;111;192:sg=1;38;2;47;117;198:tw=1;38;2;0;95;47:ow=4;38;2;0;72;179:st=1;38;2;0;72;179'
+export LS_COLORS='di=1;38;2;0;72;179:ln=38;2;122;31;122:or=38;2;174;81;88:mi=9;38;2;174;81;88:so=38;2;0;95;47:pi=38;2;146;110;37:ex=38;2;0;72;179:bd=38;2;9;91;98:cd=38;2;9;91;98:su=1;38;2;174;81;88:sg=1;38;2;146;110;37:tw=1;38;2;0;95;47:ow=4;38;2;0;72;179:st=1;38;2;0;72;179'
 
 # LSCOLORS (BSD ls)
 export CLICOLOR=1
@@ -87,7 +87,7 @@ export LSCOLORS='ExfxcxdxBxgxgxBxDxCxex'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=48;2;222;219;211;38;2;40;50;58"
 zstyle ':completion:*:descriptions' format '%F{#524b42}-- %d --%f'
 zstyle ':completion:*:messages' format '%F{#524b42}-- %d --%f'
-zstyle ':completion:*:warnings' format '%F{#286fc0}-- no matches --%f'
+zstyle ':completion:*:warnings' format '%F{#ae5158}-- no matches --%f'
 
 # fzf-tab
 zstyle ':fzf-tab:*' fzf-flags \
@@ -97,7 +97,7 @@ zstyle ':fzf-tab:*' fzf-flags \
   '--color=spinner:#843900,info:#524b42' \
   '--color=pointer:#0048b3,marker:#005f2f,prompt:#0048b3'
 zstyle ':fzf-tab:*' default-color $'\033[38;2;40;50;58m'
-zstyle ':fzf-tab:*' group-colors $'\033[38;2;0;72;179m' $'\033[38;2;0;95;47m' $'\033[38;2;132;57;0m' $'\033[38;2;122;31;122m' $'\033[38;2;9;91;98m' $'\033[38;2;0;72;179m' $'\033[38;2;47;117;198m' $'\033[38;2;40;111;192m'
+zstyle ':fzf-tab:*' group-colors $'\033[38;2;0;72;179m' $'\033[38;2;0;95;47m' $'\033[38;2;132;57;0m' $'\033[38;2;122;31;122m' $'\033[38;2;9;91;98m' $'\033[38;2;0;72;179m' $'\033[38;2;146;110;37m' $'\033[38;2;174;81;88m'
 
 # Prompt helpers
 export TOKEN_FG='#28323a'
@@ -106,8 +106,8 @@ export TOKEN_ACCENT='#0048b3'
 export TOKEN_ACCENT2='#843900'
 export TOKEN_BLUE='#0048b3'
 export TOKEN_GREEN='#005f2f'
-export TOKEN_RED='#286fc0'
-export TOKEN_YELLOW='#2f75c6'
+export TOKEN_RED='#ae5158'
+export TOKEN_YELLOW='#926e25'
 export TOKEN_PURPLE='#7a1f7a'
 export TOKEN_CYAN='#095b62'
 export TOKEN_MUTED='#524b42'

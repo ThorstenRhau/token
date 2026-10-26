@@ -10,7 +10,7 @@ gui:
     inactiveBorderColor:
       - "#91887d"
     searchingActiveBorderColor:
-      - "#d99148"
+      - "#bf9c53"
       - bold
     optionsTextColor:
       - "#66abc6"
@@ -27,6 +27,6 @@ gui:
     markedBaseCommitBgColor:
       - "#30302c"
     unstagedChangesColor:
-      - "#db8935"
+      - "#dd8384"
     defaultFgColor:
       - "#c9c0b1"

@@ -74,15 +74,15 @@
     <key>DVTScrollbarMarkerBreakpointColor</key>
     <string>0.400000 0.670588 0.776471 1</string>
     <key>DVTScrollbarMarkerDiffColor</key>
-    <string>0.850980 0.568627 0.282353 1</string>
+    <string>0.749020 0.611765 0.325490 1</string>
     <key>DVTScrollbarMarkerDiffConflictColor</key>
-    <string>0.858824 0.537255 0.207843 1</string>
+    <string>0.866667 0.513725 0.517647 1</string>
     <key>DVTScrollbarMarkerErrorColor</key>
-    <string>0.858824 0.537255 0.207843 1</string>
+    <string>0.866667 0.513725 0.517647 1</string>
     <key>DVTScrollbarMarkerRuntimeIssueColor</key>
     <string>0.725490 0.568627 0.858824 1</string>
     <key>DVTScrollbarMarkerWarningColor</key>
-    <string>0.850980 0.568627 0.282353 1</string>
+    <string>0.749020 0.611765 0.325490 1</string>
     <key>DVTSourceTextBackground</key>
     <string>0.152941 0.152941 0.141176 1</string>
     <key>DVTSourceTextBlockDimBackgroundColor</key>
@@ -106,7 +106,7 @@
       <key>xcode.syntax.comment.doc</key>
       <string>0.650980 0.611765 0.568627 1</string>
       <key>xcode.syntax.comment.doc.keyword</key>
-      <string>0.850980 0.568627 0.282353 1</string>
+      <string>0.749020 0.611765 0.325490 1</string>
       <key>xcode.syntax.declaration.other</key>
       <string>0.725490 0.568627 0.858824 1</string>
       <key>xcode.syntax.declaration.type</key>
@@ -138,13 +138,13 @@
       <key>xcode.syntax.keyword</key>
       <string>0.400000 0.670588 0.776471 1</string>
       <key>xcode.syntax.mark</key>
-      <string>0.850980 0.568627 0.282353 1</string>
+      <string>0.749020 0.611765 0.325490 1</string>
       <key>xcode.syntax.markup.aside.kind</key>
-      <string>0.850980 0.568627 0.282353 1</string>
+      <string>0.749020 0.611765 0.325490 1</string>
       <key>xcode.syntax.markup.code</key>
       <string>0.549020 0.733333 0.384314 1</string>
       <key>xcode.syntax.number</key>
-      <string>0.850980 0.568627 0.282353 1</string>
+      <string>0.909804 0.603922 0.286275 1</string>
       <key>xcode.syntax.plain</key>
       <string>0.788235 0.752941 0.694118 1</string>
       <key>xcode.syntax.preprocessor</key>

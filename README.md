@@ -35,7 +35,9 @@ typography.
 ### Token Meridian
 
 Circadia Warm Parchment and Dark Classic semantic colors on Token Ultra's
-surfaces. Palette and token-role inspiration: [Circadia 2.0](https://github.com/tanmaymanojgandhi/circadia).
+surfaces, with Token Ultra's red and yellow for errors and warnings so they
+stay distinct from info and hint. Palette and token-role inspiration:
+[Circadia 2.0](https://github.com/tanmaymanojgandhi/circadia).
 
 | Dark                                                                                                         | Light                                                                                                           |
 | :----------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
