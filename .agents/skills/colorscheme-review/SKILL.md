@@ -13,8 +13,7 @@ Audit the repository without modifying it or saving a report to disk, and return
 one Markdown report in the conversation.
 
 Use current code, registries, tests, and official upstream sources as the
-authority. Do not preserve a finding merely because an older checklist expected
-it.
+authority.
 
 ## Contents
 
@@ -79,11 +78,11 @@ dynamic and compiled parity, cache invalidation and fallback, terminal colors,
 and parts of the generated formats.
 
 Read an assertion before relying on it. A loop over an empty list, or a pattern
-that matches nothing, passes without checking anything. An earlier VS Code test
-matched none of its 160 cases. Spend independent effort where the tests cannot
-see: upstream drift, native application acceptance, documentation drift,
-cross-output consistency the tests do not assert, and gaps in the tests
-themselves. Write your own runtime probe only for a gap you can name.
+that matches nothing, passes without checking anything. Spend independent
+effort where the tests cannot see: upstream drift, native application
+acceptance, documentation drift, cross-output consistency the tests do not
+assert, and gaps in the tests themselves. Write your own runtime probe only for
+a gap you can name.
 
 ## Audit coverage
 
