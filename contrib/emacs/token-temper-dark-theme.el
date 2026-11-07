@@ -28,6 +28,7 @@
       (yellow          "#C5A15A")
       (purple          "#C294E6")
       (cyan            "#62C7B9")
+      (olive           "#62C7B9")
       (bright-green    "#76D5C7")
       (bright-blue     "#64C3B6")
       (bright-purple   "#C69AE7")
@@ -39,7 +40,8 @@
       (diff-change     "#363229")
       (diff-text       "#494231")
       (sel             "#3A414A")
-      (match           "#4A402E"))
+      (match           "#4A402E")
+      (line-nr         "#535D68"))
 
   (custom-theme-set-faces
    'token-temper-dark
@@ -47,7 +49,7 @@
    ;; ── Core ─────────────────────────────────────────────────────────────────
    `(default                           ((,class (:foreground ,fg0 :background ,bg3))))
    `(cursor                            ((,class (:background ,fg0))))
-   `(fringe                            ((,class (:foreground ,fg3 :background ,bg3))))
+   `(fringe                            ((,class (:foreground ,fg3 :background ,bg2))))
    `(region                            ((,class (:background ,sel :extend t))))
    `(secondary-selection               ((,class (:background ,bg5 :extend t))))
    `(highlight                         ((,class (:background ,bg5))))
@@ -85,10 +87,10 @@
    `(variable-pitch                    ((,class (:family "sans-serif"))))
 
    ;; ── Line numbers ─────────────────────────────────────────────────────────
-   `(line-number                       ((,class (:inherit default :foreground ,fg3 :background ,bg3))))
-   `(line-number-current-line          ((,class (:inherit line-number :foreground ,accent2 :background ,bg3 :weight bold))))
-   `(line-number-major-tick            ((,class (:inherit line-number :foreground ,fg2 :background ,bg3 :weight bold))))
-   `(line-number-minor-tick            ((,class (:inherit line-number :foreground ,fg3 :background ,bg3))))
+   `(line-number                       ((,class (:inherit default :foreground ,line-nr :background ,bg2))))
+   `(line-number-current-line          ((,class (:inherit line-number :foreground ,olive :background ,bg2 :weight bold))))
+   `(line-number-major-tick            ((,class (:inherit line-number :foreground ,fg2 :background ,bg2 :weight bold))))
+   `(line-number-minor-tick            ((,class (:inherit line-number :foreground ,line-nr :background ,bg2))))
 
    ;; ── Mode line ────────────────────────────────────────────────────────────
    `(mode-line                         ((,class (:foreground ,fg1 :background ,bg1))))
@@ -271,9 +273,9 @@
    `(git-gutter:deleted                ((,class (:foreground ,red))))
    `(git-gutter:modified               ((,class (:foreground ,yellow))))
    `(git-gutter:unchanged              ((,class (:foreground ,fg3))))
-   `(git-gutter-fr:added               ((,class (:foreground ,green :background ,bg3))))
-   `(git-gutter-fr:deleted             ((,class (:foreground ,red :background ,bg3))))
-   `(git-gutter-fr:modified            ((,class (:foreground ,yellow :background ,bg3))))
+   `(git-gutter-fr:added               ((,class (:foreground ,green :background ,bg2))))
+   `(git-gutter-fr:deleted             ((,class (:foreground ,red :background ,bg2))))
+   `(git-gutter-fr:modified            ((,class (:foreground ,yellow :background ,bg2))))
    `(git-timemachine-minibuffer-author-face ((,class (:foreground ,accent))))
    `(git-timemachine-minibuffer-detail-face ((,class (:foreground ,fg2))))
    `(git-timemachine-commit            ((,class (:foreground ,purple))))
