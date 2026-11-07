@@ -9,11 +9,11 @@
     "textLink.foreground": "#51B8AA",
     "textLink.activeForeground": "#5CC1B3",
     "selection.background": "#3A414A",
-    "icon.foreground": "#A2A9AF",
+    "icon.foreground": "#AFB6BC",
     "sash.hoverBorder": "#5CC1B3",
     "editor.background": "#272C33",
     "editor.foreground": "#C3C8CC",
-    "editorLineNumber.foreground": "#535D68",
+    "editorLineNumber.foreground": "#67717D",
     "editorLineNumber.activeForeground": "#9AA4AE",
     "editorCursor.foreground": "#C3C8CC",
     "editor.selectionBackground": "#3A414A",
@@ -41,7 +41,7 @@
     "activityBarBadge.background": "#5CC1B3",
     "activityBarBadge.foreground": "#272C33",
     "sideBar.background": "#22272E",
-    "sideBar.foreground": "#A2A9AF",
+    "sideBar.foreground": "#AFB6BC",
     "sideBarTitle.foreground": "#C3C8CC",
     "sideBarSectionHeader.background": "#272C33",
     "list.activeSelectionBackground": "#3A414A",
@@ -57,7 +57,7 @@
     "panelTitle.activeForeground": "#C3C8CC",
     "panelTitle.inactiveForeground": "#9AA4AE",
     "statusBar.background": "#22272E",
-    "statusBar.foreground": "#A2A9AF",
+    "statusBar.foreground": "#AFB6BC",
     "statusBar.noFolderBackground": "#22272E",
     "statusBar.debuggingBackground": "#C294E6",
     "titleBar.activeBackground": "#22272E",
@@ -80,7 +80,7 @@
     "terminal.ansiBlue": "#51B8AA",
     "terminal.ansiMagenta": "#C294E6",
     "terminal.ansiCyan": "#62C7B9",
-    "terminal.ansiWhite": "#A2A9AF",
+    "terminal.ansiWhite": "#AFB6BC",
     "terminal.ansiBrightBlack": "#858F9B",
     "terminal.ansiBrightRed": "#5CC1B3",
     "terminal.ansiBrightGreen": "#76D5C7",
@@ -108,66 +108,83 @@
       }
     },
     {
-      "name": "Operator",
-      "scope": "keyword.operator",
+      "name": "Declaration keyword",
+      "scope": "storage.type.function, storage.type.class, storage.type.interface, storage.type.enum, storage.type.struct, storage.type.type, storage.type.namespace, storage.type.keyword, storage.type.ts, storage.type.tsx, storage.type.js, storage.type.rust",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#E7CDFF",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "name": "Operator",
+      "scope": "keyword.operator, storage.type.function.arrow",
+      "settings": {
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "settings": {
-        "foreground": "#5CC1B3"
+        "foreground": "#5CC1B3",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Function call",
-      "scope": "meta.function-call, variable.function",
+      "scope": "meta.function-call, variable.function, meta.function-call entity.name.function, meta.function.call entity.name.function, meta.method-call entity.name.function, entity.name.function.call, entity.name.function.support, entity.name.function.decorator, entity.name.function.macro, entity.name.function.tagged-template",
       "settings": {
-        "foreground": "#5CC1B3"
+        "foreground": "#5CC1B3",
+        "fontStyle": ""
       }
     },
     {
       "name": "Built-in function",
       "scope": "support.function",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
       "name": "String",
       "scope": "string, punctuation.definition.string",
       "settings": {
-        "foreground": "#5CC1B3"
+        "foreground": "#5CC1B3",
+        "fontStyle": ""
       }
     },
     {
       "name": "Literal",
       "scope": "constant, constant.language, constant.numeric, variable.other.constant",
       "settings": {
-        "foreground": "#5CC1B3"
+        "foreground": "#5CC1B3",
+        "fontStyle": ""
       }
     },
     {
       "name": "Type definition",
-      "scope": "entity.name.type, entity.name.class, entity.name.type.class",
+      "scope": "entity.name.type.class, entity.name.type.interface, entity.name.type.struct, entity.name.type.enum, entity.name.type.alias, entity.name.class, entity.name.struct, entity.name.interface, entity.name.enum",
       "settings": {
-        "foreground": "#5CC1B3"
+        "foreground": "#5CC1B3",
+        "fontStyle": "bold"
       }
     },
     {
       "name": "Type reference",
-      "scope": "storage.type, support.type, support.class, entity.other.inherited-class",
+      "scope": "entity.name.type, storage.type, support.type, support.class, entity.other.inherited-class",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
       "name": "Module",
       "scope": "entity.name.namespace, entity.name.type.module, support.module",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
@@ -190,21 +207,24 @@
       "name": "Tag",
       "scope": "entity.name.tag",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
       "name": "Tag attribute",
       "scope": "entity.other.attribute-name",
       "settings": {
-        "foreground": "#C3C8CC"
+        "foreground": "#C3C8CC",
+        "fontStyle": ""
       }
     },
     {
       "name": "Attribute",
       "scope": "meta.annotation, storage.type.annotation",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
@@ -219,7 +239,8 @@
       "name": "Built-in symbol",
       "scope": "variable.language",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
@@ -242,28 +263,32 @@
       "name": "Identifier",
       "scope": "variable, support.variable, meta.definition.variable",
       "settings": {
-        "foreground": "#C3C8CC"
+        "foreground": "#C3C8CC",
+        "fontStyle": ""
       }
     },
     {
       "name": "Property",
       "scope": "variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key",
       "settings": {
-        "foreground": "#C3C8CC"
+        "foreground": "#C3C8CC",
+        "fontStyle": ""
       }
     },
     {
       "name": "Delimiter",
       "scope": "punctuation, meta.brace, meta.delimiter, meta.bracket",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#9AA4AE",
+        "fontStyle": ""
       }
     },
     {
       "name": "Parameter",
       "scope": "variable.parameter",
       "settings": {
-        "foreground": "#A2A9AF"
+        "foreground": "#AFB6BC",
+        "fontStyle": ""
       }
     },
     {
@@ -286,7 +311,7 @@
       "name": "Heading 3",
       "scope": "heading.3.markdown",
       "settings": {
-        "foreground": "#A2A9AF",
+        "foreground": "#AFB6BC",
         "fontStyle": "bold"
       }
     },
@@ -310,7 +335,7 @@
       "name": "Heading 6",
       "scope": "heading.6.markdown",
       "settings": {
-        "foreground": "#A2A9AF",
+        "foreground": "#AFB6BC",
         "fontStyle": "bold"
       }
     },
@@ -318,7 +343,8 @@
       "name": "Heading delimiter",
       "scope": "punctuation.definition.heading.markdown",
       "settings": {
-        "foreground": "#9AA4AE"
+        "foreground": "#9AA4AE",
+        "fontStyle": ""
       }
     },
     {
@@ -341,14 +367,16 @@
       "name": "Markup code",
       "scope": "markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw",
       "settings": {
-        "foreground": "#5CC1B3"
+        "foreground": "#5CC1B3",
+        "fontStyle": ""
       }
     },
     {
       "name": "Markup code delimiter",
       "scope": "punctuation.definition.markdown, punctuation.definition.raw.markdown",
       "settings": {
-        "foreground": "#9AA4AE"
+        "foreground": "#9AA4AE",
+        "fontStyle": ""
       }
     },
     {
@@ -392,99 +420,107 @@
       "name": "Diff added",
       "scope": "markup.inserted, meta.diff.header.to-file",
       "settings": {
-        "foreground": "#5EC4B5"
+        "foreground": "#5EC4B5",
+        "fontStyle": ""
       }
     },
     {
       "name": "Diff deleted",
       "scope": "markup.deleted, meta.diff.header.from-file",
       "settings": {
-        "foreground": "#E3888C"
+        "foreground": "#E3888C",
+        "fontStyle": ""
       }
     },
     {
       "name": "Diff changed",
       "scope": "markup.changed",
       "settings": {
-        "foreground": "#C5A15A"
+        "foreground": "#C5A15A",
+        "fontStyle": ""
       }
     },
     {
       "name": "GitGutter inserted",
       "scope": "markup.inserted.git_gutter",
       "settings": {
-        "foreground": "#5EC4B5"
+        "foreground": "#5EC4B5",
+        "fontStyle": ""
       }
     },
     {
       "name": "GitGutter deleted",
       "scope": "markup.deleted.git_gutter",
       "settings": {
-        "foreground": "#E3888C"
+        "foreground": "#E3888C",
+        "fontStyle": ""
       }
     },
     {
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
       "settings": {
-        "foreground": "#C5A15A"
+        "foreground": "#C5A15A",
+        "fontStyle": ""
       }
     },
     {
       "name": "GitGutter untracked",
       "scope": "markup.untracked.git_gutter",
       "settings": {
-        "foreground": "#858F9B"
+        "foreground": "#858F9B",
+        "fontStyle": ""
       }
     },
     {
       "name": "GitGutter ignored",
       "scope": "markup.ignored.git_gutter",
       "settings": {
-        "foreground": "#858F9B"
+        "foreground": "#858F9B",
+        "fontStyle": ""
       }
     }
   ],
   "semanticHighlighting": true,
   "semanticTokenColors": {
     "class": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
     },
     "enum": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
     },
     "interface": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
     },
     "struct": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
     },
     "type": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
     },
     "typeParameter": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
     },
     "namespace": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
@@ -544,7 +580,7 @@
       "underline": false
     },
     "parameter": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
@@ -568,68 +604,68 @@
       "italic": true
     },
     "*.defaultLibrary": {
-      "foreground": "#A2A9AF",
+      "foreground": "#AFB6BC",
       "bold": false,
       "italic": false,
       "underline": false
     },
     "type.declaration": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "type.definition": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "class.declaration": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "class.definition": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "enum.declaration": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "enum.definition": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "interface.declaration": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "interface.definition": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "struct.declaration": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "struct.definition": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
@@ -647,25 +683,25 @@
     },
     "function.declaration": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "function.definition": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "method.declaration": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },
     "method.definition": {
       "foreground": "#5CC1B3",
-      "bold": false,
+      "bold": true,
       "italic": false,
       "underline": false
     },

@@ -152,9 +152,8 @@ local hermes_roles = {
   bg1 = { 'status_bar_bg', 'voice_status_bg', 'completion_menu_bg', 'completion_menu_meta_bg' },
   sel = { 'selection_bg', 'completion_menu_current_bg', 'completion_menu_meta_current_bg' },
   green = { 'ui_ok', 'status_bar_good' },
-  red = { 'ui_error', 'status_bar_critical' },
+  red = { 'ui_error', 'status_bar_critical', 'status_bar_bad' },
   yellow = { 'ui_warn', 'status_bar_warn' },
-  orange = { 'status_bar_bad' },
   blue = { 'shell_dollar' },
 }
 for _, appearance in ipairs(appearances) do
@@ -222,6 +221,7 @@ local pi_vars = {
   fg1 = 'fg1',
   fg2 = 'fg2',
   fg3 = 'fg3',
+  comment = 'comment',
   accent = 'accent',
   accent2 = 'accent2',
   blue = 'blue',
@@ -271,7 +271,7 @@ local pi_colors = {
   toolDiffAdded = 'green',
   toolDiffRemoved = 'red',
   toolDiffContext = 'fg2',
-  syntaxComment = 'fg2',
+  syntaxComment = 'comment',
   syntaxKeyword = 'accent2',
   syntaxFunction = 'accent',
   syntaxVariable = 'fg0',
@@ -279,7 +279,7 @@ local pi_colors = {
   syntaxNumber = 'orange',
   syntaxType = 'blue',
   syntaxOperator = 'fg1',
-  syntaxPunctuation = 'fg1',
+  syntaxPunctuation = 'comment',
   thinkingOff = 'fg3',
   thinkingMinimal = 'fg3',
   thinkingLow = 'blue',
@@ -440,7 +440,7 @@ local function expected_semantic_colors(appearance, palette, variant)
   end
 
   return {
-    comment = palette.fg2,
+    comment = palette.comment,
     control = palette.accent2,
     definition = palette.accent,
     call = palette.accent,
@@ -487,7 +487,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       )
       equal(
         semantic.bold,
-        false,
+        typography.role('vscode', selector) == 'definition',
         'VS Code exact semantic bold for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
       )
       equal(
@@ -635,7 +635,7 @@ local function expected_herdr_colors(palette)
     red = palette.red,
     blue = palette.blue,
     teal = palette.cyan,
-    peach = palette.orange,
+    peach = palette.accent2,
   }
 end
 
@@ -685,16 +685,29 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     equal(fish[variant].fish_color_cwd_root, palette.red:sub(2), 'Fish root cwd color for ' .. appearance.name)
     equal(fish[variant].fish_color_status, palette.red:sub(2), 'Fish status color for ' .. appearance.name)
     equal(fish[variant].fish_color_history_current, palette.accent:sub(2), 'Fish history color for ' .. appearance.name)
+    local profile = require('token.appearance').roles(appearance.name, palette, palette_variant == 'dark')
+    local keyword = (profile and profile.syntax.control.fg or palette.accent2):sub(2)
+    equal(fish[variant].fish_color_keyword, keyword .. ' --bold', 'Fish keyword style for ' .. appearance.name)
+    equal(
+      fish[variant].fish_color_comment,
+      palette.comment:sub(2) .. ' --italics',
+      'Fish comment style for ' .. appearance.name
+    )
   end
 
   for _, variant in ipairs({ 'dark', 'light' }) do
     local palette = palette_fn(variant)
     local zsh = read_text('contrib/zsh/' .. appearance.slug .. '-' .. variant .. '.zsh')
+    local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
+    local r = profile and profile.syntax
+    local keyword = (r and r.control.fg or palette.accent2):sub(2)
     local styles = {
-      ['exec-descriptor'] = 'fg=#' .. palette.accent2:sub(2),
+      ['reserved-word'] = 'fg=#' .. keyword .. ',bold',
+      ['exec-descriptor'] = 'fg=#' .. keyword,
+      ['comment'] = 'fg=#' .. palette.comment:sub(2) .. ',italic',
       ['subtle-bg'] = 'bg=#' .. palette.match:sub(2),
-      ['optarg-string'] = 'fg=#' .. palette.green:sub(2),
-      ['optarg-number'] = 'fg=#' .. palette.purple:sub(2),
+      ['optarg-string'] = 'fg=#' .. (r and r.literal.fg or palette.green):sub(2),
+      ['optarg-number'] = 'fg=#' .. (r and (r.number or r.literal).fg or palette.purple):sub(2),
       ['recursive-base'] = 'none',
     }
     for name, style in pairs(styles) do
@@ -719,9 +732,9 @@ local flint_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
   flint_rules[rule.name] = rule.settings
 end
-equal(flint_rules['Function definition'].fontStyle, nil, 'VS Code Flint definition typography')
-equal(flint_rules['Function call'].fontStyle, nil, 'VS Code Flint call typography')
-equal(flint_rules['Type reference'].fontStyle, nil, 'VS Code Flint reference typography')
+equal(flint_rules['Function definition'].fontStyle, 'bold', 'VS Code Flint definition typography')
+equal(flint_rules['Function call'].fontStyle, '', 'VS Code Flint call typography')
+equal(flint_rules['Type reference'].fontStyle, '', 'VS Code Flint reference typography')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-flint/manifest.json')).name,
   'Token Flint',
@@ -732,9 +745,10 @@ equal(windows_flint[1].name, 'Token Flint Dark', 'Windows Terminal Flint dark na
 equal(windows_flint[2].name, 'Token Flint Light', 'Windows Terminal Flint light name')
 -- Regular-role Emacs faces state every font attribute as off.
 local emacs_regular = ' :weight normal :slant normal :underline nil)))'
+local emacs_definition = ' :weight bold :slant normal :underline nil)))'
 local emacs_flint = read_text('contrib/emacs/token-flint-dark-theme.el')
 truthy(
-  emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
+  emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_definition, 1, true),
   'Emacs Flint definition typography'
 )
 truthy(
@@ -747,11 +761,11 @@ local temper_rules = {}
 for _, rule in ipairs(vscode_temper.tokenColors) do
   temper_rules[rule.name] = rule.settings
 end
-equal(temper_rules['Function definition'].fontStyle, nil, 'VS Code Temper definition typography')
-equal(temper_rules['Function call'].fontStyle, nil, 'VS Code Temper call typography')
-equal(temper_rules['String'].fontStyle, nil, 'VS Code Temper literal typography')
+equal(temper_rules['Function definition'].fontStyle, 'bold', 'VS Code Temper definition typography')
+equal(temper_rules['Function call'].fontStyle, '', 'VS Code Temper call typography')
+equal(temper_rules['String'].fontStyle, '', 'VS Code Temper literal typography')
 equal(temper_rules['String'].foreground, temper_dark.accent, 'VS Code Temper literal color')
-equal(temper_rules['Type reference'].fontStyle, nil, 'VS Code Temper reference typography')
+equal(temper_rules['Type reference'].fontStyle, '', 'VS Code Temper reference typography')
 equal(temper_rules['Type reference'].foreground, temper_dark.fg1, 'VS Code Temper type reference color')
 equal(temper_rules.Exception.foreground, temper_dark.accent2, 'VS Code Temper exception color')
 equal(
@@ -764,7 +778,7 @@ equal(windows_temper[1].name, 'Token Temper Dark', 'Windows Terminal Temper dark
 equal(windows_temper[2].name, 'Token Temper Light', 'Windows Terminal Temper light name')
 local emacs_temper = read_text('contrib/emacs/token-temper-dark-theme.el')
 truthy(
-  emacs_temper:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
+  emacs_temper:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_definition, 1, true),
   'Emacs Temper definition typography'
 )
 truthy(
@@ -785,11 +799,11 @@ local ultra_rules = {}
 for _, rule in ipairs(vscode_ultra.tokenColors) do
   ultra_rules[rule.name] = rule.settings
 end
-equal(ultra_rules['Function definition'].fontStyle, nil, 'VS Code Ultra definition typography')
-equal(ultra_rules['Function call'].fontStyle, nil, 'VS Code Ultra call typography')
-equal(ultra_rules.String.fontStyle, nil, 'VS Code Ultra literal typography')
+equal(ultra_rules['Function definition'].fontStyle, 'bold', 'VS Code Ultra definition typography')
+equal(ultra_rules['Function call'].fontStyle, '', 'VS Code Ultra call typography')
+equal(ultra_rules.String.fontStyle, '', 'VS Code Ultra literal typography')
 equal(ultra_rules.String.foreground, ultra_dark.orange, 'VS Code Ultra literal color')
-equal(ultra_rules['Type reference'].fontStyle, nil, 'VS Code Ultra reference typography')
+equal(ultra_rules['Type reference'].fontStyle, '', 'VS Code Ultra reference typography')
 equal(ultra_rules['Type reference'].foreground, ultra_dark.fg1, 'VS Code Ultra type reference color')
 equal(ultra_rules.Exception.foreground, ultra_dark.accent2, 'VS Code Ultra exception color')
 equal(
@@ -805,7 +819,7 @@ equal(windows_ultra[1].name, 'Token Ultra Dark', 'Windows Terminal Ultra dark na
 equal(windows_ultra[2].name, 'Token Ultra Light', 'Windows Terminal Ultra light name')
 local emacs_ultra = read_text('contrib/emacs/token-ultra-dark-theme.el')
 truthy(
-  emacs_ultra:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
+  emacs_ultra:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_definition, 1, true),
   'Emacs Ultra definition typography'
 )
 truthy(
@@ -847,12 +861,12 @@ end
 equal(meridian_rules.Keyword.foreground, meridian_dark.blue, 'VS Code Meridian keyword color')
 equal(meridian_rules.Keyword.fontStyle, 'bold', 'VS Code Meridian keyword typography')
 equal(meridian_rules.String.foreground, meridian_dark.green, 'VS Code Meridian string color')
-equal(meridian_rules.Number.foreground, meridian_dark.accent, 'VS Code Meridian number color')
+equal(meridian_rules.Number.foreground, meridian_dark.green, 'VS Code Meridian number color')
 equal(meridian_rules.Property.foreground, meridian_dark.orange, 'VS Code Meridian property color')
-equal(meridian_rules['Function definition'].fontStyle, nil, 'VS Code Meridian definition typography')
-equal(meridian_rules['Type definition'].fontStyle, nil, 'VS Code Meridian type definition typography')
-equal(meridian_rules['Type reference'].fontStyle, nil, 'VS Code Meridian type typography')
-equal(meridian_rules['Built-in function'].fontStyle, nil, 'VS Code Meridian built-in typography')
+equal(meridian_rules['Function definition'].fontStyle, 'bold', 'VS Code Meridian definition typography')
+equal(meridian_rules['Type definition'].fontStyle, 'bold', 'VS Code Meridian type definition typography')
+equal(meridian_rules['Type reference'].fontStyle, '', 'VS Code Meridian type typography')
+equal(meridian_rules['Built-in function'].fontStyle, '', 'VS Code Meridian built-in typography')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-meridian/manifest.json')).name,
   'Token Meridian',
@@ -954,10 +968,18 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     )
     equal(
       (vscode_rules['Function definition'] or vscode_rules.Function).fontStyle,
-      nil,
+      'bold',
       'VS Code definition typography ' .. label
     )
-    equal((vscode_rules['Type reference'] or vscode_rules.Type).fontStyle, nil, 'VS Code type typography ' .. label)
+    equal((vscode_rules['Type reference'] or vscode_rules.Type).fontStyle, '', 'VS Code type typography ' .. label)
+    equal(vscode_rules['Function call'].fontStyle, '', 'VS Code call typography ' .. label)
+    equal(vscode_rules.Operator.fontStyle, '', 'VS Code operator typography ' .. label)
+    equal(vscode_rules['Declaration keyword'].fontStyle, 'bold', 'VS Code declaration keyword typography ' .. label)
+    equal(vscode_rules['Declaration keyword'].foreground, expected.control, 'VS Code declaration keyword ' .. label)
+    -- TextMate rules inherit fontStyle, so an unset style would leak bold into sub-scopes.
+    for rule_name, settings in pairs(vscode_rules) do
+      truthy(settings.fontStyle ~= nil, 'VS Code rule ' .. rule_name .. ' sets no fontStyle for ' .. label)
+    end
     equal(
       (vscode_rules['Type reference'] or vscode_rules.Type).foreground,
       expected.type,
@@ -971,7 +993,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     equal(vscode_rules['Markup link'].foreground, expected.link, 'VS Code link color ' .. label)
     local vscode_preprocessor = vscode_rules.Preprocessor or vscode_rules.PreProc
     equal(vscode_preprocessor.fontStyle, 'bold', 'VS Code preprocessor typography ' .. label)
-    equal(vscode_rules['Markup code'].fontStyle, nil, 'VS Code markup code typography ' .. label)
+    equal(vscode_rules['Markup code'].fontStyle, '', 'VS Code markup code typography ' .. label)
 
     local sublime_source = read_text('contrib/sublime/' .. appearance.slug .. '-' .. variant .. '.sublime-color-scheme')
     sublime_source = sublime_source:gsub('^//[^\n]*\n', '', 1)
@@ -1005,7 +1027,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     )
     equal(
       (sublime_rules['Function definition'] or sublime_rules.Function).font_style,
-      nil,
+      'bold',
       'Sublime definition typography ' .. label
     )
     equal(
@@ -1021,7 +1043,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     equal(sublime_rules['Markup link'].foreground, expected.link, 'Sublime link color ' .. label)
     local sublime_preprocessor = sublime_rules.Preprocessor or sublime_rules.PreProc
     equal(sublime_preprocessor.font_style, 'bold', 'Sublime preprocessor typography ' .. label)
-    equal(sublime_rules['Markup code'].font_style, nil, 'Sublime markup code typography ' .. label)
+    equal(sublime_rules['Markup code'].font_style, '', 'Sublime markup code typography ' .. label)
 
     local gtk = read_text('contrib/gtksourceview/' .. appearance.slug .. '-' .. variant .. '.xml')
     truthy(gtk:find('name="def:keyword"[^>]*bold="true"'), 'GtkSourceView keyword typography ' .. label)
@@ -1118,10 +1140,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     truthy(emacs:find('font%-lock%-keyword%-face[^\n]*:weight bold'), 'Emacs keyword typography ' .. label)
     truthy(emacs:find('font%-lock%-comment%-face[^\n]*:slant italic'), 'Emacs comment typography ' .. label)
     truthy(emacs:find('markdown%-list%-face[^\n]*:weight bold'), 'Emacs list typography ' .. label)
-    truthy(
-      not emacs:find('font%-lock%-function%-name%-face[^\n]*:weight bold'),
-      'Emacs definition typography ' .. label
-    )
+    truthy(emacs:find('font%-lock%-function%-name%-face[^\n]*:weight bold'), 'Emacs definition typography ' .. label)
 
     local xcode = read_text('contrib/xcode/' .. appearance.slug .. '-' .. variant .. '.xccolortheme')
     local xcode_fonts = assert(xcode:match('<key>DVTSourceTextSyntaxFonts</key>%s*<dict>(.-)</dict>'))
@@ -1179,7 +1198,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       'Bat preprocessor typography ' .. label
     )
     local bat_markup_code = assert(bat:match('<string>Markup code</string>.-<key>settings</key>%s*<dict>(.-)</dict>'))
-    truthy(not bat_markup_code:find('<key>fontStyle</key>', 1, true), 'Bat markup code typography ' .. label)
+    truthy(bat_markup_code:find('<key>fontStyle</key>%s*<string></string>'), 'Bat markup code typography ' .. label)
   end
 end
 
@@ -1343,6 +1362,7 @@ local foreground_keys = {
   'fg1',
   'fg2',
   'fg3',
+  'comment',
   'accent',
   'accent2',
   'blue',
@@ -1367,6 +1387,8 @@ local foreground_keys = {
   'gsign_del_staged',
   'gsign_untracked_staged',
 }
+
+local role_slot_keys = { blue = true, purple = true, cyan = true, orange = true }
 
 local palette_loaders = {
   token = 'token.palette',
@@ -1460,7 +1482,7 @@ local palette_anchors = {
       fg0 = '#31312b',
       accent = '#893517',
       blue = '#37526a',
-      orange = '#004943',
+      orange = '#1a5a53',
       sel = '#dedbd3',
       match = '#eadab6',
     },
@@ -1468,15 +1490,17 @@ local palette_anchors = {
   ['token-meridian'] = {
     dark = {
       fg0 = '#c9c0b1',
-      fg1 = '#aba195',
+      fg1 = '#b8aea1',
       fg2 = '#a69c91',
       fg3 = '#91887d',
+      comment = '#a69c91',
       accent = '#e89a49',
-      blue = '#66abc6',
+      blue = '#7cc1dc',
       green = '#8cbb62',
-      yellow = '#bf9c53',
-      purple = '#b991db',
-      orange = '#de88a6',
+      yellow = '#c2b040',
+      purple = '#c69de8',
+      cyan = '#cf9c70',
+      orange = '#bb97ab',
       olive = '#d9a86e',
     },
     light = {
@@ -1484,12 +1508,13 @@ local palette_anchors = {
       fg1 = '#46535f',
       fg2 = '#524b42',
       fg3 = '#43505c',
+      comment = '#6c645b',
       accent = '#0048b3',
       blue = '#0048b3',
       green = '#005f2f',
       cyan = '#095b62',
-      purple = '#7a1f7a',
-      orange = '#4b1fa3',
+      purple = '#832882',
+      orange = '#725264',
       olive = '#843900',
     },
   },
@@ -1498,11 +1523,12 @@ local palette_anchors = {
 for _, background in ipairs({ 'dark', 'light' }) do
   local classic = require(palette_loaders.token)(background)
   local meridian = require(palette_loaders['token-meridian'])(background)
+  local ultra = require(palette_loaders['token-ultra'])(background)
 
   for name, loader in pairs(palette_loaders) do
     local palette = require(loader)(background)
     equal(sorted_keys(palette), sorted_keys(classic), name .. ' palette keys for ' .. background)
-    equal(vim.tbl_count(palette), 49, name .. ' palette key count for ' .. background)
+    equal(vim.tbl_count(palette), 50, name .. ' palette key count for ' .. background)
     for key, color in pairs(palette) do
       truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid ' .. name .. ' color ' .. key .. ' for ' .. background)
     end
@@ -1512,12 +1538,26 @@ for _, background in ipairs({ 'dark', 'light' }) do
 
     if name ~= 'token-meridian' then
       for _, key in ipairs(foreground_keys) do
-        local target = contrast(meridian[key], meridian.bg3)
-        local actual = contrast(palette[key], palette.bg3)
-        truthy(
-          math.abs(actual - target) <= 0.05,
-          string.format('%s contrast parity for %s %s: expected %.3f, got %.3f', name, key, background, target, actual)
-        )
+        -- These keys hold different syntax roles per appearance, so the role
+        -- hierarchy test below owns their contrast.
+        if not role_slot_keys[key] then
+          -- Meridian's dark yellow moved away from the tan its types use, so the
+          -- other appearances keep parity with Ultra's.
+          local reference = key == 'yellow' and background == 'dark' and ultra or meridian
+          local target = contrast(reference[key], reference.bg3)
+          local actual = contrast(palette[key], palette.bg3)
+          truthy(
+            math.abs(actual - target) <= 0.05,
+            string.format(
+              '%s contrast parity for %s %s: expected %.3f, got %.3f',
+              name,
+              key,
+              background,
+              target,
+              actual
+            )
+          )
+        end
       end
       if background == 'dark' then
         local terminal = require('token.terminal').colors(palette, true, name)
@@ -1527,7 +1567,6 @@ for _, background in ipairs({ 'dark', 'light' }) do
     end
   end
 
-  local ultra = require(palette_loaders['token-ultra'])(background)
   for index = 0, 5 do
     local key = 'bg' .. index
     equal(meridian[key], ultra[key], 'Meridian preserved Ultra ' .. key .. ' for ' .. background)
@@ -1548,9 +1587,11 @@ for _, background in ipairs({ 'dark', 'light' }) do
     'sel',
     'match',
     'red',
-    'yellow',
   }) do
     equal(meridian[key], ultra[key], 'Meridian preserved Ultra state color ' .. key .. ' for ' .. background)
+  end
+  if background == 'light' then
+    equal(meridian.yellow, ultra.yellow, 'Meridian preserved Ultra light yellow')
   end
 
   local meridian_roles = require('token.appearance').roles('token-meridian', meridian, background == 'dark')
@@ -1675,8 +1716,14 @@ local runtime_roles = {
   { '@markup.quote', 'comment' },
   { '@markup.link', 'link', 'link' },
   { '@markup.heading', 'heading', 'heading' },
-  { '@function', 'regular', 'definition' },
+  { '@function', 'definition', 'definition' },
+  { '@function.method', 'definition' },
+  { '@type.definition', 'definition' },
   { '@function.call', 'regular', 'call' },
+  { '@function.method.call', 'regular' },
+  { '@function.css', 'regular', 'call' },
+  { '@lsp.type.function', 'regular' },
+  { '@lsp.type.method', 'regular' },
   { '@type', 'regular', 'type' },
   { '@function.builtin', 'regular', 'builtin' },
   { '@property', 'regular', 'property' },
@@ -1687,12 +1734,28 @@ local runtime_roles = {
   { 'Boolean', 'regular', 'number' },
   { 'Special', 'regular' },
   { 'SpecialChar', 'regular' },
-  { '@lsp.typemod.function.definition', 'regular' },
+  { '@lsp.typemod.typeParameter.declaration', 'regular' },
   { '@lsp.mod.declaration', 'regular' },
   { '@lsp.mod.definition', 'regular' },
   { '@lsp.mod.modification', 'regular' },
   { '@lsp.mod.defaultLibrary', 'regular' },
 }
+-- Typography and the LSP links each declare the definition token types, so
+-- compare the two lists and check every group they produce.
+local typography_definitions, lsp_definitions = {}, {}
+for _, selector in ipairs(typography.vscode_exact_selectors()) do
+  if typography.role('vscode', selector) == 'definition' then
+    typography_definitions[selector] = true
+  end
+end
+for name in pairs(require('token.groups.lsp')({})) do
+  local selector = name:match('^@lsp%.typemod%.(.+)$')
+  if selector then
+    lsp_definitions[selector] = true
+    runtime_roles[#runtime_roles + 1] = { name, 'definition' }
+  end
+end
+equal(sorted_keys(lsp_definitions), sorted_keys(typography_definitions), 'LSP definition token types')
 token.setup()
 for _, appearance in ipairs(require('token.appearance').all()) do
   for _, background in ipairs({ 'dark', 'light' }) do
@@ -1825,11 +1888,12 @@ token.setup({
   end,
 })
 load('dark', 'token')
-equal(vim.api.nvim_get_hl(0, { name = '@function', link = true }).link, 'Function', 'function alias lost its link')
+equal(vim.api.nvim_get_hl(0, { name = '@function.call', link = true }).link, 'Function', 'call alias lost its link')
 equal(vim.api.nvim_get_hl(0, { name = '@comment', link = true }).link, 'Comment', 'comment alias lost its link')
-equal(hl('@function').fg, tonumber('112233', 16), 'function alias ignored target override')
+equal(hl('@function.call').fg, tonumber('112233', 16), 'call alias ignored target override')
 equal(hl('@comment').fg, tonumber('445566', 16), 'comment alias ignored callback override')
-equal(hl('@function').bold, nil, 'function alias regular typography changed')
+equal(hl('@function.call').bold, nil, 'call alias regular typography changed')
+equal(hl('@function').bold, true, 'definition typography changed')
 truthy(hl('@comment').italic, 'comment alias typography changed')
 
 -- Shared user customization follows the appearance overlay and receives the active colorscheme.
@@ -2349,18 +2413,18 @@ equal(require('token.terminal').colors(meridian_palette, true, 'token-meridian')
   [0] = '#1d1d1c',
   [1] = '#dd8384',
   [2] = '#8cbb62',
-  [3] = '#bf9c53',
-  [4] = '#66abc6',
-  [5] = '#b991db',
-  [6] = '#66abc6',
-  [7] = '#aba195',
+  [3] = '#c2b040',
+  [4] = '#7cc1dc',
+  [5] = '#c69de8',
+  [6] = '#7cc1dc',
+  [7] = '#b8aea1',
   [8] = '#91887d',
   [9] = '#ea9d49',
   [10] = '#8cbb62',
   [11] = '#f8c88f',
-  [12] = '#66abc6',
-  [13] = '#de88a6',
-  [14] = '#66abc6',
+  [12] = '#7cc1dc',
+  [13] = '#c69de8',
+  [14] = '#7cc1dc',
   [15] = '#c9c0b1',
 }, 'Meridian ANSI dark roles')
 
@@ -2373,15 +2437,15 @@ equal(require('token.terminal').colors(meridian_light_palette, false, 'token-mer
   [2] = '#005f2f',
   [3] = '#926e25',
   [4] = '#0048b3',
-  [5] = '#7a1f7a',
+  [5] = '#832882',
   [6] = '#095b62',
-  [7] = '#b5b2ab',
+  [7] = '#8f8c85',
   [8] = '#524b42',
   [9] = '#ae5158',
   [10] = '#005f2f',
   [11] = '#843900',
   [12] = '#0048b3',
-  [13] = '#4b1fa3',
+  [13] = '#832882',
   [14] = '#095b62',
   [15] = '#fbf9f4',
 }, 'Meridian ANSI light roles')
@@ -2753,5 +2817,30 @@ end
 parity({}, 'core-only')
 parity({ plugins = { all = true } }, 'all-plugin')
 parity({ styles = style_reach }, 'styled')
+
+-- Syntax roles keep one hierarchy in every variant: text steps down from normal
+-- through operators to comments, comments stay above WCAG AA on the cursor line,
+-- and no colored role outranks keywords.
+token.setup()
+for _, appearance in ipairs(appearances) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    local label = appearance.name .. ' ' .. background
+    local function ratio(group, surface_group)
+      local surface = hl(surface_group or 'Normal').bg
+      return contrast(string.format('#%06x', hl(group).fg), string.format('#%06x', surface))
+    end
+    truthy(ratio('@comment') < ratio('@operator') - 0.5, 'comments sit below operators for ' .. label)
+    truthy(ratio('@operator') < ratio('@variable') - 0.5, 'operators sit below normal text for ' .. label)
+    truthy(ratio('@comment', 'CursorLine') >= 4.5, 'comments keep AA on the cursor line for ' .. label)
+    equal(ratio('@punctuation.delimiter'), ratio('@comment'), 'punctuation sits on the comment tier for ' .. label)
+    for _, group in ipairs({ '@function', '@function.call', '@string', '@number', '@constant', '@type' }) do
+      truthy(ratio(group) <= ratio('@keyword') + 0.1, group .. ' does not outrank keywords for ' .. label)
+    end
+    if appearance.name == 'token-meridian' then
+      truthy(ratio('@property') < ratio('@function'), 'Meridian properties sit below functions for ' .. background)
+    end
+  end
+end
 
 print('token: headless tests passed')

@@ -10,7 +10,7 @@
     <style name="secondary-cursor" foreground="#514b44"/>
     <style name="current-line" background="#f0ede6"/>
     <style name="current-line-number" foreground="#514b44" background="#f0ede6"/>
-    <style name="line-numbers" foreground="#b5b2ab" background="#f6f5f1"/>
+    <style name="line-numbers" foreground="#8f8c85" background="#f6f5f1"/>
     <style name="line-numbers-border" background="#eae9e5"/>
     <style name="draw-spaces" foreground="#544e44"/>
     <style name="background-pattern" background="#f6f5f1"/>
@@ -18,21 +18,21 @@
     <style name="bracket-match" foreground="#893517" background="#eadab6" bold="true"/>
     <style name="bracket-mismatch" foreground="#ae5158" bold="true"/>
     <style name="search-match" foreground="#31312b" background="#eadab6"/>
-    <style name="def:comment" foreground="#514b44" italic="true"/>
-    <style name="def:shebang" foreground="#514b44" italic="true"/>
-    <style name="def:doc-comment" foreground="#514b44" italic="true"/>
-    <style name="def:doc-comment-element" foreground="#514b44" italic="true"/>
-    <style name="def:constant" foreground="#004943"/>
-    <style name="def:special-constant" foreground="#004943"/>
-    <style name="def:number" foreground="#004943"/>
-    <style name="def:decimal" foreground="#004943"/>
-    <style name="def:base-n-integer" foreground="#004943"/>
-    <style name="def:floating-point" foreground="#004943"/>
-    <style name="def:complex" foreground="#004943"/>
-    <style name="def:boolean" foreground="#004943"/>
-    <style name="def:character" foreground="#004943"/>
-    <style name="def:string" foreground="#004943"/>
-    <style name="def:special-char" foreground="#004943"/>
+    <style name="def:comment" foreground="#6b645d" italic="true"/>
+    <style name="def:shebang" foreground="#6b645d" italic="true"/>
+    <style name="def:doc-comment" foreground="#6b645d" italic="true"/>
+    <style name="def:doc-comment-element" foreground="#6b645d" italic="true"/>
+    <style name="def:constant" foreground="#1a5a53"/>
+    <style name="def:special-constant" foreground="#1a5a53"/>
+    <style name="def:number" foreground="#1a5a53"/>
+    <style name="def:decimal" foreground="#1a5a53"/>
+    <style name="def:base-n-integer" foreground="#1a5a53"/>
+    <style name="def:floating-point" foreground="#1a5a53"/>
+    <style name="def:complex" foreground="#1a5a53"/>
+    <style name="def:boolean" foreground="#1a5a53"/>
+    <style name="def:character" foreground="#1a5a53"/>
+    <style name="def:string" foreground="#1a5a53"/>
+    <style name="def:special-char" foreground="#1a5a53"/>
     <style name="def:identifier" foreground="#31312b"/>
     <style name="def:function" foreground="#893517"/>
     <style name="def:builtin" foreground="#565141"/>
@@ -61,7 +61,7 @@
     <style name="def:list-marker" foreground="#6c4800" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>
     <style name="def:emphasis" italic="true"/>
-    <style name="def:inline-code" foreground="#004943"/>
+    <style name="def:inline-code" foreground="#1a5a53"/>
     <style name="def:underlined" underline="single"/>
     <style name="def:deletion" foreground="#ae5158"/>
     <style name="def:insertion" foreground="#385a35"/>

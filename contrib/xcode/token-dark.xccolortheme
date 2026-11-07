@@ -44,7 +44,7 @@
     <key>DVTMarkupTextEmphasisFont</key>
     <string>.AppleSystemUIFontItalic - 10.0</string>
     <key>DVTMarkupTextInlineCodeColor</key>
-    <string>0.650980 0.631373 0.596078 0.7</string>
+    <string>0.701961 0.682353 0.647059 0.7</string>
     <key>DVTMarkupTextLinkColor</key>
     <string>0.505882 0.647059 0.768627 1</string>
     <key>DVTMarkupTextLinkFont</key>
@@ -134,7 +134,7 @@
       <key>xcode.syntax.identifier.variable</key>
       <string>0.764706 0.752941 0.721569 1</string>
       <key>xcode.syntax.identifier.variable.system</key>
-      <string>0.968627 0.776471 0.600000 1</string>
+      <string>0.694118 0.584314 0.792157 1</string>
       <key>xcode.syntax.keyword</key>
       <string>0.968627 0.776471 0.600000 1</string>
       <key>xcode.syntax.mark</key>
@@ -144,7 +144,7 @@
       <key>xcode.syntax.markup.code</key>
       <string>0.560784 0.717647 0.549020 1</string>
       <key>xcode.syntax.number</key>
-      <string>0.839216 0.572549 0.298039 1</string>
+      <string>0.439216 0.682353 0.678431 1</string>
       <key>xcode.syntax.plain</key>
       <string>0.764706 0.752941 0.721569 1</string>
       <key>xcode.syntax.preprocessor</key>
@@ -167,9 +167,9 @@
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.other</key>
-      <string>SFMono-Medium - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.type</key>
-      <string>SFMono-Medium - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.identifier.class</key>
       <string>SFMono-Medium - 12.0</string>
       <key>xcode.syntax.identifier.class.system</key>

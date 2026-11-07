@@ -10,7 +10,7 @@
     <style name="secondary-cursor" foreground="#504b44"/>
     <style name="current-line" background="#f0efeb"/>
     <style name="current-line-number" foreground="#504b44" background="#f0efeb"/>
-    <style name="line-numbers" foreground="#b4b2ab" background="#f6f5f1"/>
+    <style name="line-numbers" foreground="#8e8c86" background="#f6f5f1"/>
     <style name="line-numbers-border" background="#eae9e5"/>
     <style name="draw-spaces" foreground="#524e46"/>
     <style name="background-pattern" background="#f6f5f1"/>
@@ -18,21 +18,21 @@
     <style name="bracket-match" foreground="#863716" background="#e8d8b0" bold="true"/>
     <style name="bracket-mismatch" foreground="#ad5253" bold="true"/>
     <style name="search-match" foreground="#323128" background="#e8d8b0"/>
-    <style name="def:comment" foreground="#504b44" italic="true"/>
-    <style name="def:shebang" foreground="#504b44" italic="true"/>
-    <style name="def:doc-comment" foreground="#504b44" italic="true"/>
-    <style name="def:doc-comment-element" foreground="#504b44" italic="true"/>
-    <style name="def:constant" foreground="#573c72"/>
-    <style name="def:special-constant" foreground="#573c72"/>
-    <style name="def:number" foreground="#613500"/>
-    <style name="def:decimal" foreground="#613500"/>
-    <style name="def:base-n-integer" foreground="#613500"/>
-    <style name="def:floating-point" foreground="#613500"/>
-    <style name="def:complex" foreground="#613500"/>
-    <style name="def:boolean" foreground="#613500"/>
+    <style name="def:comment" foreground="#6a655d" italic="true"/>
+    <style name="def:shebang" foreground="#6a655d" italic="true"/>
+    <style name="def:doc-comment" foreground="#6a655d" italic="true"/>
+    <style name="def:doc-comment-element" foreground="#6a655d" italic="true"/>
+    <style name="def:constant" foreground="#61457c"/>
+    <style name="def:special-constant" foreground="#61457c"/>
+    <style name="def:number" foreground="#1d5f5e"/>
+    <style name="def:decimal" foreground="#1d5f5e"/>
+    <style name="def:base-n-integer" foreground="#1d5f5e"/>
+    <style name="def:floating-point" foreground="#1d5f5e"/>
+    <style name="def:complex" foreground="#1d5f5e"/>
+    <style name="def:boolean" foreground="#1d5f5e"/>
     <style name="def:character" foreground="#365a33"/>
     <style name="def:string" foreground="#365a33"/>
-    <style name="def:special-char" foreground="#573c72"/>
+    <style name="def:special-char" foreground="#61457c"/>
     <style name="def:identifier" foreground="#323128"/>
     <style name="def:function" foreground="#863716"/>
     <style name="def:builtin" foreground="#315270"/>
@@ -40,7 +40,7 @@
     <style name="def:statement" foreground="#6d4717" bold="true"/>
     <style name="def:type" foreground="#315270"/>
     <style name="def:operator" foreground="#565141"/>
-    <style name="def:preprocessor" foreground="#573c72" bold="true"/>
+    <style name="def:preprocessor" foreground="#61457c" bold="true"/>
     <style name="def:error" foreground="#ad5253" bold="true"/>
     <style name="def:warning" foreground="#857238"/>
     <style name="def:note" foreground="#315270" bold="true"/>
@@ -52,7 +52,7 @@
     <style name="def:heading3" foreground="#465509" bold="true"/>
     <style name="def:heading4" foreground="#315270" bold="true"/>
     <style name="def:heading5" foreground="#365a33" bold="true"/>
-    <style name="def:heading6" foreground="#573c72" bold="true"/>
+    <style name="def:heading6" foreground="#61457c" bold="true"/>
     <style name="def:thematic-break" foreground="#504b44" bold="true"/>
     <style name="def:preformatted-section" foreground="#323128" background="#f6f5f1"/>
     <style name="def:link-destination" foreground="#315270" underline="single"/>
@@ -70,5 +70,5 @@
     <style name="diff:changed-line" foreground="#857238"/>
     <style name="diff:location" foreground="#315270"/>
     <style name="diff:diff-file" foreground="#863716" bold="true"/>
-    <style name="diff:special-case" foreground="#573c72"/>
+    <style name="diff:special-case" foreground="#61457c"/>
 </style-scheme>

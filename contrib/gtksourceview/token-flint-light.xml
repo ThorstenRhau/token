@@ -10,7 +10,7 @@
     <style name="secondary-cursor" foreground="#414C57"/>
     <style name="current-line" background="#EBEFF2"/>
     <style name="current-line-number" foreground="#414C57" background="#EBEFF2"/>
-    <style name="line-numbers" foreground="#A7B2BB" background="#EEF1F3"/>
+    <style name="line-numbers" foreground="#818C94" background="#EEF1F3"/>
     <style name="line-numbers-border" background="#E0E5EA"/>
     <style name="draw-spaces" foreground="#444E59"/>
     <style name="background-pattern" background="#EEF1F3"/>
@@ -18,10 +18,10 @@
     <style name="bracket-match" foreground="#902A03" background="#E9DDBE" bold="true"/>
     <style name="bracket-mismatch" foreground="#BF3F50" bold="true"/>
     <style name="search-match" foreground="#283039" background="#E9DDBE"/>
-    <style name="def:comment" foreground="#414C57" italic="true"/>
-    <style name="def:shebang" foreground="#414C57" italic="true"/>
-    <style name="def:doc-comment" foreground="#414C57" italic="true"/>
-    <style name="def:doc-comment-element" foreground="#414C57" italic="true"/>
+    <style name="def:comment" foreground="#5A6571" italic="true"/>
+    <style name="def:shebang" foreground="#5A6571" italic="true"/>
+    <style name="def:doc-comment" foreground="#5A6571" italic="true"/>
+    <style name="def:doc-comment-element" foreground="#5A6571" italic="true"/>
     <style name="def:constant" foreground="#3D5902"/>
     <style name="def:special-constant" foreground="#3D5902"/>
     <style name="def:number" foreground="#3D5902"/>

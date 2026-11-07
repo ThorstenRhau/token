@@ -2,7 +2,7 @@
 ---@return table<string, vim.api.keyset.highlight>
 local function syntax(p)
   return {
-    Comment = { fg = p.fg2, italic = true },
+    Comment = { fg = p.comment, italic = true },
     Constant = { fg = p.purple },
     String = { fg = p.green },
     Character = { fg = p.green },
@@ -35,8 +35,8 @@ local function syntax(p)
     Special = { fg = p.purple },
     SpecialChar = { fg = p.purple },
     Tag = { fg = p.purple },
-    Delimiter = { fg = p.fg1 },
-    SpecialComment = { fg = p.fg2, italic = true },
+    Delimiter = { fg = p.comment },
+    SpecialComment = { fg = p.comment, italic = true },
     Debug = { fg = p.red },
 
     Underlined = { underline = true },

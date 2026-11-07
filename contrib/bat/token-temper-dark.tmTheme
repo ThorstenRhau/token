@@ -56,13 +56,28 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Operator</string>
+      <string>Declaration keyword</string>
       <key>scope</key>
-      <string>keyword.operator</string>
+      <string>storage.type.function, storage.type.class, storage.type.interface, storage.type.enum, storage.type.struct, storage.type.type, storage.type.namespace, storage.type.keyword, storage.type.ts, storage.type.tsx, storage.type.js, storage.type.rust</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#E7CDFF</string>
+        <key>fontStyle</key>
+        <string>bold</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Operator</string>
+      <key>scope</key>
+      <string>keyword.operator, storage.type.function.arrow</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -74,17 +89,21 @@
       <dict>
         <key>foreground</key>
         <string>#5CC1B3</string>
+        <key>fontStyle</key>
+        <string>bold</string>
       </dict>
     </dict>
     <dict>
       <key>name</key>
       <string>Function call</string>
       <key>scope</key>
-      <string>meta.function-call, variable.function</string>
+      <string>meta.function-call, variable.function, meta.function-call entity.name.function, meta.function.call entity.name.function, meta.method-call entity.name.function, entity.name.function.call, entity.name.function.support, entity.name.function.decorator, entity.name.function.macro, entity.name.function.tagged-template</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
         <string>#5CC1B3</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -95,7 +114,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -107,6 +128,8 @@
       <dict>
         <key>foreground</key>
         <string>#5CC1B3</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -118,28 +141,34 @@
       <dict>
         <key>foreground</key>
         <string>#5CC1B3</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
       <key>name</key>
       <string>Type definition</string>
       <key>scope</key>
-      <string>entity.name.type, entity.name.class, entity.name.type.class</string>
+      <string>entity.name.type.class, entity.name.type.interface, entity.name.type.struct, entity.name.type.enum, entity.name.type.alias, entity.name.class, entity.name.struct, entity.name.interface, entity.name.enum</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
         <string>#5CC1B3</string>
+        <key>fontStyle</key>
+        <string>bold</string>
       </dict>
     </dict>
     <dict>
       <key>name</key>
       <string>Type reference</string>
       <key>scope</key>
-      <string>storage.type, support.type, support.class, entity.other.inherited-class</string>
+      <string>entity.name.type, storage.type, support.type, support.class, entity.other.inherited-class</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -150,7 +179,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -187,7 +218,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -199,6 +232,8 @@
       <dict>
         <key>foreground</key>
         <string>#C3C8CC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -209,7 +244,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -233,7 +270,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -271,6 +310,8 @@
       <dict>
         <key>foreground</key>
         <string>#C3C8CC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -282,6 +323,8 @@
       <dict>
         <key>foreground</key>
         <string>#C3C8CC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -292,7 +335,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#9AA4AE</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -303,7 +348,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -340,7 +387,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -379,7 +426,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#A2A9AF</string>
+        <string>#AFB6BC</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -393,6 +440,8 @@
       <dict>
         <key>foreground</key>
         <string>#9AA4AE</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -430,6 +479,8 @@
       <dict>
         <key>foreground</key>
         <string>#5CC1B3</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -441,6 +492,8 @@
       <dict>
         <key>foreground</key>
         <string>#9AA4AE</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -511,6 +564,8 @@
       <dict>
         <key>foreground</key>
         <string>#5EC4B5</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -522,6 +577,8 @@
       <dict>
         <key>foreground</key>
         <string>#E3888C</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -533,6 +590,8 @@
       <dict>
         <key>foreground</key>
         <string>#C5A15A</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -544,6 +603,8 @@
       <dict>
         <key>foreground</key>
         <string>#5EC4B5</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -555,6 +616,8 @@
       <dict>
         <key>foreground</key>
         <string>#E3888C</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -566,6 +629,8 @@
       <dict>
         <key>foreground</key>
         <string>#C5A15A</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -577,6 +642,8 @@
       <dict>
         <key>foreground</key>
         <string>#858F9B</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -588,6 +655,8 @@
       <dict>
         <key>foreground</key>
         <string>#858F9B</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     </array>

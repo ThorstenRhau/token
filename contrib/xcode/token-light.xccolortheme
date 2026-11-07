@@ -80,7 +80,7 @@
     <key>DVTScrollbarMarkerErrorColor</key>
     <string>0.678431 0.321569 0.325490 1</string>
     <key>DVTScrollbarMarkerRuntimeIssueColor</key>
-    <string>0.341176 0.235294 0.447059 1</string>
+    <string>0.380392 0.270588 0.486275 1</string>
     <key>DVTScrollbarMarkerWarningColor</key>
     <string>0.521569 0.447059 0.219608 1</string>
     <key>DVTSourceTextBackground</key>
@@ -98,13 +98,13 @@
     <key>DVTSourceTextSyntaxColors</key>
     <dict>
       <key>xcode.syntax.attribute</key>
-      <string>0.341176 0.235294 0.447059 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.character</key>
       <string>0.211765 0.352941 0.200000 1</string>
       <key>xcode.syntax.comment</key>
-      <string>0.313725 0.294118 0.266667 1</string>
+      <string>0.415686 0.396078 0.364706 1</string>
       <key>xcode.syntax.comment.doc</key>
-      <string>0.313725 0.294118 0.266667 1</string>
+      <string>0.415686 0.396078 0.364706 1</string>
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>0.521569 0.447059 0.219608 1</string>
       <key>xcode.syntax.declaration.other</key>
@@ -114,19 +114,19 @@
       <key>xcode.syntax.identifier.class</key>
       <string>0.192157 0.321569 0.439216 1</string>
       <key>xcode.syntax.identifier.class.system</key>
-      <string>0.341176 0.235294 0.447059 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.identifier.constant</key>
-      <string>0.341176 0.235294 0.447059 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.identifier.constant.system</key>
-      <string>0.341176 0.235294 0.447059 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.identifier.function</key>
       <string>0.525490 0.215686 0.086275 1</string>
       <key>xcode.syntax.identifier.function.system</key>
       <string>0.525490 0.215686 0.086275 1</string>
       <key>xcode.syntax.identifier.macro</key>
-      <string>0.341176 0.235294 0.447059 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.identifier.macro.system</key>
-      <string>0.341176 0.235294 0.447059 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.identifier.type</key>
       <string>0.192157 0.321569 0.439216 1</string>
       <key>xcode.syntax.identifier.type.system</key>
@@ -134,7 +134,7 @@
       <key>xcode.syntax.identifier.variable</key>
       <string>0.196078 0.192157 0.156863 1</string>
       <key>xcode.syntax.identifier.variable.system</key>
-      <string>0.427451 0.278431 0.090196 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.keyword</key>
       <string>0.427451 0.278431 0.090196 1</string>
       <key>xcode.syntax.mark</key>
@@ -144,11 +144,11 @@
       <key>xcode.syntax.markup.code</key>
       <string>0.211765 0.352941 0.200000 1</string>
       <key>xcode.syntax.number</key>
-      <string>0.380392 0.207843 0.000000 1</string>
+      <string>0.113725 0.372549 0.368627 1</string>
       <key>xcode.syntax.plain</key>
       <string>0.196078 0.192157 0.156863 1</string>
       <key>xcode.syntax.preprocessor</key>
-      <string>0.341176 0.235294 0.447059 1</string>
+      <string>0.380392 0.270588 0.486275 1</string>
       <key>xcode.syntax.string</key>
       <string>0.211765 0.352941 0.200000 1</string>
       <key>xcode.syntax.url</key>
@@ -167,9 +167,9 @@
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.other</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.type</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.identifier.class</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.identifier.class.system</key>

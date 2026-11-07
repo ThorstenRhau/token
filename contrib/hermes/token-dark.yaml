@@ -29,7 +29,7 @@ colors:
   status_bar_critical: "#d68585"
   ui_warn: "#b99d4a"
   status_bar_warn: "#b99d4a"
-  status_bar_bad: "#d6924c"
+  status_bar_bad: "#d68585"
   shell_dollar: "#81a5c4"
 spinner:
   waiting_faces: ["󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥"]

@@ -4,7 +4,7 @@
     "Error": "#E3888C",
     "FlagArg": "#51B8AA",
     "FlagMultiArg": "#C294E6",
-    "FlagNoArg": "#A2A9AF",
+    "FlagNoArg": "#AFB6BC",
     "FlagOptArg": "#62C7B9",
     "Highlight1": "#51B8AA",
     "Highlight2": "#5EC4B5",
@@ -14,10 +14,10 @@
     "Highlight6": "#C5A15A",
     "Highlight7": "#5CC1B3",
     "Highlight8": "#E3888C",
-    "Highlight9": "#A2A9AF",
+    "Highlight9": "#AFB6BC",
     "Highlight10": "#9AA4AE",
     "Highlight11": "#62C7B9",
-    "Highlight12": "#51B7AA",
+    "Highlight12": "#E7CDFF",
     "KeywordAmbiguous": "#C5A15A",
     "KeywordNegative": "#E3888C",
     "KeywordPositive": "#5EC4B5",
@@ -30,6 +30,6 @@
     "LogLevelTrace": "#9AA4AE",
     "LogLevelWarning": "#C5A15A",
     "Usage": "#9AA4AE",
-    "Value": "#A2A9AF"
+    "Value": "#AFB6BC"
   }
 }

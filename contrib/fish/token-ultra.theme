@@ -4,18 +4,18 @@
 [dark]
 # preferred_background: 272724
 fish_color_normal c5c1b8
-fish_color_command 8aa5bb
-fish_color_keyword f7c988
-fish_color_quote 9ab58e
-fish_color_redirection b296cb
+fish_color_command ed9574
+fish_color_keyword f7c988 --bold
+fish_color_quote 80b3ac
+fish_color_redirection b4afa6
 fish_color_end a39d94
 fish_color_error dd8384
-fish_color_param a7a299
-fish_color_comment a39d94
+fish_color_param b4afa6
+fish_color_comment a39d94 --italics
 fish_color_selection --reverse
-fish_color_operator ed9574
+fish_color_operator b4afa6
 fish_color_escape b296cb
-fish_color_autosuggestion 585855
+fish_color_autosuggestion 6b6b67
 fish_color_cwd 8aa5bb
 fish_color_cwd_root dd8384
 fish_color_user 9ab58e
@@ -40,18 +40,18 @@ fish_pager_color_selected_description a39d94
 [light]
 # preferred_background: fbf9f4
 fish_color_normal 31312b
-fish_color_command 37526a
-fish_color_keyword 6c4800
-fish_color_quote 385a35
-fish_color_redirection 573c72
-fish_color_end 514b44
+fish_color_command 893517
+fish_color_keyword 6c4800 --bold
+fish_color_quote 1a5a53
+fish_color_redirection 565141
+fish_color_end 6b645d
 fish_color_error ae5158
 fish_color_param 565141
-fish_color_comment 514b44
+fish_color_comment 6b645d --italics
 fish_color_selection --reverse
-fish_color_operator 893517
+fish_color_operator 565141
 fish_color_escape 573c72
-fish_color_autosuggestion b5b2ab
+fish_color_autosuggestion 8f8c85
 fish_color_cwd 37526a
 fish_color_cwd_root ae5158
 fish_color_user 385a35
@@ -76,18 +76,18 @@ fish_pager_color_selected_description 514b44
 [unknown]
 # preferred_background: 272724
 fish_color_normal c5c1b8
-fish_color_command 8aa5bb
-fish_color_keyword f7c988
-fish_color_quote 9ab58e
-fish_color_redirection b296cb
+fish_color_command ed9574
+fish_color_keyword f7c988 --bold
+fish_color_quote 80b3ac
+fish_color_redirection b4afa6
 fish_color_end a39d94
 fish_color_error dd8384
-fish_color_param a7a299
-fish_color_comment a39d94
+fish_color_param b4afa6
+fish_color_comment a39d94 --italics
 fish_color_selection --reverse
-fish_color_operator ed9574
+fish_color_operator b4afa6
 fish_color_escape b296cb
-fish_color_autosuggestion 585855
+fish_color_autosuggestion 6b6b67
 fish_color_cwd 8aa5bb
 fish_color_cwd_root dd8384
 fish_color_user 9ab58e

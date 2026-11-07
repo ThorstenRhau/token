@@ -10,9 +10,10 @@
 ---@field bg5 string Strong raised background used by references, active snippets, and quickfix selections.
 -- Foreground ramp
 ---@field fg0 string Primary foreground used by normal text and identifiers.
----@field fg1 string Secondary foreground used by operators, delimiters, and emphasized UI text.
----@field fg2 string Muted foreground used by comments, concealed text, and secondary UI text.
+---@field fg1 string Secondary foreground used by operators, parameters, and emphasized UI text.
+---@field fg2 string Muted foreground used by concealed text and secondary UI text.
 ---@field fg3 string Most subdued foreground used by borders, inactive UI, and nonessential text.
+---@field comment string Quietest readable text, used by comments and punctuation.
 -- Accent hues
 ---@field accent string Primary accent used by functions, titles, active search, and focused UI.
 ---@field accent2 string Secondary accent used by keywords, control flow, and alternate active UI.
@@ -23,7 +24,7 @@
 ---@field yellow string Yellow semantic hue used by warnings, changes, and pending states.
 ---@field purple string Purple semantic hue used by constants, preprocessor groups, and special syntax.
 ---@field cyan string Cyan semantic hue used by hints and auxiliary information.
----@field orange string Orange semantic hue used by numeric and boolean literals.
+---@field orange string Semantic slot used by numeric and boolean literals; its hue varies by appearance.
 ---@field olive string Warm olive hue used by the current line number and tertiary headings.
 -- Bright terminal variants
 ---@field bright_green string Bright ANSI green used for terminal color 10.
@@ -81,6 +82,7 @@ local function palette(background)
       fg1 = '#565141',
       fg2 = '#504b44',
       fg3 = '#524e46',
+      comment = '#6a655d',
       -- Accent hues
       accent = '#863716',
       accent2 = '#6d4717',
@@ -89,9 +91,9 @@ local function palette(background)
       green = '#365a33',
       red = '#ad5253',
       yellow = '#857238',
-      purple = '#573c72',
+      purple = '#61457c',
       cyan = '#185b5b',
-      orange = '#613500',
+      orange = '#1d5f5e',
       olive = '#465509',
       -- Bright variants
       bright_green = '#274b24',
@@ -117,7 +119,7 @@ local function palette(background)
       match = '#e8d8b0',
       indent = '#e0ddd8',
       indent_active = '#a8a49c',
-      line_nr = '#b4b2ab',
+      line_nr = '#8e8c86',
       -- Git sign column
       gsign_add = '#23831e',
       gsign_change = '#9d6600',
@@ -141,9 +143,10 @@ local function palette(background)
     bg5 = '#383835',
     -- Foreground ramp
     fg0 = '#c3c0b8',
-    fg1 = '#a6a198',
+    fg1 = '#b3aea5',
     fg2 = '#a19c94',
     fg3 = '#8a8884',
+    comment = '#a19c94',
     -- Accent hues
     accent = '#f4906f',
     accent2 = '#f7c699',
@@ -154,7 +157,7 @@ local function palette(background)
     yellow = '#b99d4a',
     purple = '#b195ca',
     cyan = '#7dbbba',
-    orange = '#d6924c',
+    orange = '#70aead',
     olive = '#a9b76c',
     -- Bright variants
     bright_green = '#a0c89d',
@@ -180,7 +183,7 @@ local function palette(background)
     match = '#4a4030',
     indent = '#323230',
     indent_active = '#626260',
-    line_nr = '#575755',
+    line_nr = '#6b6b69',
     -- Git sign column
     gsign_add = '#7ca379',
     gsign_change = '#c3a753',

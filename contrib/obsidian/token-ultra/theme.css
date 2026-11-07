@@ -11,12 +11,12 @@
   --color-base-40: #8d8983;
   --color-base-50: #a39d94;
   --color-base-60: #a39d94;
-  --color-base-70: #a7a299;
+  --color-base-70: #b4afa6;
   --color-base-100: #c5c1b8;
   --color-red: #dd8384;
   --color-red-rgb: 221, 131, 132;
-  --color-orange: #78aba4;
-  --color-orange-rgb: 120, 171, 164;
+  --color-orange: #f7c988;
+  --color-orange-rgb: 247, 201, 136;
   --color-yellow: #bf9c53;
   --color-yellow-rgb: 191, 156, 83;
   --color-green: #9ab58e;
@@ -82,12 +82,12 @@
   --code-function: #ed9574;
   --code-important: #dd8384;
   --code-keyword: #f7c988;
-  --code-operator: #a7a299;
+  --code-operator: #b4afa6;
   --code-property: #c5c1b8;
-  --code-punctuation: #a7a299;
-  --code-string: #78aba4;
-  --code-tag: #a7a299;
-  --code-value: #78aba4;
+  --code-punctuation: #a39d94;
+  --code-string: #80b3ac;
+  --code-tag: #b4afa6;
+  --code-value: #80b3ac;
 }
 
 .theme-light {
@@ -97,7 +97,7 @@
   --color-base-20: #ecebe7;
   --color-base-25: #eae9e5;
   --color-base-30: #e7e3dc;
-  --color-base-35: #b5b2ab;
+  --color-base-35: #8f8c85;
   --color-base-40: #a8a49c;
   --color-base-50: #544e44;
   --color-base-60: #514b44;
@@ -105,8 +105,8 @@
   --color-base-100: #31312b;
   --color-red: #ae5158;
   --color-red-rgb: 174, 81, 88;
-  --color-orange: #004943;
-  --color-orange-rgb: 0, 73, 67;
+  --color-orange: #6c4800;
+  --color-orange-rgb: 108, 72, 0;
   --color-yellow: #926e25;
   --color-yellow-rgb: 146, 110, 37;
   --color-green: #385a35;
@@ -168,14 +168,20 @@
 
   --code-normal: #31312b;
   --code-background: #ecebe7;
-  --code-comment: #514b44;
+  --code-comment: #6b645d;
   --code-function: #893517;
   --code-important: #ae5158;
   --code-keyword: #6c4800;
   --code-operator: #565141;
   --code-property: #31312b;
-  --code-punctuation: #565141;
-  --code-string: #004943;
+  --code-punctuation: #6b645d;
+  --code-string: #1a5a53;
   --code-tag: #565141;
-  --code-value: #004943;
+  --code-value: #1a5a53;
 }
+
+.cm-comment { font-style: italic; }
+.token.comment { font-style: italic; }
+.cm-keyword { font-weight: bold; }
+.token.keyword { font-weight: bold; }
+.cm-def:not(.cm-hmd-frontmatter) { font-weight: bold; }

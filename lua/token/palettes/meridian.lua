@@ -1,6 +1,7 @@
 ---Token Meridian combines Circadia's Warm Parchment and Dark Classic colors with Ultra surfaces.
----`red` and `yellow` are Token Ultra's status hues so errors and warnings stay distinct from
----info and hint, which share Circadia's blue and tan.
+---`red` is Token Ultra's status hue and light `yellow` matches it, so errors and warnings stay
+---distinct from info and hint, which share Circadia's blue and tan. Dark `yellow` moves toward
+---true yellow to stay clear of the tan that types use.
 ---@param background 'dark'|'light'
 ---@return TokenPalette
 local function palette(background)
@@ -20,15 +21,16 @@ local function palette(background)
       fg1 = '#46535f',
       fg2 = '#524b42',
       fg3 = '#43505c',
+      comment = '#6c645b',
       accent = '#0048b3',
       accent2 = '#843900',
       blue = '#0048b3',
       green = '#005f2f',
       red = '#ae5158',
       yellow = '#926e25',
-      purple = '#7a1f7a',
+      purple = '#832882',
       cyan = '#095b62',
-      orange = '#4b1fa3',
+      orange = '#725264',
       olive = '#843900',
       bright_green = '#1c4470',
       bright_blue = '#20538a',
@@ -50,7 +52,7 @@ local function palette(background)
       match = '#eadab6',
       indent = '#e0ddd8',
       indent_active = '#a8a49c',
-      line_nr = '#b5b2ab',
+      line_nr = '#8f8c85',
       gsign_add = '#24831f',
       gsign_change = '#9d6600',
       gsign_del = '#c82a2a',
@@ -70,18 +72,19 @@ local function palette(background)
     bg4 = '#30302c',
     bg5 = '#383835',
     fg0 = '#c9c0b1',
-    fg1 = '#aba195',
+    fg1 = '#b8aea1',
     fg2 = '#a69c91',
     fg3 = '#91887d',
+    comment = '#a69c91',
     accent = '#e89a49',
     accent2 = '#f8c88f',
-    blue = '#66abc6',
+    blue = '#7cc1dc',
     green = '#8cbb62',
     red = '#dd8384',
-    yellow = '#bf9c53',
-    purple = '#b991db',
-    cyan = '#d9a86e',
-    orange = '#de88a6',
+    yellow = '#c2b040',
+    purple = '#c69de8',
+    cyan = '#cf9c70',
+    orange = '#bb97ab',
     olive = '#d9a86e',
     bright_green = '#f2b26c',
     bright_blue = '#ea9d49',
@@ -103,7 +106,7 @@ local function palette(background)
     match = '#4d4231',
     indent = '#333330',
     indent_active = '#636360',
-    line_nr = '#585855',
+    line_nr = '#6b6b67',
     gsign_add = '#7da47a',
     gsign_change = '#c4a855',
     gsign_del = '#c67777',

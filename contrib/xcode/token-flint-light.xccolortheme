@@ -102,9 +102,9 @@
       <key>xcode.syntax.character</key>
       <string>0.239216 0.349020 0.007843 1</string>
       <key>xcode.syntax.comment</key>
-      <string>0.254902 0.298039 0.341176 1</string>
+      <string>0.352941 0.396078 0.443137 1</string>
       <key>xcode.syntax.comment.doc</key>
-      <string>0.254902 0.298039 0.341176 1</string>
+      <string>0.352941 0.396078 0.443137 1</string>
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>0.600000 0.411765 0.078431 1</string>
       <key>xcode.syntax.declaration.other</key>
@@ -167,9 +167,9 @@
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.other</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.type</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.identifier.class</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.identifier.class.system</key>

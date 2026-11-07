@@ -44,7 +44,7 @@
     <key>DVTMarkupTextEmphasisFont</key>
     <string>.AppleSystemUIFontItalic - 10.0</string>
     <key>DVTMarkupTextInlineCodeColor</key>
-    <string>0.000000 0.286275 0.262745 0.7</string>
+    <string>0.101961 0.352941 0.325490 0.7</string>
     <key>DVTMarkupTextLinkColor</key>
     <string>0.215686 0.321569 0.415686 1</string>
     <key>DVTMarkupTextLinkFont</key>
@@ -100,11 +100,11 @@
       <key>xcode.syntax.attribute</key>
       <string>0.337255 0.317647 0.254902 1</string>
       <key>xcode.syntax.character</key>
-      <string>0.000000 0.286275 0.262745 1</string>
+      <string>0.101961 0.352941 0.325490 1</string>
       <key>xcode.syntax.comment</key>
-      <string>0.317647 0.294118 0.266667 1</string>
+      <string>0.419608 0.392157 0.364706 1</string>
       <key>xcode.syntax.comment.doc</key>
-      <string>0.317647 0.294118 0.266667 1</string>
+      <string>0.419608 0.392157 0.364706 1</string>
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>0.572549 0.431373 0.145098 1</string>
       <key>xcode.syntax.declaration.other</key>
@@ -116,9 +116,9 @@
       <key>xcode.syntax.identifier.class.system</key>
       <string>0.337255 0.317647 0.254902 1</string>
       <key>xcode.syntax.identifier.constant</key>
-      <string>0.000000 0.286275 0.262745 1</string>
+      <string>0.101961 0.352941 0.325490 1</string>
       <key>xcode.syntax.identifier.constant.system</key>
-      <string>0.000000 0.286275 0.262745 1</string>
+      <string>0.101961 0.352941 0.325490 1</string>
       <key>xcode.syntax.identifier.function</key>
       <string>0.537255 0.207843 0.090196 1</string>
       <key>xcode.syntax.identifier.function.system</key>
@@ -142,15 +142,15 @@
       <key>xcode.syntax.markup.aside.kind</key>
       <string>0.572549 0.431373 0.145098 1</string>
       <key>xcode.syntax.markup.code</key>
-      <string>0.000000 0.286275 0.262745 1</string>
+      <string>0.101961 0.352941 0.325490 1</string>
       <key>xcode.syntax.number</key>
-      <string>0.000000 0.286275 0.262745 1</string>
+      <string>0.101961 0.352941 0.325490 1</string>
       <key>xcode.syntax.plain</key>
       <string>0.192157 0.192157 0.168627 1</string>
       <key>xcode.syntax.preprocessor</key>
       <string>0.423529 0.282353 0.000000 1</string>
       <key>xcode.syntax.string</key>
-      <string>0.000000 0.286275 0.262745 1</string>
+      <string>0.101961 0.352941 0.325490 1</string>
       <key>xcode.syntax.url</key>
       <string>0.215686 0.321569 0.415686 1</string>
     </dict>
@@ -167,9 +167,9 @@
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.other</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.type</key>
-      <string>SFMono-Regular - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.identifier.class</key>
       <string>SFMono-Regular - 12.0</string>
       <key>xcode.syntax.identifier.class.system</key>

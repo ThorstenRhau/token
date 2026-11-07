@@ -54,7 +54,7 @@
     <key>DVTMarkupTextNormalFont</key>
     <string>.AppleSystemUIFont - 10.0</string>
     <key>DVTMarkupTextOtherHeadingColor</key>
-    <string>0.635294 0.662745 0.686275 1</string>
+    <string>0.686275 0.713725 0.737255 1</string>
     <key>DVTMarkupTextOtherHeadingFont</key>
     <string>.AppleSystemUIFontBold - 14.0</string>
     <key>DVTMarkupTextPrimaryHeadingColor</key>
@@ -98,7 +98,7 @@
     <key>DVTSourceTextSyntaxColors</key>
     <dict>
       <key>xcode.syntax.attribute</key>
-      <string>0.635294 0.662745 0.686275 1</string>
+      <string>0.686275 0.713725 0.737255 1</string>
       <key>xcode.syntax.character</key>
       <string>0.662745 0.725490 0.549020 1</string>
       <key>xcode.syntax.comment</key>
@@ -112,9 +112,9 @@
       <key>xcode.syntax.declaration.type</key>
       <string>0.921569 0.619608 0.513725 1</string>
       <key>xcode.syntax.identifier.class</key>
-      <string>0.635294 0.662745 0.686275 1</string>
+      <string>0.686275 0.713725 0.737255 1</string>
       <key>xcode.syntax.identifier.class.system</key>
-      <string>0.635294 0.662745 0.686275 1</string>
+      <string>0.686275 0.713725 0.737255 1</string>
       <key>xcode.syntax.identifier.constant</key>
       <string>0.662745 0.725490 0.549020 1</string>
       <key>xcode.syntax.identifier.constant.system</key>
@@ -122,19 +122,19 @@
       <key>xcode.syntax.identifier.function</key>
       <string>0.921569 0.619608 0.513725 1</string>
       <key>xcode.syntax.identifier.function.system</key>
-      <string>0.635294 0.662745 0.686275 1</string>
+      <string>0.686275 0.713725 0.737255 1</string>
       <key>xcode.syntax.identifier.macro</key>
       <string>0.972549 0.823529 0.541176 1</string>
       <key>xcode.syntax.identifier.macro.system</key>
       <string>0.972549 0.823529 0.541176 1</string>
       <key>xcode.syntax.identifier.type</key>
-      <string>0.635294 0.662745 0.686275 1</string>
+      <string>0.686275 0.713725 0.737255 1</string>
       <key>xcode.syntax.identifier.type.system</key>
-      <string>0.635294 0.662745 0.686275 1</string>
+      <string>0.686275 0.713725 0.737255 1</string>
       <key>xcode.syntax.identifier.variable</key>
       <string>0.764706 0.784314 0.800000 1</string>
       <key>xcode.syntax.identifier.variable.system</key>
-      <string>0.635294 0.662745 0.686275 1</string>
+      <string>0.686275 0.713725 0.737255 1</string>
       <key>xcode.syntax.keyword</key>
       <string>0.972549 0.823529 0.541176 1</string>
       <key>xcode.syntax.mark</key>
@@ -167,9 +167,9 @@
       <key>xcode.syntax.comment.doc.keyword</key>
       <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.other</key>
-      <string>SFMono-Medium - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.declaration.type</key>
-      <string>SFMono-Medium - 12.0</string>
+      <string>SFMono-Bold - 12.0</string>
       <key>xcode.syntax.identifier.class</key>
       <string>SFMono-Medium - 12.0</string>
       <key>xcode.syntax.identifier.class.system</key>

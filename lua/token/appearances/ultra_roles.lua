@@ -3,7 +3,7 @@
 local function ultra_roles(p)
   return {
     syntax = {
-      comment = { fg = p.fg2 },
+      comment = { fg = p.comment },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
       definition = { fg = p.accent },
@@ -15,9 +15,9 @@ local function ultra_roles(p)
       builtin = { fg = p.fg1 },
       attribute = { fg = p.fg1 },
       operator = { fg = p.fg1 },
-      punctuation = { fg = p.fg1 },
+      punctuation = { fg = p.comment },
       tag = { fg = p.fg1 },
-      tag_delimiter = { fg = p.fg2 },
+      tag_delimiter = { fg = p.comment },
       link = { fg = p.blue },
       quote = { fg = p.fg2 },
     },

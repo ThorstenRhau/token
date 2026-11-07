@@ -3,6 +3,7 @@ local M = {}
 local attributes = {
   regular = { bold = false, italic = false, underline = false },
   control = { bold = true, italic = false, underline = false },
+  definition = { bold = true, italic = false, underline = false },
   comment = { bold = false, italic = true, underline = false },
   link = { bold = false, italic = false, underline = true },
   heading = { bold = true, italic = false, underline = false },
@@ -47,14 +48,11 @@ local groups = {
     '@number.float',
     '@type',
     '@type.builtin',
-    '@type.definition',
     '@attribute',
     '@attribute.builtin',
     '@property',
-    '@function',
     '@function.builtin',
     '@function.call',
-    '@function.method',
     '@function.method.call',
     '@constructor',
     '@tag.builtin',
@@ -98,6 +96,11 @@ local groups = {
     '@keyword.directive.define',
     '@markup.list',
   },
+  definition = {
+    '@function',
+    '@function.method',
+    '@type.definition',
+  },
   comment = {
     'Comment',
     'SpecialComment',
@@ -127,19 +130,22 @@ local groups = {
   },
 }
 
-for _, token_type in ipairs({
-  'class',
-  'enum',
-  'function',
-  'interface',
-  'method',
-  'struct',
-  'type',
-  'typeParameter',
-}) do
-  for _, modifier in ipairs({ 'declaration', 'definition' }) do
-    groups.regular[#groups.regular + 1] = '@lsp.typemod.' .. token_type .. '.' .. modifier
+-- Generic parameters declare a name too, but bolding every `T` adds noise.
+local definition_token_types = {
+  class = true,
+  enum = true,
+  ['function'] = true,
+  interface = true,
+  method = true,
+  struct = true,
+  type = true,
+}
+
+for _, modifier in ipairs({ 'declaration', 'definition' }) do
+  for token_type in pairs(definition_token_types) do
+    groups.definition[#groups.definition + 1] = '@lsp.typemod.' .. token_type .. '.' .. modifier
   end
+  groups.regular[#groups.regular + 1] = '@lsp.typemod.typeParameter.' .. modifier
 end
 
 local group_roles = {}
@@ -153,6 +159,7 @@ local textmate_roles = {
   Comment = 'comment',
   Keyword = 'control',
   Storage = 'control',
+  ['Declaration keyword'] = 'control',
   PreProc = 'control',
   Preprocessor = 'control',
   Include = 'control',
@@ -160,7 +167,7 @@ local textmate_roles = {
   Label = 'control',
   Debug = 'control',
   Exception = 'control',
-  ['Function definition'] = 'regular',
+  ['Function definition'] = 'definition',
   ['Function call'] = 'regular',
   ['Built-in function'] = 'regular',
   ['Built-in symbol'] = 'regular',
@@ -168,7 +175,7 @@ local textmate_roles = {
   Literal = 'regular',
   Number = 'regular',
   Constant = 'regular',
-  ['Type definition'] = 'regular',
+  ['Type definition'] = 'definition',
   ['Type reference'] = 'regular',
   Type = 'regular',
   Class = 'regular',
@@ -238,7 +245,7 @@ local emacs_roles = {
   ['font-lock-string-face'] = 'regular',
   ['font-lock-keyword-face'] = 'control',
   ['font-lock-builtin-face'] = 'regular',
-  ['font-lock-function-name-face'] = 'regular',
+  ['font-lock-function-name-face'] = 'definition',
   ['font-lock-function-call-face'] = 'regular',
   ['font-lock-type-face'] = 'regular',
   ['font-lock-constant-face'] = 'regular',
@@ -316,7 +323,7 @@ for _, token_type in ipairs({
 }) do
   for _, modifier in ipairs({ 'declaration', 'definition' }) do
     local selector = token_type .. '.' .. modifier
-    vscode_roles[selector] = 'regular'
+    vscode_roles[selector] = definition_token_types[token_type] and 'definition' or 'regular'
     vscode_exact_selectors[#vscode_exact_selectors + 1] = selector
   end
 end
@@ -327,8 +334,8 @@ local xcode_roles = {
   ['xcode.syntax.comment'] = 'comment',
   ['xcode.syntax.comment.doc'] = 'comment',
   ['xcode.syntax.comment.doc.keyword'] = 'control',
-  ['xcode.syntax.declaration.other'] = 'regular',
-  ['xcode.syntax.declaration.type'] = 'regular',
+  ['xcode.syntax.declaration.other'] = 'definition',
+  ['xcode.syntax.declaration.type'] = 'definition',
   ['xcode.syntax.identifier.class'] = 'regular',
   ['xcode.syntax.identifier.class.system'] = 'regular',
   ['xcode.syntax.identifier.constant'] = 'regular',
@@ -353,7 +360,17 @@ local xcode_roles = {
   DVTMarkupTextSecondaryHeadingFont = 'heading',
 }
 
+-- Obsidian frontmatter keys also carry `.cm-def`, so that selector excludes them.
+local obsidian_roles = {
+  ['.cm-comment'] = 'comment',
+  ['.cm-def:not(.cm-hmd-frontmatter)'] = 'definition',
+  ['.cm-keyword'] = 'control',
+  ['.token.comment'] = 'comment',
+  ['.token.keyword'] = 'control',
+}
+
 local mappings = {
+  obsidian = obsidian_roles,
   textmate = textmate_roles,
   gtk = gtk_roles,
   emacs = emacs_roles,

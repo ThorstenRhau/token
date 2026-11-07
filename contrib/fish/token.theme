@@ -5,17 +5,17 @@
 # preferred_background: 262624
 fish_color_normal c3c0b8
 fish_color_command 81a5c4
-fish_color_keyword f7c699
+fish_color_keyword f7c699 --bold
 fish_color_quote 8fb78c
 fish_color_redirection b195ca
 fish_color_end a19c94
 fish_color_error d68585
-fish_color_param a6a198
-fish_color_comment a19c94
+fish_color_param b3aea5
+fish_color_comment a19c94 --italics
 fish_color_selection --reverse
 fish_color_operator f4906f
 fish_color_escape b195ca
-fish_color_autosuggestion 575755
+fish_color_autosuggestion 6b6b69
 fish_color_cwd 81a5c4
 fish_color_cwd_root d68585
 fish_color_user 8fb78c
@@ -41,17 +41,17 @@ fish_pager_color_selected_description a19c94
 # preferred_background: faf9f5
 fish_color_normal 323128
 fish_color_command 315270
-fish_color_keyword 6d4717
+fish_color_keyword 6d4717 --bold
 fish_color_quote 365a33
-fish_color_redirection 573c72
-fish_color_end 504b44
+fish_color_redirection 61457c
+fish_color_end 6a655d
 fish_color_error ad5253
 fish_color_param 565141
-fish_color_comment 504b44
+fish_color_comment 6a655d --italics
 fish_color_selection --reverse
 fish_color_operator 863716
-fish_color_escape 573c72
-fish_color_autosuggestion b4b2ab
+fish_color_escape 61457c
+fish_color_autosuggestion 8e8c86
 fish_color_cwd 315270
 fish_color_cwd_root ad5253
 fish_color_user 365a33
@@ -77,17 +77,17 @@ fish_pager_color_selected_description 504b44
 # preferred_background: 262624
 fish_color_normal c3c0b8
 fish_color_command 81a5c4
-fish_color_keyword f7c699
+fish_color_keyword f7c699 --bold
 fish_color_quote 8fb78c
 fish_color_redirection b195ca
 fish_color_end a19c94
 fish_color_error d68585
-fish_color_param a6a198
-fish_color_comment a19c94
+fish_color_param b3aea5
+fish_color_comment a19c94 --italics
 fish_color_selection --reverse
 fish_color_operator f4906f
 fish_color_escape b195ca
-fish_color_autosuggestion 575755
+fish_color_autosuggestion 6b6b69
 fish_color_cwd 81a5c4
 fish_color_cwd_root d68585
 fish_color_user 8fb78c

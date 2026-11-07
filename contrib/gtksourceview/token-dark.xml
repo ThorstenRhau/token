@@ -10,7 +10,7 @@
     <style name="secondary-cursor" foreground="#a19c94"/>
     <style name="current-line" background="#2f2f2d"/>
     <style name="current-line-number" foreground="#a19c94" background="#2f2f2d"/>
-    <style name="line-numbers" foreground="#575755" background="#212120"/>
+    <style name="line-numbers" foreground="#6b6b69" background="#212120"/>
     <style name="line-numbers-border" background="#383835"/>
     <style name="draw-spaces" foreground="#8a8884"/>
     <style name="background-pattern" background="#212120"/>
@@ -24,12 +24,12 @@
     <style name="def:doc-comment-element" foreground="#a19c94" italic="true"/>
     <style name="def:constant" foreground="#b195ca"/>
     <style name="def:special-constant" foreground="#b195ca"/>
-    <style name="def:number" foreground="#d6924c"/>
-    <style name="def:decimal" foreground="#d6924c"/>
-    <style name="def:base-n-integer" foreground="#d6924c"/>
-    <style name="def:floating-point" foreground="#d6924c"/>
-    <style name="def:complex" foreground="#d6924c"/>
-    <style name="def:boolean" foreground="#d6924c"/>
+    <style name="def:number" foreground="#70aead"/>
+    <style name="def:decimal" foreground="#70aead"/>
+    <style name="def:base-n-integer" foreground="#70aead"/>
+    <style name="def:floating-point" foreground="#70aead"/>
+    <style name="def:complex" foreground="#70aead"/>
+    <style name="def:boolean" foreground="#70aead"/>
     <style name="def:character" foreground="#8fb78c"/>
     <style name="def:string" foreground="#8fb78c"/>
     <style name="def:special-char" foreground="#b195ca"/>
@@ -39,7 +39,7 @@
     <style name="def:keyword" foreground="#f7c699" bold="true"/>
     <style name="def:statement" foreground="#f7c699" bold="true"/>
     <style name="def:type" foreground="#81a5c4"/>
-    <style name="def:operator" foreground="#a6a198"/>
+    <style name="def:operator" foreground="#b3aea5"/>
     <style name="def:preprocessor" foreground="#b195ca" bold="true"/>
     <style name="def:error" foreground="#d68585" bold="true"/>
     <style name="def:warning" foreground="#b99d4a"/>

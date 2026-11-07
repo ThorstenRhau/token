@@ -7,7 +7,7 @@ local function blink_indent(p)
     BlinkIndentUnderline = { sp = p.indent_active, underline = true },
 
     BlinkIndentRed = { fg = p.red },
-    BlinkIndentOrange = { fg = p.orange },
+    BlinkIndentOrange = { fg = p.accent2 },
     BlinkIndentYellow = { fg = p.yellow },
     BlinkIndentGreen = { fg = p.green },
     BlinkIndentCyan = { fg = p.cyan },
@@ -15,7 +15,7 @@ local function blink_indent(p)
     BlinkIndentViolet = { fg = p.purple },
 
     BlinkIndentRedUnderline = { sp = p.red, underline = true },
-    BlinkIndentOrangeUnderline = { sp = p.orange, underline = true },
+    BlinkIndentOrangeUnderline = { sp = p.accent2, underline = true },
     BlinkIndentYellowUnderline = { sp = p.yellow, underline = true },
     BlinkIndentGreenUnderline = { sp = p.green, underline = true },
     BlinkIndentCyanUnderline = { sp = p.cyan, underline = true },

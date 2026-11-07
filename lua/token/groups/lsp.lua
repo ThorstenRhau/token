@@ -1,7 +1,7 @@
 ---@param _p table palette (unused, all groups are links)
 ---@return table
 local function lsp(_p)
-  return {
+  local groups = {
     -- LSP semantic token type links
     ['@lsp.type.class'] = { link = '@type' },
     ['@lsp.type.comment'] = { link = '@comment' },
@@ -9,11 +9,13 @@ local function lsp(_p)
     ['@lsp.type.enum'] = { link = '@type' },
     ['@lsp.type.enumMember'] = { link = '@constant' },
     ['@lsp.type.event'] = { link = '@type' },
-    ['@lsp.type.function'] = { link = '@function' },
+    -- Function and method references keep the call style; the declaration and
+    -- definition modifier groups below carry the definition style.
+    ['@lsp.type.function'] = { link = '@function.call' },
     ['@lsp.type.interface'] = { link = '@type' },
     ['@lsp.type.keyword'] = { link = '@keyword' },
     ['@lsp.type.macro'] = { link = '@function.macro' },
-    ['@lsp.type.method'] = { link = '@function.method' },
+    ['@lsp.type.method'] = { link = '@function.method.call' },
     ['@lsp.type.modifier'] = { link = '@keyword.modifier' },
     ['@lsp.type.namespace'] = { link = '@module' },
     ['@lsp.type.number'] = { link = '@number' },
@@ -48,6 +50,23 @@ local function lsp(_p)
     ['@lsp.mod.abstract'] = { italic = true },
     ['@lsp.mod.documentation'] = { italic = true },
   }
+
+  local definition_targets = {
+    ['function'] = '@function',
+    method = '@function.method',
+    class = '@type.definition',
+    enum = '@type.definition',
+    interface = '@type.definition',
+    struct = '@type.definition',
+    type = '@type.definition',
+  }
+  for token_type, target in pairs(definition_targets) do
+    for _, modifier in ipairs({ 'declaration', 'definition' }) do
+      groups['@lsp.typemod.' .. token_type .. '.' .. modifier] = { link = target }
+    end
+  end
+
+  return groups
 end
 
 return lsp

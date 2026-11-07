@@ -10,7 +10,7 @@
     <style name="secondary-cursor" foreground="#9AA4AE"/>
     <style name="current-line" background="#30363E"/>
     <style name="current-line-number" foreground="#9AA4AE" background="#30363E"/>
-    <style name="line-numbers" foreground="#535D68" background="#22272E"/>
+    <style name="line-numbers" foreground="#67717D" background="#22272E"/>
     <style name="line-numbers-border" background="#373E47"/>
     <style name="draw-spaces" foreground="#858F9B"/>
     <style name="background-pattern" background="#22272E"/>
@@ -35,11 +35,11 @@
     <style name="def:special-char" foreground="#5CC1B3"/>
     <style name="def:identifier" foreground="#C3C8CC"/>
     <style name="def:function" foreground="#5CC1B3"/>
-    <style name="def:builtin" foreground="#A2A9AF"/>
+    <style name="def:builtin" foreground="#AFB6BC"/>
     <style name="def:keyword" foreground="#E7CDFF" bold="true"/>
     <style name="def:statement" foreground="#E7CDFF" bold="true"/>
-    <style name="def:type" foreground="#A2A9AF"/>
-    <style name="def:operator" foreground="#A2A9AF"/>
+    <style name="def:type" foreground="#AFB6BC"/>
+    <style name="def:operator" foreground="#AFB6BC"/>
     <style name="def:preprocessor" foreground="#E7CDFF" bold="true"/>
     <style name="def:error" foreground="#E3888C" bold="true"/>
     <style name="def:warning" foreground="#C5A15A"/>
@@ -49,10 +49,10 @@
     <style name="def:heading0" foreground="#5CC1B3" bold="true"/>
     <style name="def:heading1" foreground="#5CC1B3" bold="true"/>
     <style name="def:heading2" foreground="#E7CDFF" bold="true"/>
-    <style name="def:heading3" foreground="#A2A9AF" bold="true"/>
+    <style name="def:heading3" foreground="#AFB6BC" bold="true"/>
     <style name="def:heading4" foreground="#5CC1B3" bold="true"/>
     <style name="def:heading5" foreground="#E7CDFF" bold="true"/>
-    <style name="def:heading6" foreground="#A2A9AF" bold="true"/>
+    <style name="def:heading6" foreground="#AFB6BC" bold="true"/>
     <style name="def:thematic-break" foreground="#9AA4AE" bold="true"/>
     <style name="def:preformatted-section" foreground="#C3C8CC" background="#22272E"/>
     <style name="def:link-destination" foreground="#5CC1B3" underline="single"/>

@@ -11,12 +11,12 @@
   --color-base-40: #858f9b;
   --color-base-50: #9aa4ae;
   --color-base-60: #9aa4ae;
-  --color-base-70: #a2a9af;
+  --color-base-70: #afb6bc;
   --color-base-100: #c3c8cc;
   --color-red: #e3888c;
   --color-red-rgb: 227, 136, 140;
-  --color-orange: #9dad7f;
-  --color-orange-rgb: 157, 173, 127;
+  --color-orange: #f8d28a;
+  --color-orange-rgb: 248, 210, 138;
   --color-yellow: #c5a15a;
   --color-yellow-rgb: 197, 161, 90;
   --color-green: #a9b98c;
@@ -71,10 +71,10 @@
 
   --h1-color: #eb9e83;
   --h2-color: #f8d28a;
-  --h3-color: #a2a9af;
+  --h3-color: #afb6bc;
   --h4-color: #eb9e83;
   --h5-color: #f8d28a;
-  --h6-color: #a2a9af;
+  --h6-color: #afb6bc;
 
   --code-normal: #c3c8cc;
   --code-background: #1c2127;
@@ -82,11 +82,11 @@
   --code-function: #eb9e83;
   --code-important: #e3888c;
   --code-keyword: #f8d28a;
-  --code-operator: #a2a9af;
+  --code-operator: #afb6bc;
   --code-property: #c3c8cc;
-  --code-punctuation: #a2a9af;
+  --code-punctuation: #9aa4ae;
   --code-string: #a9b98c;
-  --code-tag: #a2a9af;
+  --code-tag: #afb6bc;
   --code-value: #a9b98c;
 }
 
@@ -97,7 +97,7 @@
   --color-base-20: #e7ebef;
   --color-base-25: #e0e5ea;
   --color-base-30: #d9dee3;
-  --color-base-35: #a7b2bb;
+  --color-base-35: #818c94;
   --color-base-40: #9ba4ac;
   --color-base-50: #444e59;
   --color-base-60: #414c57;
@@ -105,8 +105,8 @@
   --color-base-100: #283039;
   --color-red: #bf3f50;
   --color-red-rgb: 191, 63, 80;
-  --color-orange: #2f4500;
-  --color-orange-rgb: 47, 69, 0;
+  --color-orange: #6b4600;
+  --color-orange-rgb: 107, 70, 0;
   --color-yellow: #996914;
   --color-yellow-rgb: 153, 105, 20;
   --color-green: #3d5902;
@@ -168,14 +168,20 @@
 
   --code-normal: #283039;
   --code-background: #e7ebef;
-  --code-comment: #414c57;
+  --code-comment: #5a6571;
   --code-function: #902a03;
   --code-important: #bf3f50;
   --code-keyword: #6b4600;
   --code-operator: #46515d;
   --code-property: #283039;
-  --code-punctuation: #46515d;
+  --code-punctuation: #5a6571;
   --code-string: #3d5902;
   --code-tag: #46515d;
   --code-value: #3d5902;
 }
+
+.cm-comment { font-style: italic; }
+.token.comment { font-style: italic; }
+.cm-keyword { font-weight: bold; }
+.token.keyword { font-weight: bold; }
+.cm-def:not(.cm-hmd-frontmatter) { font-weight: bold; }

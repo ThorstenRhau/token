@@ -10,7 +10,7 @@ local function meridian_roles(p, is_dark)
 
   return {
     syntax = {
-      comment = { fg = p.fg2 },
+      comment = { fg = p.comment },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
       property = { fg = p.orange },
@@ -19,14 +19,16 @@ local function meridian_roles(p, is_dark)
       control = { fg = p.blue },
       literal = { fg = p.green },
       special = { fg = p.purple },
-      number = { fg = is_dark and p.accent or p.cyan },
+      -- Dark numbers follow `literal`: the dark `accent` sat too close to the
+      -- gold `builtin` in shell, where both appear on most lines.
+      number = { fg = is_dark and p.green or p.cyan },
       type = { fg = is_dark and p.cyan or p.accent2 },
       builtin = { fg = is_dark and p.cyan or p.accent2 },
       attribute = { fg = is_dark and p.cyan or p.accent2 },
       operator = { fg = p.fg1 },
-      punctuation = { fg = p.fg1 },
+      punctuation = { fg = p.comment },
       tag = { fg = p.blue },
-      tag_delimiter = { fg = p.fg1 },
+      tag_delimiter = { fg = p.comment },
       link = { fg = p.accent },
       quote = { fg = p.fg1 },
     },
@@ -54,7 +56,7 @@ local function meridian_roles(p, is_dark)
       [10] = p.green,
       [11] = p.accent2,
       [12] = p.blue,
-      [13] = p.orange,
+      [13] = p.purple,
       [14] = p.blue,
       [15] = p.fg0,
     } or {
@@ -71,7 +73,7 @@ local function meridian_roles(p, is_dark)
       [10] = p.green,
       [11] = p.accent2,
       [12] = p.blue,
-      [13] = p.orange,
+      [13] = p.purple,
       [14] = p.cyan,
       [15] = p.bg3,
     },

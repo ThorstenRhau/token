@@ -6,6 +6,6 @@ set -gx FZF_DEFAULT_OPTS (string join " " -- \
   --border \
   '--color=fg:#c9c0b1,bg:#272724,hl:#e89a49' \
   '--color=fg+:#c9c0b1,bg+:#3c3b36,hl+:#e89a49' \
-  '--color=border:#91887d,header:#66abc6,gutter:#272724' \
+  '--color=border:#91887d,header:#7cc1dc,gutter:#272724' \
   '--color=spinner:#f8c88f,info:#a69c91' \
   '--color=pointer:#e89a49,marker:#8cbb62,prompt:#e89a49')

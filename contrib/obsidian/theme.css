@@ -11,12 +11,12 @@
   --color-base-40: #8a8884;
   --color-base-50: #a19c94;
   --color-base-60: #a19c94;
-  --color-base-70: #a6a198;
+  --color-base-70: #b3aea5;
   --color-base-100: #c3c0b8;
   --color-red: #d68585;
   --color-red-rgb: 214, 133, 133;
-  --color-orange: #d6924c;
-  --color-orange-rgb: 214, 146, 76;
+  --color-orange: #f7c699;
+  --color-orange-rgb: 247, 198, 153;
   --color-yellow: #b99d4a;
   --color-yellow-rgb: 185, 157, 74;
   --color-green: #8fb78c;
@@ -82,12 +82,12 @@
   --code-function: #f4906f;
   --code-important: #d68585;
   --code-keyword: #f7c699;
-  --code-operator: #a6a198;
+  --code-operator: #b3aea5;
   --code-property: #c3c0b8;
-  --code-punctuation: #a6a198;
+  --code-punctuation: #a19c94;
   --code-string: #8fb78c;
   --code-tag: #b195ca;
-  --code-value: #d6924c;
+  --code-value: #70aead;
 }
 
 .theme-light {
@@ -97,7 +97,7 @@
   --color-base-20: #ecebe7;
   --color-base-25: #eae9e5;
   --color-base-30: #e6e5e1;
-  --color-base-35: #b4b2ab;
+  --color-base-35: #8e8c86;
   --color-base-40: #a8a49c;
   --color-base-50: #524e46;
   --color-base-60: #504b44;
@@ -105,8 +105,8 @@
   --color-base-100: #323128;
   --color-red: #ad5253;
   --color-red-rgb: 173, 82, 83;
-  --color-orange: #613500;
-  --color-orange-rgb: 97, 53, 0;
+  --color-orange: #6d4717;
+  --color-orange-rgb: 109, 71, 23;
   --color-yellow: #857238;
   --color-yellow-rgb: 133, 114, 56;
   --color-green: #365a33;
@@ -115,10 +115,10 @@
   --color-cyan-rgb: 24, 91, 91;
   --color-blue: #315270;
   --color-blue-rgb: 49, 82, 112;
-  --color-purple: #573c72;
-  --color-purple-rgb: 87, 60, 114;
-  --color-pink: #573c72;
-  --color-pink-rgb: 87, 60, 114;
+  --color-purple: #61457c;
+  --color-purple-rgb: 97, 69, 124;
+  --color-pink: #61457c;
+  --color-pink-rgb: 97, 69, 124;
 
   --accent-h: 17.68;
   --accent-s: 71.79%;
@@ -164,18 +164,24 @@
   --h3-color: #465509;
   --h4-color: #315270;
   --h5-color: #365a33;
-  --h6-color: #573c72;
+  --h6-color: #61457c;
 
   --code-normal: #323128;
   --code-background: #ecebe7;
-  --code-comment: #504b44;
+  --code-comment: #6a655d;
   --code-function: #863716;
   --code-important: #ad5253;
   --code-keyword: #6d4717;
   --code-operator: #565141;
   --code-property: #323128;
-  --code-punctuation: #565141;
+  --code-punctuation: #6a655d;
   --code-string: #365a33;
-  --code-tag: #573c72;
-  --code-value: #613500;
+  --code-tag: #61457c;
+  --code-value: #1d5f5e;
 }
+
+.cm-comment { font-style: italic; }
+.token.comment { font-style: italic; }
+.cm-keyword { font-weight: bold; }
+.token.keyword { font-weight: bold; }
+.cm-def:not(.cm-hmd-frontmatter) { font-weight: bold; }

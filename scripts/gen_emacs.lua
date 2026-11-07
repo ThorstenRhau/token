@@ -48,6 +48,7 @@ local EMACS_LET_KEYS = {
   'sel',
   'match',
   'line_nr',
+  'comment',
 }
 
 -- Face table schema:
@@ -167,9 +168,9 @@ local EMACS_FACES = {
   { 'whitespace-space-after-tab', bg = 'diff_del' },
 
   { section = 'Font lock' },
-  { 'font-lock-comment-face', fg = 'fg2', italic = true },
-  { 'font-lock-comment-delimiter-face', fg = 'fg2', italic = true },
-  { 'font-lock-doc-face', fg = 'fg2', italic = true },
+  { 'font-lock-comment-face', fg = 'comment', italic = true },
+  { 'font-lock-comment-delimiter-face', fg = 'comment', italic = true },
+  { 'font-lock-doc-face', fg = 'comment', italic = true },
   { 'font-lock-doc-markup-face', fg = 'green', italic = true },
   { 'font-lock-string-face', fg = 'green' },
   { 'font-lock-keyword-face', fg = 'accent2' },
@@ -189,12 +190,16 @@ local EMACS_FACES = {
   { 'font-lock-escape-face', fg = 'purple' },
   { 'font-lock-number-face', fg = 'orange' },
   { 'font-lock-operator-face', fg = 'fg1' },
-  { 'font-lock-delimiter-face', fg = 'fg1' },
-  { 'font-lock-bracket-face', fg = 'fg1' },
-  { 'font-lock-punctuation-face', fg = 'fg1' },
-  { 'font-lock-misc-punctuation-face', fg = 'fg1' },
+  { 'font-lock-delimiter-face', fg = 'comment' },
+  { 'font-lock-bracket-face', fg = 'comment' },
+  { 'font-lock-punctuation-face', fg = 'comment' },
+  { 'font-lock-misc-punctuation-face', fg = 'comment' },
   { 'font-lock-property-name-face', fg = 'fg0' },
   { 'font-lock-property-use-face', fg = 'fg0' },
+  -- bash-ts-mode marks commands in `$(...)` and heredocs with these faces;
+  -- their built-in defaults are salmon and bold yellow.
+  { 'sh-quoted-exec', inherit = 'default' },
+  { 'sh-heredoc', inherit = 'font-lock-string-face' },
 
   { section = 'Treesitter (Emacs 29+)' },
   { 'treesit-fold-replacement-face', fg = 'fg2', bg = 'bg4' },
@@ -379,8 +384,10 @@ local EMACS_FACES = {
   { 'eglot-semantic-variable', inherit = 'font-lock-variable-name-face' },
   { 'eglot-semantic-property', inherit = 'font-lock-property-use-face' },
   { 'eglot-semantic-enumMember', inherit = 'font-lock-constant-face' },
-  { 'eglot-semantic-function', inherit = 'font-lock-function-call-face' },
-  { 'eglot-semantic-method', inherit = 'font-lock-function-call-face' },
+  -- Color only: Eglot stacks these above font-lock, and an inherited normal
+  -- weight would cancel the bold of `font-lock-function-name-face`.
+  { 'eglot-semantic-function', fg = 'accent' },
+  { 'eglot-semantic-method', fg = 'accent' },
   { 'eglot-semantic-macro', inherit = 'font-lock-preprocessor-face' },
   { 'eglot-semantic-keyword', inherit = 'font-lock-keyword-face' },
   { 'eglot-semantic-modifier', inherit = 'font-lock-keyword-face' },
@@ -871,7 +878,7 @@ local EMACS_FACES = {
   { 'markdown-hr-face', fg = 'fg3' },
   { 'markdown-html-attr-name-face', fg = 'blue' },
   { 'markdown-html-attr-value-face', fg = 'green' },
-  { 'markdown-html-tag-delimiter-face', fg = 'fg2' },
+  { 'markdown-html-tag-delimiter-face', fg = 'comment' },
   { 'markdown-html-tag-name-face', fg = 'accent' },
   { 'markdown-math-face', fg = 'purple' },
   { 'markdown-metadata-key-face', fg = 'fg2' },
@@ -1418,6 +1425,8 @@ local function profile_face(entry, p, profile)
     ['markdown-ts-list-marker'] = r.control,
     ['markdown-ts-html-tag'] = r.tag,
     ['markdown-ts-latex'] = r.type,
+    ['eglot-semantic-function'] = r.call,
+    ['eglot-semantic-method'] = r.call,
     ['eglot-semantic-parameter'] = r.parameter,
     ['eglot-semantic-readonly'] = r.literal,
     ['eglot-semantic-decorator'] = r.attribute,

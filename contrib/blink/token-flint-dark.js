@@ -8,7 +8,7 @@ t.prefs_.set('color-palette-overrides', [
   '#88ACC4',
   '#E09478',
   '#98BBD4',
-  '#A2A9AF',
+  '#AFB6BC',
   '#858F9B',
   '#EB9E83',
   '#BCCAA1',

@@ -12,7 +12,7 @@ matching appearance palette, so everything stays consistent without extra work.
 - Token Ultra, Token Meridian, classic Token, Token Flint, and Token Temper appearances, each with dark and light variants
 - Treesitter capture groups for accurate syntax highlighting
 - LSP semantic token highlights
-- Shared semantic typography: bold control flow and headings, italic comments and quotes, underlined links
+- Shared semantic typography: bold control flow, definitions and headings, italic comments and quotes, underlined links
 - LSP diagnostic signs, virtual text, and underlines
 - Diff highlights for buffers and signs
 - Legacy syntax group coverage for non-Treesitter filetypes

@@ -1,12 +1,56 @@
+-- nvim-treesitter tags call sites with plain `@function` in these languages, so
+-- the capture cannot mean "definition" there and they keep the call style.
+local call_site_languages = {
+  'angular',
+  'awk',
+  'bass',
+  'cmake',
+  'css',
+  'd',
+  'erlang',
+  'forth',
+  'func',
+  'glimmer',
+  'gotmpl',
+  'gren',
+  'groovy',
+  'groq',
+  'hcl',
+  'inko',
+  'kcl',
+  'latex',
+  'leo',
+  'llvm',
+  'meson',
+  'mlir',
+  'nu',
+  'pascal',
+  'prisma',
+  'purescript',
+  'racket',
+  'rego',
+  'scheme',
+  'scss',
+  'soql',
+  'sourcepawn',
+  'sparql',
+  'tablegen',
+  'tcl',
+  'teal',
+  'tiger',
+  'vala',
+  'vhdl',
+}
+
 ---@param p table palette
 ---@return table
 local function treesitter(p)
-  return {
+  local groups = {
     -- Variables
     ['@variable'] = { fg = p.fg0 },
-    ['@variable.builtin'] = { fg = p.accent2 },
+    ['@variable.builtin'] = { fg = p.purple },
     ['@variable.parameter'] = { fg = p.fg1 },
-    ['@variable.parameter.builtin'] = { fg = p.accent2 },
+    ['@variable.parameter.builtin'] = { fg = p.purple },
     ['@variable.member'] = { fg = p.fg0 },
 
     -- Constants
@@ -59,14 +103,14 @@ local function treesitter(p)
 
     -- Operators / punctuation
     ['@operator'] = { link = 'Operator' },
-    ['@punctuation'] = { fg = p.fg1 },
-    ['@punctuation.delimiter'] = { fg = p.fg1 },
-    ['@punctuation.bracket'] = { fg = p.fg1 },
+    ['@punctuation'] = { fg = p.comment },
+    ['@punctuation.delimiter'] = { fg = p.comment },
+    ['@punctuation.bracket'] = { fg = p.comment },
     ['@punctuation.special'] = { fg = p.purple },
 
     -- Comments
     ['@comment'] = { link = 'Comment' },
-    ['@comment.documentation'] = { fg = p.fg2, italic = true },
+    ['@comment.documentation'] = { fg = p.comment, italic = true },
     ['@comment.error'] = { fg = p.red, italic = true },
     ['@comment.warning'] = { fg = p.yellow, italic = true },
     ['@comment.todo'] = { fg = p.yellow },
@@ -93,7 +137,7 @@ local function treesitter(p)
     ['@tag'] = { fg = p.purple },
     ['@tag.builtin'] = { fg = p.purple },
     ['@tag.attribute'] = { fg = p.accent2 },
-    ['@tag.delimiter'] = { fg = p.fg2 },
+    ['@tag.delimiter'] = { fg = p.comment },
 
     -- Markup (markdown etc.)
     ['@markup'] = { fg = p.fg0 },
@@ -136,6 +180,12 @@ local function treesitter(p)
     ['@spell'] = {},
     ['@nospell'] = {},
   }
+
+  for _, language in ipairs(call_site_languages) do
+    groups['@function.' .. language] = { link = '@function.call' }
+  end
+
+  return groups
 end
 
 return treesitter

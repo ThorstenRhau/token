@@ -61,6 +61,9 @@ local function heading_colors(p, profile)
   return headings
 end
 
+-- An empty style is meaningful. TextMate rules inherit `fontStyle` from less
+-- specific matches, so without it `keyword.operator` picks up the bold of
+-- `keyword` and calls pick up the bold of `entity.name.function`.
 local function textmate_style(role)
   local attributes = typography.attributes(role)
   local styles = {}
@@ -69,17 +72,14 @@ local function textmate_style(role)
       styles[#styles + 1] = attribute
     end
   end
-  return #styles > 0 and table.concat(styles, ' ') or nil
+  return table.concat(styles, ' ')
 end
 
 -- Rules carry no font style of their own; the fourth slot is filled here from
 -- `token.typography` so the shared profile is the only owner of attributes.
 local function apply_textmate_typography(rules)
   for _, rule in ipairs(rules) do
-    local role = typography.role('textmate', rule[1])
-    if role then
-      rule[4] = textmate_style(role)
-    end
+    rule[4] = textmate_style(typography.role('textmate', rule[1]) or 'regular')
   end
   return rules
 end
@@ -187,7 +187,7 @@ local function gen_carapace(p, variant, _term, appearance)
     q('Highlight9', p.fg1),
     q('Highlight10', p.fg2),
     q('Highlight11', p.olive),
-    q('Highlight12', p.orange),
+    q('Highlight12', p.accent2),
     q('KeywordAmbiguous', p.yellow),
     q('KeywordNegative', p.red),
     q('KeywordPositive', p.green),
@@ -282,6 +282,52 @@ local function tmtheme_entry(name, scope, fg, style)
   return table.concat(lines, '\n')
 end
 
+-- The TypeScript, Java, Rust, C, Go and shell grammars tag call sites with
+-- `entity.name.function` too, so these scopes keep calls out of the definition rule.
+local function_call_scopes = table.concat({
+  'meta.function-call',
+  'variable.function',
+  'meta.function-call entity.name.function',
+  'meta.function.call entity.name.function',
+  'meta.method-call entity.name.function',
+  'entity.name.function.call',
+  'entity.name.function.support',
+  'entity.name.function.decorator',
+  'entity.name.function.macro',
+  'entity.name.function.tagged-template',
+}, ', ')
+
+-- Plain `entity.name.type` also tags references, such as Rust's `i32` and Go
+-- parameter types, so only these scopes count as definitions.
+local type_definition_scopes = table.concat({
+  'entity.name.type.class',
+  'entity.name.type.interface',
+  'entity.name.type.struct',
+  'entity.name.type.enum',
+  'entity.name.type.alias',
+  'entity.name.class',
+  'entity.name.struct',
+  'entity.name.interface',
+  'entity.name.enum',
+}, ', ')
+
+-- `storage.type` covers types, but these scopes are the words `const`, `class`,
+-- `def` and `struct`, which Tree-sitter tags as keywords.
+local declaration_keyword_scopes = table.concat({
+  'storage.type.function',
+  'storage.type.class',
+  'storage.type.interface',
+  'storage.type.enum',
+  'storage.type.struct',
+  'storage.type.type',
+  'storage.type.namespace',
+  'storage.type.keyword',
+  'storage.type.ts',
+  'storage.type.tsx',
+  'storage.type.js',
+  'storage.type.rust',
+}, ', ')
+
 local function textmate_scope_rules(p, appearance, variant)
   local profile = role_profile(p, variant, appearance)
   local headings = heading_colors(p, profile)
@@ -300,14 +346,15 @@ local function textmate_scope_rules(p, appearance, variant)
         r.control.fg,
         nil,
       },
-      { 'Operator', 'keyword.operator', r.operator.fg, nil },
+      { 'Declaration keyword', declaration_keyword_scopes, r.control.fg, nil },
+      { 'Operator', 'keyword.operator, storage.type.function.arrow', r.operator.fg, nil },
       {
         'Function definition',
         'entity.name.function, meta.function.definition entity.name',
         r.definition.fg,
         nil,
       },
-      { 'Function call', 'meta.function-call, variable.function', r.call.fg, nil },
+      { 'Function call', function_call_scopes, r.call.fg, nil },
       { 'Built-in function', 'support.function', r.builtin.fg, nil },
       { 'String', 'string, punctuation.definition.string', r.literal.fg, nil },
       {
@@ -317,15 +364,10 @@ local function textmate_scope_rules(p, appearance, variant)
         r.literal.fg,
         nil,
       },
-      {
-        'Type definition',
-        'entity.name.type, entity.name.class, entity.name.type.class',
-        r.definition.fg,
-        nil,
-      },
+      { 'Type definition', type_definition_scopes, r.definition.fg, nil },
       {
         'Type reference',
-        'storage.type, support.type, support.class, entity.other.inherited-class',
+        'entity.name.type, storage.type, support.type, support.class, entity.other.inherited-class',
         r.type.fg,
         nil,
       },
@@ -424,18 +466,27 @@ local function textmate_scope_rules(p, appearance, variant)
     return rules
   end
   return {
-    { 'Comment', 'comment, punctuation.definition.comment', p.fg2, nil },
+    { 'Comment', 'comment, punctuation.definition.comment', p.comment, nil },
     { 'Keyword', 'keyword, keyword.control, keyword.other', p.accent2, nil },
     { 'Storage', 'storage, storage.modifier', p.accent2, nil },
-    { 'Operator', 'keyword.operator', p.fg1, nil },
-    { 'Function', 'entity.name.function, support.function, meta.function-call', p.accent, nil },
+    { 'Operator', 'keyword.operator, storage.type.function.arrow', p.fg1, nil },
+    {
+      'Function definition',
+      'entity.name.function, meta.function.definition entity.name',
+      p.accent,
+      nil,
+    },
+    { 'Function call', function_call_scopes, p.accent, nil },
+    { 'Built-in function', 'support.function', p.accent, nil },
     { 'String', 'string, punctuation.definition.string', p.green, nil },
     { 'String escape', 'constant.character.escape', p.purple, nil },
     { 'Boolean', 'constant.language.boolean', p.orange, nil },
     { 'Number', 'constant.numeric', p.orange, nil },
     { 'Constant', 'constant, constant.language, support.constant, variable.other.constant', p.purple, nil },
-    { 'Type', 'storage.type, support.type, entity.name.type, entity.other.inherited-class', p.blue, nil },
-    { 'Class', 'entity.name.type.class, support.class, entity.name.class', p.blue, nil },
+    { 'Type definition', type_definition_scopes, p.blue, nil },
+    { 'Type', 'entity.name.type, storage.type, support.type, entity.other.inherited-class', p.blue, nil },
+    { 'Declaration keyword', declaration_keyword_scopes, p.accent2, nil },
+    { 'Class', 'support.class', p.blue, nil },
     { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', p.blue, nil },
     {
       'PreProc',
@@ -459,7 +510,7 @@ local function textmate_scope_rules(p, appearance, variant)
       p.fg0,
       nil,
     },
-    { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil },
+    { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.comment, nil },
     { 'Parameter', 'variable.parameter', p.fg1, nil },
     { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', headings[1], nil },
     { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', headings[2], nil },
@@ -467,11 +518,11 @@ local function textmate_scope_rules(p, appearance, variant)
     { 'Heading 4', 'heading.4.markdown', headings[4], nil },
     { 'Heading 5', 'heading.5.markdown', headings[5], nil },
     { 'Heading 6', 'heading.6.markdown', headings[6], nil },
-    { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil },
+    { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.comment, nil },
     { 'Markup link', 'markup.underline.link, string.other.link', p.blue, nil },
     { 'Markup link text', 'string.other.link.title.markdown, constant.other.reference.link.markdown', p.blue, nil },
     { 'Markup code', 'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw', p.green, nil },
-    { 'Markup code delimiter', 'punctuation.definition.markdown, punctuation.definition.raw.markdown', p.fg2, nil },
+    { 'Markup code delimiter', 'punctuation.definition.markdown, punctuation.definition.raw.markdown', p.comment, nil },
     { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', p.accent2, nil },
     { 'Markup bold', 'markup.bold', nil, nil },
     { 'Markup italic', 'markup.italic', nil, nil },
@@ -649,10 +700,10 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     { 'bracket-mismatch', { fg = p.red, bold = true } },
     { 'search-match', { fg = p.fg0, bg = p.match } },
     -- Default syntax defs (languages map their tokens onto these)
-    { 'def:comment', { fg = p.fg2, italic = true } },
-    { 'def:shebang', { fg = p.fg2, italic = true } },
-    { 'def:doc-comment', { fg = p.fg2, italic = true } },
-    { 'def:doc-comment-element', { fg = p.fg2, italic = true } },
+    { 'def:comment', { fg = p.comment, italic = true } },
+    { 'def:shebang', { fg = p.comment, italic = true } },
+    { 'def:doc-comment', { fg = p.comment, italic = true } },
+    { 'def:doc-comment-element', { fg = p.comment, italic = true } },
     { 'def:constant', { fg = p.purple } },
     { 'def:special-constant', { fg = p.purple } },
     { 'def:number', { fg = p.orange } },
@@ -860,21 +911,23 @@ end
 -- fish (.theme)
 -- ---------------------------------------------------------------------------
 
-local function fish_theme_lines(p)
+local function fish_theme_lines(p, variant, appearance)
   local s = strip
+  local profile = role_profile(p, variant, appearance)
+  local r = profile and profile.syntax
   return {
     'fish_color_normal ' .. s(p.fg0),
-    'fish_color_command ' .. s(p.blue),
-    'fish_color_keyword ' .. s(p.accent2),
-    'fish_color_quote ' .. s(p.green),
-    'fish_color_redirection ' .. s(p.purple),
-    'fish_color_end ' .. s(p.fg2),
+    'fish_color_command ' .. s(r and r.call.fg or p.blue),
+    'fish_color_keyword ' .. s(r and r.control.fg or p.accent2) .. ' --bold',
+    'fish_color_quote ' .. s(r and r.literal.fg or p.green),
+    'fish_color_redirection ' .. s(r and r.operator.fg or p.purple),
+    'fish_color_end ' .. s(p.comment),
     'fish_color_error ' .. s(p.red),
     'fish_color_param ' .. s(p.fg1),
-    'fish_color_comment ' .. s(p.fg2),
+    'fish_color_comment ' .. s(p.comment) .. ' --italics',
     'fish_color_selection --reverse',
-    'fish_color_operator ' .. s(p.accent),
-    'fish_color_escape ' .. s(p.purple),
+    'fish_color_operator ' .. s(r and r.operator.fg or p.accent),
+    'fish_color_escape ' .. s(r and r.special.fg or p.purple),
     'fish_color_autosuggestion ' .. s(p.line_nr),
     'fish_color_cwd ' .. s(p.blue),
     'fish_color_cwd_root ' .. s(p.red),
@@ -903,7 +956,7 @@ local function gen_fish(dark, light, _dark_term, _light_term, appearance)
   local function add_variant(lines, name, p)
     lines[#lines + 1] = '[' .. name .. ']'
     lines[#lines + 1] = '# preferred_background: ' .. strip(p.bg3)
-    extend_lines(lines, fish_theme_lines(p))
+    extend_lines(lines, fish_theme_lines(p, p == light and 'light' or 'dark', appearance))
     lines[#lines + 1] = ''
   end
 
@@ -1006,6 +1059,7 @@ local function gen_pi(p, variant, appearance)
         { 'fg1', p.fg1 },
         { 'fg2', p.fg2 },
         { 'fg3', p.fg3 },
+        { 'comment', p.comment },
         { 'accent', p.accent },
         { 'accent2', p.accent2 },
         { 'blue', p.blue },
@@ -1058,7 +1112,7 @@ local function gen_pi(p, variant, appearance)
         { 'toolDiffAdded', 'green' },
         { 'toolDiffRemoved', 'red' },
         { 'toolDiffContext', 'fg2' },
-        { 'syntaxComment', r and r.comment.fg or 'fg2' },
+        { 'syntaxComment', r and r.comment.fg or 'comment' },
         { 'syntaxKeyword', r and r.control.fg or 'accent2' },
         { 'syntaxFunction', r and r.definition.fg or 'accent' },
         { 'syntaxVariable', r and r.variable.fg or 'fg0' },
@@ -1066,7 +1120,7 @@ local function gen_pi(p, variant, appearance)
         { 'syntaxNumber', r and (r.number or r.literal).fg or 'orange' },
         { 'syntaxType', r and r.type.fg or 'blue' },
         { 'syntaxOperator', r and r.operator.fg or 'fg1' },
-        { 'syntaxPunctuation', r and r.punctuation.fg or 'fg1' },
+        { 'syntaxPunctuation', r and r.punctuation.fg or 'comment' },
         { 'thinkingOff', 'fg3' },
         { 'thinkingMinimal', 'fg3' },
         { 'thinkingLow', 'blue' },
@@ -1130,7 +1184,7 @@ local function herdr_theme_lines(p, variant)
     { 'red', p.red },
     { 'blue', p.blue },
     { 'teal', p.cyan },
-    { 'peach', p.orange },
+    { 'peach', p.accent2 },
   }
   local lines = {}
   for _, color in ipairs(colors) do
@@ -1453,8 +1507,8 @@ local function gen_xcode(p, variant, _term, appearance)
   local syntax_roles = {
     { 'xcode.syntax.attribute', p.purple },
     { 'xcode.syntax.character', p.green },
-    { 'xcode.syntax.comment', p.fg2 },
-    { 'xcode.syntax.comment.doc', p.fg2 },
+    { 'xcode.syntax.comment', p.comment },
+    { 'xcode.syntax.comment.doc', p.comment },
     { 'xcode.syntax.comment.doc.keyword', p.yellow },
     { 'xcode.syntax.declaration.other', p.accent },
     { 'xcode.syntax.declaration.type', p.blue },
@@ -1469,7 +1523,7 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'xcode.syntax.identifier.type', p.blue },
     { 'xcode.syntax.identifier.type.system', p.blue },
     { 'xcode.syntax.identifier.variable', p.fg0 },
-    { 'xcode.syntax.identifier.variable.system', p.accent2 },
+    { 'xcode.syntax.identifier.variable.system', p.purple },
     { 'xcode.syntax.keyword', p.accent2 },
     { 'xcode.syntax.mark', p.yellow },
     { 'xcode.syntax.markup.aside.kind', p.yellow },
@@ -1978,7 +2032,7 @@ local function obsidian_theme_block(p, variant, appearance)
 
   local colors = {
     { 'red', p.red },
-    { 'orange', p.orange },
+    { 'orange', p.accent2 },
     { 'yellow', p.yellow },
     { 'green', p.green },
     { 'cyan', p.cyan },
@@ -2041,13 +2095,13 @@ local function obsidian_theme_block(p, variant, appearance)
     '',
     '  --code-normal: ' .. p.fg0 .. ';',
     '  --code-background: ' .. p.bg1 .. ';',
-    '  --code-comment: ' .. p.fg2 .. ';',
+    '  --code-comment: ' .. p.comment .. ';',
     '  --code-function: ' .. (profile and profile.syntax.call.fg or p.accent) .. ';',
     '  --code-important: ' .. p.red .. ';',
     '  --code-keyword: ' .. (profile and profile.syntax.control.fg or p.accent2) .. ';',
     '  --code-operator: ' .. p.fg1 .. ';',
     '  --code-property: ' .. (profile and (profile.syntax.property or profile.syntax.variable).fg or p.fg0) .. ';',
-    '  --code-punctuation: ' .. p.fg1 .. ';',
+    '  --code-punctuation: ' .. p.comment .. ';',
     '  --code-string: ' .. code_literal .. ';',
     '  --code-tag: ' .. code_tag .. ';',
     '  --code-value: ' .. (profile and profile.syntax.literal.fg or p.orange) .. ';',
@@ -2057,6 +2111,24 @@ local function obsidian_theme_block(p, variant, appearance)
   return (table.concat(lines, '\n'):gsub('#%x%x%x%x%x%x', string.lower))
 end
 
+local OBSIDIAN_TYPOGRAPHY_SELECTORS = {
+  '.cm-comment',
+  '.token.comment',
+  '.cm-keyword',
+  '.token.keyword',
+  '.cm-def:not(.cm-hmd-frontmatter)',
+}
+
+local function obsidian_typography_lines()
+  local lines = {}
+  for _, selector in ipairs(OBSIDIAN_TYPOGRAPHY_SELECTORS) do
+    local attributes = typography.attributes(typography.role('obsidian', selector))
+    local declaration = attributes.bold and 'font-weight: bold;' or 'font-style: italic;'
+    lines[#lines + 1] = selector .. ' { ' .. declaration .. ' }'
+  end
+  return table.concat(lines, '\n')
+end
+
 local function gen_obsidian_theme(dark, light, appearance)
   local content = table.concat({
     '/* Generated by token colorscheme. Do not edit manually. */',
@@ -2064,6 +2136,8 @@ local function gen_obsidian_theme(dark, light, appearance)
     obsidian_theme_block(dark, 'dark', appearance),
     '',
     obsidian_theme_block(light, 'light', appearance),
+    '',
+    obsidian_typography_lines(),
     '',
   }, '\n')
 
@@ -2175,7 +2249,7 @@ local function gen_starship(p, variant, _term, appearance)
     'yellow  = "' .. p.yellow .. '"',
     'purple  = "' .. p.purple .. '"',
     'cyan    = "' .. p.cyan .. '"',
-    'orange  = "' .. p.orange .. '"',
+    'orange  = "' .. p.accent2 .. '"',
     '',
   }, '\n')
 
@@ -2234,6 +2308,15 @@ local function gen_zsh(p, variant, _term, appearance)
   local s = strip
   local F = 'FAST_HIGHLIGHT_STYLES'
   local zle_selected = 'fg=#' .. s(p.fg0) .. ',bg=#' .. s(p.sel)
+  local profile = role_profile(p, variant, appearance)
+  local r = profile and profile.syntax
+  local keyword = s(r and r.control.fg or p.accent2)
+  local command = s(r and r.call.fg or p.blue)
+  local func = s(r and r.call.fg or p.accent)
+  local builtin = s(r and r.builtin.fg or p.blue)
+  local literal = s(r and r.literal.fg or p.green)
+  local number = s(r and (r.number or r.literal).fg or p.purple)
+  local variable = s(r and r.variable.fg or p.purple)
   local lines = {
     '# Generated by token colorscheme. Do not edit manually.',
     '# Source this file from your .zshrc to apply ' .. appearance.slug .. ' ' .. variant .. ' colors.',
@@ -2246,17 +2329,17 @@ local function gen_zsh(p, variant, _term, appearance)
     'typeset -gA ' .. F,
     F .. "[default]='none'",
     F .. "[unknown-token]='fg=#" .. s(p.red) .. "'",
-    F .. "[reserved-word]='fg=#" .. s(p.accent2) .. "'",
-    F .. "[alias]='fg=#" .. s(p.blue) .. "'",
-    F .. "[suffix-alias]='fg=#" .. s(p.blue) .. "'",
-    F .. "[global-alias]='fg=#" .. s(p.blue) .. "'",
-    F .. "[builtin]='fg=#" .. s(p.blue) .. "'",
-    F .. "[function]='fg=#" .. s(p.accent) .. "'",
-    F .. "[command]='fg=#" .. s(p.blue) .. "'",
-    F .. "[precommand]='fg=#" .. s(p.accent2) .. "'",
-    F .. "[subcommand]='fg=#" .. s(p.accent2) .. "'",
-    F .. "[commandseparator]='fg=#" .. s(p.fg2) .. "'",
-    F .. "[hashed-command]='fg=#" .. s(p.blue) .. "'",
+    F .. "[reserved-word]='fg=#" .. keyword .. ",bold'",
+    F .. "[alias]='fg=#" .. command .. "'",
+    F .. "[suffix-alias]='fg=#" .. command .. "'",
+    F .. "[global-alias]='fg=#" .. command .. "'",
+    F .. "[builtin]='fg=#" .. builtin .. "'",
+    F .. "[function]='fg=#" .. func .. "'",
+    F .. "[command]='fg=#" .. command .. "'",
+    F .. "[precommand]='fg=#" .. keyword .. "'",
+    F .. "[subcommand]='fg=#" .. keyword .. "'",
+    F .. "[commandseparator]='fg=#" .. s(p.comment) .. "'",
+    F .. "[hashed-command]='fg=#" .. command .. "'",
     F .. "[autodirectory]='fg=#" .. s(p.fg1) .. ",underline'",
     F .. "[path]='fg=#" .. s(p.fg1) .. ",underline'",
     F .. "[path_pathseparator]='fg=#" .. s(p.fg2) .. ",underline'",
@@ -2266,34 +2349,34 @@ local function gen_zsh(p, variant, _term, appearance)
     F .. "[globbing-ext]='fg=#" .. s(p.purple) .. "'",
     F .. "[history-expansion]='fg=#" .. s(p.purple) .. "'",
     F .. "[back-quoted-argument]='fg=#" .. s(p.fg2) .. "'",
-    F .. "[single-quoted-argument]='fg=#" .. s(p.green) .. "'",
-    F .. "[double-quoted-argument]='fg=#" .. s(p.green) .. "'",
-    F .. "[dollar-quoted-argument]='fg=#" .. s(p.green) .. "'",
+    F .. "[single-quoted-argument]='fg=#" .. literal .. "'",
+    F .. "[double-quoted-argument]='fg=#" .. literal .. "'",
+    F .. "[dollar-quoted-argument]='fg=#" .. literal .. "'",
     F .. "[single-quoted-argument-unclosed]='fg=#" .. s(p.red) .. ",underline'",
     F .. "[double-quoted-argument-unclosed]='fg=#" .. s(p.red) .. ",underline'",
     F .. "[dollar-quoted-argument-unclosed]='fg=#" .. s(p.red) .. ",underline'",
     F .. "[back-or-dollar-double-quoted-argument]='fg=#" .. s(p.purple) .. "'",
     F .. "[back-dollar-quoted-argument]='fg=#" .. s(p.purple) .. "'",
     F .. "[assign]='fg=#" .. s(p.fg0) .. "'",
-    F .. "[assign-array-bracket]='fg=#" .. s(p.green) .. "'",
+    F .. "[assign-array-bracket]='fg=#" .. literal .. "'",
     F .. "[redirection]='fg=#" .. s(p.purple) .. "'",
-    F .. "[comment]='fg=#" .. s(p.fg2) .. ",italic'",
+    F .. "[comment]='fg=#" .. s(p.comment) .. ",italic'",
     F .. "[single-hyphen-option]='fg=#" .. s(p.fg1) .. "'",
     F .. "[double-hyphen-option]='fg=#" .. s(p.fg1) .. "'",
-    F .. "[variable]='fg=#" .. s(p.purple) .. "'",
+    F .. "[variable]='fg=#" .. variable .. "'",
     F .. "[for-loop-variable]='fg=#" .. s(p.fg0) .. "'",
-    F .. "[for-loop-operator]='fg=#" .. s(p.accent2) .. "'",
-    F .. "[for-loop-number]='fg=#" .. s(p.purple) .. "'",
-    F .. "[for-loop-separator]='fg=#" .. s(p.fg2) .. "'",
-    F .. "[exec-descriptor]='fg=#" .. s(p.accent2) .. "'",
-    F .. "[here-string-tri]='fg=#" .. s(p.accent2) .. "'",
+    F .. "[for-loop-operator]='fg=#" .. keyword .. "'",
+    F .. "[for-loop-number]='fg=#" .. number .. "'",
+    F .. "[for-loop-separator]='fg=#" .. s(p.comment) .. "'",
+    F .. "[exec-descriptor]='fg=#" .. keyword .. "'",
+    F .. "[here-string-tri]='fg=#" .. keyword .. "'",
     F .. "[here-string-text]='none'",
-    F .. "[here-string-var]='fg=#" .. s(p.purple) .. "'",
+    F .. "[here-string-var]='fg=#" .. variable .. "'",
     F .. "[mathvar]='fg=#" .. s(p.blue) .. "'",
-    F .. "[mathnum]='fg=#" .. s(p.purple) .. "'",
+    F .. "[mathnum]='fg=#" .. number .. "'",
     F .. "[matherr]='fg=#" .. s(p.red) .. "'",
-    F .. "[case-input]='fg=#" .. s(p.green) .. "'",
-    F .. "[case-parentheses]='fg=#" .. s(p.accent2) .. "'",
+    F .. "[case-input]='fg=#" .. literal .. "'",
+    F .. "[case-parentheses]='fg=#" .. keyword .. "'",
     F .. "[case-condition]='fg=#" .. s(p.blue) .. "'",
     F .. "[paired-bracket]='fg=#" .. s(p.blue) .. "'",
     F .. "[bracket-level-1]='fg=#" .. s(p.green) .. "'",
@@ -2301,9 +2384,9 @@ local function gen_zsh(p, variant, _term, appearance)
     F .. "[bracket-level-3]='fg=#" .. s(p.cyan) .. "'",
     F .. "[single-sq-bracket]='fg=#" .. s(p.blue) .. "'",
     F .. "[double-sq-bracket]='fg=#" .. s(p.blue) .. "'",
-    F .. "[double-paren]='fg=#" .. s(p.accent2) .. "'",
-    F .. "[optarg-string]='fg=#" .. s(p.green) .. "'",
-    F .. "[optarg-number]='fg=#" .. s(p.purple) .. "'",
+    F .. "[double-paren]='fg=#" .. keyword .. "'",
+    F .. "[optarg-string]='fg=#" .. literal .. "'",
+    F .. "[optarg-number]='fg=#" .. number .. "'",
     F .. "[recursive-base]='none'",
     F .. "[correct-subtle]='fg=#" .. s(p.blue) .. "'",
     F .. "[incorrect-subtle]='fg=#" .. s(p.red) .. "'",
@@ -2447,7 +2530,8 @@ local function gen_hermes(p, variant, appearance)
     { 'status_bar_critical', p.red },
     { 'ui_warn', p.yellow },
     { 'status_bar_warn', p.yellow },
-    { 'status_bar_bad', p.orange },
+    -- `orange` holds a syntax role in most appearances, so it cannot signal a bad state.
+    { 'status_bar_bad', p.red },
     { 'shell_dollar', p.blue },
   }
   for _, entry in ipairs(colors) do

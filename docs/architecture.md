@@ -61,6 +61,29 @@ groups and default generator mappings. User styles are applied after shared
 typography, so supported customization can override those defaults before the
 final global gates.
 
+Syntax readability follows one hierarchy, which `tests/headless.lua` checks for
+every appearance and variant. Text steps down from normal through operators
+(`fg1`) to comments and punctuation (`comment`), which stay above WCAG AA on the
+cursor line. No colored role outranks keywords. Definitions are bold and calls
+regular, so `@function` means a definition except in languages whose Tree-sitter
+queries also tag calls with it; those link to the call style in
+[`groups/treesitter.lua`](../lua/token/groups/treesitter.lua).
+
+TextMate targets (VS Code, bat, Sublime) inherit `fontStyle` from less specific
+rules, so every generated rule sets it, and regular rules set it to the empty
+string. Without that, `keyword.operator` turns bold through `keyword`, and calls
+turn bold through `entity.name.function`. `make check` cannot see these leaks,
+because they only appear when a real grammar tokenizes code.
+
+Palette keys with one meaning across appearances keep contrast parity with
+Meridian. Dark `yellow` is the exception: it keeps parity with Ultra, because
+Meridian's moved away from the tan its types use. `blue`, `purple`, `cyan` and
+`orange` are role slots that hold different syntax roles per appearance, so the
+hierarchy owns their contrast. Their hue is not stable across appearances, so new
+status colors should use `red`, `yellow` or the `diag_*` keys. Integrations that
+expose an orange by name, such as Blink's indent colors and Starship's palette,
+use `accent2`, which is warm in every appearance except Temper.
+
 ## Compiled runtime path
 
 [`lua/token/compile.lua`](../lua/token/compile.lua) serializes the completed

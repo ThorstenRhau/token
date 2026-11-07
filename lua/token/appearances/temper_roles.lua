@@ -4,7 +4,7 @@
 local function temper_roles(p)
   return {
     syntax = {
-      comment = { fg = p.fg2 },
+      comment = { fg = p.comment },
       note = { fg = p.fg1 },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
@@ -18,10 +18,10 @@ local function temper_roles(p)
       builtin = { fg = p.fg1 },
       attribute = { fg = p.fg1 },
       operator = { fg = p.fg1 },
-      punctuation = { fg = p.fg1 },
+      punctuation = { fg = p.comment },
       tag = { fg = p.fg1 },
       tag_attribute = { fg = p.fg0 },
-      tag_delimiter = { fg = p.fg2 },
+      tag_delimiter = { fg = p.comment },
       link = { fg = p.accent },
       quote = { fg = p.fg2 },
     },
