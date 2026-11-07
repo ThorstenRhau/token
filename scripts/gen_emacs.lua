@@ -53,8 +53,10 @@ local EMACS_LET_KEYS = {
 -- Face table schema:
 --   Face entry (positional [1] is the elisp face name, rest are attributes):
 --     { 'face-name', inherit = 'face-name', fg = 'palette_key', bg = 'palette_key',
---       bold = true, italic = true, underline = true|false|<table>,
+--       bold = true|false, italic = true|false, underline = true|false|<table>,
 --       strike = true, extend = true, box = true|<table>, height = N }
+--   `false` emits the normal value, so the face overrides that attribute in
+--   faces stacked or inherited with it. A name alone emits an empty spec.
 --   `inherit` must name a face defined in this table. A theme spec replaces
 --   the face's defface spec, so restate inheritance the face relies on
 --   (e.g. `default`, which carries text-scale-mode zoom).
@@ -92,6 +94,11 @@ local EMACS_FACES = {
   { 'tooltip', fg = 'fg0', bg = 'bg0' },
   { 'menu', fg = 'fg0', bg = 'bg1' },
   { 'minibuffer-prompt', fg = 'blue', bold = true },
+  -- Emacs 31 shows the active minibuffer in this face while another
+  -- window is selected.
+  { 'minibuffer-nonselected', fg = 'yellow', bg = 'bg4', bold = true },
+  { 'which-func', inherit = 'font-lock-function-name-face' },
+  { 'icon-button', fg = 'fg0', bg = 'bg4', box = { line_width = -1, color = 'fg3' } },
   { 'link', fg = 'blue', underline = true },
   { 'link-visited', fg = 'purple', underline = true },
   { 'button', fg = 'blue', underline = true },
@@ -135,14 +142,15 @@ local EMACS_FACES = {
   { 'tab-bar-tab-group-current', fg = 'accent', bg = 'bg3', bold = true },
   { 'tab-bar-tab-group-inactive', fg = 'fg2', bg = 'bg1' },
   { 'tab-bar-tab-ungrouped', fg = 'fg3', bg = 'bg1' },
+  { 'tab-bar-tab-highlight', fg = 'fg0', bg = 'bg5' },
   { 'tab-line', fg = 'fg2', bg = 'bg1' },
   { 'tab-line-tab', fg = 'fg1', bg = 'bg3' },
   { 'tab-line-tab-current', fg = 'fg0', bg = 'bg3', bold = true },
   { 'tab-line-tab-inactive', fg = 'fg2', bg = 'bg1' },
+  { 'tab-line-tab-inactive-alternate', fg = 'fg2', bg = 'bg2' },
   { 'tab-line-tab-modified', fg = 'accent' },
   { 'tab-line-highlight', fg = 'fg0', bg = 'bg5' },
   { 'tab-line-close-highlight', fg = 'red' },
-  { 'tab-line-new-tab', fg = 'green' },
 
   { section = 'Whitespace' },
   { 'whitespace-space', fg = 'bg5' },
@@ -175,6 +183,7 @@ local EMACS_FACES = {
   { 'font-lock-preprocessor-face', fg = 'purple' },
   { 'font-lock-negation-char-face', fg = 'red' },
   { 'font-lock-warning-face', fg = 'yellow' },
+  { 'font-lock-regexp-face', fg = 'purple' },
   { 'font-lock-regexp-grouping-backslash', fg = 'purple' },
   { 'font-lock-regexp-grouping-construct', fg = 'purple' },
   { 'font-lock-escape-face', fg = 'purple' },
@@ -186,7 +195,6 @@ local EMACS_FACES = {
   { 'font-lock-misc-punctuation-face', fg = 'fg1' },
   { 'font-lock-property-name-face', fg = 'fg0' },
   { 'font-lock-property-use-face', fg = 'fg0' },
-  { 'font-lock-reference-face', fg = 'blue' },
 
   { section = 'Treesitter (Emacs 29+)' },
   { 'treesit-fold-replacement-face', fg = 'fg2', bg = 'bg4' },
@@ -201,12 +209,6 @@ local EMACS_FACES = {
   { 'query-replace', fg = 'fg0', bg = 'diff_del' },
 
   { section = 'Occur / grep / compilation' },
-  { 'occur-match', fg = 'fg0', bg = 'match', bold = true },
-  { 'occur-prefix', fg = 'fg2' },
-  { 'occur-suffix', fg = 'fg2' },
-  { 'grep-match-face', fg = 'fg0', bg = 'match', bold = true },
-  { 'grep-hit-face', fg = 'accent', bold = true },
-  { 'grep-context-face', fg = 'fg2' },
   { 'compilation-error', fg = 'red', bold = true },
   { 'compilation-warning', fg = 'yellow' },
   { 'compilation-info', fg = 'blue' },
@@ -215,7 +217,6 @@ local EMACS_FACES = {
   { 'compilation-mode-line-run', fg = 'yellow', bold = true },
   { 'compilation-line-number', fg = 'accent' },
   { 'compilation-column-number', fg = 'fg2' },
-  { 'compilation-face', fg = 'fg0' },
   { 'next-error', bg = 'diff_change', extend = true },
 
   { section = 'Parentheses / Delimiters' },
@@ -259,7 +260,7 @@ local EMACS_FACES = {
   { 'diff-added', fg = 'bright_green', bg = 'diff_add', extend = true },
   { 'diff-removed', fg = 'red', bg = 'diff_del', extend = true },
   { 'diff-changed', fg = 'yellow', bg = 'diff_change', extend = true },
-  { 'diff-unchanged', fg = 'fg2', extend = true },
+  { 'diff-changed-unspecified', inherit = 'diff-changed' },
   { 'diff-context', fg = 'fg2', extend = true },
   { 'diff-indicator-added', fg = 'green', bg = 'diff_add' },
   { 'diff-indicator-removed', fg = 'red', bg = 'diff_del' },
@@ -362,6 +363,45 @@ local EMACS_FACES = {
   { 'eglot-type-hint-face', fg = 'blue', bg = 'bg4', italic = true },
   { 'eglot-diagnostic-tag-unnecessary-face', fg = 'fg3' },
   { 'eglot-diagnostic-tag-deprecated-face', fg = 'fg2', strike = true },
+  -- Eglot semantic tokens (on by default since Emacs 31) follow Neovim's
+  -- `@lsp.type.*` links. Eglot applies modifier faces above the type face,
+  -- so modifiers that Neovim leaves alone stay empty instead of repainting
+  -- the token, such as a parameter declaration in the function color.
+  { 'eglot-semantic-namespace', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-type', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-class', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-enum', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-interface', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-struct', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-typeParameter', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-event', inherit = 'font-lock-type-face' },
+  { 'eglot-semantic-parameter', fg = 'fg1' },
+  { 'eglot-semantic-variable', inherit = 'font-lock-variable-name-face' },
+  { 'eglot-semantic-property', inherit = 'font-lock-property-use-face' },
+  { 'eglot-semantic-enumMember', inherit = 'font-lock-constant-face' },
+  { 'eglot-semantic-function', inherit = 'font-lock-function-call-face' },
+  { 'eglot-semantic-method', inherit = 'font-lock-function-call-face' },
+  { 'eglot-semantic-macro', inherit = 'font-lock-preprocessor-face' },
+  { 'eglot-semantic-keyword', inherit = 'font-lock-keyword-face' },
+  { 'eglot-semantic-modifier', inherit = 'font-lock-keyword-face' },
+  { 'eglot-semantic-comment', inherit = 'font-lock-comment-face' },
+  { 'eglot-semantic-string', inherit = 'font-lock-string-face' },
+  { 'eglot-semantic-number', inherit = 'font-lock-number-face' },
+  { 'eglot-semantic-regexp', inherit = 'font-lock-regexp-face' },
+  { 'eglot-semantic-operator', inherit = 'font-lock-operator-face' },
+  { 'eglot-semantic-decorator', fg = 'purple' },
+  { 'eglot-semantic-declaration' },
+  { 'eglot-semantic-definition' },
+  { 'eglot-semantic-modification' },
+  { 'eglot-semantic-defaultLibrary' },
+  -- Color only: inheriting the constant face would bring its normal slant
+  -- and cancel the italic of `static` or `async` stacked below it.
+  { 'eglot-semantic-readonly', fg = 'purple' },
+  { 'eglot-semantic-static', italic = true },
+  { 'eglot-semantic-abstract', italic = true },
+  { 'eglot-semantic-async', italic = true },
+  { 'eglot-semantic-documentation', italic = true },
+  { 'eglot-semantic-deprecated', strike = true },
   { 'lsp-face-highlight-textual', bg = 'bg5' },
   { 'lsp-face-highlight-read', bg = 'bg5' },
   { 'lsp-face-highlight-write', bg = 'bg5', bold = true },
@@ -380,6 +420,7 @@ local EMACS_FACES = {
   { 'completions-group-title', fg = 'blue', bold = true },
   { 'completions-group-separator', fg = 'fg3', strike = true },
   { 'completion-preview', fg = 'fg3' },
+  { 'completion-preview-common', inherit = 'completion-preview', underline = true },
   { 'completion-preview-exact', fg = 'fg2', underline = true },
 
   { section = 'Corfu' },
@@ -436,9 +477,6 @@ local EMACS_FACES = {
 
   { section = 'Consult' },
   { 'consult-file', fg = 'blue' },
-  { 'consult-separator', fg = 'fg3' },
-  { 'consult-preview-cursor', bg = 'sel' },
-  { 'consult-preview-error', bg = 'diff_del' },
   { 'consult-preview-insertion', bg = 'diff_add' },
   { 'consult-line-number', fg = 'fg3' },
   { 'consult-line-number-prefix', fg = 'fg3' },
@@ -493,9 +531,6 @@ local EMACS_FACES = {
 
   { section = 'Helpful' },
   { 'helpful-heading', fg = 'accent', bold = true },
-
-  { section = 'Describe' },
-  { 'describe-variable-value', fg = 'green' },
 
   { section = 'Eldoc' },
   { 'eldoc-highlight-function-argument', fg = 'accent', bold = true },
@@ -572,6 +607,22 @@ local EMACS_FACES = {
   { 'magit-diff-lines-heading', fg = 'fg0', bg = 'bg4', extend = true },
   { 'magit-diff-lines-boundary', bg = 'bg4', extend = true },
   { 'magit-diff-whitespace-warning', bg = 'diff_del' },
+  { 'magit-diff-added-indicator', fg = 'green' },
+  { 'magit-diff-removed-indicator', fg = 'red' },
+  { 'magit-diff-base-indicator', fg = 'yellow' },
+  { 'magit-diff-our-heading', fg = 'red', bg = 'diff_del_inline', bold = true, extend = true },
+  { 'magit-diff-their-heading', fg = 'bright_green', bg = 'diff_add_inline', bold = true, extend = true },
+  { 'magit-diff-base-heading', fg = 'yellow', bg = 'diff_text', bold = true, extend = true },
+  { 'magit-diff-file-heading-selection', fg = 'accent2', bg = 'bg5', extend = true },
+  { 'magit-dimmed', fg = 'fg3' },
+  { 'magit-refname', fg = 'fg2' },
+  { 'magit-sequence-head', fg = 'blue' },
+  { 'magit-sequence-part', fg = 'yellow' },
+  { 'magit-sequence-stop', fg = 'green' },
+  { 'magit-sequence-drop', fg = 'red' },
+  { 'magit-bisect-good', fg = 'green' },
+  { 'magit-bisect-skip', fg = 'yellow' },
+  { 'magit-bisect-bad', fg = 'red' },
   { 'magit-diffstat-added', fg = 'green' },
   { 'magit-diffstat-removed', fg = 'red' },
   { 'magit-branch-local', fg = 'blue' },
@@ -586,7 +637,6 @@ local EMACS_FACES = {
   { 'magit-log-author', fg = 'accent' },
   { 'magit-log-date', fg = 'fg2' },
   { 'magit-log-graph', fg = 'fg3' },
-  { 'magit-log-head-label-head', fg = 'fg0', bg = 'accent', bold = true },
   { 'magit-process-ok', fg = 'green', bold = true },
   { 'magit-process-ng', fg = 'red', bold = true },
   { 'magit-reflog-commit', fg = 'green' },
@@ -613,6 +663,7 @@ local EMACS_FACES = {
   { 'magit-blame-summary', fg = 'fg0', bg = 'bg2' },
   { 'magit-blame-margin', fg = 'fg2', bg = 'bg2' },
   { 'magit-blame-dimmed', fg = 'fg3', bg = 'bg2' },
+  { 'magit-blame-highlight', fg = 'fg0', bg = 'bg5', extend = true },
 
   { section = 'Git commit' },
   { 'git-commit-summary', fg = 'fg0', bold = true },
@@ -627,14 +678,9 @@ local EMACS_FACES = {
   { 'git-commit-trailer-token', fg = 'blue' },
   { 'git-commit-trailer-value', fg = 'fg0' },
 
+  -- Magit 4 gives every rebase action one face; `git-rebase-action` and
+  -- `git-rebase-killed-action` inherit the keyword and comment faces.
   { section = 'Git rebase' },
-  { 'git-rebase-pick', fg = 'green' },
-  { 'git-rebase-reword', fg = 'blue' },
-  { 'git-rebase-edit', fg = 'yellow' },
-  { 'git-rebase-squash', fg = 'purple' },
-  { 'git-rebase-fixup', fg = 'accent2' },
-  { 'git-rebase-exec', fg = 'cyan' },
-  { 'git-rebase-kill-line', fg = 'red', strike = true },
   { 'git-rebase-hash', fg = 'fg3' },
   { 'git-rebase-description', fg = 'fg0' },
   { 'git-rebase-label', fg = 'fg2' },
@@ -663,13 +709,14 @@ local EMACS_FACES = {
   { 'transient-nonstandard-key', fg = 'yellow', underline = true },
   { 'transient-unreachable', fg = 'fg3' },
   { 'transient-unreachable-key', fg = 'fg3', underline = true },
-  { 'transient-separator', fg = 'fg3', strike = true, extend = true },
-  { 'transient-amaranth', fg = 'red', bold = true },
-  { 'transient-blue', fg = 'blue', bold = true },
-  { 'transient-pink', fg = 'bright_purple', bold = true },
-  { 'transient-purple', fg = 'purple', bold = true },
-  { 'transient-teal', fg = 'cyan', bold = true },
-  { 'transient-red', fg = 'red', bold = true },
+  { 'transient-higher-level', box = { line_width = -1, color = 'fg3' } },
+  -- Semantic key colors: what a suffix does to the transient after it runs.
+  { 'transient-key-exit', inherit = 'transient-key' },
+  { 'transient-key-stay', inherit = 'transient-key', fg = 'green' },
+  { 'transient-key-return', inherit = 'transient-key', fg = 'yellow' },
+  { 'transient-key-recurse', inherit = 'transient-key', fg = 'blue' },
+  { 'transient-key-stack', inherit = 'transient-key', fg = 'purple' },
+  { 'transient-key-noop', inherit = 'transient-key', fg = 'fg3' },
 
   { section = 'Which-key' },
   { 'which-key-key-face', fg = 'accent', bold = true },
@@ -831,6 +878,38 @@ local EMACS_FACES = {
   { 'markdown-metadata-value-face', fg = 'fg1' },
   { 'markdown-highlighting-face', bg = 'match' },
 
+  -- Emacs 31's built-in tree-sitter Markdown mode, mapped like Neovim's
+  -- `@markup.*` captures. Code blocks set no foreground so the embedded
+  -- language's faces show through.
+  { section = 'Markdown (tree-sitter)' },
+  { 'markdown-ts-heading-1', bold = true },
+  { 'markdown-ts-heading-2', bold = true },
+  { 'markdown-ts-heading-3', bold = true },
+  { 'markdown-ts-heading-4', bold = true },
+  { 'markdown-ts-heading-5', bold = true },
+  { 'markdown-ts-heading-6', bold = true },
+  { 'markdown-ts-delimiter', fg = 'fg3', bold = false, italic = false },
+  { 'markdown-ts-list-marker', fg = 'accent2' },
+  { 'markdown-ts-emphasis', italic = true },
+  { 'markdown-ts-bold', bold = true },
+  { 'markdown-ts-strikethrough', fg = 'fg2', strike = true },
+  { 'markdown-ts-block-quote', fg = 'fg2', italic = true },
+  { 'markdown-ts-link', fg = 'blue', underline = true },
+  { 'markdown-ts-link-destination', fg = 'blue', underline = true },
+  { 'markdown-ts-code-span', fg = 'green', bg = 'bg2' },
+  { 'markdown-ts-code-block', bg = 'bg2', extend = true },
+  { 'markdown-ts-code-block-markup-hidden', bg = 'bg2', extend = true },
+  { 'markdown-ts-indented-code-block', fg = 'green', bg = 'bg2', extend = true },
+  { 'markdown-ts-language-keyword', fg = 'fg3' },
+  { 'markdown-ts-html-tag', fg = 'purple' },
+  { 'markdown-ts-latex', fg = 'blue' },
+  { 'markdown-ts-table', extend = true },
+  { 'markdown-ts-table-header', fg = 'fg0', bold = true },
+  { 'markdown-ts-table-delimiter-cell', fg = 'fg3' },
+  { 'markdown-ts-task-checked', fg = 'green' },
+  { 'markdown-ts-task-unchecked', fg = 'fg3' },
+  { 'markdown-ts-hard-line-break-space', bg = 'bg5' },
+
   { section = 'Shell / Terminal' },
   { 'comint-highlight-input', fg = 'fg0', bold = true },
   { 'comint-highlight-prompt', fg = 'green', bold = true },
@@ -966,8 +1045,8 @@ local EMACS_FACES = {
   { 'eww-form-text', fg = 'fg0', bg = 'bg4', box = true },
   { 'eww-form-textarea', fg = 'fg0', bg = 'bg4', box = true },
   { 'shr-link', fg = 'blue', underline = true },
-  { 'shr-visited-link', fg = 'purple', underline = true },
   { 'shr-selected-link', fg = 'bg3', bg = 'blue' },
+  { 'shr-mark', fg = 'fg0', bg = 'match' },
   { 'shr-strike-through', fg = 'fg2', strike = true },
   { 'shr-abbreviation', underline = { style = 'dots', color = 'fg2' } },
   { 'shr-h1', fg = 'accent', bold = true },
@@ -1025,6 +1104,8 @@ local EMACS_FACES = {
   { 'package-status-external', fg = 'cyan' },
   { 'package-status-incompat', fg = 'red' },
   { 'package-status-disabled', fg = 'fg3', strike = true },
+  { 'package-mark-install-line', bg = 'diff_add', extend = true },
+  { 'package-mark-delete-line', bg = 'diff_del', extend = true },
 
   { section = 'Custom / Customize' },
   { 'custom-group-tag', fg = 'accent', bold = true },
@@ -1123,9 +1204,9 @@ local function emacs_attr_part(name, value)
     emacs_check_key(value, 'bg')
     return ':background ,' .. emacs_key(value)
   elseif name == 'bold' then
-    return value and ':weight bold' or nil
+    return value and ':weight bold' or ':weight normal'
   elseif name == 'italic' then
-    return value and ':slant italic' or nil
+    return value and ':slant italic' or ':slant normal'
   elseif name == 'underline' then
     if type(value) == 'table' then
       emacs_check_key(value.color, 'underline.color')
@@ -1282,6 +1363,7 @@ local function heading_face(entry, p, headings)
   local level = entry[1]:match('^outline%-(%d)$')
     or entry[1]:match('^org%-level%-(%d)$')
     or entry[1]:match('^markdown%-header%-face%-(%d)$')
+    or entry[1]:match('^markdown%-ts%-heading%-(%d)$')
   if not level then
     return entry
   end
@@ -1313,7 +1395,7 @@ local function profile_face(entry, p, profile)
     ['font-lock-regexp-grouping-construct'] = r.literal,
     ['font-lock-escape-face'] = r.literal,
     ['font-lock-number-face'] = r.number or r.literal,
-    ['font-lock-reference-face'] = r.type,
+    ['font-lock-regexp-face'] = r.literal,
     ['font-lock-string-face'] = r.literal,
     link = r.link,
     ['link-visited'] = r.link,
@@ -1322,13 +1404,23 @@ local function profile_face(entry, p, profile)
     ['markdown-link-face'] = r.link,
     ['markdown-url-face'] = r.link,
     ['markdown-plain-url-face'] = r.link,
+    ['markdown-ts-link'] = r.link,
+    ['markdown-ts-link-destination'] = r.link,
     ['shr-link'] = r.link,
-    ['shr-visited-link'] = r.link,
     ['font-lock-property-name-face'] = property,
     ['font-lock-property-use-face'] = property,
     ['markdown-inline-code-face'] = r.literal,
     ['markdown-blockquote-face'] = r.quote,
     ['markdown-list-face'] = r.control,
+    ['markdown-ts-code-span'] = r.literal,
+    ['markdown-ts-indented-code-block'] = r.literal,
+    ['markdown-ts-block-quote'] = r.quote,
+    ['markdown-ts-list-marker'] = r.control,
+    ['markdown-ts-html-tag'] = r.tag,
+    ['markdown-ts-latex'] = r.type,
+    ['eglot-semantic-parameter'] = r.parameter,
+    ['eglot-semantic-readonly'] = r.literal,
+    ['eglot-semantic-decorator'] = r.attribute,
   }
   local role = roles[entry[1]]
   if not role then
@@ -1385,8 +1477,11 @@ local function typography_face(entry)
     return entry
   end
   local result = copy_face(entry)
+  -- Keep `false` so regular faces emit normal weight and slant, as Neovim's
+  -- typography does; otherwise bold leaks in from faces stacked with them,
+  -- such as Eglot's semantic-token modifiers.
   for attribute, enabled in pairs(typography.attributes(role)) do
-    result[attribute] = enabled or nil
+    result[attribute] = enabled
   end
   return result
 end

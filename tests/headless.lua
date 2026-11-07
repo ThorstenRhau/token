@@ -95,6 +95,26 @@ for _, appearance in ipairs(appearances) do
       emacs_theme:find('`(line-number-current-line          ((,class (:inherit line-number ', 1, true),
       filename .. ' line-number-current-line does not inherit line-number'
     )
+    -- Eglot applies modifier faces above the token type, so modifiers that
+    -- Neovim leaves alone must not repaint the token.
+    truthy(
+      emacs_theme:find('`(eglot-semantic-declaration        ((,class ())))', 1, true),
+      filename .. ' eglot-semantic-declaration is not empty'
+    )
+    -- Regular faces state normal weight and slant so stacked faces cannot
+    -- make them bold or italic.
+    truthy(
+      emacs_theme:find('`%(font%-lock%-string%-face%s+%(%(,class %(:foreground ,[%w%-]+ :weight normal :slant normal'),
+      filename .. ' font-lock-string-face does not reset weight and slant'
+    )
+    -- Tree-sitter Markdown headings follow the same heading cycle.
+    for level = 1, 6 do
+      local ts = emacs_theme:match('`%(markdown%-ts%-heading%-' .. level .. '%s+%(%(,class %(:foreground ,([%w%-]+)')
+      local classic =
+        emacs_theme:match('`%(markdown%-header%-face%-' .. level .. '%s+%(%(,class %(:foreground ,([%w%-]+)')
+      truthy(ts, filename .. ' markdown-ts-heading-' .. level .. ' has no foreground')
+      equal(ts, classic, filename .. ' markdown-ts-heading-' .. level)
+    end
     -- The byte compiler warns about unused lexical bindings.
     local bindings, body = emacs_theme:match('%(let (%b())(.*)$')
     truthy(bindings, filename .. ' has no let block')
@@ -710,13 +730,15 @@ equal(
 local windows_flint = vim.json.decode(read_text('contrib/windows-terminal/token-flint.json')).schemes
 equal(windows_flint[1].name, 'Token Flint Dark', 'Windows Terminal Flint dark name')
 equal(windows_flint[2].name, 'Token Flint Light', 'Windows Terminal Flint light name')
+-- Regular-role Emacs faces state every font attribute as off.
+local emacs_regular = ' :weight normal :slant normal :underline nil)))'
 local emacs_flint = read_text('contrib/emacs/token-flint-dark-theme.el')
 truthy(
-  emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent)))', 1, true),
+  emacs_flint:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
   'Emacs Flint definition typography'
 )
 truthy(
-  emacs_flint:find('font-lock-function-call-face      ((,class (:foreground ,accent)))', 1, true),
+  emacs_flint:find('font-lock-function-call-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
   'Emacs Flint call typography'
 )
 local temper_dark = require('token.palettes.temper')('dark')
@@ -742,19 +764,19 @@ equal(windows_temper[1].name, 'Token Temper Dark', 'Windows Terminal Temper dark
 equal(windows_temper[2].name, 'Token Temper Light', 'Windows Terminal Temper light name')
 local emacs_temper = read_text('contrib/emacs/token-temper-dark-theme.el')
 truthy(
-  emacs_temper:find('font-lock-function-name-face      ((,class (:foreground ,accent)))', 1, true),
+  emacs_temper:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
   'Emacs Temper definition typography'
 )
 truthy(
-  emacs_temper:find('font-lock-function-call-face      ((,class (:foreground ,accent)))', 1, true),
+  emacs_temper:find('font-lock-function-call-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
   'Emacs Temper call typography'
 )
 truthy(
-  emacs_temper:find('font-lock-type-face               ((,class (:foreground ,fg1)))', 1, true),
+  emacs_temper:find('font-lock-type-face               ((,class (:foreground ,fg1' .. emacs_regular, 1, true),
   'Emacs Temper type grammar'
 )
 truthy(
-  emacs_temper:find('font-lock-string-face             ((,class (:foreground ,accent)))', 1, true),
+  emacs_temper:find('font-lock-string-face             ((,class (:foreground ,accent' .. emacs_regular, 1, true),
   'Emacs Temper literal grammar'
 )
 local ultra_dark = require('token.palettes.ultra')('dark')
@@ -783,19 +805,23 @@ equal(windows_ultra[1].name, 'Token Ultra Dark', 'Windows Terminal Ultra dark na
 equal(windows_ultra[2].name, 'Token Ultra Light', 'Windows Terminal Ultra light name')
 local emacs_ultra = read_text('contrib/emacs/token-ultra-dark-theme.el')
 truthy(
-  emacs_ultra:find('font-lock-function-name-face      ((,class (:foreground ,accent)))', 1, true),
+  emacs_ultra:find('font-lock-function-name-face      ((,class (:foreground ,accent' .. emacs_regular, 1, true),
   'Emacs Ultra definition typography'
 )
 truthy(
-  emacs_ultra:find('font-lock-type-face               ((,class (:foreground ,fg1)))', 1, true),
+  emacs_ultra:find('font-lock-type-face               ((,class (:foreground ,fg1' .. emacs_regular, 1, true),
   'Emacs Ultra type grammar'
 )
 truthy(
-  emacs_ultra:find('font-lock-string-face             ((,class (:foreground ,orange)))', 1, true),
+  emacs_ultra:find('font-lock-string-face             ((,class (:foreground ,orange' .. emacs_regular, 1, true),
   'Emacs Ultra literal grammar'
 )
 truthy(
-  emacs_ultra:find('markdown-url-face                 ((,class (:foreground ,blue :underline t)))', 1, true),
+  emacs_ultra:find(
+    'markdown-url-face                 ((,class (:foreground ,blue :weight normal :slant normal :underline t)))',
+    1,
+    true
+  ),
   'Emacs Ultra link role'
 )
 local gtk_ultra = read_text('contrib/gtksourceview/token-ultra-dark.xml')

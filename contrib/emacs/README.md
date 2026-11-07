@@ -3,7 +3,7 @@
 Dark and light Emacs themes for classic Token, Token Flint, Token Temper, Token
 Ultra, and Token Meridian, derived from the
 [token](https://github.com/ThorstenRhau/token) Neovim colorscheme. Each covers
-about 860 faces across syntax, org-mode, magit, completion frameworks,
+about 920 faces across syntax, org-mode, magit, completion frameworks,
 diagnostics, diffs, shell, mail, and more.
 
 > The `.el` files in this directory are generated from Token's appearance
@@ -27,7 +27,21 @@ diagnostics, diffs, shell, mail, and more.
 
 ## Requirements
 
-Emacs 27+ (uses `:extend`, `(:style wave)` underlines, and `lexical-binding`).
+Emacs 31+. The themes target the faces of Emacs 31 and its built-in packages,
+such as `markdown-ts-mode` and Eglot's semantic tokens, and of Magit 4.
+
+## Tree-sitter highlighting
+
+Tree-sitter modes highlight function calls, properties, variables, operators
+and brackets only at level 4. Emacs defaults to level 3, which leaves them in
+the default color. For highlighting close to Token in Neovim, set:
+
+```elisp
+(setopt treesit-font-lock-level 4)
+```
+
+Eglot's semantic tokens, on by default since Emacs 31, are themed to follow
+the Neovim colorscheme's LSP colors.
 
 ## Installation
 
@@ -107,16 +121,16 @@ To follow the system appearance automatically (macOS / Emacs 29+):
 | Category | Details |
 | --- | --- |
 | Core | `default`, cursor, fringe, region, line numbers, mode line, tab bar, whitespace |
-| Syntax | All `font-lock-*` faces including Emacs 29+ additions |
-| Search | `isearch`, `lazy-highlight`, occur, grep, compilation |
+| Syntax | All `font-lock-*` faces, including Emacs 31's `font-lock-regexp-face` |
+| Search | `isearch`, `lazy-highlight`, compilation |
 | Parens | `show-paren-*`, `rainbow-delimiters` (9 levels) |
 | Outline | `outline-1` through `outline-8` |
 | Diffs | `diff-mode`, `diff-hl`, `git-gutter`, ediff, smerge |
 | Diagnostics | `flymake`, `flycheck` (including fringe and error list) |
-| LSP | `eglot`, `lsp-mode`, `lsp-ui` |
+| LSP | `eglot` (including semantic tokens), `lsp-mode`, `lsp-ui` |
 | Completion | `corfu`, `company`, `vertico`, `ivy`, `consult`, `embark`, `orderless`, `marginalia` |
 | Org | Headings 1–8, blocks, agenda, roam, tables, checkboxes, timestamps, priorities |
-| Markdown | All heading levels, code, tables, links, footnotes, HTML |
+| Markdown | `markdown-mode` and the built-in `markdown-ts-mode`: headings, code, tables, links, footnotes, tasks, HTML |
 | Version control | `magit` (full), `forge`, `git-commit`, `git-rebase`, `git-timemachine` |
 | Navigation | `dired`, `diredfl`, `ibuffer`, `treemacs`, `neotree`, `xref` |
 | Info / Help | `info`, `helpful`, `eldoc` |

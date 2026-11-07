@@ -243,11 +243,13 @@ local emacs_roles = {
   ['font-lock-type-face'] = 'regular',
   ['font-lock-constant-face'] = 'regular',
   ['font-lock-preprocessor-face'] = 'control',
+  ['font-lock-regexp-face'] = 'regular',
   ['font-lock-regexp-grouping-backslash'] = 'regular',
   ['font-lock-regexp-grouping-construct'] = 'regular',
   ['font-lock-escape-face'] = 'regular',
   ['font-lock-number-face'] = 'regular',
-  ['font-lock-reference-face'] = 'regular',
+  ['eglot-semantic-parameter'] = 'regular',
+  ['eglot-semantic-decorator'] = 'regular',
   link = 'link',
   ['link-visited'] = 'link',
   ['org-link'] = 'link',
@@ -256,8 +258,10 @@ local emacs_roles = {
   ['markdown-url-face'] = 'link',
   ['markdown-plain-url-face'] = 'link',
   ['markdown-list-face'] = 'control',
+  ['markdown-ts-link'] = 'link',
+  ['markdown-ts-link-destination'] = 'link',
+  ['markdown-ts-list-marker'] = 'control',
   ['shr-link'] = 'link',
-  ['shr-visited-link'] = 'link',
 }
 
 local vscode_roles = {
