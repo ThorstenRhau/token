@@ -48,6 +48,7 @@ local EMACS_LET_KEYS = {
   'sel',
   'match',
   'line_nr',
+  'whitespace',
   'comment',
 }
 
@@ -154,9 +155,9 @@ local EMACS_FACES = {
   { 'tab-line-close-highlight', fg = 'red' },
 
   { section = 'Whitespace' },
-  { 'whitespace-space', fg = 'bg5' },
-  { 'whitespace-hspace', fg = 'bg5' },
-  { 'whitespace-tab', fg = 'bg5' },
+  { 'whitespace-space', fg = 'whitespace' },
+  { 'whitespace-hspace', fg = 'whitespace' },
+  { 'whitespace-tab', fg = 'whitespace' },
   { 'whitespace-newline', fg = 'bg5' },
   { 'whitespace-missing-newline-at-eof', fg = 'red' },
   { 'whitespace-trailing', fg = 'red', bg = 'diff_del' },

@@ -48,8 +48,9 @@
 -- UI elements
 ---@field sel string Background for visual selections, selected menu items, and focused rows.
 ---@field match string Background for search matches and active snippet placeholders.
----@field indent string Foreground for ordinary indentation guides and whitespace markers.
+---@field indent string Foreground for ordinary indentation guides and `NonText` markers.
 ---@field indent_active string Foreground for active indentation scopes.
+---@field whitespace string Foreground for listchars markers such as tabs, trailing spaces, and nbsp; one step above `indent`.
 ---@field line_nr string Foreground for ordinary line numbers.
 -- Git signs
 ---@field gsign_add string Foreground for unstaged added-line signs.
@@ -119,6 +120,7 @@ local function palette(background)
       match = '#e8d8b0',
       indent = '#e0ddd8',
       indent_active = '#a8a49c',
+      whitespace = '#c4c0ba',
       line_nr = '#8e8c86',
       -- Git sign column
       gsign_add = '#23831e',
@@ -183,6 +185,7 @@ local function palette(background)
     match = '#4a4030',
     indent = '#323230',
     indent_active = '#626260',
+    whitespace = '#4a4a48',
     line_nr = '#6b6b69',
     -- Git sign column
     gsign_add = '#7ca379',

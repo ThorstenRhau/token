@@ -2,7 +2,7 @@
 ---@return table<string, vim.api.keyset.highlight>
 local function blink_indent(p)
   return {
-    BlinkIndent = { link = 'Whitespace' },
+    BlinkIndent = { fg = p.indent },
     BlinkIndentScope = { fg = p.indent_active },
     BlinkIndentUnderline = { sp = p.indent_active, underline = true },
 

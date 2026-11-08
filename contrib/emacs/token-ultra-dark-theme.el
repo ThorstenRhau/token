@@ -43,6 +43,7 @@
       (sel             "#3c3b36")
       (match           "#4d4231")
       (line-nr         "#6b6b67")
+      (whitespace      "#4b4b48")
       (comment         "#a39d94"))
 
   (custom-theme-set-faces
@@ -131,9 +132,9 @@
    `(tab-line-close-highlight          ((,class (:foreground ,red))))
 
    ;; ── Whitespace ───────────────────────────────────────────────────────────
-   `(whitespace-space                  ((,class (:foreground ,bg5))))
-   `(whitespace-hspace                 ((,class (:foreground ,bg5))))
-   `(whitespace-tab                    ((,class (:foreground ,bg5))))
+   `(whitespace-space                  ((,class (:foreground ,whitespace))))
+   `(whitespace-hspace                 ((,class (:foreground ,whitespace))))
+   `(whitespace-tab                    ((,class (:foreground ,whitespace))))
    `(whitespace-newline                ((,class (:foreground ,bg5))))
    `(whitespace-missing-newline-at-eof ((,class (:foreground ,red))))
    `(whitespace-trailing               ((,class (:foreground ,red :background ,diff-del))))

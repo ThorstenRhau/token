@@ -1377,6 +1377,7 @@ local foreground_keys = {
   'bright_blue',
   'indent',
   'indent_active',
+  'whitespace',
   'line_nr',
   'gsign_add',
   'gsign_change',
@@ -1528,7 +1529,7 @@ for _, background in ipairs({ 'dark', 'light' }) do
   for name, loader in pairs(palette_loaders) do
     local palette = require(loader)(background)
     equal(sorted_keys(palette), sorted_keys(classic), name .. ' palette keys for ' .. background)
-    equal(vim.tbl_count(palette), 50, name .. ' palette key count for ' .. background)
+    equal(vim.tbl_count(palette), 51, name .. ' palette key count for ' .. background)
     for key, color in pairs(palette) do
       truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid ' .. name .. ' color ' .. key .. ' for ' .. background)
     end

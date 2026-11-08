@@ -85,7 +85,7 @@ local function editor(p)
     MsgSeparator = { fg = p.fg3, bg = p.bg4 },
 
     NonText = { fg = p.indent },
-    Whitespace = { fg = p.indent },
+    Whitespace = { fg = p.whitespace },
     SpecialKey = { fg = p.fg3 },
     EndOfBuffer = { fg = p.bg4 },
     Conceal = { fg = p.fg2 },

@@ -60,7 +60,7 @@ local function render_markdown(p)
 
     -- misc
     RenderMarkdownSign = { link = 'SignColumn' },
-    RenderMarkdownIndent = { link = 'Whitespace' },
+    RenderMarkdownIndent = { fg = p.indent },
     RenderMarkdownMath = { link = '@markup.math' },
     RenderMarkdownHtmlComment = { link = '@comment' },
   }
