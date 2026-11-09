@@ -84,7 +84,7 @@ local function editor(p)
     StdoutMsg = { fg = p.fg0 },
     MsgSeparator = { fg = p.fg3, bg = p.bg4 },
 
-    NonText = { fg = p.indent },
+    NonText = { fg = p.fg3 },
     Whitespace = { fg = p.whitespace },
     SpecialKey = { fg = p.fg3 },
     EndOfBuffer = { fg = p.bg4 },

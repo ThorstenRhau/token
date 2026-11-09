@@ -48,7 +48,7 @@
 -- UI elements
 ---@field sel string Background for visual selections, selected menu items, and focused rows.
 ---@field match string Background for search matches and active snippet placeholders.
----@field indent string Foreground for ordinary indentation guides and `NonText` markers.
+---@field indent string Foreground for ordinary indentation guides.
 ---@field indent_active string Foreground for active indentation scopes.
 ---@field whitespace string Foreground for listchars markers such as tabs, trailing spaces, and nbsp; one step above `indent`.
 ---@field line_nr string Foreground for ordinary line numbers.
