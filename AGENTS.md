@@ -6,6 +6,8 @@ compilation, and contrib contract.
 
 ## Architecture and sources of truth
 
+- For broad work, start with `docs/index.md`. Use `docs/architecture.md` for
+  current boundaries and `docs/decisions/` for accepted rationale.
 - `lua/token/appearance.lua` registers appearances and selects their palette,
   optional role profile, generated slug, and cache identity. An appearance with
   a role profile gets the shared highlight overlay in `appearances/overlay.lua`.
@@ -34,6 +36,9 @@ compilation, and contrib contract.
 - Add plugin support with a `groups/plugins/<name>.lua` module and matching
   registry entry. Group modules export
   `(palette) -> { [group] = highlight }`.
+- Before adding semantic token links for a language server, follow the check
+  in `docs/lsp-semantic-tokens.md`. Servers use the same modifier names with
+  different meanings.
 - Put highlight groups in the appropriate core or plugin module. Prefer
   `{ link = 'GroupName' }` when groups should remain identical; same-file
   duplicate definitions are acceptable when they preserve independent future

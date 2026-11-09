@@ -18,12 +18,18 @@ authoritative by concern:
 
 - [Architecture](architecture.md): appearance registration, runtime theme
   assembly, compiled caches, generated contrib themes, and validation coverage.
+- [LSP semantic tokens](lsp-semantic-tokens.md): how Neovim, VS Code and
+  Eglot apply semantic tokens, observed server conventions, current mappings,
+  and how to check a new server.
 
 ## Decision history
 
-No decision records are currently retained. Add a numbered record under
-`docs/decisions/` only for accepted, non-obvious rationale that cannot be
-represented as current architecture, a project rule, or an enforced invariant.
+- [ADR-0001](decisions/0001-lsp-readonly-modifier.md): keep `readonly` as
+  constant, with parameter and Lua exceptions.
+
+Add a numbered record under `docs/decisions/` only for accepted, non-obvious
+rationale that cannot be represented as current architecture, a project rule,
+or an enforced invariant.
 
 ## Active work
 
