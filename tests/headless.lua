@@ -473,6 +473,20 @@ for _, appearance in ipairs(require('token.appearance').all()) do
         )
       end
     end
+    -- Readonly exceptions follow Neovim's @variable.parameter and @variable.
+    local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
+    local readonly_exceptions = {
+      ['parameter.readonly'] = profile and profile.syntax.parameter.fg or palette.fg1,
+      ['variable.readonly:lua'] = profile and profile.syntax.variable.fg or palette.fg0,
+    }
+    for name, color in pairs(readonly_exceptions) do
+      local semantic = theme.semanticTokenColors[name]
+      local label = 'VS Code ' .. name .. ' for ' .. appearance.name .. ' ' .. variant
+      equal(semantic and semantic.foreground, color, label)
+      for attribute, enabled in pairs(typography.attributes('regular')) do
+        equal(semantic[attribute], enabled, label .. ' ' .. attribute)
+      end
+    end
     for _, modifier in ipairs({ 'declaration', 'definition' }) do
       local semantic = theme.semanticTokenColors['*.' .. modifier]
       for attribute, enabled in pairs(typography.attributes('regular')) do
@@ -1750,7 +1764,8 @@ for _, selector in ipairs(typography.vscode_exact_selectors()) do
   end
 end
 for name in pairs(require('token.groups.lsp')({})) do
-  local selector = name:match('^@lsp%.typemod%.(.+)$')
+  local selector = name:match('^@lsp%.typemod%.([^.]+%.declaration)$')
+    or name:match('^@lsp%.typemod%.([^.]+%.definition)$')
   if selector then
     lsp_definitions[selector] = true
     runtime_roles[#runtime_roles + 1] = { name, 'definition' }
@@ -1974,8 +1989,17 @@ local provider_links = {
   ['@lsp.type.localDateTime.toml'] = '@string.special',
   ['@lsp.type.localDate.toml'] = '@string.special',
   ['@lsp.type.localTime.toml'] = '@string.special',
+  ['@lsp.typemod.variable.readonly.lua'] = '@variable',
+}
+-- Modifier links that apply to every filetype.
+local modifier_links = {
+  ['@lsp.typemod.parameter.selfParameter'] = '@variable.parameter.builtin',
+  ['@lsp.typemod.function.defaultLibrary'] = '@function.builtin',
+  ['@lsp.typemod.class.defaultLibrary'] = '@type.builtin',
+  ['@lsp.typemod.parameter.readonly'] = '@variable.parameter',
 }
 local provider_styles = {
+  ['@variable'] = { italic = true },
   ['@variable.parameter.builtin'] = { italic = true },
   ['@property'] = { italic = false, bold = true },
   ['@boolean'] = { strikethrough = true },
@@ -1999,7 +2023,14 @@ for _, styled in ipairs({ false, true }) do
         end
         local unqualified = name:gsub('%.[^.]+$', '')
         equal(groups[unqualified], nil, label .. ' unqualified definition')
-        equal(groups[unqualified .. '.lua'], nil, label .. ' leaked filetype definition')
+        if not name:match('%.lua$') then
+          equal(groups[unqualified .. '.lua'], nil, label .. ' leaked filetype definition')
+        end
+      end
+      for name, target in pairs(modifier_links) do
+        local label = name .. ' in ' .. appearance.name .. ' ' .. background
+        equal(groups[name], { link = target }, label .. ' direct link')
+        equal(hl(name), hl(target), label .. ' semantic styling')
       end
       for name in pairs(groups) do
         for _, modifier in ipairs({ 'builtin', 'classMember', 'parameter', 'global' }) do

@@ -642,6 +642,18 @@
       "italic": false,
       "underline": false
     },
+    "parameter.readonly": {
+      "foreground": "#b3aea5",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:lua": {
+      "foreground": "#c3c0b8",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
     "*.async": {
       "italic": true
     },

@@ -217,9 +217,11 @@ with a `token:` error.
 
 ## LSP semantic tokens
 
-Token supports standard LSP semantic tokens and additional Python and TOML
-tokens from BasedPyright and Tombi. These inherit Token's existing semantic
-colors and styles across all appearances.
+Token links the standard LSP semantic token types and modifiers to its
+Treesitter groups, so they get the same colors and styles in every appearance.
+Some language servers add their own token types and modifiers, such as `self`
+parameters in Python or dates in TOML. Token links these to the closest
+existing group.
 
 ## Compilation
 

@@ -1819,6 +1819,9 @@ local function gen_vscode_theme(p, variant, term, appearance)
     { 'parameter', p.fg1 },
     { '*.deprecated', json_object({ { 'strikethrough', true } }) },
     { '*.readonly', json_object({ { 'foreground', p.purple } }) },
+    -- Outrank `*.readonly`, as Neovim does. See docs/lsp-semantic-tokens.md.
+    { 'parameter.readonly', p.fg1 },
+    { 'variable.readonly:lua', p.fg0 },
     { '*.async', json_object({ { 'italic', true } }) },
     { '*.static', json_object({ { 'italic', true } }) },
     { '*.abstract', json_object({ { 'italic', true } }) },
@@ -1849,6 +1852,8 @@ local function gen_vscode_theme(p, variant, term, appearance)
       { 'parameter', r.parameter.fg },
       { '*.deprecated', json_object({ { 'strikethrough', true } }) },
       { '*.readonly', json_object({ { 'foreground', r.literal.fg } }) },
+      { 'parameter.readonly', r.parameter.fg },
+      { 'variable.readonly:lua', r.variable.fg },
       { '*.async', json_object({ { 'italic', true } }) },
       { '*.static', json_object({ { 'italic', true } }) },
       { '*.abstract', json_object({ { 'italic', true } }) },
