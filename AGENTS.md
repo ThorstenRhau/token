@@ -2,7 +2,9 @@
 
 Token is a Neovim 0.12+ colorscheme with registered dark and light
 appearances. `README.md` is the public installation, configuration, plugin,
-compilation, and contrib contract.
+compilation, and contrib contract. `doc/token.txt` is the shipped `:help`
+reference for the same contract; update both when options, plugin keys,
+appearances, or commands change.
 
 ## Architecture and sources of truth
 

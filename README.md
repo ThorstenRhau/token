@@ -114,6 +114,33 @@ while Neovim runs to switch variants.
 defaults and deep-merges the options you pass. It does not reload a colorscheme
 that is already active.
 
+The full reference ships with the plugin. Run `:help token` in Neovim, or jump
+to an option with a tag such as `:help token-config-styles`.
+
+### Completion for options
+
+Token describes its options with LuaCATS annotations, so lua-language-server
+and EmmyLua can complete option names and check values in your config. Options
+passed straight to `setup()` already have a type. Annotate a table you build
+elsewhere, such as a lazy.nvim `opts` table, with `---@type token.Config`.
+
+The language server must read Token's files. lazydev.nvim adds them when your
+config calls `require('token')`. Without it, add Token's install directory to
+the workspace library. By default that is
+`~/.local/share/nvim/site/pack/core/opt/token` for vim.pack and
+`~/.local/share/nvim/lazy/token` for lazy.nvim. For EmmyLua, in `.emmyrc.json`
+in your config directory:
+
+```json
+{
+  "workspace": {
+    "library": ["$VIMRUNTIME", "~/.local/share/nvim/site/pack/core/opt/token"]
+  }
+}
+```
+
+`:help token-types` has the same setup for lua-language-server.
+
 ## Token v2
 
 Token is configurable from v2. Call `require('token').setup()` before you load
@@ -193,8 +220,9 @@ token.setup(config)
 
 Style entries accept the boolean attributes listed under `attributes`. Token
 adds them on top of its own definitions. Broad categories apply before the more
-specific ones: `keywords` before `preprocessor`, `conditionals`, and `loops`,
-`constants` before `booleans`, and `variables` before `properties`.
+specific ones: `keywords` and `functions` before `preprocessor`, `keywords`
+before `conditionals` and `loops`, `constants` before `booleans`, and
+`variables` before `properties`.
 
 Color overrides apply in this order: `all`, the current background, then
 `on_colors`. Existing and new palette keys must hold `#RRGGBB` values.
@@ -211,8 +239,9 @@ leave out the last argument still work.
 selection, search, diff, diagnostic, and accent backgrounds. Highlight
 overrides and callbacks can bring back single backgrounds. `dim_inactive`
 uses `fg1` and `bg1` for the `NormalNC` groups of the core and enabled plugins.
-The global `attributes` switches apply last, including to plugin, callback,
-and Lualine output. Token leaves links to groups outside Token as links,
+With `transparent`, only the foreground changes. The global `attributes`
+switches apply last, including to plugin and callback output. The Lualine
+theme follows `bold`. Token leaves links to groups outside Token as links,
 because a Neovim link can't combine inherited styling with attribute overrides.
 
 Token rejects unknown options, style categories, attributes, and plugin names
@@ -251,7 +280,8 @@ must rerun `:TokenCompile`:
   `on_colors` and `on_highlights` read. Token cannot see those changes.
 
 With lazy.nvim, add `build = ':TokenCompile'` to the plugin spec so updates
-recompile automatically.
+recompile automatically. With vim.pack, restart Neovim after
+`vim.pack.update()` and then run `:TokenCompile`.
 
 Token detects changes to `setup()` options and callback bodies. It then ignores
 the cache and builds the highlights at runtime until you run `:TokenCompile`
@@ -298,7 +328,8 @@ require('token').setup({
 Token's fallback highlights for it.
 
 blink.indent uses rainbow scope guides by default. To get Token's muted guides
-with one brighter neutral scope guide, point it at Token's neutral groups:
+with one brighter neutral scope guide, turn on `plugins.blink_indent` and point
+blink.indent at Token's neutral groups:
 
 ```lua
 require('blink.indent').setup({

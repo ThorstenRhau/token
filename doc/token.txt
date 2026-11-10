@@ -1,0 +1,493 @@
+*token.txt*  Token colorscheme for Neovim
+
+==============================================================================
+CONTENTS                                                      *token-contents*
+
+  1. Introduction ........................................ |token-intro|
+  2. Install ............................................. |token-install|
+  3. Usage ............................................... |token-usage|
+  4. Configuration ....................................... |token-config|
+  5. Plugin integrations ................................. |token-plugins|
+  6. Lualine ............................................. |token-lualine|
+  7. LSP semantic tokens ................................. |token-semantic|
+  8. Compilation ......................................... |token-compile|
+  9. Lua API ............................................. |token-api|
+ 10. Type annotations .................................... |token-types|
+ 11. Themes for other tools .............................. |token-contrib|
+
+==============================================================================
+1. INTRODUCTION                                                  *token-intro*
+
+Token is a colorscheme for Neovim 0.12 and later. It has five appearances,
+and each one has a dark and a light variant:
+
+  Name              Colorscheme ~
+  Token Ultra       `token-ultra`
+  Token Meridian    `token-meridian`
+  Token (classic)   `token`
+  Token Flint       `token-flint`
+  Token Temper      `token-temper`
+
+Token Ultra uses copper definitions, ochre control flow and teal literals.
+Token Meridian puts the syntax colors of the Circadia colorscheme's Warm
+Parchment and Dark Classic themes on Token Ultra's surfaces. Classic Token
+is a warm, muted palette with earthy accents. Token Flint has a cool-gray
+base with softened rust, gold, blue and green. Token Temper uses the same
+cool-gray base and limits syntax colors mostly to teal and purple.
+
+Every appearance shares the same typography: bold control flow, definitions
+and headings, italic comments and quotes, and underlined links.
+
+Token covers Treesitter captures, LSP semantic tokens, diagnostics, diffs,
+legacy syntax groups and the 16 terminal colors. It also ships a Lualine
+theme and opt-in highlights for 30 plugins.
+
+==============================================================================
+2. INSTALL                                                     *token-install*
+
+These examples install the latest tagged release.
+
+With |vim.pack|: >lua
+    vim.pack.add({
+      {
+        src = 'https://github.com/ThorstenRhau/token',
+        version = vim.version.range('*'),
+      },
+    })
+<
+With lazy.nvim: >lua
+    { 'ThorstenRhau/token', version = '*' }
+<
+Both plugin managers generate the help tags for this file.
+
+==============================================================================
+3. USAGE                                                         *token-usage*
+
+Load an appearance with |:colorscheme|: >lua
+    vim.cmd.colorscheme('token-ultra')
+<
+The colorscheme name picks the appearance. The 'background' option picks the
+dark or light variant. Set 'background' before you load the colorscheme. If
+you change 'background' later, Token switches to the other variant.
+
+You don't have to call `setup()`. Without it, Token uses the defaults in
+|token-config|. If you call it, call it before you load the colorscheme: >lua
+    require('token').setup({
+      plugins = { gitsigns = true, snacks = true },
+    })
+    vim.cmd.colorscheme('token-ultra')
+<
+                                                                    *token-v2*
+Plugin integrations are off by default since Token v2. Earlier versions
+loaded all of them. Turn on the ones you use under |token-config-plugins|, or
+set `plugins = { all = true }` to get the v1 behavior back.
+
+==============================================================================
+4. CONFIGURATION                                                *token-config*
+
+`setup()` applies to every appearance. Each call starts from the defaults
+and deep-merges the options you pass. The call doesn't reload a colorscheme
+that is already active, so run |:colorscheme| again to see the change.
+
+Token rejects unknown options, style categories, attributes and plugin
+names. The error message starts with `token:`.
+
+These are the defaults: >lua
+    require('token').setup({
+      transparent = false,
+      terminal_colors = true,
+      dim_inactive = false,
+      attributes = {
+        bold = true,
+        italic = true,
+        underline = true,
+        undercurl = true,
+        strikethrough = true,
+      },
+      styles = {},
+      colors = { all = {}, dark = {}, light = {} },
+      highlights = { all = {}, dark = {}, light = {} },
+      plugins = { all = false },
+      on_colors = nil,
+      on_highlights = nil,
+    })
+<
+                                                    *token-config-transparent*
+transparent ~
+    Boolean, default `false`.
+    Removes every background that uses one of the base surface colors,
+    `bg0` to `bg3`, such as the one in |hl-Normal|. Cursor line, selection,
+    search, diff, diagnostic and accent backgrounds stay. To bring back a
+    single background, use |token-config-highlights| or |token-on_highlights|.
+
+                                                *token-config-terminal_colors*
+terminal_colors ~
+    Boolean, default `true`.
+    Sets the 16 terminal colors (|terminal-config|) when the colorscheme
+    loads.
+
+                                                   *token-config-dim_inactive*
+dim_inactive ~
+    Boolean, default `false`.
+    Gives inactive windows a quieter foreground and background. Token sets
+    |hl-NormalNC| and the matching groups of enabled plugins to the `fg1`
+    and `bg1` palette colors. With `transparent`, only the foreground
+    changes.
+
+                                                     *token-config-attributes*
+attributes ~
+    Table of booleans, all `true` by default.
+    Keys: `bold`, `italic`, `underline`, `undercurl`, `strikethrough`.
+    Setting a key to `false` removes that attribute everywhere. Token
+    applies this last, after plugin groups, your overrides and the
+    callbacks. The Lualine theme follows the `bold` key. Example: >lua
+        attributes = { italic = false }
+<
+    One exception: a group that links to a group Token does not define
+    stays a link, and keeps the attributes of the group it links to.
+
+                                                         *token-config-styles*
+styles ~
+    Table of attribute tables, empty by default.
+    Sets attributes on Token's groups for a syntax category, on top of
+    Token's own definitions. Each entry takes the same keys as
+    |token-config-attributes|. Example: >lua
+        styles = {
+          comments = { italic = false },
+          functions = { bold = true },
+        }
+<
+    Categories:
+
+      Name            Highlights ~
+      `booleans`        booleans and built-in constants
+      `comments`        comments, doc comments and comment annotations
+      `conditionals`    conditional keywords
+      `constants`       constants, macros and booleans
+      `functions`       functions, methods, calls and macros
+      `keywords`        statements and all keywords
+      `loops`           loop keywords
+      `numbers`         integer and floating-point numbers
+      `operators`       operators
+      `preprocessor`    imports, directives and macros
+      `properties`      properties and members
+      `strings`         strings, characters, paths, URLs, regexes, escapes
+      `types`           types, definitions, constructors, structures
+      `variables`       identifiers, variables, parameters and members
+
+    Some categories overlap. The broad one applies first and the narrow one
+    wins: `keywords` and `functions` before `preprocessor`, `keywords`
+    before `conditionals` and `loops`, `constants` before `booleans`, and
+    `variables` before `properties`.
+
+                                                         *token-config-colors*
+colors ~
+    Table with the keys `all`, `dark` and `light`, each empty by default.
+    Changes palette colors. Each entry maps a palette key to a `#RRGGBB`
+    string. Token applies `all` first, then the entry for the current
+    background, then |token-on_colors|. You can also add new keys and use
+    them in your own highlights. Example: >lua
+        colors = {
+          all = { accent = '#c0754a' },
+          light = { bg3 = '#f6f1e8' },
+        }
+<
+    The palette keys are the same in every appearance and variant:
+
+      Group           Keys ~
+      Backgrounds     `bg0` to `bg5`, where `bg3` is the editor background
+      Foregrounds     `fg0` to `fg3`, `comment`, `property`, `faded`
+      Accents         `accent`, `accent2`
+      Hues            `blue`, `green`, `red`, `yellow`, `purple`, `cyan`,
+                      `orange`, `olive`
+      Terminal        `bright_green`, `bright_blue`, `bright_purple`,
+                      `bright_cyan`
+      Diff            `diff_add`, `diff_del`, `diff_add_inline`,
+                      `diff_del_inline`, `diff_add_strong`,
+                      `diff_del_strong`, `diff_change`, `diff_text`
+      Diagnostics     `diag_error`, `diag_warn`, `diag_info`, `diag_hint`
+      Editor          `sel`, `match`, `match_current`, `indent`,
+                      `indent_active`, `whitespace`, `line_nr`
+      Git signs       `gsign_add`, `gsign_change`, `gsign_del`,
+                      `gsign_untracked`, and the same four names with a
+                      `_staged` suffix
+
+    The annotations in Token's `lua/token/palette.lua` describe what each
+    key is used for.
+
+                                                     *token-config-highlights*
+highlights ~
+    Table with the keys `all`, `dark` and `light`, each empty by default.
+    Sets highlight groups. Each entry is a complete definition, as passed to
+    |nvim_set_hl()|, and replaces Token's definition of that group. An entry
+    under `dark` or `light` replaces the entry with the same name under
+    `all`. Example: >lua
+        highlights = {
+          all = { WinSeparator = { fg = '#5c5c5c' } },
+          light = { CursorLine = { bg = '#efe8dc' } },
+        }
+<
+    To change one attribute of a group and keep the rest, use
+    |token-on_highlights|.
+
+                                                        *token-config-plugins*
+plugins ~
+    Table of booleans, default `{ all = false }`.
+    Turns on highlights for other plugins. `all = true` turns on every
+    integration. A plugin key set to `true` or `false` overrides `all`. See
+    |token-plugins| for the keys.
+
+                                *token-config-on_colors* *token-on_colors*
+on_colors ~
+    Function, default `nil`.
+    Runs after |token-config-colors| and can change the palette in place.
+    Arguments:
+      {colors}       the palette table
+      {background}   `'dark'` or `'light'`
+      {colorscheme}  the active colorscheme name, such as `'token-ultra'`
+    Example: >lua
+        on_colors = function(colors, background)
+          if background == 'dark' then
+            colors.comment = colors.fg3
+          end
+        end
+<
+                        *token-config-on_highlights* *token-on_highlights*
+on_highlights ~
+    Function, default `nil`.
+    Runs after |token-config-highlights| and before
+    |token-config-attributes|. It can change, add or remove highlight
+    definitions in place.
+    Arguments:
+      {highlights}   table of group name to |nvim_set_hl()| definition
+      {colors}       the palette table
+      {background}   `'dark'` or `'light'`
+      {colorscheme}  the active colorscheme name, such as `'token-ultra'`
+    Example: >lua
+        on_highlights = function(highlights, colors)
+          highlights.LineNr = { fg = colors.fg3 }
+          highlights.CursorLineNr.bold = false
+        end
+<
+    Both callbacks can leave out arguments they don't need. If you use
+    compiled caches, see |token-compile| for when to recompile.
+
+==============================================================================
+5. PLUGIN INTEGRATIONS                                         *token-plugins*
+
+By default Token loads only its core groups. Turn on a plugin under
+|token-config-plugins|: >lua
+    require('token').setup({
+      plugins = { gitsigns = true, telescope = true },
+    })
+<
+  Key                   Plugin ~
+  `blink`                 blink.cmp
+  `blink_indent`          blink.indent
+  `claudecode`            claudecode.nvim
+  `cmp`                   nvim-cmp
+  `dap_ui`                nvim-dap-ui
+  `diffview`              diffview.nvim
+  `flash`                 flash.nvim
+  `fugitive`              vim-fugitive
+  `fzf`                   fzf-lua
+  `gitsigns`              gitsigns.nvim
+  `hlchunk`               hlchunk.nvim
+  `ibl`                   indent-blankline.nvim
+  `lazy`                  lazy.nvim
+  `markview`              markview.nvim
+  `mason`                 mason.nvim
+  `matchup`               vim-matchup
+  `mini`                  mini.nvim, including mini.statuscolumn
+  `neo_tree`              neo-tree.nvim
+  `neogit`                neogit
+  `noice`                 noice.nvim
+  `nvimtree`              nvim-tree.lua
+  `oil`                   oil.nvim
+  `render_markdown`       render-markdown.nvim
+  `sidekick`              sidekick.nvim
+  `snacks`                snacks.nvim
+  `telescope`             telescope.nvim
+  `todo_comments`         todo-comments.nvim
+  `treesitter_context`    nvim-treesitter-context
+  `trouble`               trouble.nvim
+  `whichkey`              which-key.nvim
+
+Lualine isn't in this list. See |token-lualine|.
+
+                                                          *token-blink-indent*
+blink.indent ~
+blink.indent draws rainbow scope guides by default. For Token's muted guides
+with one brighter scope guide, turn on `plugins.blink_indent`, then point
+blink.indent at Token's groups: >lua
+    require('blink.indent').setup({
+      scope = {
+        highlights = { 'BlinkIndentScope' },
+        underline = {
+          highlights = { 'BlinkIndentUnderline' },
+        },
+      },
+    })
+<
+                                                               *token-hlchunk*
+hlchunk.nvim ~
+hlchunk sets its own highlight groups during setup and on every |ColorScheme|
+event. To use Token's colors:
+
+  1. Turn on `plugins.hlchunk` or `plugins.all`.
+  2. Load the colorscheme.
+  3. Set up hlchunk with style functions that read Token's groups.
+
+The style functions run again when you change the appearance or
+'background', so the colors follow. Turn on only the modules you want: >lua
+    local function token_style(names)
+      return function()
+        return vim.tbl_map(function(name)
+          return vim.api.nvim_get_hl(0, { name = name, link = false })
+        end, names)
+      end
+    end
+
+    require('hlchunk').setup({
+      chunk = { enable = true, style = token_style({ 'HLChunk1', 'HLChunk2' }) },
+      indent = { enable = true, style = token_style({ 'HLIndent1' }) },
+      line_num = { enable = true, style = token_style({ 'HLLineNum1' }) },
+      blank = { enable = true, style = token_style({ 'HLBlank1' }) },
+    })
+<
+==============================================================================
+6. LUALINE                                                     *token-lualine*
+
+Token ships a Lualine theme for each appearance, named like the colorscheme.
+Lualine loads it when you use the `auto` theme or the name directly: >lua
+    require('lualine').setup({
+      options = { theme = 'auto' },
+    })
+<
+You don't need to turn on anything under |token-config-plugins|. The theme
+follows `transparent` and the `bold` setting in |token-config-attributes|.
+
+==============================================================================
+7. LSP SEMANTIC TOKENS                                        *token-semantic*
+
+Token links the standard LSP semantic token types and modifiers to its
+Treesitter groups, so they get the same colors and styles in every
+appearance. Some servers add their own types, such as
+`self` parameters in Python or dates in TOML. Token links those to the
+closest existing group. See |lsp-semantic-highlight| for how Neovim applies
+them.
+
+==============================================================================
+8. COMPILATION                                                 *token-compile*
+
+Token works without compilation. To make loading faster, you can compile
+every appearance and variant to Lua bytecode.
+
+                                                               *:TokenCompile*
+:TokenCompile
+    Writes ten caches to `stdpath('cache')/token/`, one for each appearance
+    in dark and light. From the next load, Token reads the cache for the
+    current appearance and 'background'. The caches contain only the plugin
+    integrations you turned on, and no terminal colors when
+    `terminal_colors = false`.
+
+                                                            *:TokenClearCache*
+:TokenClearCache
+    Removes the caches. From the next colorscheme load, Token builds the
+    highlights at runtime again. The current session keeps its highlights
+    until then.
+
+Token does not check whether a cache matches the installed Token version.
+Run |:TokenCompile| again:
+
+  - after you update Token, because Token keeps loading the old highlights
+    until you do.
+  - after you change a value that |token-on_colors| or |token-on_highlights|
+    reads from outside the function, such as a global or an upvalue. The
+    cache cannot see those values.
+
+With lazy.nvim, add `build = ':TokenCompile'` to the plugin spec to recompile
+after every update. With |vim.pack|, restart Neovim after
+|vim.pack.update()| and then run |:TokenCompile|.
+
+Token notices when the `setup()` options or the callback code change. It
+then skips the cache and builds the highlights at runtime until you run
+|:TokenCompile| again. Token deletes a corrupt cache by itself.
+
+Each compile replaces the earlier caches. If two Neovim instances share a
+cache directory but use different Token options, only the one you compiled
+last loads from the cache.
+
+==============================================================================
+9. LUA API                                                         *token-api*
+
+                                                               *token.setup()*
+require('token').setup({opts})
+    Stores the configuration for the next colorscheme load. {opts} is a
+    table as described in |token-config|. Leave it out to go back to the
+    defaults.
+
+                                                                *token.load()*
+require('token').load({colorscheme})
+    Loads a Token appearance with the current 'background'. {colorscheme}
+    is one of the names in |token-intro| and defaults to `'token'`. Most
+    configurations use |:colorscheme| instead, which calls this function.
+
+==============================================================================
+10. TYPE ANNOTATIONS                                             *token-types*
+
+Token describes its options with LuaCATS annotations. A Lua language server
+such as lua-language-server or EmmyLua can use them to complete option names
+and check values while you edit your config.
+
+Inside `setup()`, the options already have a type: >lua
+    require('token').setup({
+      plugins = { gitsigns = true },
+    })
+<
+When you build the table elsewhere, add the type yourself. This is also how
+to type the `opts` table of a lazy.nvim spec: >lua
+    ---@type token.Config
+    local config = { transparent = true }
+<
+The annotations work only if the language server reads Token's files. A
+plugin manager installs Token outside your config directory, so add Token's
+install directory to the workspace library. By default that is:
+
+  vim.pack     `~/.local/share/nvim/site/pack/core/opt/token`
+  lazy.nvim    `~/.local/share/nvim/lazy/token`
+
+For EmmyLua, in `.emmyrc.json` in your config directory: >json
+    {
+      "workspace": {
+        "library": [
+          "$VIMRUNTIME",
+          "~/.local/share/nvim/site/pack/core/opt/token"
+        ]
+      }
+    }
+<
+For lua-language-server, in your LSP setup: >lua
+    vim.lsp.config('lua_ls', {
+      settings = {
+        Lua = {
+          workspace = {
+            library = {
+              vim.env.VIMRUNTIME,
+              vim.fn.stdpath('data') .. '/site/pack/core/opt/token',
+            },
+          },
+        },
+      },
+    })
+<
+==============================================================================
+11. THEMES FOR OTHER TOOLS                                     *token-contrib*
+
+Token generates matching themes for other tools from the same palettes,
+including Ghostty, kitty, iTerm2, tmux, fish, fzf, delta, bat and VS Code.
+They're in the `contrib/` directory of the Token repository. The README
+lists every tool and how to install its theme:
+https://github.com/ThorstenRhau/token#contrib-themes
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
