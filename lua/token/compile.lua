@@ -1,8 +1,10 @@
 local M = {}
 
-local cache_format = 1
+local cache_format = 2
 local cache_header = 'token-cache-v1\n'
 local loaded_caches = {}
+-- Caches from releases that keyed file names by a configuration hash.
+local legacy_cache_name = '%-' .. string.rep('%x', 16) .. '%.lua$'
 
 local function cache_stamp(stat)
   local mtime = stat.mtime or {}
@@ -27,52 +29,9 @@ local function discard(path)
   os.remove(path)
 end
 
-local function source_root()
-  local source = debug.getinfo(1, 'S').source
-  local path = source:sub(1, 1) == '@' and source:sub(2) or source
-  return vim.fn.fnamemodify(path, ':p:h:h:h')
-end
-
-local function git_identity(root)
-  local head = io.open(root .. '/.git/HEAD', 'r')
-  if not head then
-    return nil
-  end
-  local value = head:read('*l')
-  head:close()
-  if value and #value == 40 and value:match('^[0-9a-fA-F]+$') then
-    return 'git:' .. value:lower()
-  end
-end
-
-local function metadata_identity(root)
-  local base = root .. '/lua/token'
-  local files = vim.fn.globpath(base, '**/*.lua', false, true)
-  table.sort(files)
-
-  local parts = {}
-  for _, path in ipairs(files) do
-    local stat = vim.uv.fs_stat(path)
-    if stat then
-      local mtime = stat.mtime
-      parts[#parts + 1] = table.concat({
-        path:sub(#base + 2),
-        tostring(stat.size),
-        tostring(mtime.sec),
-        tostring(mtime.nsec),
-      }, '\0')
-    end
-  end
-  return 'tree:' .. vim.fn.sha256(table.concat(parts, '\n'))
-end
-
----Return the identity of the Token source that generated a cache.
----@return string
-function M.source_identity()
-  local root = source_root()
-  return git_identity(root) or metadata_identity(root)
-end
-
+-- Caches are not tied to Token's source: users rerun :TokenCompile after
+-- updating Token. Avoid vim.fn.sha256 on the load path; its first call costs
+-- about 1.7 ms at startup.
 local function stable(value)
   local kind = type(value)
   if kind == 'function' then
@@ -80,24 +39,29 @@ local function stable(value)
     if not ok then
       error('token: callbacks must be dumpable Lua functions for compilation', 0)
     end
-    return 'function:' .. vim.fn.sha256(dumped)
+    return 'function:' .. dumped
   end
   if kind ~= 'table' then
     return kind .. ':' .. tostring(value)
   end
-  local keys = vim.tbl_keys(value)
-  table.sort(keys, function(a, b)
-    return stable(a) < stable(b)
+  local entries = {}
+  for key, item in pairs(value) do
+    entries[#entries + 1] = { stable(key), item }
+  end
+  table.sort(entries, function(a, b)
+    return a[1] < b[1]
   end)
   local parts = {}
-  for _, key in ipairs(keys) do
-    parts[#parts + 1] = stable(key) .. '=' .. stable(value[key])
+  for _, entry in ipairs(entries) do
+    parts[#parts + 1] = entry[1] .. '=' .. stable(entry[2])
   end
   return '{' .. table.concat(parts, ',') .. '}'
 end
 
-function M.fingerprint()
-  return vim.fn.sha256(stable(require('token.config').get())):sub(1, 16)
+---Return the deterministic serialization of the current configuration that a cache must match.
+---@return string
+function M.config_key()
+  return stable(require('token.config').get())
 end
 
 ---@param background 'dark'|'light'
@@ -105,13 +69,7 @@ end
 ---@return string
 function M.path(background, colorscheme)
   local appearance = require('token.appearance').get(colorscheme)
-  return vim.fn.stdpath('cache')
-    .. '/token/'
-    .. appearance.cache_prefix
-    .. background
-    .. '-'
-    .. M.fingerprint()
-    .. '.lua'
+  return vim.fn.stdpath('cache') .. '/token/' .. appearance.cache_prefix .. background .. '.lua'
 end
 
 local function serialize(value)
@@ -139,9 +97,9 @@ end
 
 ---@param background 'dark'|'light'
 ---@param colorscheme string
----@param identity string
+---@param config_key string
 ---@return string source
-local function build_source(background, colorscheme, identity)
+local function build_source(background, colorscheme, config_key)
   local is_dark = background == 'dark'
   local p, groups = require('token.theme').build(background, colorscheme)
 
@@ -155,7 +113,7 @@ local function build_source(background, colorscheme, identity)
     '}',
     'return {',
     'format=' .. cache_format .. ',',
-    'source=' .. string.format('%q', identity) .. ',',
+    'config=' .. string.format('%q', config_key) .. ',',
     'apply=function()',
     "vim.cmd('hi clear')",
     'vim.g.colors_name=' .. string.format('%q', colorscheme),
@@ -184,7 +142,7 @@ function M.compile()
 
   local pending = {}
   local appearances = require('token.appearance').all()
-  local identity = M.source_identity()
+  local config_key = M.config_key()
 
   local ok, err = pcall(function()
     for _, appearance in ipairs(appearances) do
@@ -194,7 +152,7 @@ function M.compile()
             package.loaded[key] = nil
           end
         end
-        local source = build_source(bg, appearance.name, identity)
+        local source = build_source(bg, appearance.name, config_key)
         local chunk = assert(load(source, '=' .. appearance.name .. '-' .. bg))
         local bytecode = string.dump(chunk)
 
@@ -222,11 +180,9 @@ function M.compile()
     current[pair[2]] = true
   end
 
-  -- Keep only this configuration's caches; other configurations fall back to
-  -- the dynamic path until they are compiled again.
   for _, name in ipairs(vim.fn.readdir(dir)) do
     local path = dir .. '/' .. name
-    if not current[path] and name:match('%-' .. string.rep('%x', 16) .. '%.lua$') then
+    if not current[path] and name:match(legacy_cache_name) then
       discard(path)
     end
   end
@@ -235,6 +191,34 @@ function M.compile()
     string.format('token: compiled %d appearances and %d variants', #appearances, #appearances * 2),
     vim.log.levels.INFO
   )
+end
+
+---Remove every compiled cache so later loads use the dynamic path.
+---Leaves other files in the cache directory untouched.
+function M.clear()
+  local paths = {}
+  for _, appearance in ipairs(require('token.appearance').all()) do
+    for _, bg in ipairs({ 'dark', 'light' }) do
+      paths[#paths + 1] = M.path(bg, appearance.name)
+    end
+  end
+  local dir = vim.fn.stdpath('cache') .. '/token'
+  if vim.fn.isdirectory(dir) == 1 then
+    for _, name in ipairs(vim.fn.readdir(dir)) do
+      if name:match(legacy_cache_name) or name:match('%.lua%.tmp$') then
+        paths[#paths + 1] = dir .. '/' .. name
+      end
+    end
+  end
+
+  local removed = 0
+  for _, path in ipairs(paths) do
+    loaded_caches[path] = nil
+    if os.remove(path) then
+      removed = removed + 1
+    end
+  end
+  vim.notify(string.format('token: removed %d compiled caches', removed), vim.log.levels.INFO)
 end
 
 ---@param background 'dark'|'light'
@@ -248,6 +232,11 @@ function M.load(background, colorscheme)
   local stat = vim.uv.fs_stat(path)
   if not stat then
     loaded_caches[path] = nil
+    return false
+  end
+  -- Non-dumpable callbacks cannot be compiled; use the dynamic path.
+  local key_ok, config_key = pcall(M.config_key)
+  if not key_ok then
     return false
   end
   local stamp = cache_stamp(stat)
@@ -284,8 +273,8 @@ function M.load(background, colorscheme)
       reason = 'cache returned ' .. type(cache)
     elseif cache.format ~= cache_format then
       reason = 'cache format ' .. tostring(cache.format) .. ', expected ' .. cache_format
-    elseif type(cache.source) ~= 'string' or type(cache.apply) ~= 'function' then
-      reason = 'cache is missing its source identity or apply function'
+    elseif type(cache.config) ~= 'string' or type(cache.apply) ~= 'function' then
+      reason = 'cache is missing its configuration key or apply function'
     end
     if reason then
       discard(path)
@@ -295,8 +284,9 @@ function M.load(background, colorscheme)
     loaded_caches[path] = { stamp = stamp, cache = cache }
   end
 
-  if cache.source ~= M.source_identity() then
-    discard(path)
+  -- Keep the file: another Neovim instance sharing the cache directory may
+  -- use the configuration it was compiled for.
+  if cache.config ~= config_key then
     return false
   end
 

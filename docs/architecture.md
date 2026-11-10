@@ -102,15 +102,24 @@ variant.
 
 [`lua/token/compile.lua`](../lua/token/compile.lua) serializes the completed
 highlight maps and optional terminal colors for every registered appearance and
-both background variants. Cache paths include a deterministic configuration
-fingerprint. Cache payloads also carry a source identity based on the detached
-Git revision or, for mutable trees, metadata for `lua/token/**/*.lua`.
+both background variants, one file per appearance and background. Each cache
+payload carries a deterministic serialization of the configuration it was
+built from; the loader compares it as a plain string and ignores, without
+deleting, a cache built for another configuration.
 
-Missing, stale, legacy, corrupt, or failing caches are discarded or ignored and
-the loader falls back to dynamic assembly. Compilation writes temporary files
-for the complete appearance set before promoting them to their final paths, so a
-failed build does not replace only part of the cache set. A successful build
-then removes caches for other configuration fingerprints.
+Caches are deliberately not tied to Token's source. Users rerun `:TokenCompile`
+after updating Token, as the README documents. Checking the source on every
+load cost about 2 ms for branch checkouts, and hashing the configuration with
+`vim.fn.sha256` cost about 1.7 ms on its first call, which made the compiled
+path slower than dynamic assembly at startup.
+
+Missing, mismatched, legacy, corrupt, or failing caches fall back to dynamic
+assembly; corrupt and failing ones are deleted. Compilation writes temporary
+files for the complete appearance set before promoting them to their final
+paths, so a failed build does not replace only part of the cache set. A
+successful build also removes caches left by releases that keyed file names by
+a configuration hash. `:TokenClearCache` removes the compiled and legacy cache
+files and leaves other files in the cache directory alone.
 
 ## Generated contrib themes
 

@@ -1,25 +1,27 @@
 # token
 
-Token is a Neovim 0.12+ colorscheme with five first-class appearances: Token
-Ultra, Token Meridian, Token, Token Flint, and Token Temper. All have dark and light variants,
-selective plugin integrations, and a shared optional configuration API.
+Token is a Neovim 0.12+ colorscheme with five appearances: Token Ultra, Token
+Meridian, Token, Token Flint, and Token Temper. Each has a dark and a light
+variant. Plugin integrations are opt-in, and one optional `setup()` call
+configures every appearance.
 
-Terminal themes for Ghostty, fish, delta, tmux and others are generated from the
-matching appearance palette, so everything stays consistent without extra work.
+Token also generates themes for Ghostty, fish, delta, tmux and other tools from
+the same palettes, so your terminal and tools match the editor.
 
 ## Features
 
 - Token Ultra, Token Meridian, classic Token, Token Flint, and Token Temper appearances, each with dark and light variants
-- Treesitter capture groups for accurate syntax highlighting
+- Treesitter capture groups for syntax highlighting
 - LSP semantic token highlights
 - Shared semantic typography: bold control flow, definitions and headings, italic comments and quotes, underlined links
 - LSP diagnostic signs, virtual text, and underlines
 - Diff highlights for buffers and signs
-- Legacy syntax group coverage for non-Treesitter filetypes
-- Terminal color support (ANSI colors 0–15)
-- Lualine theme included
-- Opt-in plugin integrations and configuration-keyed bytecode compilation
-- Contrib themes for external tools and apps generated from each appearance palette
+- Legacy syntax groups for filetypes without Treesitter
+- Terminal colors (ANSI colors 0 to 15)
+- A Lualine theme
+- Opt-in plugin integrations
+- Optional bytecode compilation for faster startup
+- Themes for other tools and apps, generated from each appearance palette
 
 ## Showcase
 
@@ -71,7 +73,7 @@ the shared Token semantic typography.
 
 ## Install
 
-To install the latest tagged release instead of following untagged commits on
+These snippets install the latest tagged release instead of untagged commits on
 the default branch:
 
 ```lua
@@ -103,26 +105,25 @@ token.setup(config)
 vim.cmd.colorscheme('token') -- or 'token-ultra', 'token-meridian', 'token-flint', 'token-temper'
 ```
 
-The colorscheme name selects Token Ultra, Token Meridian, classic Token, Token Flint, or Token Temper.
-`vim.o.background` selects `dark` or `light` within that appearance. Set the
-background before loading the colorscheme, or change it at runtime to switch
-variants.
+The colorscheme name selects Token Ultra, Token Meridian, classic Token, Token
+Flint, or Token Temper. `vim.o.background` selects `dark` or `light` within that
+appearance. Set the background before you load the colorscheme, or change it
+while Neovim runs to switch variants.
 
-`setup()` is shared by all appearances and is optional. Each call starts from
-the defaults and deep-merges the provided options. It does not reload an active
-colorscheme automatically.
+`setup()` is optional and applies to all appearances. Each call starts from the
+defaults and deep-merges the options you pass. It does not reload a colorscheme
+that is already active.
 
 ## Token v2
 
-Token is configurable starting with v2. Call `require('token').setup()` before
-loading the colorscheme to customize its appearance, semantic styles, palette,
-highlights, terminal colors, and plugin integrations. Calling `setup()` is
-optional, so the minimal `vim.cmd.colorscheme('token')` configuration continues
-to work.
+Token is configurable from v2. Call `require('token').setup()` before you load
+the colorscheme to change its appearance, semantic styles, palette, highlights,
+terminal colors, and plugin integrations. You don't have to call `setup()`, so
+a config with only `vim.cmd.colorscheme('token')` still works.
 
-V2 also changes plugin integrations from eagerly loading every supported module
-to a core-only default. Select integrations under `plugins`, or use
-`plugins = { all = true }` to retain the v1 integration behavior.
+In v2, plugin integrations are off by default. Earlier versions loaded every
+integration. Turn on the ones you use under `plugins`, or set
+`plugins = { all = true }` to get the v1 behavior back.
 
 ## Configuration
 
@@ -190,30 +191,32 @@ local config = {
 token.setup(config)
 ```
 
-Style entries accept the boolean attributes shown under `attributes`. They are
-overlaid on Token's existing definitions. Broad categories run before their
-more specific counterparts: `keywords` before `preprocessor`, `conditionals`,
-and `loops`, `constants` before `booleans`, and `variables` before `properties`.
+Style entries accept the boolean attributes listed under `attributes`. Token
+adds them on top of its own definitions. Broad categories apply before the more
+specific ones: `keywords` before `preprocessor`, `conditionals`, and `loops`,
+`constants` before `booleans`, and `variables` before `properties`.
 
-Color overrides apply in the order `all`, current background, then `on_colors`.
-Existing palette keys and additional keys must contain `#RRGGBB` values.
-Highlight entries are complete `nvim_set_hl` definitions: a variant entry
-replaces an entry with the same name from `all`. `on_highlights` runs afterward
-and can mutate existing definitions. Both callbacks mutate their arguments in
-place and receive an explicit `dark` or `light` background followed by the
-active `token-ultra`, `token-meridian`, `token`, `token-flint`, or `token-temper` colorscheme name. Existing
-callbacks that omit the trailing argument remain compatible.
+Color overrides apply in this order: `all`, the current background, then
+`on_colors`. Existing and new palette keys must hold `#RRGGBB` values.
+Highlight entries are complete `nvim_set_hl` definitions, and a variant entry
+replaces the entry with the same name from `all`. `on_highlights` runs after
+that and can change existing definitions.
 
-Transparency clears Token's base surfaces while retaining cursor-line,
+Both callbacks change their arguments in place. They receive `dark` or `light`
+as the background, followed by the active colorscheme name: `token-ultra`,
+`token-meridian`, `token`, `token-flint`, or `token-temper`. Callbacks that
+leave out the last argument still work.
+
+`transparent` clears Token's base surfaces and keeps the cursor-line,
 selection, search, diff, diagnostic, and accent backgrounds. Highlight
-overrides and callbacks can restore individual backgrounds. `dim_inactive`
-uses `fg1` and `bg1` for core and enabled-plugin `NormalNC` groups. Global
-attribute gates run last and also apply to plugin, callback, and Lualine output.
-Links to targets outside Token are preserved because Neovim links cannot combine
-inherited styling with attribute overrides.
+overrides and callbacks can bring back single backgrounds. `dim_inactive`
+uses `fg1` and `bg1` for the `NormalNC` groups of the core and enabled plugins.
+The global `attributes` switches apply last, including to plugin, callback,
+and Lualine output. Token leaves links to groups outside Token as links,
+because a Neovim link can't combine inherited styling with attribute overrides.
 
-Unknown options, style categories, attributes, and plugin names are rejected
-with a `token:` error.
+Token rejects unknown options, style categories, attributes, and plugin names
+with an error that starts with `token:`.
 
 ## LSP semantic tokens
 
@@ -225,43 +228,57 @@ existing group.
 
 ## Compilation
 
-Token works out of the box without compilation. For faster startup, you can
-pre-compile the theme into bytecode:
+Token works without compilation. For faster startup, you can compile the theme
+into bytecode:
 
 ```vim
 :TokenCompile
 ```
 
-This writes ten configuration-keyed variants to `stdpath('cache')/token/`:
-Ultra, Meridian, classic, Flint, and Temper, each in dark and light. On next load, matching
-appearance and background bytecode is used instead of the dynamic highlight
-path. Compiled output contains only enabled integrations and omits terminal
-assignments when `terminal_colors = false`.
+This writes ten variants to `stdpath('cache')/token/`: Ultra, Meridian,
+classic, Flint, and Temper, each in dark and light. From the next load, Token
+uses the bytecode for the current appearance and background instead of
+building the highlights at runtime. The compiled output contains only the
+integrations you enabled, and leaves out terminal colors when
+`terminal_colors = false`.
 
-Compiled caches belong to one configuration. Each compile removes caches left by
-other configurations, so Neovim instances that share a cache directory but use
-different Token options, such as a terminal and a GUI client, keep only the most
-recently compiled set. The other instances use the dynamic path until they are
-compiled again.
+Token does not check whether a cache matches the installed Token version. You
+must rerun `:TokenCompile`:
 
-Compiled caches are tied to the Token source that created them. Detached Git
-installs use their commit hash; mutable or non-Git installs use the sorted
-metadata of `lua/token/**/*.lua`. Source-mismatched and legacy caches are
-ignored and deleted before they can apply highlights, then Token uses the
-dynamic path. Static configuration and callback-body changes use a different
-cache key and also fall back dynamically until recompiled. A corrupt matching
-cache is deleted automatically.
+- After updating Token. Until you do, Token keeps loading the highlights from
+  the old version.
+- After changing callback upvalues, globals, or other external inputs that
+  `on_colors` and `on_highlights` read. Token cannot see those changes.
 
-Rerun `:TokenCompile` after source or static configuration changes to restore
-compiled loading. Also rerun it after changing callback upvalues, globals, or
-external inputs that cannot be derived from Token's source.
+With lazy.nvim, add `build = ':TokenCompile'` to the plugin spec so updates
+recompile automatically.
+
+Token detects changes to `setup()` options and callback bodies. It then ignores
+the cache and builds the highlights at runtime until you run `:TokenCompile`
+again.
+
+Each compile overwrites the previous set. If two Neovim instances share a cache
+directory but use different Token options, such as a terminal and a GUI client,
+only the one you compiled last loads from the cache. Token deletes a corrupt
+cache on its own.
+
+To stop using compilation, remove the compiled caches:
+
+```vim
+:TokenClearCache
+```
+
+From the next colorscheme load, Token builds the highlights at runtime, and you
+no longer need to rerun `:TokenCompile` after updates. The running session keeps
+its current highlights until the colorscheme loads again.
 
 ## Supported plugins
 
-Plugin integrations are opt-in and the default is core-only. Set
-`plugins = { all = true }` to restore the historical behavior of loading every
-integration. An explicit boolean overrides `all`. Keys match the module
-filenames below; Lualine remains available on demand and is not selected here.
+Plugin integrations are opt-in, and by default Token loads only its core
+groups. Set `plugins = { all = true }` to load every integration, as v1 did. A
+`true` or `false` for a single plugin overrides `all`. The keys below match the
+module filenames. Lualine isn't in this list: its theme loads when Lualine asks
+for it.
 
 `blink`, `blink_indent`, `claudecode`, `cmp`, `dap_ui`, `diffview`, `flash`,
 `fugitive`, `fzf`, `gitsigns`, `hlchunk`, `ibl`, `lazy`, `markview`, `mason`,
@@ -277,11 +294,11 @@ require('token').setup({
 })
 ```
 
-`plugins.mini` includes `mini.statuscolumn`; consequently, `plugins.all` also
-enables its Token highlight fallbacks.
+`plugins.mini` includes `mini.statuscolumn`, so `plugins.all` also turns on
+Token's fallback highlights for it.
 
-blink.indent defaults to rainbow scope guides. To use Token's muted guides and
-single brighter neutral scope guide, configure it with Token's neutral groups:
+blink.indent uses rainbow scope guides by default. To get Token's muted guides
+with one brighter neutral scope guide, point it at Token's neutral groups:
 
 ```lua
 require('blink.indent').setup({
@@ -294,10 +311,10 @@ require('blink.indent').setup({
 })
 ```
 
-hlchunk sets its own highlight groups during setup and on `ColorScheme`.
-Enable Token's `plugins.hlchunk` (or `plugins.all`) and load the colorscheme
-before setting up hlchunk. Use style callbacks to keep Token's colors when
-switching appearances or backgrounds. Enable only the modules you want:
+hlchunk sets its own highlight groups during setup and on `ColorScheme`. Turn
+on Token's `plugins.hlchunk` (or `plugins.all`), and load the colorscheme before
+you set up hlchunk. Style callbacks keep Token's colors when you switch
+appearances or backgrounds. Turn on only the modules you want:
 
 ```lua
 local function token_style(names)
@@ -318,15 +335,15 @@ require('hlchunk').setup({
 
 ## Contrib themes
 
-Pre-generated themes for external tools and apps. Auto-generated from the
-registered appearance palettes and shared semantic typography; rebuild after
-palette or typography changes with `make contrib`.
+Token ships themes for other tools and apps. They're generated from the same
+appearance palettes and semantic typography as the Neovim colorscheme. After
+you change a palette or the typography, run `make contrib` to rebuild them.
 
-Herdr exports soften `overlay0` and `accent` toward the terminal background for
-quieter pane frames, with stronger active/inactive separation in light mode.
-Herdr also uses these tokens for secondary UI details and accent highlights.
-This adjustment is confined to Herdr; canonical palettes and other exports retain
-their original colors.
+The Herdr themes blend `overlay0` and `accent` toward the terminal background,
+so pane frames are quieter. In light mode they also separate active and
+inactive panes more. Herdr uses the same two colors for secondary UI details
+and accent highlights. Only the Herdr themes change. The palettes and the other
+themes keep their original colors.
 
 | Tool                                                                                 | Files                                                                                                           | Usage                                                                                                                                                     |
 | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -357,15 +374,14 @@ their original colors.
 | [Xcode](https://developer.apple.com/xcode/)                                          | `contrib/xcode/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.xccolortheme`           | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/` and select the visible name                                                              |
 | [Zsh](https://www.zsh.org/)                                                          | `contrib/zsh/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.zsh`                      | Source the selected file from `.zshrc`                                                                                                                    |
 
-The recommended classic Token Obsidian accent, `#bc6a49`, is deliberately a
-compromise between its light and dark accents. Keeping one user-level accent
-avoids having to change the Obsidian setting whenever macOS switches
-appearance. Token Ultra, Token Meridian, Token Flint, and Token Temper are independently
-installable as `Token Ultra`, `Token Meridian`, `Token Flint`, and `Token Temper`.
+For classic Token in Obsidian, use the accent `#bc6a49`. It sits between the
+light and dark accents on purpose, so you don't have to change the Obsidian
+setting each time macOS switches appearance. Token Ultra, Token Meridian, Token
+Flint, and Token Temper install as separate Obsidian themes with those names.
 
-Pi syntax and Markdown colors follow the appearance role profile when one is
-registered. Pi's single heading color uses the first heading role; appearances
-without a profile retain the default palette mappings.
+In Pi, syntax and Markdown colors follow the appearance's role profile when it
+has one. Pi has a single heading color, which takes the first heading role.
+Appearances without a profile keep the default palette mappings.
 
 ### Hermes Agent
 
@@ -386,13 +402,15 @@ display:
   skin: token-ultra-dark
 ```
 
-Select the matching Token appearance in your terminal and use a
+Select the matching Token appearance in your terminal, and use a
 [Nerd Fonts 3 font](https://www.nerdfonts.com/) for the feather, tool icons, and
-circle-slice spinner frames. Dark and light skins are selected explicitly;
-for example, use `/skin token-ultra-light` with a light terminal background.
-Skins preserve Hermes' name, message wording, and built-in startup logo and hero
-artwork. Keeping the default artwork preserves the TUI's session-details column
-width. Customization uses the
+circle-slice spinner frames. Hermes doesn't switch between dark and light on
+its own, so pick the skin yourself. For example, use `/skin token-ultra-light`
+with a light terminal background.
+
+The skins keep Hermes' name, message wording, and built-in startup logo and
+hero artwork. The default artwork keeps the width of the TUI's session-details
+column. The skins use the
 [Hermes skin API](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/skin_engine.py).
 
 ## License

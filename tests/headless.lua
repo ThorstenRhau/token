@@ -2534,7 +2534,7 @@ fails('highlight callbacks', function()
   load()
 end)
 
--- Cache fingerprinting must not make compilation a requirement for dynamic loading.
+-- Cache configuration keys must not make compilation a requirement for dynamic loading.
 token.setup({ on_colors = pairs })
 load()
 equal(vim.g.colors_name, 'token', 'non-dumpable callback blocked dynamic loading')
@@ -2599,12 +2599,12 @@ equal(
   'cache paths collide'
 )
 local cache_dir = vim.fn.stdpath('cache') .. '/token'
-local other_config_cache = cache_dir .. '/dark-' .. string.rep('0', 16) .. '.lua'
+local legacy_hashed_cache = cache_dir .. '/dark-' .. string.rep('0', 16) .. '.lua'
 local unrelated_cache_file = cache_dir .. '/notes.lua'
-vim.fn.writefile({ 'other configuration' }, other_config_cache)
+vim.fn.writefile({ 'legacy configuration-hashed cache' }, legacy_hashed_cache)
 vim.fn.writefile({ 'unrelated' }, unrelated_cache_file)
 compile.compile()
-equal(vim.uv.fs_stat(other_config_cache), nil, 'compile kept a cache for another configuration')
+equal(vim.uv.fs_stat(legacy_hashed_cache), nil, 'compile kept a legacy configuration-hashed cache')
 truthy(vim.uv.fs_stat(unrelated_cache_file), 'compile removed a file it did not write')
 assert(os.remove(unrelated_cache_file))
 equal(#vim.fn.glob(cache_dir .. '/*.lua', false, true), 10, 'compile left extra caches')
@@ -2677,6 +2677,7 @@ equal(compile.load('dark', 'token-flint'), false, 'configuration change reused s
 equal(compile.load('dark', 'token-temper'), false, 'configuration change reused stale Temper cache')
 equal(compile.load('dark', 'token-ultra'), false, 'configuration change reused stale Ultra cache')
 equal(compile.load('dark', 'token-meridian'), false, 'configuration change reused stale Meridian cache')
+truthy(vim.uv.fs_stat(dark_path), 'configuration mismatch removed a cache another instance may use')
 
 token.setup({
   terminal_colors = false,
@@ -2684,34 +2685,7 @@ token.setup({
   highlights = { all = { TokenCterm = { fg = '#abcdef', cterm = { bold = true } } } },
   on_highlights = callback,
 })
-
--- Mutable Token trees use metadata identity and never apply cache output from before a source change.
-local source_fixture = vim.fn.tempname()
-local source_ok, source_err = xpcall(function()
-  vim.fn.mkdir(source_fixture .. '/lua/token', 'p')
-  local fixture_module = source_fixture .. '/lua/token/compile.lua'
-  assert(vim.uv.fs_copyfile(root .. '/lua/token/compile.lua', fixture_module))
-  local fixture_compile = assert(loadfile(fixture_module))()
-  local source_identity = fixture_compile.source_identity()
-  truthy(source_identity:match('^tree:'), 'mutable Token tree did not use metadata identity')
-  local source_probe = source_fixture .. '/lua/token/token_cache_identity_test.lua'
-  vim.fn.writefile({ '-- cache identity probe' }, source_probe)
-  truthy(fixture_compile.source_identity() ~= source_identity, 'mutable Token metadata did not change identity')
-  fixture_compile.compile()
-  vim.g.colors_name = 'source-identity-sentinel'
-  vim.api.nvim_set_hl(0, 'TokenSourceIdentity', { fg = '#010203' })
-  assert(os.remove(source_probe))
-  equal(fixture_compile.load('dark'), false, 'source-mismatched cache loaded')
-  equal(vim.uv.fs_stat(dark_path), nil, 'source-mismatched cache was not removed')
-  equal(vim.g.colors_name, 'source-identity-sentinel', 'source-mismatched cache applied stale colorscheme')
-  equal(hl('TokenSourceIdentity').fg, 0x010203, 'source-mismatched cache applied stale highlights')
-  load('dark')
-  equal(vim.g.colors_name, 'token', 'source-mismatched cache did not fall back dynamically')
-  truthy(hl('TokenCompiled').bold, 'source-mismatched cache dynamic fallback omitted highlights')
-end, debug.traceback)
-vim.fn.delete(source_fixture, 'rf')
-assert(source_ok, source_err)
-compile.compile()
+truthy(compile.load('dark'), 'matching configuration did not reuse its cache')
 
 local meridian_file = assert(io.open(meridian_dark_path, 'wb'))
 assert(meridian_file:write('corrupt'))
@@ -2766,8 +2740,8 @@ equal(vim.uv.fs_stat(dark_path), nil, 'legacy executable cache was not removed')
 local failed_cache = assert(
   _G.load(
     string.format(
-      'return { format = 1, source = %q, apply = function() error({ message = "cache execution failed" }) end }',
-      compile.source_identity()
+      'return { format = 2, config = %q, apply = function() error({ message = "cache execution failed" }) end }',
+      compile.config_key()
     )
   )
 )
@@ -2777,6 +2751,27 @@ assert(file:close())
 load('dark')
 truthy(hl('TokenCompiled').bold, 'failed compiled cache did not reach dynamic fallback')
 equal(vim.uv.fs_stat(dark_path), nil, 'failed compiled cache was not removed')
+
+-- Clearing removes every compiled and legacy cache and nothing else.
+compile.compile()
+truthy(compile.load('dark'), 'cache did not load before clearing')
+vim.fn.writefile({ 'legacy configuration-hashed cache' }, legacy_hashed_cache)
+vim.fn.writefile({ 'unrelated' }, unrelated_cache_file)
+compile.clear()
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    equal(
+      vim.uv.fs_stat(compile.path(background, appearance.name)),
+      nil,
+      'clear kept the ' .. appearance.name .. ' ' .. background .. ' cache'
+    )
+  end
+end
+equal(vim.uv.fs_stat(legacy_hashed_cache), nil, 'clear kept a legacy configuration-hashed cache')
+truthy(vim.uv.fs_stat(unrelated_cache_file), 'clear removed a file it did not write')
+assert(os.remove(unrelated_cache_file))
+equal(compile.load('dark'), false, 'cleared cache still loaded')
+compile.clear()
 
 -- Complete dynamic and compiled maps, including ANSI colors, must match for both registry modes.
 local function applied_groups(groups)
