@@ -2905,6 +2905,11 @@ for _, appearance in ipairs(appearances) do
     -- Docstrings read as comments, and Lua table braces as punctuation.
     equal(hl('@string.documentation'), hl('@comment'), 'docstrings match comments for ' .. label)
     equal(hl('@constructor.lua'), hl('@punctuation.bracket'), 'Lua table braces match brackets for ' .. label)
+    -- The accent block cursor stays visible on the current search match.
+    truthy(
+      contrast(string.format('#%06x', hl('Cursor').bg), string.format('#%06x', hl('CurSearch').bg)) >= 3,
+      'the cursor stands out on the current match for ' .. label
+    )
   end
 end
 

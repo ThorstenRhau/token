@@ -90,6 +90,14 @@ across appearances, so new status colors should use `red`, `yellow` or the
 indent colors and Starship's palette, use `accent2`, which is warm in every
 appearance except Temper.
 
+The cursor takes `accent` in Neovim and in every generated theme with a cursor
+or caret key, so `accent` must not fill the current search match, or the block
+cursor disappears on it. `CurSearch` and `IncSearch` use `match_current`, a cool
+tint that keeps at least 3:1 against the cursor, and generated themes map their
+current-match key to it, such as VS Code `editor.findMatchBackground` and Emacs
+`isearch`. `tests/headless.lua` checks the contrast for every appearance and
+variant.
+
 ## Compiled runtime path
 
 [`lua/token/compile.lua`](../lua/token/compile.lua) serializes the completed
