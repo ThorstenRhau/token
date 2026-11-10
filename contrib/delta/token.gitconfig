@@ -14,6 +14,10 @@
 	hunk-header-decoration-style = "#8a8884" box ul
 	hunk-header-file-style = bold
 	hunk-header-line-number-style = bold "#a19c94"
+	merge-conflict-ours-diff-header-style = bold "#a19c94"
+	merge-conflict-ours-diff-header-decoration-style = "#8a8884" box
+	merge-conflict-theirs-diff-header-style = bold "#a19c94"
+	merge-conflict-theirs-diff-header-decoration-style = "#8a8884" box
 	line-numbers-left-style = "#8a8884"
 	line-numbers-right-style = "#8a8884"
 	line-numbers-minus-style = bold "#d68585"
@@ -40,6 +44,10 @@
 	hunk-header-decoration-style = "#716c64" box ul
 	hunk-header-file-style = bold
 	hunk-header-line-number-style = bold "#6a655d"
+	merge-conflict-ours-diff-header-style = bold "#6a655d"
+	merge-conflict-ours-diff-header-decoration-style = "#716c64" box
+	merge-conflict-theirs-diff-header-style = bold "#6a655d"
+	merge-conflict-theirs-diff-header-decoration-style = "#716c64" box
 	line-numbers-left-style = "#716c64"
 	line-numbers-right-style = "#716c64"
 	line-numbers-minus-style = bold "#ad5253"
