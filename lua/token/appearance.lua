@@ -38,9 +38,17 @@ local appearances = {
     palette = 'token.palettes.meridian',
     roles = 'token.appearances.meridian_roles',
   },
+  ['token-melange'] = {
+    name = 'token-melange',
+    display_name = 'Token Melange',
+    slug = 'token-melange',
+    cache_prefix = 'melange-',
+    palette = 'token.palettes.melange',
+    roles = 'token.appearances.melange_roles',
+  },
 }
 
-local order = { 'token', 'token-flint', 'token-temper', 'token-ultra', 'token-meridian' }
+local order = { 'token', 'token-flint', 'token-temper', 'token-ultra', 'token-meridian', 'token-melange' }
 
 local M = {}
 

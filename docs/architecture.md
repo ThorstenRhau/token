@@ -79,12 +79,9 @@ string. Without that, `keyword.operator` turns bold through `keyword`, and calls
 turn bold through `entity.name.function`. `make check` cannot see these leaks,
 because they only appear when a real grammar tokenizes code.
 
-Palette keys with one meaning across appearances keep contrast parity with
-Meridian. That includes `property` and `faded`; Meridian's `property` holds the
-same value as its `orange` slot. Dark `yellow` is the exception: it keeps parity
-with Ultra, because Meridian's moved away from the tan its types use. `blue`,
-`purple`, `cyan` and `orange` are role slots that hold different syntax roles
-per appearance, so the hierarchy owns their contrast. Their hue is not stable
+Each appearance sets its own palette contrast. The syntax hierarchy above is
+the shared contrast contract. `blue`, `purple`, `cyan` and `orange` are role
+slots that hold different syntax roles per appearance. Their hue is not stable
 across appearances, so new status colors should use `red`, `yellow` or the
 `diag_*` keys. Integrations that expose an orange by name, such as Blink's
 indent colors and Starship's palette, use `accent2`, which is warm in every

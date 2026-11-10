@@ -1,0 +1,50 @@
+{
+  "schemes": [
+    {
+      "name": "Token Melange Dark",
+      "background": "#292522",
+      "foreground": "#c9beb2",
+      "cursorColor": "#cda44f",
+      "selectionBackground": "#403a36",
+      "black": "#221f1c",
+      "red": "#c88b8f",
+      "green": "#84b894",
+      "yellow": "#c19a47",
+      "blue": "#a2a9d0",
+      "purple": "#d59ec6",
+      "cyan": "#86aeb1",
+      "white": "#b5ada3",
+      "brightBlack": "#988573",
+      "brightRed": "#ee907c",
+      "brightGreen": "#95c9a8",
+      "brightYellow": "#fcc493",
+      "brightBlue": "#b3bae1",
+      "brightPurple": "#dfadd3",
+      "brightCyan": "#98c4c7",
+      "brightWhite": "#c9beb2"
+    },
+    {
+      "name": "Token Melange Light",
+      "background": "#f1f1f1",
+      "foreground": "#39281f",
+      "cursorColor": "#674400",
+      "selectionBackground": "#d9d3ce",
+      "black": "#39281f",
+      "red": "#9c5364",
+      "green": "#2a563c",
+      "yellow": "#976502",
+      "blue": "#3b5198",
+      "purple": "#843476",
+      "cyan": "#355b60",
+      "white": "#a1806e",
+      "brightBlack": "#594334",
+      "brightRed": "#ac0a1f",
+      "brightGreen": "#164729",
+      "brightYellow": "#773a03",
+      "brightBlue": "#384792",
+      "brightPurple": "#954986",
+      "brightCyan": "#436b70",
+      "brightWhite": "#f1f1f1"
+    }
+  ]
+}

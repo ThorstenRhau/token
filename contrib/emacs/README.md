@@ -1,7 +1,7 @@
 # token - Emacs themes
 
 Dark and light Emacs themes for classic Token, Token Flint, Token Temper, Token
-Ultra, and Token Meridian, derived from the
+Ultra, Token Meridian, and Token Melange, derived from the
 [token](https://github.com/ThorstenRhau/token) Neovim colorscheme. Each covers
 about 920 faces across syntax, org-mode, magit, completion frameworks,
 diagnostics, diffs, shell, mail, and more.
@@ -24,6 +24,8 @@ diagnostics, diffs, shell, mail, and more.
 | `token-ultra-light-theme.el` | `token-ultra-light` |
 | `token-meridian-dark-theme.el` | `token-meridian-dark` |
 | `token-meridian-light-theme.el` | `token-meridian-light` |
+| `token-melange-dark-theme.el` | `token-melange-dark` |
+| `token-melange-light-theme.el` | `token-melange-light` |
 
 ## Requirements
 
@@ -50,7 +52,7 @@ the Neovim colorscheme's LSP colors.
 1. Copy the `.el` files to a directory on your `custom-theme-load-path`:
 
 ```bash
-cp token{,-flint,-temper,-ultra,-meridian}-{dark,light}-theme.el ~/.emacs.d/themes/
+cp token{,-flint,-temper,-ultra,-meridian,-melange}-{dark,light}-theme.el ~/.emacs.d/themes/
 ```
 
 2. Add the directory to your init file and load the theme:
@@ -62,6 +64,7 @@ cp token{,-flint,-temper,-ultra,-meridian}-{dark,light}-theme.el ~/.emacs.d/them
 (load-theme 'token-temper-dark t)   ; Temper
 (load-theme 'token-ultra-dark t)    ; Ultra
 (load-theme 'token-meridian-dark t) ; Meridian
+(load-theme 'token-melange-dark t)  ; Melange
 ```
 
 The files include a `;;;###autoload` cookie, so `package.el`-style installers
@@ -102,8 +105,9 @@ Use the matching pair for the appearance you want. For example, classic Token:
 (load-theme 'token-light t)
 ```
 
-For Flint, Temper, Ultra, or Meridian, use the matching `token-flint-*`,
-`token-temper-*`, `token-ultra-*`, or `token-meridian-*` pair.
+For Flint, Temper, Ultra, Meridian, or Melange, use the matching
+`token-flint-*`, `token-temper-*`, `token-ultra-*`, `token-meridian-*`, or
+`token-melange-*` pair.
 
 To follow the system appearance automatically (macOS / Emacs 29+):
 

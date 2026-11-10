@@ -734,7 +734,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
 end
 
 local vscode_package = vim.json.decode(read_text('contrib/vscode/package.json'))
-equal(#vscode_package.contributes.themes, 10, 'VS Code package does not inventory ten themes')
+equal(#vscode_package.contributes.themes, 12, 'VS Code package does not inventory twelve themes')
 equal(vscode_package.contributes.themes[3].label, 'Token Flint Dark', 'VS Code Flint dark label')
 equal(vscode_package.contributes.themes[4].label, 'Token Flint Light', 'VS Code Flint light label')
 equal(vscode_package.contributes.themes[5].label, 'Token Temper Dark', 'VS Code Temper dark label')
@@ -743,6 +743,8 @@ equal(vscode_package.contributes.themes[7].label, 'Token Ultra Dark', 'VS Code U
 equal(vscode_package.contributes.themes[8].label, 'Token Ultra Light', 'VS Code Ultra light label')
 equal(vscode_package.contributes.themes[9].label, 'Token Meridian Dark', 'VS Code Meridian dark label')
 equal(vscode_package.contributes.themes[10].label, 'Token Meridian Light', 'VS Code Meridian light label')
+equal(vscode_package.contributes.themes[11].label, 'Token Melange Dark', 'VS Code Melange dark label')
+equal(vscode_package.contributes.themes[12].label, 'Token Melange Light', 'VS Code Melange light label')
 local vscode_flint = vim.json.decode(read_text('contrib/vscode/themes/token-flint-dark-color-theme.json'))
 local flint_rules = {}
 for _, rule in ipairs(vscode_flint.tokenColors) do
@@ -891,6 +893,42 @@ equal(
 local obsidian_meridian = read_text('contrib/obsidian/token-meridian/theme.css')
 truthy(obsidian_meridian:find('%-%-background%-primary: #272724;', 1, false), 'Obsidian Meridian Ultra background')
 truthy(obsidian_meridian:find('%-%-h3%-color: #ea9d49;', 1, false), 'Obsidian Meridian heading color')
+
+-- Melange's grammar: warm control flow, functions and operators; cool data.
+for _, variant in ipairs({ 'dark', 'light' }) do
+  local melange = require('token.palettes.melange')(variant)
+  local vscode_melange =
+    vim.json.decode(read_text('contrib/vscode/themes/token-melange-' .. variant .. '-color-theme.json'))
+  local melange_rules = {}
+  for _, rule in ipairs(vscode_melange.tokenColors) do
+    melange_rules[rule.name] = rule.settings
+  end
+  local label = 'VS Code Melange ' .. variant
+  equal(melange_rules.Keyword.foreground, melange.olive, label .. ' keyword color')
+  equal(melange_rules['Function definition'].foreground, melange.accent, label .. ' definition color')
+  equal(melange_rules.Operator.foreground, melange.orange, label .. ' operator color')
+  equal(melange_rules.String.foreground, melange.blue, label .. ' string color')
+  equal(melange_rules.Number.foreground, melange.purple, label .. ' number color')
+  equal(melange_rules['Type reference'].foreground, melange.cyan, label .. ' type color')
+  equal(melange_rules.Property.foreground, melange.property, label .. ' property color')
+  local green = melange.green
+  truthy(
+    read_text('contrib/ripgrep/token-melange-' .. variant .. '.ripgreprc'):find(
+      string.format('--colors=path:fg:0x%s,0x%s,0x%s', green:sub(2, 3), green:sub(4, 5), green:sub(6, 7)),
+      1,
+      true
+    ),
+    'ripgrep Melange ' .. variant .. ' path color'
+  )
+end
+equal(
+  vim.json.decode(read_text('contrib/obsidian/token-melange/manifest.json')).name,
+  'Token Melange',
+  'Obsidian Melange name'
+)
+local windows_melange = vim.json.decode(read_text('contrib/windows-terminal/token-melange.json')).schemes
+equal(windows_melange[1].name, 'Token Melange Dark', 'Windows Terminal Melange dark name')
+equal(windows_melange[2].name, 'Token Melange Light', 'Windows Terminal Melange light name')
 
 local function xcode_rgba(hex, alpha)
   return string.format(
@@ -1373,48 +1411,13 @@ for _, appearance in ipairs(appearances) do
   end
 end
 
-local foreground_keys = {
-  'fg0',
-  'fg1',
-  'fg2',
-  'fg3',
-  'comment',
-  'accent',
-  'accent2',
-  'blue',
-  'green',
-  'red',
-  'yellow',
-  'purple',
-  'cyan',
-  'orange',
-  'olive',
-  'property',
-  'faded',
-  'bright_green',
-  'bright_blue',
-  'indent',
-  'indent_active',
-  'whitespace',
-  'line_nr',
-  'gsign_add',
-  'gsign_change',
-  'gsign_del',
-  'gsign_untracked',
-  'gsign_add_staged',
-  'gsign_change_staged',
-  'gsign_del_staged',
-  'gsign_untracked_staged',
-}
-
-local role_slot_keys = { blue = true, purple = true, cyan = true, orange = true }
-
 local palette_loaders = {
   token = 'token.palette',
   ['token-flint'] = 'token.palettes.flint',
   ['token-temper'] = 'token.palettes.temper',
   ['token-ultra'] = 'token.palettes.ultra',
   ['token-meridian'] = 'token.palettes.meridian',
+  ['token-melange'] = 'token.palettes.melange',
 }
 
 local palette_anchors = {
@@ -1541,6 +1544,41 @@ local palette_anchors = {
       faded = '#827b72',
     },
   },
+  -- Surfaces and tints are Melange's own values; foregrounds are fitted.
+  ['token-melange'] = {
+    dark = {
+      bg3 = '#292522',
+      bg4 = '#34302c',
+      sel = '#403a36',
+      diff_add = '#233524',
+      diff_del_strong = '#7d2a2f',
+      diag_info = '#273142',
+      diag_hint = '#253333',
+      -- Clear of `blue`, so ANSI 4 and 12 stay distinct.
+      bright_blue = '#b3bae1',
+      accent = '#cda44f',
+      olive = '#ea9f63',
+      blue = '#a2a9d0',
+      purple = '#d59ec6',
+      cyan = '#86aeb1',
+      orange = '#ee907c',
+    },
+    light = {
+      bg3 = '#f1f1f1',
+      bg4 = '#e9e1db',
+      sel = '#d9d3ce',
+      diff_add = '#d0e9d1',
+      diff_del = '#f1dedf',
+      diag_info = '#e0e2e8',
+      diag_hint = '#cde8e7',
+      accent = '#674400',
+      olive = '#773a03',
+      blue = '#3b5198',
+      purple = '#843476',
+      cyan = '#355b60',
+      orange = '#ac0a1f',
+    },
+  },
 }
 
 for _, background in ipairs({ 'dark', 'light' }) do
@@ -1559,34 +1597,11 @@ for _, background in ipairs({ 'dark', 'light' }) do
       equal(palette[key], color, name .. ' anchor ' .. key .. ' for ' .. background)
     end
 
-    if name ~= 'token-meridian' then
-      for _, key in ipairs(foreground_keys) do
-        -- These keys hold different syntax roles per appearance, so the role
-        -- hierarchy test below owns their contrast.
-        if not role_slot_keys[key] then
-          -- Meridian's dark yellow moved away from the tan its types use, so the
-          -- other appearances keep parity with Ultra's.
-          local reference = key == 'yellow' and background == 'dark' and ultra or meridian
-          local target = contrast(reference[key], reference.bg3)
-          local actual = contrast(palette[key], palette.bg3)
-          truthy(
-            math.abs(actual - target) <= 0.05,
-            string.format(
-              '%s contrast parity for %s %s: expected %.3f, got %.3f',
-              name,
-              key,
-              background,
-              target,
-              actual
-            )
-          )
-        end
-      end
-      if background == 'dark' then
-        local terminal = require('token.terminal').colors(palette, true, name)
-        truthy(luminance(terminal[13]) > luminance(terminal[5]), name .. ' ANSI bright purple is not brighter')
-        truthy(luminance(terminal[14]) > luminance(terminal[6]), name .. ' ANSI bright cyan is not brighter')
-      end
+    -- Meridian's ANSI table reuses its normal purple and cyan for the bright slots.
+    if name ~= 'token-meridian' and background == 'dark' then
+      local terminal = require('token.terminal').colors(palette, true, name)
+      truthy(luminance(terminal[13]) > luminance(terminal[5]), name .. ' ANSI bright purple is not brighter')
+      truthy(luminance(terminal[14]) > luminance(terminal[6]), name .. ' ANSI bright cyan is not brighter')
     end
   end
 
@@ -2506,6 +2521,25 @@ equal(require('token.terminal').colors(meridian_light_palette, false, 'token-mer
   [15] = '#fbf9f4',
 }, 'Meridian ANSI light roles')
 
+-- Melange modes follow Melange's Lualine theme, and bright red takes its coral.
+for _, background in ipairs({ 'dark', 'light' }) do
+  load(background, 'token-melange')
+  local melange_lualine = require('lualine.themes.token-melange')
+  local melange_palette = require('token.theme').palette(background, 'token-melange')
+  local label = 'Melange ' .. background
+  equal(melange_lualine.normal.a.bg, melange_palette.fg2, label .. ' Lualine normal mode color')
+  equal(melange_lualine.insert.a.bg, melange_palette.accent, label .. ' Lualine insert mode color')
+  equal(melange_lualine.visual.a.bg, melange_palette.purple, label .. ' Lualine visual mode color')
+  equal(melange_lualine.replace.a.bg, melange_palette.orange, label .. ' Lualine replace mode color')
+  equal(melange_lualine.command.a.bg, melange_palette.cyan, label .. ' Lualine command mode color')
+  equal(melange_lualine.terminal.a.bg, melange_palette.green, label .. ' Lualine terminal mode color')
+  local melange_terminal = require('token.terminal').colors(melange_palette, background == 'dark', 'token-melange')
+  local default_terminal = require('token.terminal').colors(melange_palette, background == 'dark')
+  equal(melange_terminal[9], melange_palette.orange, label .. ' ANSI bright red')
+  default_terminal[9] = melange_palette.orange
+  equal(melange_terminal, default_terminal, label .. ' ANSI otherwise follows the default roles')
+end
+
 token.setup({
   on_colors = function(colors, _, colorscheme)
     if colorscheme == 'token-meridian' then
@@ -2523,6 +2557,7 @@ equal(require('lualine.themes.token-flint').normal.a.gui, nil, 'Flint Lualine ig
 equal(require('lualine.themes.token-temper').normal.a.gui, nil, 'Temper Lualine ignored bold gate')
 equal(require('lualine.themes.token-ultra').normal.a.gui, nil, 'Ultra Lualine ignored bold gate')
 equal(require('lualine.themes.token-meridian').normal.a.gui, nil, 'Meridian Lualine ignored bold gate')
+equal(require('lualine.themes.token-melange').normal.a.gui, nil, 'Melange Lualine ignored bold gate')
 
 -- Invalid callback output is rejected.
 token.setup({
@@ -2552,6 +2587,7 @@ local callback = function(groups, colors, background, colorscheme)
     underline = colorscheme == 'token-temper',
     undercurl = colorscheme == 'token-ultra',
     strikethrough = colorscheme == 'token-meridian',
+    reverse = colorscheme == 'token-melange',
   }
 end
 token.setup({
@@ -2572,6 +2608,8 @@ local ultra_dark_path = compile.path('dark', 'token-ultra')
 local ultra_light_path = compile.path('light', 'token-ultra')
 local meridian_dark_path = compile.path('dark', 'token-meridian')
 local meridian_light_path = compile.path('light', 'token-meridian')
+local melange_dark_path = compile.path('dark', 'token-melange')
+local melange_light_path = compile.path('light', 'token-melange')
 truthy(vim.uv.fs_stat(dark_path), 'dark cache missing')
 truthy(vim.uv.fs_stat(light_path), 'light cache missing')
 truthy(vim.uv.fs_stat(flint_dark_path), 'Flint dark cache missing')
@@ -2582,6 +2620,8 @@ truthy(vim.uv.fs_stat(ultra_dark_path), 'Ultra dark cache missing')
 truthy(vim.uv.fs_stat(ultra_light_path), 'Ultra light cache missing')
 truthy(vim.uv.fs_stat(meridian_dark_path), 'Meridian dark cache missing')
 truthy(vim.uv.fs_stat(meridian_light_path), 'Meridian light cache missing')
+truthy(vim.uv.fs_stat(melange_dark_path), 'Melange dark cache missing')
+truthy(vim.uv.fs_stat(melange_light_path), 'Melange light cache missing')
 equal(
   vim.tbl_count({
     [dark_path] = true,
@@ -2594,8 +2634,10 @@ equal(
     [ultra_light_path] = true,
     [meridian_dark_path] = true,
     [meridian_light_path] = true,
+    [melange_dark_path] = true,
+    [melange_light_path] = true,
   }),
-  10,
+  12,
   'cache paths collide'
 )
 local cache_dir = vim.fn.stdpath('cache') .. '/token'
@@ -2607,7 +2649,7 @@ compile.compile()
 equal(vim.uv.fs_stat(legacy_hashed_cache), nil, 'compile kept a legacy configuration-hashed cache')
 truthy(vim.uv.fs_stat(unrelated_cache_file), 'compile removed a file it did not write')
 assert(os.remove(unrelated_cache_file))
-equal(#vim.fn.glob(cache_dir .. '/*.lua', false, true), 10, 'compile left extra caches')
+equal(#vim.fn.glob(cache_dir .. '/*.lua', false, true), 12, 'compile left extra caches')
 fail_flint_compile = true
 local compile_ok, compile_error = pcall(compile.compile)
 equal(compile_ok, false, 'injected Flint compilation unexpectedly succeeded')
@@ -2623,6 +2665,8 @@ for _, path in ipairs({
   ultra_light_path,
   meridian_dark_path,
   meridian_light_path,
+  melange_dark_path,
+  melange_light_path,
 }) do
   truthy(vim.uv.fs_stat(path), 'failed Flint rebuild removed existing cache: ' .. path)
 end
@@ -2670,6 +2714,13 @@ truthy(
   hl('TokenCompiled').strikethrough and not hl('TokenCompiled').bold,
   'compiled Meridian light callback result incorrect'
 )
+load('dark', 'token-melange')
+equal(vim.g.colors_name, 'token-melange', 'compiled Melange colors_name')
+truthy(hl('TokenCompiled').bold and hl('TokenCompiled').reverse, 'compiled Melange callback result incorrect')
+equal(hl('TokenCompiled').strikethrough, nil, 'Melange cache used Meridian callback result')
+load('light', 'token-melange')
+equal(vim.g.colors_name, 'token-melange', 'compiled Melange light colors_name')
+truthy(hl('TokenCompiled').reverse and not hl('TokenCompiled').bold, 'compiled Melange light callback result incorrect')
 
 token.setup({ transparent = true })
 equal(compile.load('dark'), false, 'configuration change reused stale cache')
@@ -2677,6 +2728,7 @@ equal(compile.load('dark', 'token-flint'), false, 'configuration change reused s
 equal(compile.load('dark', 'token-temper'), false, 'configuration change reused stale Temper cache')
 equal(compile.load('dark', 'token-ultra'), false, 'configuration change reused stale Ultra cache')
 equal(compile.load('dark', 'token-meridian'), false, 'configuration change reused stale Meridian cache')
+equal(compile.load('dark', 'token-melange'), false, 'configuration change reused stale Melange cache')
 truthy(vim.uv.fs_stat(dark_path), 'configuration mismatch removed a cache another instance may use')
 
 token.setup({

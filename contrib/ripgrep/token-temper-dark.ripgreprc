@@ -3,7 +3,7 @@
 --colors=match:fg:0x5c,0xc1,0xb3
 --colors=match:style:bold
 --colors=path:none
---colors=path:fg:0x51,0xb8,0xaa
+--colors=path:fg:0x5c,0xc1,0xb3
 --colors=path:style:nobold
 --colors=line:none
 --colors=line:fg:0x9a,0xa4,0xae

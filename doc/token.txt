@@ -18,19 +18,23 @@ CONTENTS                                                      *token-contents*
 ==============================================================================
 1. INTRODUCTION                                                  *token-intro*
 
-Token is a colorscheme for Neovim 0.12 and later. It has five appearances,
+Token is a colorscheme for Neovim 0.12 and later. It has six appearances,
 and each one has a dark and a light variant:
 
   Name              Colorscheme ~
   Token Ultra       `token-ultra`
   Token Meridian    `token-meridian`
+  Token Melange     `token-melange`
   Token (classic)   `token`
   Token Flint       `token-flint`
   Token Temper      `token-temper`
 
 Token Ultra uses copper definitions, ochre control flow and teal literals.
 Token Meridian puts the syntax colors of the Circadia colorscheme's Warm
-Parchment and Dark Classic themes on Token Ultra's surfaces. Classic Token
+Parchment and Dark Classic themes on Token Ultra's surfaces. Token Melange
+adapts the Melange colorscheme by Sergio Alejandro Vargas (MIT License):
+warm orange, gold and coral for control flow, functions and operators, and
+cool blue, magenta and cyan for strings, numbers and types. Classic Token
 is a warm, muted palette with earthy accents. Token Flint has a cool-gray
 base with softened rust, gold, blue and green. Token Temper uses the same
 cool-gray base and limits syntax colors mostly to teal and purple.
@@ -385,7 +389,7 @@ every appearance and variant to Lua bytecode.
 
                                                                *:TokenCompile*
 :TokenCompile
-    Writes ten caches to `stdpath('cache')/token/`, one for each appearance
+    Writes twelve caches to `stdpath('cache')/token/`, one for each appearance
     in dark and light. From the next load, Token reads the cache for the
     current appearance and 'background'. The caches contain only the plugin
     integrations you turned on, and no terminal colors when
