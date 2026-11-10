@@ -20,4 +20,4 @@ t.prefs_.set('color-palette-overrides', [
 ]);
 t.prefs_.set('foreground-color', '#31312b');
 t.prefs_.set('background-color', '#fbf9f4');
-t.prefs_.set('cursor-color', 'rgba(49, 49, 43, 0.5)');
+t.prefs_.set('cursor-color', 'rgba(137, 53, 23, 0.5)');

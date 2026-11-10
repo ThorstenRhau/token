@@ -1247,7 +1247,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       BackgroundColor = palette.bg3,
       TextColor = palette.fg0,
       TextBoldColor = palette.fg0,
-      CursorColor = palette.fg0,
+      CursorColor = palette.accent,
       SelectionColor = palette.sel,
       ANSIBlackColor = term[0],
       ANSIRedColor = term[1],
@@ -1543,7 +1543,7 @@ for _, background in ipairs({ 'dark', 'light' }) do
   for name, loader in pairs(palette_loaders) do
     local palette = require(loader)(background)
     equal(sorted_keys(palette), sorted_keys(classic), name .. ' palette keys for ' .. background)
-    equal(vim.tbl_count(palette), 51, name .. ' palette key count for ' .. background)
+    equal(vim.tbl_count(palette), 52, name .. ' palette key count for ' .. background)
     for key, color in pairs(palette) do
       truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid ' .. name .. ' color ' .. key .. ' for ' .. background)
     end

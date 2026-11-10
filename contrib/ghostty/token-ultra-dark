@@ -2,7 +2,7 @@
 
 background = #272724
 foreground = #c5c1b8
-cursor-color = #c5c1b8
+cursor-color = #ed9574
 cursor-text = #272724
 selection-background = #3c3b36
 selection-foreground = #c5c1b8

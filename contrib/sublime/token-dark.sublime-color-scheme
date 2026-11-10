@@ -6,7 +6,7 @@
   "globals": {
     "background": "#262624",
     "foreground": "#c3c0b8",
-    "caret": "#c3c0b8",
+    "caret": "#f4906f",
     "line_highlight": "#38383540",
     "selection": "#3a3a37",
     "selection_border": "#3a3a37",

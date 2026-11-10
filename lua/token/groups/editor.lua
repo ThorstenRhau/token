@@ -60,8 +60,8 @@ local function editor(p)
     VisualNOS = { bg = p.sel },
 
     Search = { fg = p.fg0, bg = p.match },
-    IncSearch = { fg = p.bg3, bg = p.accent2 },
-    CurSearch = { fg = p.bg3, bg = p.accent },
+    IncSearch = { fg = p.fg0, bg = p.match_current, bold = true },
+    CurSearch = { fg = p.fg0, bg = p.match_current, bold = true },
     Substitute = { fg = p.bg3, bg = p.red },
 
     MatchParen = { fg = p.accent, bold = true, underline = true },

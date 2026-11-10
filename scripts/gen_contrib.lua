@@ -565,7 +565,7 @@ local function gen_bat(p, variant, _term, appearance)
     '          <key>foreground</key>',
     '          <string>' .. p.fg0 .. '</string>',
     '          <key>caret</key>',
-    '          <string>' .. p.fg0 .. '</string>',
+    '          <string>' .. p.accent .. '</string>',
     '          <key>lineHighlight</key>',
     '          <string>' .. p.bg5 .. '40</string>',
     '          <key>selection</key>',
@@ -619,7 +619,7 @@ local function gen_sublime(p, variant, _term, appearance)
       json_object({
         { 'background', p.bg3 },
         { 'foreground', p.fg0 },
-        { 'caret', p.fg0 },
+        { 'caret', p.accent },
         { 'line_highlight', p.bg5 .. '40' },
         { 'selection', p.sel },
         { 'selection_border', p.sel },
@@ -687,7 +687,7 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     { 'text', { fg = p.fg0, bg = p.bg3 } },
     { 'selection', { bg = p.sel } },
     { 'selection-unfocused', { bg = p.bg4 } },
-    { 'cursor', { fg = p.fg0 } },
+    { 'cursor', { fg = p.accent } },
     { 'secondary-cursor', { fg = p.fg2 } },
     { 'current-line', { bg = p.bg4 } },
     { 'current-line-number', { fg = p.fg2, bg = p.bg4 } },
@@ -840,7 +840,7 @@ local function gen_blink(p, variant, term, appearance)
     ']);',
     "t.prefs_.set('foreground-color', '" .. p.fg0 .. "');",
     "t.prefs_.set('background-color', '" .. p.bg3 .. "');",
-    "t.prefs_.set('cursor-color', '" .. blink_rgba(p.fg0, 0.5) .. "');",
+    "t.prefs_.set('cursor-color', '" .. blink_rgba(p.accent, 0.5) .. "');",
     '',
   }, '\n')
 
@@ -1026,7 +1026,7 @@ local function gen_ghostty(p, variant, term, appearance)
     '',
     'background = ' .. p.bg3,
     'foreground = ' .. p.fg0,
-    'cursor-color = ' .. p.fg0,
+    'cursor-color = ' .. p.accent,
     'cursor-text = ' .. p.bg3,
     'selection-background = ' .. p.sel,
     'selection-foreground = ' .. p.fg0,
@@ -1228,7 +1228,7 @@ local function gen_kitty(p, variant, term, appearance)
     '',
     'background ' .. p.bg3,
     'foreground ' .. p.fg0,
-    'cursor ' .. p.fg0,
+    'cursor ' .. p.accent,
     'cursor_text_color ' .. p.bg3,
     'selection_background ' .. p.sel,
     'selection_foreground ' .. p.fg0,
@@ -1277,7 +1277,7 @@ local function gen_iterm2(p, variant, term, appearance)
     iterm2_color_entry('Background Color', p.bg3),
     iterm2_color_entry('Foreground Color', p.fg0),
     iterm2_color_entry('Bold Color', p.fg0),
-    iterm2_color_entry('Cursor Color', p.fg0),
+    iterm2_color_entry('Cursor Color', p.accent),
     iterm2_color_entry('Cursor Text Color', p.bg3),
     iterm2_color_entry('Selection Color', p.sel),
     iterm2_color_entry('Selected Text Color', p.fg0),
@@ -1346,12 +1346,12 @@ local function gen_apple_terminal(p, variant, term, appearance)
   apple_terminal_color(lines, 'BackgroundColor', p.bg3)
   apple_terminal_color(lines, 'TextColor', p.fg0)
   apple_terminal_color(lines, 'TextBoldColor', p.fg0)
-  apple_terminal_color(lines, 'CursorColor', p.fg0)
+  apple_terminal_color(lines, 'CursorColor', p.accent)
   apple_terminal_color(lines, 'SelectionColor', p.sel)
 
   -- Terminal.app has no cursor text colour key and paints the glyph on top of
-  -- the cursor fill in the normal text colour, so a block cursor in fg0 hides
-  -- the character under it. Type 1 is an underline, which keeps the cursor in
+  -- the cursor fill in the normal text colour, so a block cursor in accent
+  -- hides the character under it. Type 1 is an underline, which keeps the cursor in
   -- the palette's own colour and the character readable. Terminal also has no
   -- selection text or link colour.
   lines[#lines + 1] = '    <key>CursorType</key>'
@@ -1440,7 +1440,7 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'DVTConsoleExectuableOutputTextColor', xcode_rgba(p.fg0) },
     { 'DVTConsoleExectuableOutputTextFont', 'SFMono-Regular - 12.0' },
     { 'DVTConsoleTextBackgroundColor', xcode_rgba(p.bg3) },
-    { 'DVTConsoleTextInsertionPointColor', xcode_rgba(p.fg0) },
+    { 'DVTConsoleTextInsertionPointColor', xcode_rgba(p.accent) },
     { 'DVTConsoleTextSelectionColor', xcode_rgba(p.sel) },
   }
   for _, entry in ipairs(console_entries) do
@@ -1496,7 +1496,7 @@ local function gen_xcode(p, variant, _term, appearance)
     { 'DVTSourceTextBackground', p.bg3 },
     { 'DVTSourceTextBlockDimBackgroundColor', p.bg2 },
     { 'DVTSourceTextCurrentLineHighlightColor', p.bg4 },
-    { 'DVTSourceTextInsertionPointColor', p.fg0 },
+    { 'DVTSourceTextInsertionPointColor', p.accent },
     { 'DVTSourceTextInvisiblesColor', p.indent_active },
     { 'DVTSourceTextSelectionColor', p.sel },
   }
@@ -1616,7 +1616,7 @@ local function windows_terminal_scheme(p, name, term)
     { 'name', name },
     { 'background', p.bg3 },
     { 'foreground', p.fg0 },
-    { 'cursorColor', p.fg0 },
+    { 'cursorColor', p.accent },
     { 'selectionBackground', p.sel },
   }
   for i, color_name in ipairs(ansi_names) do
@@ -1738,11 +1738,11 @@ local function gen_vscode_theme(p, variant, term, appearance)
     { 'editor.foreground', p.fg0 },
     { 'editorLineNumber.foreground', p.line_nr },
     { 'editorLineNumber.activeForeground', p.fg2 },
-    { 'editorCursor.foreground', p.fg0 },
+    { 'editorCursor.foreground', p.accent },
     { 'editor.selectionBackground', p.sel },
     { 'editor.inactiveSelectionBackground', p.bg4 },
     { 'editor.lineHighlightBackground', p.bg5 .. '40' },
-    { 'editor.findMatchBackground', p.match },
+    { 'editor.findMatchBackground', p.match_current },
     { 'editor.findMatchHighlightBackground', p.match .. '80' },
     { 'editorWhitespace.foreground', p.fg3 .. '80' },
     { 'editorIndentGuide.background1', p.fg3 .. '40' },
@@ -1794,7 +1794,7 @@ local function gen_vscode_theme(p, variant, term, appearance)
     { 'tab.border', p.bg2 },
     { 'terminal.background', p.bg3 },
     { 'terminal.foreground', p.fg0 },
-    { 'terminalCursor.foreground', p.fg0 },
+    { 'terminalCursor.foreground', p.accent },
     { 'terminal.selectionBackground', p.sel },
   }
   extend_lines(colors, vscode_terminal_colors(term))
@@ -2080,7 +2080,7 @@ local function obsidian_theme_block(p, variant, appearance)
     '  --text-error: ' .. p.red .. ';',
     '  --text-selection: ' .. p.sel .. ';',
     '  --text-highlight-bg: ' .. p.match .. ';',
-    '  --caret-color: ' .. p.fg0 .. ';',
+    '  --caret-color: ' .. p.accent .. ';',
     '',
     '  --link-color: ' .. p.blue .. ';',
     '  --link-color-hover: ' .. p.accent .. ';',

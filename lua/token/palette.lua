@@ -48,6 +48,7 @@
 -- UI elements
 ---@field sel string Background for visual selections, selected menu items, and focused rows.
 ---@field match string Background for search matches and active snippet placeholders.
+---@field match_current string Background for the current search match; cool hue apart from `match`, dark enough to keep the accent cursor visible.
 ---@field indent string Foreground for ordinary indentation guides.
 ---@field indent_active string Foreground for active indentation scopes.
 ---@field whitespace string Foreground for listchars markers such as tabs, trailing spaces, and nbsp; one step above `indent`.
@@ -118,6 +119,7 @@ local function palette(background)
       -- UI elements
       sel = '#dddcd6',
       match = '#e8d8b0',
+      match_current = '#b5d7f5',
       indent = '#e0ddd8',
       indent_active = '#a8a49c',
       whitespace = '#c4c0ba',
@@ -183,6 +185,7 @@ local function palette(background)
     -- UI elements
     sel = '#3a3a37',
     match = '#4a4030',
+    match_current = '#304e66',
     indent = '#323230',
     indent_active = '#626260',
     whitespace = '#4a4a48',

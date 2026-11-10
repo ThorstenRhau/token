@@ -41,6 +41,7 @@
       (diff-text       "#DED2B8")
       (sel             "#DCE2E7")
       (match           "#E9DDBE")
+      (match-current   "#ABDCEC")
       (line-nr         "#818C94")
       (whitespace      "#B8C0C6")
       (comment         "#5A6571"))
@@ -50,7 +51,7 @@
 
    ;; ── Core ─────────────────────────────────────────────────────────────────
    `(default                           ((,class (:foreground ,fg0 :background ,bg3))))
-   `(cursor                            ((,class (:background ,fg0))))
+   `(cursor                            ((,class (:background ,accent))))
    `(fringe                            ((,class (:foreground ,fg3 :background ,bg2))))
    `(region                            ((,class (:background ,sel :extend t))))
    `(secondary-selection               ((,class (:background ,bg5 :extend t))))
@@ -180,7 +181,7 @@
    `(treesit-fold-replacement-face     ((,class (:foreground ,fg2 :background ,bg4))))
 
    ;; ── Search ───────────────────────────────────────────────────────────────
-   `(isearch                           ((,class (:foreground ,fg0 :background ,match :weight bold))))
+   `(isearch                           ((,class (:foreground ,fg0 :background ,match-current :weight bold))))
    `(isearch-fail                      ((,class (:foreground ,fg0 :background ,diff-del))))
    `(isearch-group-1                   ((,class (:foreground ,bg3 :background ,accent))))
    `(isearch-group-2                   ((,class (:foreground ,bg3 :background ,accent2))))

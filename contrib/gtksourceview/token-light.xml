@@ -6,7 +6,7 @@
     <style name="text" foreground="#323128" background="#faf9f5"/>
     <style name="selection" background="#dddcd6"/>
     <style name="selection-unfocused" background="#f0efeb"/>
-    <style name="cursor" foreground="#323128"/>
+    <style name="cursor" foreground="#863716"/>
     <style name="secondary-cursor" foreground="#504b44"/>
     <style name="current-line" background="#f0efeb"/>
     <style name="current-line-number" foreground="#504b44" background="#f0efeb"/>

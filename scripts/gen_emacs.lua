@@ -47,6 +47,7 @@ local EMACS_LET_KEYS = {
   'diff_text',
   'sel',
   'match',
+  'match_current',
   'line_nr',
   'whitespace',
   'comment',
@@ -72,7 +73,7 @@ local EMACS_LET_KEYS = {
 local EMACS_FACES = {
   { section = 'Core' },
   { 'default', fg = 'fg0', bg = 'bg3' },
-  { 'cursor', bg = 'fg0' },
+  { 'cursor', bg = 'accent' },
   { 'fringe', fg = 'fg3', bg = 'bg2' },
   { 'region', bg = 'sel', extend = true },
   { 'secondary-selection', bg = 'bg5', extend = true },
@@ -206,7 +207,7 @@ local EMACS_FACES = {
   { 'treesit-fold-replacement-face', fg = 'fg2', bg = 'bg4' },
 
   { section = 'Search' },
-  { 'isearch', fg = 'fg0', bg = 'match', bold = true },
+  { 'isearch', fg = 'fg0', bg = 'match_current', bold = true },
   { 'isearch-fail', fg = 'fg0', bg = 'diff_del' },
   { 'isearch-group-1', fg = 'bg3', bg = 'accent' },
   { 'isearch-group-2', fg = 'bg3', bg = 'accent2' },
