@@ -15,8 +15,8 @@
     "find_highlight": "#e8d8b0",
     "find_highlight_foreground": "#323128",
     "gutter_foreground": "#8e8c86",
-    "guide": "#524e4640",
-    "active_guide": "#504b4480",
+    "guide": "#716c6440",
+    "active_guide": "#6a655d80",
     "accent": "#863716"
   },
   "rules": [
@@ -308,7 +308,7 @@
     {
       "name": "Markup quote",
       "scope": "markup.quote",
-      "foreground": "#504b44",
+      "foreground": "#6a655d",
       "font_style": "italic"
     },
     {
@@ -326,7 +326,7 @@
     {
       "name": "Diff changed",
       "scope": "markup.changed",
-      "foreground": "#857238",
+      "foreground": "#7d6a30",
       "font_style": ""
     },
     {
@@ -344,19 +344,19 @@
     {
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
-      "foreground": "#857238",
+      "foreground": "#7d6a30",
       "font_style": ""
     },
     {
       "name": "GitGutter untracked",
       "scope": "markup.untracked.git_gutter",
-      "foreground": "#524e46",
+      "foreground": "#716c64",
       "font_style": ""
     },
     {
       "name": "GitGutter ignored",
       "scope": "markup.ignored.git_gutter",
-      "foreground": "#524e46",
+      "foreground": "#716c64",
       "font_style": ""
     }
   ]

@@ -12,6 +12,7 @@ local function temper_roles(p)
       definition = { fg = p.accent },
       call = { fg = p.accent },
       control = { fg = p.accent2 },
+      exception = { fg = p.red },
       literal = { fg = p.accent },
       path = { fg = p.accent },
       special = { fg = p.purple },
@@ -27,6 +28,8 @@ local function temper_roles(p)
       quote = { fg = p.fg2 },
     },
     headings = { p.accent, p.accent2, p.fg1, p.accent, p.accent2, p.fg1 },
+    -- Temper's `accent` is teal, which would make ANSI bright red read as green.
+    terminal = { [9] = p.red },
   }
 end
 

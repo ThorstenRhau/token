@@ -7,14 +7,14 @@
     <style name="selection" background="#dedbd3"/>
     <style name="selection-unfocused" background="#f0ede6"/>
     <style name="cursor" foreground="#893517"/>
-    <style name="secondary-cursor" foreground="#514b44"/>
+    <style name="secondary-cursor" foreground="#6b645d"/>
     <style name="current-line" background="#f0ede6"/>
-    <style name="current-line-number" foreground="#514b44" background="#f0ede6"/>
+    <style name="current-line-number" foreground="#6b645d" background="#f0ede6"/>
     <style name="line-numbers" foreground="#8f8c85" background="#f6f5f1"/>
     <style name="line-numbers-border" background="#eae9e5"/>
-    <style name="draw-spaces" foreground="#544e44"/>
+    <style name="draw-spaces" foreground="#736c62"/>
     <style name="background-pattern" background="#f6f5f1"/>
-    <style name="right-margin" foreground="#544e44" background="#544e44"/>
+    <style name="right-margin" foreground="#736c62" background="#736c62"/>
     <style name="bracket-match" foreground="#893517" background="#eadab6" bold="true"/>
     <style name="bracket-mismatch" foreground="#ae5158" bold="true"/>
     <style name="search-match" foreground="#31312b" background="#eadab6"/>
@@ -42,7 +42,7 @@
     <style name="def:operator" foreground="#565141"/>
     <style name="def:preprocessor" foreground="#6c4800" bold="true"/>
     <style name="def:error" foreground="#ae5158" bold="true"/>
-    <style name="def:warning" foreground="#926e25"/>
+    <style name="def:warning" foreground="#89661b"/>
     <style name="def:note" foreground="#37526a" bold="true"/>
     <style name="def:net-address" foreground="#37526a" underline="single"/>
     <style name="def:heading" foreground="#893517" bold="true"/>
@@ -53,7 +53,7 @@
     <style name="def:heading4" foreground="#893517" bold="true"/>
     <style name="def:heading5" foreground="#6c4800" bold="true"/>
     <style name="def:heading6" foreground="#37526a" bold="true"/>
-    <style name="def:thematic-break" foreground="#514b44" bold="true"/>
+    <style name="def:thematic-break" foreground="#6b645d" bold="true"/>
     <style name="def:preformatted-section" foreground="#31312b" background="#f6f5f1"/>
     <style name="def:link-destination" foreground="#37526a" underline="single"/>
     <style name="def:link-text" foreground="#37526a" underline="single"/>
@@ -67,7 +67,7 @@
     <style name="def:insertion" foreground="#385a35"/>
     <style name="diff:added-line" foreground="#385a35"/>
     <style name="diff:removed-line" foreground="#ae5158"/>
-    <style name="diff:changed-line" foreground="#926e25"/>
+    <style name="diff:changed-line" foreground="#89661b"/>
     <style name="diff:location" foreground="#37526a"/>
     <style name="diff:diff-file" foreground="#893517" bold="true"/>
     <style name="diff:special-case" foreground="#573c72"/>

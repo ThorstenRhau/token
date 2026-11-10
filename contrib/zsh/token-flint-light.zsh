@@ -3,7 +3,7 @@
 
 # ZLE selection and pasted text
 zle_highlight=(${zle_highlight:#region:*})
-zle_highlight=(${zle_highlight:#paste:*} "region:fg=#283039,bg=#DCE2E7" "paste:fg=#283039,bg=#DCE2E7")
+zle_highlight=(${zle_highlight:#paste:*} "region:fg=#283039,bg=#D1D6DB" "paste:fg=#283039,bg=#D1D6DB")
 
 # fast-syntax-highlighting
 typeset -gA FAST_HIGHLIGHT_STYLES
@@ -22,13 +22,13 @@ FAST_HIGHLIGHT_STYLES[commandseparator]='fg=#5A6571'
 FAST_HIGHLIGHT_STYLES[hashed-command]='fg=#902A03'
 FAST_HIGHLIGHT_STYLES[autodirectory]='fg=#46515D,underline'
 FAST_HIGHLIGHT_STYLES[path]='fg=#46515D,underline'
-FAST_HIGHLIGHT_STYLES[path_pathseparator]='fg=#414C57,underline'
+FAST_HIGHLIGHT_STYLES[path_pathseparator]='fg=#5A6571,underline'
 FAST_HIGHLIGHT_STYLES[path_prefix]='fg=#46515D,underline'
 FAST_HIGHLIGHT_STYLES[path-to-dir]='fg=#46515D,underline'
 FAST_HIGHLIGHT_STYLES[globbing]='fg=#852500'
 FAST_HIGHLIGHT_STYLES[globbing-ext]='fg=#852500'
 FAST_HIGHLIGHT_STYLES[history-expansion]='fg=#852500'
-FAST_HIGHLIGHT_STYLES[back-quoted-argument]='fg=#414C57'
+FAST_HIGHLIGHT_STYLES[back-quoted-argument]='fg=#5A6571'
 FAST_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#3D5902'
 FAST_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#3D5902'
 FAST_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=#3D5902'
@@ -61,7 +61,7 @@ FAST_HIGHLIGHT_STYLES[case-condition]='fg=#035378'
 FAST_HIGHLIGHT_STYLES[paired-bracket]='fg=#035378'
 FAST_HIGHLIGHT_STYLES[bracket-level-1]='fg=#3D5902'
 FAST_HIGHLIGHT_STYLES[bracket-level-2]='fg=#6b4600'
-FAST_HIGHLIGHT_STYLES[bracket-level-3]='fg=#09567B'
+FAST_HIGHLIGHT_STYLES[bracket-level-3]='fg=#01575B'
 FAST_HIGHLIGHT_STYLES[single-sq-bracket]='fg=#035378'
 FAST_HIGHLIGHT_STYLES[double-sq-bracket]='fg=#035378'
 FAST_HIGHLIGHT_STYLES[double-paren]='fg=#6b4600'
@@ -77,27 +77,27 @@ FAST_HIGHLIGHT_STYLES[subtle-bg]='bg=#E9DDBE'
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#818C94'
 
 # LS_COLORS (GNU ls, tree, zsh completion)
-export LS_COLORS='di=1;38;2;3;83;120:ln=38;2;133;37;0:or=38;2;191;63;80:mi=9;38;2;191;63;80:so=38;2;61;89;2:pi=38;2;153;105;20:ex=38;2;144;42;3:bd=38;2;9;86;123:cd=38;2;9;86;123:su=1;38;2;191;63;80:sg=1;38;2;153;105;20:tw=1;38;2;61;89;2:ow=4;38;2;3;83;120:st=1;38;2;3;83;120'
+export LS_COLORS='di=1;38;2;3;83;120:ln=38;2;133;37;0:or=38;2;191;63;80:mi=9;38;2;191;63;80:so=38;2;61;89;2:pi=38;2;145;97;3:ex=38;2;144;42;3:bd=38;2;1;87;91:cd=38;2;1;87;91:su=1;38;2;191;63;80:sg=1;38;2;145;97;3:tw=1;38;2;61;89;2:ow=4;38;2;3;83;120:st=1;38;2;3;83;120'
 
 # LSCOLORS (BSD ls)
 export CLICOLOR=1
 export LSCOLORS='ExfxcxdxBxgxgxBxDxCxex'
 
 # Completion
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=48;2;220;226;231;38;2;40;48;57"
-zstyle ':completion:*:descriptions' format '%F{#414C57}-- %d --%f'
-zstyle ':completion:*:messages' format '%F{#414C57}-- %d --%f'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=48;2;209;214;219;38;2;40;48;57"
+zstyle ':completion:*:descriptions' format '%F{#5A6571}-- %d --%f'
+zstyle ':completion:*:messages' format '%F{#5A6571}-- %d --%f'
 zstyle ':completion:*:warnings' format '%F{#BF3F50}-- no matches --%f'
 
 # fzf-tab
 zstyle ':fzf-tab:*' fzf-flags \
   '--color=fg:#283039,bg:#F5F7F8,hl:#902A03' \
-  '--color=fg+:#283039,bg+:#DCE2E7,hl+:#902A03' \
-  '--color=border:#444E59,header:#035378,gutter:#F5F7F8' \
-  '--color=spinner:#6b4600,info:#414C57' \
+  '--color=fg+:#283039,bg+:#D1D6DB,hl+:#902A03' \
+  '--color=border:#636D79,header:#035378,gutter:#F5F7F8' \
+  '--color=spinner:#6b4600,info:#5A6571' \
   '--color=pointer:#902A03,marker:#3D5902,prompt:#902A03'
 zstyle ':fzf-tab:*' default-color $'\033[38;2;40;48;57m'
-zstyle ':fzf-tab:*' group-colors $'\033[38;2;3;83;120m' $'\033[38;2;61;89;2m' $'\033[38;2;107;70;0m' $'\033[38;2;133;37;0m' $'\033[38;2;9;86;123m' $'\033[38;2;144;42;3m' $'\033[38;2;153;105;20m' $'\033[38;2;191;63;80m'
+zstyle ':fzf-tab:*' group-colors $'\033[38;2;3;83;120m' $'\033[38;2;61;89;2m' $'\033[38;2;107;70;0m' $'\033[38;2;133;37;0m' $'\033[38;2;1;87;91m' $'\033[38;2;144;42;3m' $'\033[38;2;145;97;3m' $'\033[38;2;191;63;80m'
 
 # Prompt helpers
 export TOKEN_FG='#283039'
@@ -107,7 +107,7 @@ export TOKEN_ACCENT2='#6b4600'
 export TOKEN_BLUE='#035378'
 export TOKEN_GREEN='#3D5902'
 export TOKEN_RED='#BF3F50'
-export TOKEN_YELLOW='#996914'
+export TOKEN_YELLOW='#916103'
 export TOKEN_PURPLE='#852500'
-export TOKEN_CYAN='#09567B'
-export TOKEN_MUTED='#414C57'
+export TOKEN_CYAN='#01575B'
+export TOKEN_MUTED='#5A6571'

@@ -4,9 +4,9 @@
 export _FZF_THEME_OPTS="\
 --border \
 --color=fg:#283039,bg:#F5F7F8,hl:#902A03 \
---color=fg+:#283039,bg+:#DCE2E7,hl+:#902A03 \
---color=border:#444E59,header:#035378,gutter:#F5F7F8 \
---color=spinner:#6b4600,info:#414C57 \
+--color=fg+:#283039,bg+:#D1D6DB,hl+:#902A03 \
+--color=border:#636D79,header:#035378,gutter:#F5F7F8 \
+--color=spinner:#6b4600,info:#5A6571 \
 --color=pointer:#902A03,marker:#3D5902,prompt:#902A03
 "
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+${FZF_DEFAULT_OPTS} }${_FZF_THEME_OPTS}"

@@ -271,7 +271,7 @@
       "name": "Debug",
       "scope": "keyword.other.debugger",
       "settings": {
-        "foreground": "#ea9f63",
+        "foreground": "#c88b8f",
         "fontStyle": "bold"
       }
     },
@@ -279,7 +279,7 @@
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
       "settings": {
-        "foreground": "#ea9f63",
+        "foreground": "#c88b8f",
         "fontStyle": "bold"
       }
     },

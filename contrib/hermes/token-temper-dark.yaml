@@ -23,14 +23,14 @@ colors:
   selection_bg: "#3A414A"
   completion_menu_current_bg: "#3A414A"
   completion_menu_meta_current_bg: "#3A414A"
-  ui_ok: "#5EC4B5"
-  status_bar_good: "#5EC4B5"
+  ui_ok: "#7FC291"
+  status_bar_good: "#7FC291"
   ui_error: "#E3888C"
   status_bar_critical: "#E3888C"
   ui_warn: "#C5A15A"
   status_bar_warn: "#C5A15A"
   status_bar_bad: "#E3888C"
-  shell_dollar: "#51B8AA"
+  shell_dollar: "#53B4CE"
 spinner:
   waiting_faces: ["󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥"]
   thinking_faces: ["󰪞", "󰪟", "󰪠", "󰪡", "󰪢", "󰪣", "󰪤", "󰪥"]

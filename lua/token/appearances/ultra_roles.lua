@@ -10,6 +10,7 @@ local function ultra_roles(p)
       definition = { fg = p.accent },
       call = { fg = p.accent },
       control = { fg = p.accent2 },
+      exception = { fg = p.red },
       literal = { fg = p.orange },
       special = { fg = p.purple },
       type = { fg = p.fg1 },

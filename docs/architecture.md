@@ -64,9 +64,11 @@ Syntax readability follows one hierarchy, which `tests/headless.lua` checks for
 every appearance and variant. Text steps down from normal through operators
 (`fg1`) to comments and punctuation (`comment`), which stay above WCAG AA on the
 cursor line. Code that a diagnostic marks as unused takes `faded`, one tier
-below comments in dark and light. No colored role outranks keywords. Members and
-properties take `property`, a muted mauve just above the comment tier, so they
-differ from locals without competing with functions. Word operators such as
+below comments in dark and light. No colored role outranks keywords. Exception
+keywords such as `try`, `catch` and `throw` take `red` in every appearance, so
+error handling stands apart from other control flow. Members and properties
+take `property`, a muted mauve just above the comment tier, so they differ from
+locals without competing with functions. Word operators such as
 `and` and `not` keep the operator color and the keyword weight. Docstrings read
 as comments. Definitions are bold and calls regular, so `@function` means a
 definition except in languages whose Tree-sitter queries also tag calls with it;
@@ -86,6 +88,19 @@ across appearances, so new status colors should use `red`, `yellow` or the
 `diag_*` keys. Integrations that expose an orange by name, such as Blink's
 indent colors and Starship's palette, use `accent2`, which is warm in every
 appearance except Temper.
+
+The foreground ramp steps down from `fg0` through `fg3` to `faded` in dark and
+light, and `fg2` holds the `comment` value. Inlay hints, inactive status lines
+and ANSI bright black therefore read as muted in both variants.
+`tests/headless.lua` checks the order for every palette.
+
+[`lua/token/terminal.lua`](../lua/token/terminal.lua) maps palette keys to ANSI
+slots. A role profile's `terminal` table replaces only the slots it names, for
+the cases where a role slot would give an ANSI color the wrong hue: Flint's
+magenta takes `property` because its `purple` is terracotta, Temper's bright
+red takes `red` because its `accent` is teal, and Melange's bright red takes
+its coral. Temper's `green`, `blue` and `cyan` sit about 33 degrees of OKLCH
+hue apart around the teal accent so the terminal can tell them apart.
 
 The cursor takes `accent` in Neovim and in every generated theme with a cursor
 or caret key, so `accent` must not fill the current search match, or the block

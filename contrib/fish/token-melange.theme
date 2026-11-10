@@ -40,7 +40,7 @@ fish_pager_color_selected_description af997d
 [light]
 # preferred_background: f1f1f1
 fish_color_normal 39281f
-fish_color_command 674400
+fish_color_command 634f00
 fish_color_keyword 773a03 --bold
 fish_color_quote 3b5198
 fish_color_redirection ac0a1f
@@ -60,18 +60,18 @@ fish_color_host_remote 773a03
 fish_color_status 9c5364
 fish_color_cancel 9c5364
 fish_color_search_match --background=e0c6a2
-fish_color_history_current 674400
+fish_color_history_current 634f00
 fish_color_valid_path --underline
 
 # Pager
-fish_pager_color_progress 674400
-fish_pager_color_prefix 674400 --bold
+fish_pager_color_progress 634f00
+fish_pager_color_prefix 634f00 --bold
 fish_pager_color_completion 39281f
-fish_pager_color_description 594334
+fish_pager_color_description 735c4c
 fish_pager_color_selected_background --background=d9d3ce
-fish_pager_color_selected_prefix 674400 --bold
+fish_pager_color_selected_prefix 634f00 --bold
 fish_pager_color_selected_completion 39281f
-fish_pager_color_selected_description 594334
+fish_pager_color_selected_description 735c4c
 
 [unknown]
 # preferred_background: 292522

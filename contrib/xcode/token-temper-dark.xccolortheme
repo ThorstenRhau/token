@@ -12,7 +12,7 @@
     <key>DVTConsoleDebuggerOutputTextFont</key>
     <string>SFMono-Regular - 12.0</string>
     <key>DVTConsoleDebuggerPromptTextColor</key>
-    <string>0.368627 0.768627 0.709804 1</string>
+    <string>0.498039 0.760784 0.568627 1</string>
     <key>DVTConsoleDebuggerPromptTextFont</key>
     <string>SFMono-Regular - 12.0</string>
     <key>DVTConsoleExectuableInputTextColor</key>
@@ -72,7 +72,7 @@
     <key>DVTScrollbarMarkerAnalyzerColor</key>
     <string>0.384314 0.780392 0.725490 1</string>
     <key>DVTScrollbarMarkerBreakpointColor</key>
-    <string>0.317647 0.721569 0.666667 1</string>
+    <string>0.325490 0.705882 0.807843 1</string>
     <key>DVTScrollbarMarkerDiffColor</key>
     <string>0.772549 0.631373 0.352941 1</string>
     <key>DVTScrollbarMarkerDiffConflictColor</key>

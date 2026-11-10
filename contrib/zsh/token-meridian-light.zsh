@@ -22,13 +22,13 @@ FAST_HIGHLIGHT_STYLES[commandseparator]='fg=#6c645b'
 FAST_HIGHLIGHT_STYLES[hashed-command]='fg=#832882'
 FAST_HIGHLIGHT_STYLES[autodirectory]='fg=#46535f,underline'
 FAST_HIGHLIGHT_STYLES[path]='fg=#46535f,underline'
-FAST_HIGHLIGHT_STYLES[path_pathseparator]='fg=#524b42,underline'
+FAST_HIGHLIGHT_STYLES[path_pathseparator]='fg=#6c645b,underline'
 FAST_HIGHLIGHT_STYLES[path_prefix]='fg=#46535f,underline'
 FAST_HIGHLIGHT_STYLES[path-to-dir]='fg=#46535f,underline'
 FAST_HIGHLIGHT_STYLES[globbing]='fg=#832882'
 FAST_HIGHLIGHT_STYLES[globbing-ext]='fg=#832882'
 FAST_HIGHLIGHT_STYLES[history-expansion]='fg=#832882'
-FAST_HIGHLIGHT_STYLES[back-quoted-argument]='fg=#524b42'
+FAST_HIGHLIGHT_STYLES[back-quoted-argument]='fg=#6c645b'
 FAST_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#005f2f'
 FAST_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#005f2f'
 FAST_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=#005f2f'
@@ -77,7 +77,7 @@ FAST_HIGHLIGHT_STYLES[subtle-bg]='bg=#eadab6'
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#8f8c85'
 
 # LS_COLORS (GNU ls, tree, zsh completion)
-export LS_COLORS='di=1;38;2;0;72;179:ln=38;2;131;40;130:or=38;2;174;81;88:mi=9;38;2;174;81;88:so=38;2;0;95;47:pi=38;2;146;110;37:ex=38;2;0;72;179:bd=38;2;9;91;98:cd=38;2;9;91;98:su=1;38;2;174;81;88:sg=1;38;2;146;110;37:tw=1;38;2;0;95;47:ow=4;38;2;0;72;179:st=1;38;2;0;72;179'
+export LS_COLORS='di=1;38;2;0;72;179:ln=38;2;131;40;130:or=38;2;174;81;88:mi=9;38;2;174;81;88:so=38;2;0;95;47:pi=38;2;137;102;27:ex=38;2;0;72;179:bd=38;2;9;91;98:cd=38;2;9;91;98:su=1;38;2;174;81;88:sg=1;38;2;137;102;27:tw=1;38;2;0;95;47:ow=4;38;2;0;72;179:st=1;38;2;0;72;179'
 
 # LSCOLORS (BSD ls)
 export CLICOLOR=1
@@ -85,19 +85,19 @@ export LSCOLORS='ExfxcxdxBxgxgxBxDxCxex'
 
 # Completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}" "ma=48;2;222;219;211;38;2;40;50;58"
-zstyle ':completion:*:descriptions' format '%F{#524b42}-- %d --%f'
-zstyle ':completion:*:messages' format '%F{#524b42}-- %d --%f'
+zstyle ':completion:*:descriptions' format '%F{#6c645b}-- %d --%f'
+zstyle ':completion:*:messages' format '%F{#6c645b}-- %d --%f'
 zstyle ':completion:*:warnings' format '%F{#ae5158}-- no matches --%f'
 
 # fzf-tab
 zstyle ':fzf-tab:*' fzf-flags \
   '--color=fg:#28323a,bg:#fbf9f4,hl:#0048b3' \
   '--color=fg+:#28323a,bg+:#dedbd3,hl+:#0048b3' \
-  '--color=border:#43505c,header:#0048b3,gutter:#fbf9f4' \
-  '--color=spinner:#843900,info:#524b42' \
+  '--color=border:#616f7c,header:#0048b3,gutter:#fbf9f4' \
+  '--color=spinner:#843900,info:#6c645b' \
   '--color=pointer:#0048b3,marker:#005f2f,prompt:#0048b3'
 zstyle ':fzf-tab:*' default-color $'\033[38;2;40;50;58m'
-zstyle ':fzf-tab:*' group-colors $'\033[38;2;0;72;179m' $'\033[38;2;0;95;47m' $'\033[38;2;132;57;0m' $'\033[38;2;131;40;130m' $'\033[38;2;9;91;98m' $'\033[38;2;0;72;179m' $'\033[38;2;146;110;37m' $'\033[38;2;174;81;88m'
+zstyle ':fzf-tab:*' group-colors $'\033[38;2;0;72;179m' $'\033[38;2;0;95;47m' $'\033[38;2;132;57;0m' $'\033[38;2;131;40;130m' $'\033[38;2;9;91;98m' $'\033[38;2;0;72;179m' $'\033[38;2;137;102;27m' $'\033[38;2;174;81;88m'
 
 # Prompt helpers
 export TOKEN_FG='#28323a'
@@ -107,7 +107,7 @@ export TOKEN_ACCENT2='#843900'
 export TOKEN_BLUE='#0048b3'
 export TOKEN_GREEN='#005f2f'
 export TOKEN_RED='#ae5158'
-export TOKEN_YELLOW='#926e25'
+export TOKEN_YELLOW='#89661b'
 export TOKEN_PURPLE='#832882'
 export TOKEN_CYAN='#095b62'
-export TOKEN_MUTED='#524b42'
+export TOKEN_MUTED='#6c645b'

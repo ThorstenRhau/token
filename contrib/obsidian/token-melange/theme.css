@@ -99,16 +99,16 @@
   --color-base-30: #e3dbd4;
   --color-base-35: #a1806e;
   --color-base-40: #ad9b91;
-  --color-base-50: #5f4436;
-  --color-base-60: #594334;
+  --color-base-50: #7f6254;
+  --color-base-60: #735c4c;
   --color-base-70: #594a41;
   --color-base-100: #39281f;
   --color-red: #9c5364;
   --color-red-rgb: 156, 83, 100;
   --color-orange: #773a03;
   --color-orange-rgb: 119, 58, 3;
-  --color-yellow: #976502;
-  --color-yellow-rgb: 151, 101, 2;
+  --color-yellow: #8d5e02;
+  --color-yellow-rgb: 141, 94, 2;
   --color-green: #2a563c;
   --color-green-rgb: 42, 86, 60;
   --color-cyan: #355b60;
@@ -120,9 +120,9 @@
   --color-pink: #843476;
   --color-pink-rgb: 132, 52, 118;
 
-  --accent-h: 39.61;
+  --accent-h: 47.88;
   --accent-s: 100%;
-  --accent-l: 20.2%;
+  --accent-l: 19.41%;
 
   --background-primary: #f1f1f1;
   --background-primary-alt: #eeedeb;
@@ -131,7 +131,7 @@
   --background-modifier-hover: #e9e1db;
   --background-modifier-active-hover: #e3ddd8;
   --background-modifier-border: #e3ddd8;
-  --background-modifier-border-hover: #5f4436;
+  --background-modifier-border-hover: #7f6254;
   --background-modifier-border-focus: var(--interactive-accent);
   --background-modifier-form-field: #eeedeb;
 
@@ -139,44 +139,44 @@
   --interactive-hover: #e3ddd8;
 
   --text-normal: #39281f;
-  --text-muted: #594334;
-  --text-faint: #5f4436;
+  --text-muted: #735c4c;
+  --text-faint: #7f6254;
   --text-on-accent: #f1f1f1;
   --text-on-accent-inverted: #f1f1f1;
   --text-success: #2a563c;
-  --text-warning: #976502;
+  --text-warning: #8d5e02;
   --text-error: #9c5364;
   --text-selection: #d9d3ce;
   --text-highlight-bg: #e0c6a2;
-  --caret-color: #674400;
+  --caret-color: #634f00;
 
   --link-color: #3b5198;
-  --link-color-hover: #674400;
+  --link-color-hover: #634f00;
   --link-external-color: #3b5198;
-  --link-external-color-hover: #674400;
+  --link-external-color-hover: #634f00;
   --tag-color: #773a03;
-  --tag-color-hover: #674400;
+  --tag-color-hover: #634f00;
   --tag-background: #e9e1db;
   --tag-background-hover: #e3ddd8;
 
   --h1-color: #773a03;
-  --h2-color: #674400;
+  --h2-color: #634f00;
   --h3-color: #2a563c;
   --h4-color: #773a03;
-  --h5-color: #674400;
+  --h5-color: #634f00;
   --h6-color: #2a563c;
 
   --code-normal: #39281f;
   --code-background: #e8e4e0;
   --code-comment: #735c4c;
-  --code-function: #674400;
+  --code-function: #634f00;
   --code-important: #9c5364;
   --code-keyword: #773a03;
   --code-operator: #594a41;
   --code-property: #655066;
   --code-punctuation: #735c4c;
   --code-string: #3b5198;
-  --code-tag: #674400;
+  --code-tag: #634f00;
   --code-value: #3b5198;
 }
 

@@ -322,7 +322,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#ea9f63</string>
+        <string>#c88b8f</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -335,7 +335,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#ea9f63</string>
+        <string>#c88b8f</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>

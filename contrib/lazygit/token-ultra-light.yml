@@ -8,9 +8,9 @@ gui:
       - "#893517"
       - bold
     inactiveBorderColor:
-      - "#544e44"
+      - "#736c62"
     searchingActiveBorderColor:
-      - "#926e25"
+      - "#89661b"
       - bold
     optionsTextColor:
       - "#37526a"

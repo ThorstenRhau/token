@@ -5,8 +5,8 @@ export _FZF_THEME_OPTS="\
 --border \
 --color=fg:#31312b,bg:#fbf9f4,hl:#893517 \
 --color=fg+:#31312b,bg+:#dedbd3,hl+:#893517 \
---color=border:#544e44,header:#37526a,gutter:#fbf9f4 \
---color=spinner:#6c4800,info:#514b44 \
+--color=border:#736c62,header:#37526a,gutter:#fbf9f4 \
+--color=spinner:#6c4800,info:#6b645d \
 --color=pointer:#893517,marker:#385a35,prompt:#893517
 "
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+${FZF_DEFAULT_OPTS} }${_FZF_THEME_OPTS}"

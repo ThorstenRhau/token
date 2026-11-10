@@ -4,7 +4,7 @@
   "colors": {
     "focusBorder": "#863716",
     "foreground": "#323128",
-    "descriptionForeground": "#504b44",
+    "descriptionForeground": "#6a655d",
     "errorForeground": "#ad5253",
     "textLink.foreground": "#315270",
     "textLink.activeForeground": "#863716",
@@ -14,30 +14,30 @@
     "editor.background": "#faf9f5",
     "editor.foreground": "#323128",
     "editorLineNumber.foreground": "#8e8c86",
-    "editorLineNumber.activeForeground": "#504b44",
+    "editorLineNumber.activeForeground": "#6a655d",
     "editorCursor.foreground": "#863716",
     "editor.selectionBackground": "#dddcd6",
     "editor.inactiveSelectionBackground": "#f0efeb",
     "editor.lineHighlightBackground": "#eae9e540",
     "editor.findMatchBackground": "#b5d7f5",
     "editor.findMatchHighlightBackground": "#e8d8b080",
-    "editorWhitespace.foreground": "#524e4680",
-    "editorIndentGuide.background1": "#524e4640",
-    "editorIndentGuide.activeBackground1": "#504b4480",
+    "editorWhitespace.foreground": "#716c6480",
+    "editorIndentGuide.background1": "#716c6440",
+    "editorIndentGuide.activeBackground1": "#6a655d80",
     "editorBracketMatch.background": "#eae9e5",
     "editorBracketMatch.border": "#863716",
     "editorGutter.addedBackground": "#365a33",
-    "editorGutter.modifiedBackground": "#857238",
+    "editorGutter.modifiedBackground": "#7d6a30",
     "editorGutter.deletedBackground": "#ad5253",
     "diffEditor.insertedTextBackground": "#daf6d5",
     "diffEditor.removedTextBackground": "#ffdada",
     "editorError.foreground": "#ad5253",
-    "editorWarning.foreground": "#857238",
+    "editorWarning.foreground": "#7d6a30",
     "editorInfo.foreground": "#315270",
     "editorHint.foreground": "#185b5b",
     "activityBar.background": "#f6f5f1",
     "activityBar.foreground": "#323128",
-    "activityBar.inactiveForeground": "#504b44",
+    "activityBar.inactiveForeground": "#6a655d",
     "activityBarBadge.background": "#863716",
     "activityBarBadge.foreground": "#faf9f5",
     "sideBar.background": "#f6f5f1",
@@ -55,7 +55,7 @@
     "panel.background": "#f6f5f1",
     "panel.border": "#eae9e5",
     "panelTitle.activeForeground": "#323128",
-    "panelTitle.inactiveForeground": "#504b44",
+    "panelTitle.inactiveForeground": "#6a655d",
     "statusBar.background": "#f6f5f1",
     "statusBar.foreground": "#565141",
     "statusBar.noFolderBackground": "#f6f5f1",
@@ -63,11 +63,11 @@
     "titleBar.activeBackground": "#f6f5f1",
     "titleBar.activeForeground": "#323128",
     "titleBar.inactiveBackground": "#ecebe7",
-    "titleBar.inactiveForeground": "#504b44",
+    "titleBar.inactiveForeground": "#6a655d",
     "tab.activeBackground": "#faf9f5",
     "tab.activeForeground": "#323128",
     "tab.inactiveBackground": "#f6f5f1",
-    "tab.inactiveForeground": "#504b44",
+    "tab.inactiveForeground": "#6a655d",
     "tab.border": "#f6f5f1",
     "terminal.background": "#faf9f5",
     "terminal.foreground": "#323128",
@@ -76,16 +76,16 @@
     "terminal.ansiBlack": "#323128",
     "terminal.ansiRed": "#ad5253",
     "terminal.ansiGreen": "#365a33",
-    "terminal.ansiYellow": "#857238",
+    "terminal.ansiYellow": "#7d6a30",
     "terminal.ansiBlue": "#315270",
     "terminal.ansiMagenta": "#61457c",
     "terminal.ansiCyan": "#185b5b",
     "terminal.ansiWhite": "#8e8c86",
-    "terminal.ansiBrightBlack": "#504b44",
+    "terminal.ansiBrightBlack": "#6a655d",
     "terminal.ansiBrightRed": "#863716",
     "terminal.ansiBrightGreen": "#274b24",
     "terminal.ansiBrightYellow": "#74680d",
-    "terminal.ansiBrightBlue": "#335471",
+    "terminal.ansiBrightBlue": "#40678a",
     "terminal.ansiBrightMagenta": "#6b5488",
     "terminal.ansiBrightCyan": "#387272",
     "terminal.ansiBrightWhite": "#faf9f5"
@@ -476,7 +476,7 @@
       "name": "Markup quote",
       "scope": "markup.quote",
       "settings": {
-        "foreground": "#504b44",
+        "foreground": "#6a655d",
         "fontStyle": "italic"
       }
     },
@@ -500,7 +500,7 @@
       "name": "Diff changed",
       "scope": "markup.changed",
       "settings": {
-        "foreground": "#857238",
+        "foreground": "#7d6a30",
         "fontStyle": ""
       }
     },
@@ -524,7 +524,7 @@
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
       "settings": {
-        "foreground": "#857238",
+        "foreground": "#7d6a30",
         "fontStyle": ""
       }
     },
@@ -532,7 +532,7 @@
       "name": "GitGutter untracked",
       "scope": "markup.untracked.git_gutter",
       "settings": {
-        "foreground": "#524e46",
+        "foreground": "#716c64",
         "fontStyle": ""
       }
     },
@@ -540,7 +540,7 @@
       "name": "GitGutter ignored",
       "scope": "markup.ignored.git_gutter",
       "settings": {
-        "foreground": "#524e46",
+        "foreground": "#716c64",
         "fontStyle": ""
       }
     }

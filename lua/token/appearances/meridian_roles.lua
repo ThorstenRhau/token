@@ -17,6 +17,7 @@ local function meridian_roles(p, is_dark)
       definition = { fg = p.purple },
       call = { fg = p.purple },
       control = { fg = p.blue },
+      exception = { fg = p.red },
       literal = { fg = p.green },
       special = { fg = p.purple },
       -- Dark numbers follow `literal`: the dark `accent` sat too close to the

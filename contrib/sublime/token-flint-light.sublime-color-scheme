@@ -8,15 +8,15 @@
     "foreground": "#283039",
     "caret": "#902A03",
     "line_highlight": "#E0E5EA40",
-    "selection": "#DCE2E7",
-    "selection_border": "#DCE2E7",
+    "selection": "#D1D6DB",
+    "selection_border": "#D1D6DB",
     "inactive_selection": "#EBEFF2",
     "misspelling": "#BF3F50",
     "find_highlight": "#E9DDBE",
     "find_highlight_foreground": "#283039",
     "gutter_foreground": "#818C94",
-    "guide": "#444E5940",
-    "active_guide": "#414C5780",
+    "guide": "#636D7940",
+    "active_guide": "#5A657180",
     "accent": "#902A03"
   },
   "rules": [
@@ -272,7 +272,7 @@
     {
       "name": "Markup quote",
       "scope": "markup.quote",
-      "foreground": "#414C57",
+      "foreground": "#5A6571",
       "font_style": "italic"
     },
     {
@@ -290,7 +290,7 @@
     {
       "name": "Diff changed",
       "scope": "markup.changed",
-      "foreground": "#996914",
+      "foreground": "#916103",
       "font_style": ""
     },
     {
@@ -308,19 +308,19 @@
     {
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
-      "foreground": "#996914",
+      "foreground": "#916103",
       "font_style": ""
     },
     {
       "name": "GitGutter untracked",
       "scope": "markup.untracked.git_gutter",
-      "foreground": "#444E59",
+      "foreground": "#636D79",
       "font_style": ""
     },
     {
       "name": "GitGutter ignored",
       "scope": "markup.ignored.git_gutter",
-      "foreground": "#444E59",
+      "foreground": "#636D79",
       "font_style": ""
     }
   ]

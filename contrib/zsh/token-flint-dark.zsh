@@ -61,7 +61,7 @@ FAST_HIGHLIGHT_STYLES[case-condition]='fg=#88ACC4'
 FAST_HIGHLIGHT_STYLES[paired-bracket]='fg=#88ACC4'
 FAST_HIGHLIGHT_STYLES[bracket-level-1]='fg=#A9B98C'
 FAST_HIGHLIGHT_STYLES[bracket-level-2]='fg=#F8D28A'
-FAST_HIGHLIGHT_STYLES[bracket-level-3]='fg=#98BBD4'
+FAST_HIGHLIGHT_STYLES[bracket-level-3]='fg=#81C2C2'
 FAST_HIGHLIGHT_STYLES[single-sq-bracket]='fg=#88ACC4'
 FAST_HIGHLIGHT_STYLES[double-sq-bracket]='fg=#88ACC4'
 FAST_HIGHLIGHT_STYLES[double-paren]='fg=#F8D28A'
@@ -77,7 +77,7 @@ FAST_HIGHLIGHT_STYLES[subtle-bg]='bg=#4A402E'
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#67717D'
 
 # LS_COLORS (GNU ls, tree, zsh completion)
-export LS_COLORS='di=1;38;2;136;172;196:ln=38;2;224;148;120:or=38;2;227;136;140:mi=9;38;2;227;136;140:so=38;2;169;185;140:pi=38;2;197;161;90:ex=38;2;235;158;131:bd=38;2;152;187;212:cd=38;2;152;187;212:su=1;38;2;227;136;140:sg=1;38;2;197;161;90:tw=1;38;2;169;185;140:ow=4;38;2;136;172;196:st=1;38;2;136;172;196'
+export LS_COLORS='di=1;38;2;136;172;196:ln=38;2;224;148;120:or=38;2;227;136;140:mi=9;38;2;227;136;140:so=38;2;169;185;140:pi=38;2;197;161;90:ex=38;2;235;158;131:bd=38;2;129;194;194:cd=38;2;129;194;194:su=1;38;2;227;136;140:sg=1;38;2;197;161;90:tw=1;38;2;169;185;140:ow=4;38;2;136;172;196:st=1;38;2;136;172;196'
 
 # LSCOLORS (BSD ls)
 export CLICOLOR=1
@@ -97,7 +97,7 @@ zstyle ':fzf-tab:*' fzf-flags \
   '--color=spinner:#F8D28A,info:#9AA4AE' \
   '--color=pointer:#EB9E83,marker:#A9B98C,prompt:#EB9E83'
 zstyle ':fzf-tab:*' default-color $'\033[38;2;195;200;204m'
-zstyle ':fzf-tab:*' group-colors $'\033[38;2;136;172;196m' $'\033[38;2;169;185;140m' $'\033[38;2;248;210;138m' $'\033[38;2;224;148;120m' $'\033[38;2;152;187;212m' $'\033[38;2;235;158;131m' $'\033[38;2;197;161;90m' $'\033[38;2;227;136;140m'
+zstyle ':fzf-tab:*' group-colors $'\033[38;2;136;172;196m' $'\033[38;2;169;185;140m' $'\033[38;2;248;210;138m' $'\033[38;2;224;148;120m' $'\033[38;2;129;194;194m' $'\033[38;2;235;158;131m' $'\033[38;2;197;161;90m' $'\033[38;2;227;136;140m'
 
 # Prompt helpers
 export TOKEN_FG='#C3C8CC'
@@ -109,5 +109,5 @@ export TOKEN_GREEN='#A9B98C'
 export TOKEN_RED='#E3888C'
 export TOKEN_YELLOW='#C5A15A'
 export TOKEN_PURPLE='#E09478'
-export TOKEN_CYAN='#98BBD4'
+export TOKEN_CYAN='#81C2C2'
 export TOKEN_MUTED='#9AA4AE'

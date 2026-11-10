@@ -52,32 +52,32 @@ FAST_HIGHLIGHT_STYLES[exec-descriptor]='fg=#E7CDFF'
 FAST_HIGHLIGHT_STYLES[here-string-tri]='fg=#E7CDFF'
 FAST_HIGHLIGHT_STYLES[here-string-text]='none'
 FAST_HIGHLIGHT_STYLES[here-string-var]='fg=#C3C8CC'
-FAST_HIGHLIGHT_STYLES[mathvar]='fg=#51B8AA'
+FAST_HIGHLIGHT_STYLES[mathvar]='fg=#53B4CE'
 FAST_HIGHLIGHT_STYLES[mathnum]='fg=#5CC1B3'
 FAST_HIGHLIGHT_STYLES[matherr]='fg=#E3888C'
 FAST_HIGHLIGHT_STYLES[case-input]='fg=#5CC1B3'
 FAST_HIGHLIGHT_STYLES[case-parentheses]='fg=#E7CDFF'
-FAST_HIGHLIGHT_STYLES[case-condition]='fg=#51B8AA'
-FAST_HIGHLIGHT_STYLES[paired-bracket]='fg=#51B8AA'
-FAST_HIGHLIGHT_STYLES[bracket-level-1]='fg=#5EC4B5'
+FAST_HIGHLIGHT_STYLES[case-condition]='fg=#53B4CE'
+FAST_HIGHLIGHT_STYLES[paired-bracket]='fg=#53B4CE'
+FAST_HIGHLIGHT_STYLES[bracket-level-1]='fg=#7FC291'
 FAST_HIGHLIGHT_STYLES[bracket-level-2]='fg=#E7CDFF'
 FAST_HIGHLIGHT_STYLES[bracket-level-3]='fg=#62C7B9'
-FAST_HIGHLIGHT_STYLES[single-sq-bracket]='fg=#51B8AA'
-FAST_HIGHLIGHT_STYLES[double-sq-bracket]='fg=#51B8AA'
+FAST_HIGHLIGHT_STYLES[single-sq-bracket]='fg=#53B4CE'
+FAST_HIGHLIGHT_STYLES[double-sq-bracket]='fg=#53B4CE'
 FAST_HIGHLIGHT_STYLES[double-paren]='fg=#E7CDFF'
 FAST_HIGHLIGHT_STYLES[optarg-string]='fg=#5CC1B3'
 FAST_HIGHLIGHT_STYLES[optarg-number]='fg=#5CC1B3'
 FAST_HIGHLIGHT_STYLES[recursive-base]='none'
-FAST_HIGHLIGHT_STYLES[correct-subtle]='fg=#51B8AA'
+FAST_HIGHLIGHT_STYLES[correct-subtle]='fg=#53B4CE'
 FAST_HIGHLIGHT_STYLES[incorrect-subtle]='fg=#E3888C'
-FAST_HIGHLIGHT_STYLES[subtle-separator]='fg=#5EC4B5'
+FAST_HIGHLIGHT_STYLES[subtle-separator]='fg=#7FC291'
 FAST_HIGHLIGHT_STYLES[subtle-bg]='bg=#4A402E'
 
 # zsh-autosuggestions
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#67717D'
 
 # LS_COLORS (GNU ls, tree, zsh completion)
-export LS_COLORS='di=1;38;2;81;184;170:ln=38;2;194;148;230:or=38;2;227;136;140:mi=9;38;2;227;136;140:so=38;2;94;196;181:pi=38;2;197;161;90:ex=38;2;92;193;179:bd=38;2;98;199;185:cd=38;2;98;199;185:su=1;38;2;227;136;140:sg=1;38;2;197;161;90:tw=1;38;2;94;196;181:ow=4;38;2;81;184;170:st=1;38;2;81;184;170'
+export LS_COLORS='di=1;38;2;83;180;206:ln=38;2;194;148;230:or=38;2;227;136;140:mi=9;38;2;227;136;140:so=38;2;127;194;145:pi=38;2;197;161;90:ex=38;2;92;193;179:bd=38;2;98;199;185:cd=38;2;98;199;185:su=1;38;2;227;136;140:sg=1;38;2;197;161;90:tw=1;38;2;127;194;145:ow=4;38;2;83;180;206:st=1;38;2;83;180;206'
 
 # LSCOLORS (BSD ls)
 export CLICOLOR=1
@@ -93,19 +93,19 @@ zstyle ':completion:*:warnings' format '%F{#E3888C}-- no matches --%f'
 zstyle ':fzf-tab:*' fzf-flags \
   '--color=fg:#C3C8CC,bg:#272C33,hl:#5CC1B3' \
   '--color=fg+:#C3C8CC,bg+:#3A414A,hl+:#5CC1B3' \
-  '--color=border:#858F9B,header:#51B8AA,gutter:#272C33' \
+  '--color=border:#858F9B,header:#53B4CE,gutter:#272C33' \
   '--color=spinner:#E7CDFF,info:#9AA4AE' \
-  '--color=pointer:#5CC1B3,marker:#5EC4B5,prompt:#5CC1B3'
+  '--color=pointer:#5CC1B3,marker:#7FC291,prompt:#5CC1B3'
 zstyle ':fzf-tab:*' default-color $'\033[38;2;195;200;204m'
-zstyle ':fzf-tab:*' group-colors $'\033[38;2;81;184;170m' $'\033[38;2;94;196;181m' $'\033[38;2;231;205;255m' $'\033[38;2;194;148;230m' $'\033[38;2;98;199;185m' $'\033[38;2;92;193;179m' $'\033[38;2;197;161;90m' $'\033[38;2;227;136;140m'
+zstyle ':fzf-tab:*' group-colors $'\033[38;2;83;180;206m' $'\033[38;2;127;194;145m' $'\033[38;2;231;205;255m' $'\033[38;2;194;148;230m' $'\033[38;2;98;199;185m' $'\033[38;2;92;193;179m' $'\033[38;2;197;161;90m' $'\033[38;2;227;136;140m'
 
 # Prompt helpers
 export TOKEN_FG='#C3C8CC'
 export TOKEN_BG='#272C33'
 export TOKEN_ACCENT='#5CC1B3'
 export TOKEN_ACCENT2='#E7CDFF'
-export TOKEN_BLUE='#51B8AA'
-export TOKEN_GREEN='#5EC4B5'
+export TOKEN_BLUE='#53B4CE'
+export TOKEN_GREEN='#7FC291'
 export TOKEN_RED='#E3888C'
 export TOKEN_YELLOW='#C5A15A'
 export TOKEN_PURPLE='#C294E6'

@@ -6,7 +6,7 @@
   "globals": {
     "background": "#f1f1f1",
     "foreground": "#39281f",
-    "caret": "#674400",
+    "caret": "#634f00",
     "line_highlight": "#e3ddd840",
     "selection": "#d9d3ce",
     "selection_border": "#d9d3ce",
@@ -15,9 +15,9 @@
     "find_highlight": "#e0c6a2",
     "find_highlight_foreground": "#39281f",
     "gutter_foreground": "#a1806e",
-    "guide": "#5f443640",
-    "active_guide": "#59433480",
-    "accent": "#674400"
+    "guide": "#7f625440",
+    "active_guide": "#735c4c80",
+    "accent": "#634f00"
   },
   "rules": [
     {
@@ -53,13 +53,13 @@
     {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
-      "foreground": "#674400",
+      "foreground": "#634f00",
       "font_style": "bold"
     },
     {
       "name": "Function call",
       "scope": "meta.function-call, variable.function, meta.function-call entity.name.function, meta.function.call entity.name.function, meta.method-call entity.name.function, entity.name.function.call, entity.name.function.support, entity.name.function.decorator, entity.name.function.macro, entity.name.function.tagged-template",
-      "foreground": "#674400",
+      "foreground": "#634f00",
       "font_style": ""
     },
     {
@@ -95,7 +95,7 @@
     {
       "name": "Type definition",
       "scope": "entity.name.type.class, entity.name.type.interface, entity.name.type.struct, entity.name.type.enum, entity.name.type.alias, entity.name.class, entity.name.struct, entity.name.interface, entity.name.enum",
-      "foreground": "#674400",
+      "foreground": "#634f00",
       "font_style": "bold"
     },
     {
@@ -125,7 +125,7 @@
     {
       "name": "Tag",
       "scope": "entity.name.tag",
-      "foreground": "#674400",
+      "foreground": "#634f00",
       "font_style": ""
     },
     {
@@ -155,13 +155,13 @@
     {
       "name": "Debug",
       "scope": "keyword.other.debugger",
-      "foreground": "#773a03",
+      "foreground": "#9c5364",
       "font_style": "bold"
     },
     {
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
-      "foreground": "#773a03",
+      "foreground": "#9c5364",
       "font_style": "bold"
     },
     {
@@ -197,7 +197,7 @@
     {
       "name": "Heading 2",
       "scope": "heading.2.markdown, markup.heading.setext.2.markdown",
-      "foreground": "#674400",
+      "foreground": "#634f00",
       "font_style": "bold"
     },
     {
@@ -215,7 +215,7 @@
     {
       "name": "Heading 5",
       "scope": "heading.5.markdown",
-      "foreground": "#674400",
+      "foreground": "#634f00",
       "font_style": "bold"
     },
     {
@@ -278,7 +278,7 @@
     {
       "name": "Markup quote",
       "scope": "markup.quote",
-      "foreground": "#594334",
+      "foreground": "#735c4c",
       "font_style": "italic"
     },
     {
@@ -296,7 +296,7 @@
     {
       "name": "Diff changed",
       "scope": "markup.changed",
-      "foreground": "#976502",
+      "foreground": "#8d5e02",
       "font_style": ""
     },
     {
@@ -314,19 +314,19 @@
     {
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
-      "foreground": "#976502",
+      "foreground": "#8d5e02",
       "font_style": ""
     },
     {
       "name": "GitGutter untracked",
       "scope": "markup.untracked.git_gutter",
-      "foreground": "#5f4436",
+      "foreground": "#7f6254",
       "font_style": ""
     },
     {
       "name": "GitGutter ignored",
       "scope": "markup.ignored.git_gutter",
-      "foreground": "#5f4436",
+      "foreground": "#7f6254",
       "font_style": ""
     }
   ]

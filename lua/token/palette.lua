@@ -85,8 +85,8 @@ local function palette(background)
       -- Foreground ramp
       fg0 = '#323128',
       fg1 = '#565141',
-      fg2 = '#504b44',
-      fg3 = '#524e46',
+      fg2 = '#6a655d',
+      fg3 = '#716c64',
       comment = '#6a655d',
       -- Accent hues
       accent = '#863716',
@@ -95,7 +95,7 @@ local function palette(background)
       blue = '#315270',
       green = '#365a33',
       red = '#ad5253',
-      yellow = '#857238',
+      yellow = '#7d6a30',
       purple = '#61457c',
       cyan = '#185b5b',
       orange = '#1d5f5e',
@@ -103,7 +103,7 @@ local function palette(background)
       property = '#794f5f',
       -- Bright variants
       bright_green = '#274b24',
-      bright_blue = '#335471',
+      bright_blue = '#40678a',
       bright_purple = '#6b5488',
       bright_cyan = '#387272',
       bright_yellow = '#74680d',
@@ -118,7 +118,7 @@ local function palette(background)
       diff_text = '#e2dac0',
       -- Diagnostic backgrounds
       diag_error = '#ffdada',
-      diag_warn = '#e2dac0',
+      diag_warn = '#f0e7cd',
       diag_info = '#dae4f2',
       diag_hint = '#d6eeea',
       -- UI elements
@@ -187,7 +187,7 @@ local function palette(background)
     diff_text = '#444039',
     -- Diagnostic backgrounds
     diag_error = '#3c2024',
-    diag_warn = '#444039',
+    diag_warn = '#332f29',
     diag_info = '#1e2634',
     diag_hint = '#1c2e2e',
     -- UI elements

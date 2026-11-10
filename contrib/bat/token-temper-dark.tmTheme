@@ -309,7 +309,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#E7CDFF</string>
+        <string>#E3888C</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -322,7 +322,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#E7CDFF</string>
+        <string>#E3888C</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -589,7 +589,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#5EC4B5</string>
+        <string>#7FC291</string>
         <key>fontStyle</key>
         <string></string>
       </dict>
@@ -628,7 +628,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#5EC4B5</string>
+        <string>#7FC291</string>
         <key>fontStyle</key>
         <string></string>
       </dict>

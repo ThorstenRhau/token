@@ -149,13 +149,13 @@
     {
       "name": "Debug",
       "scope": "keyword.other.debugger",
-      "foreground": "#f7c988",
+      "foreground": "#dd8384",
       "font_style": "bold"
     },
     {
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
-      "foreground": "#f7c988",
+      "foreground": "#dd8384",
       "font_style": "bold"
     },
     {

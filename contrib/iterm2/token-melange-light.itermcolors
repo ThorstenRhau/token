@@ -51,9 +51,9 @@
       <key>Color Space</key>
       <string>sRGB</string>
       <key>Green Component</key>
-      <real>0.266667</real>
+      <real>0.309804</real>
       <key>Red Component</key>
-      <real>0.403922</real>
+      <real>0.388235</real>
     </dict>
     <key>Cursor Text Color</key>
     <dict>
@@ -155,9 +155,9 @@
       <key>Color Space</key>
       <string>sRGB</string>
       <key>Green Component</key>
-      <real>0.396078</real>
+      <real>0.368627</real>
       <key>Red Component</key>
-      <real>0.592157</real>
+      <real>0.552941</real>
     </dict>
     <key>Ansi 4 Color</key>
     <dict>
@@ -216,13 +216,13 @@
       <key>Alpha Component</key>
       <real>1</real>
       <key>Blue Component</key>
-      <real>0.203922</real>
+      <real>0.298039</real>
       <key>Color Space</key>
       <string>sRGB</string>
       <key>Green Component</key>
-      <real>0.262745</real>
+      <real>0.360784</real>
       <key>Red Component</key>
-      <real>0.349020</real>
+      <real>0.450980</real>
     </dict>
     <key>Ansi 9 Color</key>
     <dict>

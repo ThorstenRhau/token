@@ -5,12 +5,12 @@
 gui:
   theme:
     activeBorderColor:
-      - "#674400"
+      - "#634f00"
       - bold
     inactiveBorderColor:
-      - "#5f4436"
+      - "#7f6254"
     searchingActiveBorderColor:
-      - "#976502"
+      - "#8d5e02"
       - bold
     optionsTextColor:
       - "#3b5198"

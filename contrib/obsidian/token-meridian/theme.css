@@ -99,16 +99,16 @@
   --color-base-30: #e7e3dc;
   --color-base-35: #8f8c85;
   --color-base-40: #a8a49c;
-  --color-base-50: #43505c;
-  --color-base-60: #524b42;
+  --color-base-50: #616f7c;
+  --color-base-60: #6c645b;
   --color-base-70: #46535f;
   --color-base-100: #28323a;
   --color-red: #ae5158;
   --color-red-rgb: 174, 81, 88;
   --color-orange: #843900;
   --color-orange-rgb: 132, 57, 0;
-  --color-yellow: #926e25;
-  --color-yellow-rgb: 146, 110, 37;
+  --color-yellow: #89661b;
+  --color-yellow-rgb: 137, 102, 27;
   --color-green: #005f2f;
   --color-green-rgb: 0, 95, 47;
   --color-cyan: #095b62;
@@ -131,7 +131,7 @@
   --background-modifier-hover: #f0ede6;
   --background-modifier-active-hover: #eae9e5;
   --background-modifier-border: #eae9e5;
-  --background-modifier-border-hover: #43505c;
+  --background-modifier-border-hover: #616f7c;
   --background-modifier-border-focus: var(--interactive-accent);
   --background-modifier-form-field: #f6f5f1;
 
@@ -139,12 +139,12 @@
   --interactive-hover: #eae9e5;
 
   --text-normal: #28323a;
-  --text-muted: #524b42;
-  --text-faint: #43505c;
+  --text-muted: #6c645b;
+  --text-faint: #616f7c;
   --text-on-accent: #fbf9f4;
   --text-on-accent-inverted: #fbf9f4;
   --text-success: #005f2f;
-  --text-warning: #926e25;
+  --text-warning: #89661b;
   --text-error: #ae5158;
   --text-selection: #dedbd3;
   --text-highlight-bg: #eadab6;

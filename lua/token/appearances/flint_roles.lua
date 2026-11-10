@@ -26,6 +26,9 @@ local function flint_roles(p)
       quote = { fg = p.fg2 },
     },
     headings = { p.accent, p.accent2, p.fg1, p.accent, p.accent2, p.fg1 },
+    -- Flint's `purple` slot is terracotta, the hue of ANSI 9, so magenta takes
+    -- the mauve `property` and `bright_purple` holds its brighter step.
+    terminal = { [5] = p.property },
   }
 end
 

@@ -6,8 +6,8 @@
 --colors=path:fg:0x37,0x52,0x6a
 --colors=path:style:nobold
 --colors=line:none
---colors=line:fg:0x51,0x4b,0x44
+--colors=line:fg:0x6b,0x64,0x5d
 --colors=line:style:nobold
 --colors=column:none
---colors=column:fg:0x54,0x4e,0x44
+--colors=column:fg:0x73,0x6c,0x62
 --colors=column:style:nobold

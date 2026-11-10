@@ -15,8 +15,8 @@
     "find_highlight": "#eadab6",
     "find_highlight_foreground": "#31312b",
     "gutter_foreground": "#8f8c85",
-    "guide": "#544e4440",
-    "active_guide": "#514b4480",
+    "guide": "#736c6240",
+    "active_guide": "#6b645d80",
     "accent": "#893517"
   },
   "rules": [
@@ -149,13 +149,13 @@
     {
       "name": "Debug",
       "scope": "keyword.other.debugger",
-      "foreground": "#6c4800",
+      "foreground": "#ae5158",
       "font_style": "bold"
     },
     {
       "name": "Exception",
       "scope": "keyword.control.exception, keyword.control.trycatch",
-      "foreground": "#6c4800",
+      "foreground": "#ae5158",
       "font_style": "bold"
     },
     {
@@ -272,7 +272,7 @@
     {
       "name": "Markup quote",
       "scope": "markup.quote",
-      "foreground": "#514b44",
+      "foreground": "#6b645d",
       "font_style": "italic"
     },
     {
@@ -290,7 +290,7 @@
     {
       "name": "Diff changed",
       "scope": "markup.changed",
-      "foreground": "#926e25",
+      "foreground": "#89661b",
       "font_style": ""
     },
     {
@@ -308,19 +308,19 @@
     {
       "name": "GitGutter changed",
       "scope": "markup.changed.git_gutter",
-      "foreground": "#926e25",
+      "foreground": "#89661b",
       "font_style": ""
     },
     {
       "name": "GitGutter untracked",
       "scope": "markup.untracked.git_gutter",
-      "foreground": "#544e44",
+      "foreground": "#736c62",
       "font_style": ""
     },
     {
       "name": "GitGutter ignored",
       "scope": "markup.ignored.git_gutter",
-      "foreground": "#544e44",
+      "foreground": "#736c62",
       "font_style": ""
     }
   ]

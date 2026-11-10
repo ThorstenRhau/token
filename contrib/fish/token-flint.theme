@@ -67,11 +67,11 @@ fish_color_valid_path --underline
 fish_pager_color_progress 902A03
 fish_pager_color_prefix 902A03 --bold
 fish_pager_color_completion 283039
-fish_pager_color_description 414C57
-fish_pager_color_selected_background --background=DCE2E7
+fish_pager_color_description 5A6571
+fish_pager_color_selected_background --background=D1D6DB
 fish_pager_color_selected_prefix 902A03 --bold
 fish_pager_color_selected_completion 283039
-fish_pager_color_selected_description 414C57
+fish_pager_color_selected_description 5A6571
 
 [unknown]
 # preferred_background: 272C33

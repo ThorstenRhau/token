@@ -785,7 +785,7 @@ equal(temper_rules['String'].fontStyle, '', 'VS Code Temper literal typography')
 equal(temper_rules['String'].foreground, temper_dark.accent, 'VS Code Temper literal color')
 equal(temper_rules['Type reference'].fontStyle, '', 'VS Code Temper reference typography')
 equal(temper_rules['Type reference'].foreground, temper_dark.fg1, 'VS Code Temper type reference color')
-equal(temper_rules.Exception.foreground, temper_dark.accent2, 'VS Code Temper exception color')
+equal(temper_rules.Exception.foreground, temper_dark.red, 'VS Code Temper exception color')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-temper/manifest.json')).name,
   'Token Temper',
@@ -823,7 +823,7 @@ equal(ultra_rules.String.fontStyle, '', 'VS Code Ultra literal typography')
 equal(ultra_rules.String.foreground, ultra_dark.orange, 'VS Code Ultra literal color')
 equal(ultra_rules['Type reference'].fontStyle, '', 'VS Code Ultra reference typography')
 equal(ultra_rules['Type reference'].foreground, ultra_dark.fg1, 'VS Code Ultra type reference color')
-equal(ultra_rules.Exception.foreground, ultra_dark.accent2, 'VS Code Ultra exception color')
+equal(ultra_rules.Exception.foreground, ultra_dark.red, 'VS Code Ultra exception color')
 equal(
   vim.json.decode(read_text('contrib/obsidian/token-ultra/manifest.json')).name,
   'Token Ultra',
@@ -1448,8 +1448,8 @@ local palette_anchors = {
       fg0 = '#C3C8CC',
       accent = '#EB9E83',
       blue = '#88ACC4',
-      bright_purple = '#E29A80',
-      bright_cyan = '#ADCDE3',
+      bright_purple = '#DAA8C4',
+      bright_cyan = '#99D3D3',
       indent = '#31383F',
       gsign_change = '#D0AB63',
     },
@@ -1480,7 +1480,7 @@ local palette_anchors = {
       fg0 = '#283039',
       accent = '#005850',
       accent2 = '#683495',
-      bright_green = '#004A44',
+      bright_green = '#22492E',
       indent = '#D6DCE1',
       gsign_change = '#93681A',
     },
@@ -1531,8 +1531,8 @@ local palette_anchors = {
     light = {
       fg0 = '#28323a',
       fg1 = '#46535f',
-      fg2 = '#524b42',
-      fg3 = '#43505c',
+      fg2 = '#6c645b',
+      fg3 = '#616f7c',
       comment = '#6c645b',
       accent = '#0048b3',
       blue = '#0048b3',
@@ -1572,7 +1572,7 @@ local palette_anchors = {
       diff_del = '#f1dedf',
       diag_info = '#e0e2e8',
       diag_hint = '#cde8e7',
-      accent = '#674400',
+      accent = '#634f00',
       olive = '#773a03',
       blue = '#3b5198',
       purple = '#843476',
@@ -1598,6 +1598,15 @@ for _, background in ipairs({ 'dark', 'light' }) do
       equal(palette[key], color, name .. ' anchor ' .. key .. ' for ' .. background)
     end
 
+    -- The foreground ramp steps down in both variants, so muted UI text stays muted in light.
+    local function on_bg(key)
+      return contrast(palette[key], palette.bg3)
+    end
+    truthy(
+      on_bg('fg1') > on_bg('fg2') and on_bg('fg2') > on_bg('fg3') and on_bg('fg3') > on_bg('faded'),
+      name .. ' foreground ramp for ' .. background
+    )
+
     -- Meridian's ANSI table reuses its normal purple and cyan for the bright slots.
     if name ~= 'token-meridian' and background == 'dark' then
       local terminal = require('token.terminal').colors(palette, true, name)
@@ -1609,6 +1618,13 @@ for _, background in ipairs({ 'dark', 'light' }) do
     -- Temper, whose `accent2` is purple. Light `accent2` is too dark to read as yellow.
     local ansi = require('token.terminal').colors(palette, background == 'dark', name)
     equal(ansi[11], palette.bright_yellow, name .. ' ANSI bright yellow for ' .. background)
+    -- Role slots must not collapse ANSI hues: Temper's teal accent is no bright
+    -- red, and Flint's terracotta `purple` is no magenta.
+    if name == 'token-temper' then
+      equal(ansi[9], palette.red, name .. ' ANSI bright red for ' .. background)
+    elseif name == 'token-flint' then
+      equal(ansi[5], palette.property, name .. ' ANSI magenta for ' .. background)
+    end
     if background == 'dark' and name ~= 'token-temper' then
       equal(palette.bright_yellow, palette.accent2, name .. ' dark bright yellow changed')
     else
@@ -2518,12 +2534,12 @@ equal(require('token.terminal').colors(meridian_light_palette, false, 'token-mer
   [0] = '#28323a',
   [1] = '#ae5158',
   [2] = '#005f2f',
-  [3] = '#926e25',
+  [3] = '#89661b',
   [4] = '#0048b3',
   [5] = '#832882',
   [6] = '#095b62',
   [7] = '#8f8c85',
-  [8] = '#524b42',
+  [8] = '#6c645b',
   [9] = '#ae5158',
   [10] = '#005f2f',
   [11] = '#7c660e',
@@ -2952,6 +2968,8 @@ for _, appearance in ipairs(appearances) do
     for _, group in ipairs({ '@function', '@function.call', '@string', '@number', '@constant', '@type' }) do
       truthy(ratio(group) <= ratio('@keyword') + 0.1, group .. ' does not outrank keywords for ' .. label)
     end
+    -- Exception keywords such as `try` and `catch` stand apart from other keywords.
+    truthy(hl('@keyword.exception').fg ~= hl('@keyword').fg, 'exception keywords differ from keywords for ' .. label)
     truthy(ratio('@property') < ratio('@function'), 'properties sit below functions for ' .. label)
     truthy(hl('@property').fg ~= hl('@variable').fg, 'properties differ from variables for ' .. label)
     equal(hl('@variable.member').fg, hl('@property').fg, 'members match properties for ' .. label)

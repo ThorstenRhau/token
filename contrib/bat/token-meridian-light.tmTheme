@@ -21,7 +21,7 @@
           <key>selection</key>
           <string>#dedbd3cc</string>
           <key>activeGuide</key>
-          <string>#524b4220</string>
+          <string>#6c645b20</string>
           <key>findHighlight</key>
           <string>#eadab6</string>
           <key>misspelling</key>
@@ -322,7 +322,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#0048b3</string>
+        <string>#ae5158</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -335,7 +335,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#0048b3</string>
+        <string>#ae5158</string>
         <key>fontStyle</key>
         <string>bold</string>
       </dict>
@@ -628,7 +628,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#926e25</string>
+        <string>#89661b</string>
         <key>fontStyle</key>
         <string></string>
       </dict>
@@ -667,7 +667,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#926e25</string>
+        <string>#89661b</string>
         <key>fontStyle</key>
         <string></string>
       </dict>
@@ -680,7 +680,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#43505c</string>
+        <string>#616f7c</string>
         <key>fontStyle</key>
         <string></string>
       </dict>
@@ -693,7 +693,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#43505c</string>
+        <string>#616f7c</string>
         <key>fontStyle</key>
         <string></string>
       </dict>

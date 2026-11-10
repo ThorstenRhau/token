@@ -43,7 +43,7 @@
     <style name="def:preprocessor" foreground="#E7CDFF" bold="true"/>
     <style name="def:error" foreground="#E3888C" bold="true"/>
     <style name="def:warning" foreground="#C5A15A"/>
-    <style name="def:note" foreground="#51B8AA" bold="true"/>
+    <style name="def:note" foreground="#53B4CE" bold="true"/>
     <style name="def:net-address" foreground="#5CC1B3" underline="single"/>
     <style name="def:heading" foreground="#5CC1B3" bold="true"/>
     <style name="def:heading0" foreground="#5CC1B3" bold="true"/>
@@ -64,11 +64,11 @@
     <style name="def:inline-code" foreground="#5CC1B3"/>
     <style name="def:underlined" underline="single"/>
     <style name="def:deletion" foreground="#E3888C"/>
-    <style name="def:insertion" foreground="#5EC4B5"/>
-    <style name="diff:added-line" foreground="#5EC4B5"/>
+    <style name="def:insertion" foreground="#7FC291"/>
+    <style name="diff:added-line" foreground="#7FC291"/>
     <style name="diff:removed-line" foreground="#E3888C"/>
     <style name="diff:changed-line" foreground="#C5A15A"/>
-    <style name="diff:location" foreground="#51B8AA"/>
+    <style name="diff:location" foreground="#53B4CE"/>
     <style name="diff:diff-file" foreground="#5CC1B3" bold="true"/>
     <style name="diff:special-case" foreground="#C294E6"/>
 </style-scheme>

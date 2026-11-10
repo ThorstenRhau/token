@@ -1,8 +1,7 @@
 ---Melange semantic roles for Token Melange: warm colors for control flow, cool colors for data.
 ---@param p TokenPalette
----@param is_dark boolean
 ---@return table
-local function melange_roles(p, is_dark)
+local function melange_roles(p)
   return {
     syntax = {
       comment = { fg = p.comment },
@@ -14,6 +13,7 @@ local function melange_roles(p, is_dark)
       definition = { fg = p.accent },
       call = { fg = p.accent },
       control = { fg = p.olive },
+      exception = { fg = p.red },
       operator = { fg = p.orange },
       tag = { fg = p.accent },
       -- Cool: Melange's blue strings, magenta numbers and cyan types.
@@ -42,24 +42,7 @@ local function melange_roles(p, is_dark)
       inactive = p.fg3,
     },
     -- Token's default ANSI table, except that bright red takes Melange's coral.
-    terminal = {
-      [0] = is_dark and p.bg1 or p.fg0,
-      [1] = p.red,
-      [2] = p.green,
-      [3] = p.yellow,
-      [4] = p.blue,
-      [5] = p.purple,
-      [6] = p.cyan,
-      [7] = is_dark and p.fg1 or p.line_nr,
-      [8] = is_dark and p.fg3 or p.fg2,
-      [9] = p.orange,
-      [10] = p.bright_green,
-      [11] = p.bright_yellow,
-      [12] = p.bright_blue,
-      [13] = p.bright_purple,
-      [14] = p.bright_cyan,
-      [15] = is_dark and p.fg0 or p.bg3,
-    },
+    terminal = { [9] = p.orange },
   }
 end
 

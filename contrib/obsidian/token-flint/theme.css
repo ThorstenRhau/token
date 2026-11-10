@@ -21,8 +21,8 @@
   --color-yellow-rgb: 197, 161, 90;
   --color-green: #a9b98c;
   --color-green-rgb: 169, 185, 140;
-  --color-cyan: #98bbd4;
-  --color-cyan-rgb: 152, 187, 212;
+  --color-cyan: #81c2c2;
+  --color-cyan-rgb: 129, 194, 194;
   --color-blue: #88acc4;
   --color-blue-rgb: 136, 172, 196;
   --color-purple: #e09478;
@@ -99,20 +99,20 @@
   --color-base-30: #d9dee3;
   --color-base-35: #818c94;
   --color-base-40: #9ba4ac;
-  --color-base-50: #444e59;
-  --color-base-60: #414c57;
+  --color-base-50: #636d79;
+  --color-base-60: #5a6571;
   --color-base-70: #46515d;
   --color-base-100: #283039;
   --color-red: #bf3f50;
   --color-red-rgb: 191, 63, 80;
   --color-orange: #6b4600;
   --color-orange-rgb: 107, 70, 0;
-  --color-yellow: #996914;
-  --color-yellow-rgb: 153, 105, 20;
+  --color-yellow: #916103;
+  --color-yellow-rgb: 145, 97, 3;
   --color-green: #3d5902;
   --color-green-rgb: 61, 89, 2;
-  --color-cyan: #09567b;
-  --color-cyan-rgb: 9, 86, 123;
+  --color-cyan: #01575b;
+  --color-cyan-rgb: 1, 87, 91;
   --color-blue: #035378;
   --color-blue-rgb: 3, 83, 120;
   --color-purple: #852500;
@@ -131,7 +131,7 @@
   --background-modifier-hover: #ebeff2;
   --background-modifier-active-hover: #e0e5ea;
   --background-modifier-border: #e0e5ea;
-  --background-modifier-border-hover: #444e59;
+  --background-modifier-border-hover: #636d79;
   --background-modifier-border-focus: var(--interactive-accent);
   --background-modifier-form-field: #eef1f3;
 
@@ -139,14 +139,14 @@
   --interactive-hover: #e0e5ea;
 
   --text-normal: #283039;
-  --text-muted: #414c57;
-  --text-faint: #444e59;
+  --text-muted: #5a6571;
+  --text-faint: #636d79;
   --text-on-accent: #f5f7f8;
   --text-on-accent-inverted: #f5f7f8;
   --text-success: #3d5902;
-  --text-warning: #996914;
+  --text-warning: #916103;
   --text-error: #bf3f50;
-  --text-selection: #dce2e7;
+  --text-selection: #d1d6db;
   --text-highlight-bg: #e9ddbe;
   --caret-color: #902a03;
 

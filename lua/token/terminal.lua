@@ -5,11 +5,7 @@ local M = {}
 ---@param colorscheme? string
 ---@return table<integer,string> colors 0..15 ANSI terminal colors
 function M.colors(p, is_dark, colorscheme)
-  local roles = colorscheme and require('token.appearance').roles(colorscheme, p, is_dark) or nil
-  if roles and roles.terminal then
-    return roles.terminal
-  end
-  return {
+  local colors = {
     [0] = is_dark and p.bg1 or p.fg0,
     [1] = p.red,
     [2] = p.green,
@@ -27,6 +23,12 @@ function M.colors(p, is_dark, colorscheme)
     [14] = p.bright_cyan,
     [15] = is_dark and p.fg0 or p.bg3,
   }
+  -- An appearance's role profile replaces only the slots it names.
+  local roles = colorscheme and require('token.appearance').roles(colorscheme, p, is_dark) or nil
+  for index, color in pairs(roles and roles.terminal or {}) do
+    colors[index] = color
+  end
+  return colors
 end
 
 ---@param p TokenPalette
