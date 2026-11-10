@@ -15,11 +15,11 @@ Servers send `readonly` with different meanings. pyrefly 1.4.1 sends it only
 for uppercase and `Final` names. emmylua_ls 0.25.1 sends it for every local
 and parameter that is never reassigned. Measured on 2026-11-09:
 
-| File | Readonly share of variables and parameters |
-| --- | --- |
-| `lua/token/theme.lua` | 69% (152 of 221) |
-| `scripts/gen_contrib.lua` | 94% (2400 of 2558) |
-| Python sample | 3 of 13, all constants |
+| File                      | Readonly share of variables and parameters |
+| ------------------------- | ------------------------------------------ |
+| `lua/token/theme.lua`     | 69% (152 of 221)                           |
+| `scripts/gen_contrib.lua` | 94% (2400 of 2558)                         |
+| Python sample             | 3 of 13, all constants                     |
 
 With emmylua_ls attached, most Lua names took the literal color.
 

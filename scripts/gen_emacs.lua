@@ -35,6 +35,8 @@ local EMACS_LET_KEYS = {
   'cyan',
   'orange',
   'olive',
+  'property',
+  'faded',
   'bright_green',
   'bright_blue',
   'bright_purple',
@@ -196,8 +198,8 @@ local EMACS_FACES = {
   { 'font-lock-bracket-face', fg = 'comment' },
   { 'font-lock-punctuation-face', fg = 'comment' },
   { 'font-lock-misc-punctuation-face', fg = 'comment' },
-  { 'font-lock-property-name-face', fg = 'fg0' },
-  { 'font-lock-property-use-face', fg = 'fg0' },
+  { 'font-lock-property-name-face', fg = 'property' },
+  { 'font-lock-property-use-face', fg = 'property' },
   -- bash-ts-mode marks commands in `$(...)` and heredocs with these faces;
   -- their built-in defaults are salmon and bold yellow.
   { 'sh-quoted-exec', inherit = 'default' },
@@ -368,7 +370,7 @@ local EMACS_FACES = {
   { 'eglot-inlay-hint-face', fg = 'fg3', bg = 'bg4', italic = true },
   { 'eglot-parameter-hint-face', fg = 'fg3', bg = 'bg4', italic = true },
   { 'eglot-type-hint-face', fg = 'blue', bg = 'bg4', italic = true },
-  { 'eglot-diagnostic-tag-unnecessary-face', fg = 'fg3' },
+  { 'eglot-diagnostic-tag-unnecessary-face', fg = 'faded' },
   { 'eglot-diagnostic-tag-deprecated-face', fg = 'fg2', strike = true },
   -- Eglot semantic tokens (on by default since Emacs 31) follow Neovim's
   -- `@lsp.type.*` links. Eglot applies modifier faces above the type face,

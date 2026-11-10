@@ -45,6 +45,12 @@
       "font_style": ""
     },
     {
+      "name": "Word operator",
+      "scope": "keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new",
+      "foreground": "#AFB6BC",
+      "font_style": "bold"
+    },
+    {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "foreground": "#EB9E83",
@@ -67,6 +73,12 @@
       "scope": "string, punctuation.definition.string",
       "foreground": "#A9B98C",
       "font_style": ""
+    },
+    {
+      "name": "Docstring",
+      "scope": "string.quoted.docstring, string.quoted.docstring punctuation.definition.string",
+      "foreground": "#9AA4AE",
+      "font_style": "italic"
     },
     {
       "name": "Literal",
@@ -155,7 +167,7 @@
     {
       "name": "Property",
       "scope": "variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key",
-      "foreground": "#C3C8CC",
+      "foreground": "#C59AB2",
       "font_style": ""
     },
     {

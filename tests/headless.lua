@@ -446,7 +446,7 @@ local function expected_semantic_colors(appearance, palette, variant)
     call = palette.accent,
     type = palette.blue,
     builtin = palette.accent,
-    property = palette.fg0,
+    property = palette.property,
     string = palette.green,
     literal = palette.purple,
     number = palette.orange,
@@ -477,8 +477,10 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
     local readonly_exceptions = {
       ['parameter.readonly'] = profile and profile.syntax.parameter.fg or palette.fg1,
-      ['variable.readonly:lua'] = profile and profile.syntax.variable.fg or palette.fg0,
     }
+    for _, language in ipairs({ 'lua', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' }) do
+      readonly_exceptions['variable.readonly:' .. language] = profile and profile.syntax.variable.fg or palette.fg0
+    end
     for name, color in pairs(readonly_exceptions) do
       local semantic = theme.semanticTokenColors[name]
       local label = 'VS Code ' .. name .. ' for ' .. appearance.name .. ' ' .. variant
@@ -1387,6 +1389,8 @@ local foreground_keys = {
   'cyan',
   'orange',
   'olive',
+  'property',
+  'faded',
   'bright_green',
   'bright_blue',
   'indent',
@@ -1517,6 +1521,8 @@ local palette_anchors = {
       cyan = '#cf9c70',
       orange = '#bb97ab',
       olive = '#d9a86e',
+      property = '#bb97ab',
+      faded = '#8a8279',
     },
     light = {
       fg0 = '#28323a',
@@ -1531,6 +1537,8 @@ local palette_anchors = {
       purple = '#832882',
       orange = '#725264',
       olive = '#843900',
+      property = '#725264',
+      faded = '#827b72',
     },
   },
 }
@@ -1543,7 +1551,7 @@ for _, background in ipairs({ 'dark', 'light' }) do
   for name, loader in pairs(palette_loaders) do
     local palette = require(loader)(background)
     equal(sorted_keys(palette), sorted_keys(classic), name .. ' palette keys for ' .. background)
-    equal(vim.tbl_count(palette), 52, name .. ' palette key count for ' .. background)
+    equal(vim.tbl_count(palette), 54, name .. ' palette key count for ' .. background)
     for key, color in pairs(palette) do
       truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid ' .. name .. ' color ' .. key .. ' for ' .. background)
     end
@@ -1991,12 +1999,28 @@ local provider_links = {
   ['@lsp.type.localTime.toml'] = '@string.special',
   ['@lsp.typemod.variable.readonly.lua'] = '@variable',
 }
--- Modifier links that apply to every filetype.
+-- Modifier links, for every filetype unless the name carries one.
 local modifier_links = {
   ['@lsp.typemod.parameter.selfParameter'] = '@variable.parameter.builtin',
   ['@lsp.typemod.function.defaultLibrary'] = '@function.builtin',
+  ['@lsp.typemod.method.defaultLibrary'] = '@function.builtin',
   ['@lsp.typemod.class.defaultLibrary'] = '@type.builtin',
+  ['@lsp.typemod.struct.defaultLibrary'] = '@type.builtin',
+  ['@lsp.typemod.interface.defaultLibrary'] = '@type.builtin',
+  ['@lsp.typemod.type.defaultLibrary'] = '@type.builtin',
+  ['@lsp.typemod.enum.defaultLibrary'] = '@type.builtin',
+  ['@lsp.typemod.enumMember.defaultLibrary'] = '@constant.builtin',
+  ['@lsp.typemod.variable.defaultLibrary'] = '@variable.builtin',
+  ['@lsp.typemod.variable.defaultLibrary.go'] = '@constant.builtin',
+  ['@lsp.type.formatSpecifier'] = '@string.escape',
   ['@lsp.typemod.parameter.readonly'] = '@variable.parameter',
+  ['@lsp.typemod.property.readonly'] = '@property',
+  ['@lsp.typemod.variable.readonly.javascript'] = '@variable',
+  ['@lsp.typemod.variable.readonly.javascriptreact'] = '@variable',
+  ['@lsp.typemod.variable.readonly.typescript'] = '@variable',
+  ['@lsp.typemod.variable.readonly.typescriptreact'] = '@variable',
+  ['@lsp.typemod.keyword.readonly.lua'] = '@constant.builtin',
+  ['@lsp.typemod.keyword.operator.logical'] = '@keyword.operator',
 }
 local provider_styles = {
   ['@variable'] = { italic = true },
@@ -2869,9 +2893,18 @@ for _, appearance in ipairs(appearances) do
     for _, group in ipairs({ '@function', '@function.call', '@string', '@number', '@constant', '@type' }) do
       truthy(ratio(group) <= ratio('@keyword') + 0.1, group .. ' does not outrank keywords for ' .. label)
     end
-    if appearance.name == 'token-meridian' then
-      truthy(ratio('@property') < ratio('@function'), 'Meridian properties sit below functions for ' .. background)
-    end
+    truthy(ratio('@property') < ratio('@function'), 'properties sit below functions for ' .. label)
+    truthy(hl('@property').fg ~= hl('@variable').fg, 'properties differ from variables for ' .. label)
+    equal(hl('@variable.member').fg, hl('@property').fg, 'members match properties for ' .. label)
+    -- Unused code fades below comments in both variants and stays above 3:1.
+    truthy(ratio('DiagnosticUnnecessary') < ratio('@comment') - 0.5, 'unused code sits below comments for ' .. label)
+    truthy(ratio('DiagnosticUnnecessary') >= 3, 'unused code stays readable for ' .. label)
+    -- Word operators take the operator color and the keyword weight.
+    equal(hl('@keyword.operator').fg, hl('@operator').fg, 'word operators use the operator color for ' .. label)
+    equal(hl('@keyword.operator').bold, true, 'word operators stay bold for ' .. label)
+    -- Docstrings read as comments, and Lua table braces as punctuation.
+    equal(hl('@string.documentation'), hl('@comment'), 'docstrings match comments for ' .. label)
+    equal(hl('@constructor.lua'), hl('@punctuation.bracket'), 'Lua table braces match brackets for ' .. label)
   end
 end
 

@@ -45,6 +45,12 @@
       "font_style": ""
     },
     {
+      "name": "Word operator",
+      "scope": "keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new",
+      "foreground": "#46535f",
+      "font_style": "bold"
+    },
+    {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "foreground": "#832882",
@@ -67,6 +73,12 @@
       "scope": "string, punctuation.definition.string",
       "foreground": "#005f2f",
       "font_style": ""
+    },
+    {
+      "name": "Docstring",
+      "scope": "string.quoted.docstring, string.quoted.docstring punctuation.definition.string",
+      "foreground": "#6c645b",
+      "font_style": "italic"
     },
     {
       "name": "Number",

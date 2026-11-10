@@ -28,7 +28,7 @@ matching appearance palette, so everything stays consistent without extra work.
 Copper definitions, ochre control flow, teal literals, and shared semantic
 typography.
 
-| Dark                                                                                                | Light                                                                                                  |
+|                                                Dark                                                 |                                                 Light                                                  |
 | :-------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
 | [![Token Ultra dark](https://rhau.se/token-ultra-dark.webp)](https://rhau.se/token-ultra-dark.webp) | [![Token Ultra light](https://rhau.se/token-ultra-light.webp)](https://rhau.se/token-ultra-light.webp) |
 
@@ -39,7 +39,7 @@ surfaces, with Token Ultra's red and yellow for errors and warnings so they
 stay distinct from info and hint. Palette and token-role inspiration:
 [Circadia 2.0](https://github.com/tanmaymanojgandhi/circadia).
 
-| Dark                                                                                                         | Light                                                                                                           |
+|                                                     Dark                                                     |                                                      Light                                                      |
 | :----------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
 | [![Token Meridian dark](https://rhau.se/token-meridian-dark.webp)](https://rhau.se/token-meridian-dark.webp) | [![Token Meridian light](https://rhau.se/token-meridian-light.webp)](https://rhau.se/token-meridian-light.webp) |
 
@@ -47,7 +47,7 @@ stay distinct from info and hint. Palette and token-role inspiration:
 
 A warm, muted palette with earthy accents and the shared Token semantic typography.
 
-| Dark                                                                              | Light                                                                                |
+|                                       Dark                                        |                                        Light                                         |
 | :-------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
 | [![Token dark](https://rhau.se/token-dark.webp)](https://rhau.se/token-dark.webp) | [![Token light](https://rhau.se/token-light.webp)](https://rhau.se/token-light.webp) |
 
@@ -56,7 +56,7 @@ A warm, muted palette with earthy accents and the shared Token semantic typograp
 A restrained cool-gray foundation with softly desaturated rust, gold, blue, and
 green under the shared Token semantic typography.
 
-| Dark                                                                                                | Light                                                                                                  |
+|                                                Dark                                                 |                                                 Light                                                  |
 | :-------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
 | [![Token Flint dark](https://rhau.se/token-flint-dark.webp)](https://rhau.se/token-flint-dark.webp) | [![Token Flint light](https://rhau.se/token-flint-light.webp)](https://rhau.se/token-flint-light.webp) |
 
@@ -65,7 +65,7 @@ green under the shared Token semantic typography.
 A cool-gray foundation reduced to a focused teal-and-purple syntax grammar and
 the shared Token semantic typography.
 
-| Dark                                                                                                   | Light                                                                                                     |
+|                                                  Dark                                                  |                                                   Light                                                   |
 | :----------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: |
 | [![Token Temper dark](https://rhau.se/token-temper-dark.webp)](https://rhau.se/token-temper-dark.webp) | [![Token Temper light](https://rhau.se/token-temper-light.webp)](https://rhau.se/token-temper-light.webp) |
 
@@ -328,34 +328,34 @@ Herdr also uses these tokens for secondary UI details and accent highlights.
 This adjustment is confined to Herdr; canonical palettes and other exports retain
 their original colors.
 
-| Tool | Files | Usage |
-| --- | --- | --- |
-| [Apple Terminal](https://support.apple.com/guide/terminal/) | `contrib/apple-terminal/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.terminal` | Open the file to import it, then pick the profile in Settings > Profiles |
-| [bat](https://github.com/sharkdp/bat) | `contrib/bat/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.tmTheme` | Copy to the bat themes directory, then run `bat cache --build` |
-| [Blink Shell](https://blink.sh/) | `contrib/blink/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.js` | Paste the selected raw file URL in Appearance > Themes > New Theme |
-| [Carapace](https://carapace-sh.github.io/carapace-bin/) | `contrib/carapace/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.json` | Merge the selected `carapace` object into `styles.json` |
-| [ChatGPT desktop](https://chatgpt.com/download/) | `contrib/chatgpt/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.txt` | Import the share string for the matching variant |
-| [delta](https://github.com/dandavison/delta) | `contrib/delta/{token,token-flint,token-temper,token-ultra,token-meridian}.gitconfig` | Install the matching bat theme first (delta reads its syntax theme from bat's cache), then include one file and select its named dark or light feature |
-| [Emacs](https://www.gnu.org/software/emacs/) | `contrib/emacs/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}-theme.el` | Copy to the themes directory and load the selected theme name |
-| [fish](https://fishshell.com/) | `contrib/fish/{token,token-flint,token-temper,token-ultra,token-meridian}.theme` | Copy to the fish themes directory and choose the matching appearance |
-| [fzf](https://github.com/junegunn/fzf) | `contrib/fzf/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.{fish,zsh}` | Source the matching shell file |
-| [Ghostty](https://ghostty.org/) | `contrib/ghostty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}` | Copy to the Ghostty themes directory and select the matching pair |
-| [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview) | `contrib/gtksourceview/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.xml` | Copy to the GtkSourceView styles directory and select the scheme |
-| [Herdr](https://herdr.dev/) | `contrib/herdr/{token,token-flint,token-temper,token-ultra,token-meridian}.toml` | With Herdr 0.9.0+, replace existing theme tables in `config.toml` with the selected fragment, run `herdr config check`, then `herdr server reload-config` |
-| [Hermes Agent](https://hermes-agent.nousresearch.com/docs/user-guide/features/skins) | `contrib/hermes/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yaml` | Copy to the Hermes skins directory and select with `/skin` (see below) |
-| [iTerm2](https://iterm2.com/) | `contrib/iterm2/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.itermcolors` | Import from Profiles > Colors > Color Presets |
-| [kitty](https://sw.kovidgoyal.net/kitty/) | `contrib/kitty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf` | Include the selected file in `kitty.conf` |
-| [lazygit](https://github.com/jesseduffield/lazygit) | `contrib/lazygit/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yml` | Merge the selected file into `config.yml` |
-| [Obsidian](https://obsidian.md/) | `contrib/obsidian/`, `contrib/obsidian/{token-flint,token-temper,token-ultra,token-meridian}/` | Install the selected appearance directory |
-| [Pi](https://pi.dev/) | `contrib/pi/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.json` | Copy the selected file to `~/.pi/agent/themes/`, then select its name in `/settings` |
-| [ripgrep](https://github.com/BurntSushi/ripgrep) | `contrib/ripgrep/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.ripgreprc` | Point `RIPGREP_CONFIG_PATH` at the selected file |
-| [Starship](https://starship.rs/) | `contrib/starship/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.toml` | Append the file and set `palette` to its name, such as `token-dark` |
-| [Sublime Text](https://www.sublimetext.com/) | `contrib/sublime/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/` and select the scheme |
-| [tmux](https://github.com/tmux/tmux) | `contrib/tmux/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf` | Source the selected file from `tmux.conf` |
-| [VS Code](https://code.visualstudio.com/) | `contrib/vscode/` | Run `scripts/install_vscode_theme.sh`, then select any Token appearance |
-| [Windows Terminal](https://github.com/microsoft/terminal) | `contrib/windows-terminal/{token,token-flint,token-temper,token-ultra,token-meridian}.json` | Copy the selected schemes into settings or fragments |
-| [Xcode](https://developer.apple.com/xcode/) | `contrib/xcode/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.xccolortheme` | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/` and select the visible name |
-| [Zsh](https://www.zsh.org/) | `contrib/zsh/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.zsh` | Source the selected file from `.zshrc` |
+| Tool                                                                                 | Files                                                                                                           | Usage                                                                                                                                                     |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Apple Terminal](https://support.apple.com/guide/terminal/)                          | `contrib/apple-terminal/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.terminal`      | Open the file to import it, then pick the profile in Settings > Profiles                                                                                  |
+| [bat](https://github.com/sharkdp/bat)                                                | `contrib/bat/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.tmTheme`                  | Copy to the bat themes directory, then run `bat cache --build`                                                                                            |
+| [Blink Shell](https://blink.sh/)                                                     | `contrib/blink/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.js`                     | Paste the selected raw file URL in Appearance > Themes > New Theme                                                                                        |
+| [Carapace](https://carapace-sh.github.io/carapace-bin/)                              | `contrib/carapace/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.json`                | Merge the selected `carapace` object into `styles.json`                                                                                                   |
+| [ChatGPT desktop](https://chatgpt.com/download/)                                     | `contrib/chatgpt/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.txt`                  | Import the share string for the matching variant                                                                                                          |
+| [delta](https://github.com/dandavison/delta)                                         | `contrib/delta/{token,token-flint,token-temper,token-ultra,token-meridian}.gitconfig`                           | Install the matching bat theme first (delta reads its syntax theme from bat's cache), then include one file and select its named dark or light feature    |
+| [Emacs](https://www.gnu.org/software/emacs/)                                         | `contrib/emacs/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}-theme.el`               | Copy to the themes directory and load the selected theme name                                                                                             |
+| [fish](https://fishshell.com/)                                                       | `contrib/fish/{token,token-flint,token-temper,token-ultra,token-meridian}.theme`                                | Copy to the fish themes directory and choose the matching appearance                                                                                      |
+| [fzf](https://github.com/junegunn/fzf)                                               | `contrib/fzf/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.{fish,zsh}`               | Source the matching shell file                                                                                                                            |
+| [Ghostty](https://ghostty.org/)                                                      | `contrib/ghostty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}`                      | Copy to the Ghostty themes directory and select the matching pair                                                                                         |
+| [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview)                        | `contrib/gtksourceview/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.xml`            | Copy to the GtkSourceView styles directory and select the scheme                                                                                          |
+| [Herdr](https://herdr.dev/)                                                          | `contrib/herdr/{token,token-flint,token-temper,token-ultra,token-meridian}.toml`                                | With Herdr 0.9.0+, replace existing theme tables in `config.toml` with the selected fragment, run `herdr config check`, then `herdr server reload-config` |
+| [Hermes Agent](https://hermes-agent.nousresearch.com/docs/user-guide/features/skins) | `contrib/hermes/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yaml`                  | Copy to the Hermes skins directory and select with `/skin` (see below)                                                                                    |
+| [iTerm2](https://iterm2.com/)                                                        | `contrib/iterm2/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.itermcolors`           | Import from Profiles > Colors > Color Presets                                                                                                             |
+| [kitty](https://sw.kovidgoyal.net/kitty/)                                            | `contrib/kitty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf`                   | Include the selected file in `kitty.conf`                                                                                                                 |
+| [lazygit](https://github.com/jesseduffield/lazygit)                                  | `contrib/lazygit/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yml`                  | Merge the selected file into `config.yml`                                                                                                                 |
+| [Obsidian](https://obsidian.md/)                                                     | `contrib/obsidian/`, `contrib/obsidian/{token-flint,token-temper,token-ultra,token-meridian}/`                  | Install the selected appearance directory                                                                                                                 |
+| [Pi](https://pi.dev/)                                                                | `contrib/pi/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.json`                      | Copy the selected file to `~/.pi/agent/themes/`, then select its name in `/settings`                                                                      |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                                     | `contrib/ripgrep/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.ripgreprc`            | Point `RIPGREP_CONFIG_PATH` at the selected file                                                                                                          |
+| [Starship](https://starship.rs/)                                                     | `contrib/starship/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.toml`                | Append the file and set `palette` to its name, such as `token-dark`                                                                                       |
+| [Sublime Text](https://www.sublimetext.com/)                                         | `contrib/sublime/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/` and select the scheme                                                                                                            |
+| [tmux](https://github.com/tmux/tmux)                                                 | `contrib/tmux/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf`                    | Source the selected file from `tmux.conf`                                                                                                                 |
+| [VS Code](https://code.visualstudio.com/)                                            | `contrib/vscode/`                                                                                               | Run `scripts/install_vscode_theme.sh`, then select any Token appearance                                                                                   |
+| [Windows Terminal](https://github.com/microsoft/terminal)                            | `contrib/windows-terminal/{token,token-flint,token-temper,token-ultra,token-meridian}.json`                     | Copy the selected schemes into settings or fragments                                                                                                      |
+| [Xcode](https://developer.apple.com/xcode/)                                          | `contrib/xcode/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.xccolortheme`           | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/` and select the visible name                                                              |
+| [Zsh](https://www.zsh.org/)                                                          | `contrib/zsh/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.zsh`                      | Source the selected file from `.zshrc`                                                                                                                    |
 
 The recommended classic Token Obsidian accent, `#bc6a49`, is deliberately a
 compromise between its light and dark accents. Keeping one user-level accent

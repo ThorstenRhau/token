@@ -51,7 +51,7 @@ local function treesitter(p)
     ['@variable.builtin'] = { fg = p.purple },
     ['@variable.parameter'] = { fg = p.fg1 },
     ['@variable.parameter.builtin'] = { fg = p.purple },
-    ['@variable.member'] = { fg = p.fg0 },
+    ['@variable.member'] = { fg = p.property },
 
     -- Constants
     ['@constant'] = { link = 'Constant' },
@@ -65,7 +65,8 @@ local function treesitter(p)
 
     -- Strings
     ['@string'] = { link = 'String' },
-    ['@string.documentation'] = { fg = p.green, italic = true },
+    -- Docstrings are prose, so they read as comments.
+    ['@string.documentation'] = { fg = p.comment, italic = true },
     ['@string.regexp'] = { fg = p.purple },
     ['@string.escape'] = { fg = p.purple },
     ['@string.special'] = { link = 'SpecialChar' },
@@ -88,7 +89,7 @@ local function treesitter(p)
     -- Attributes / decorators
     ['@attribute'] = { fg = p.purple },
     ['@attribute.builtin'] = { fg = p.purple },
-    ['@property'] = { fg = p.fg0 },
+    ['@property'] = { fg = p.property },
 
     -- Functions
     ['@function'] = { link = 'Function' },
@@ -100,6 +101,8 @@ local function treesitter(p)
 
     -- Constructors
     ['@constructor'] = { fg = p.blue },
+    -- Lua's query captures the braces of every table literal as a constructor.
+    ['@constructor.lua'] = { link = '@punctuation.bracket' },
 
     -- Operators / punctuation
     ['@operator'] = { link = 'Operator' },
@@ -120,7 +123,9 @@ local function treesitter(p)
     ['@keyword'] = { link = 'Keyword' },
     ['@keyword.coroutine'] = { fg = p.accent2 },
     ['@keyword.function'] = { fg = p.accent2 },
-    ['@keyword.operator'] = { fg = p.accent2 },
+    -- Word operators such as `and` and `not` keep the operator color and the
+    -- keyword weight, so they stay below `if` and `return` inside a condition.
+    ['@keyword.operator'] = { fg = p.fg1 },
     ['@keyword.import'] = { link = 'Include' },
     ['@keyword.type'] = { fg = p.accent2 },
     ['@keyword.modifier'] = { fg = p.accent2 },

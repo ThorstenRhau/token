@@ -26,6 +26,7 @@
 ---@field cyan string Cyan semantic hue used by hints and auxiliary information.
 ---@field orange string Semantic slot used by numeric and boolean literals; its hue varies by appearance.
 ---@field olive string Warm olive hue used by the current line number and tertiary headings.
+---@field property string Muted mauve used by object members, properties, and data keys; sits one step above `comment`.
 -- Bright terminal variants
 ---@field bright_green string Bright ANSI green used for terminal color 10.
 ---@field bright_blue string Bright ANSI blue used for terminal color 12.
@@ -53,6 +54,7 @@
 ---@field indent_active string Foreground for active indentation scopes.
 ---@field whitespace string Foreground for listchars markers such as tabs, trailing spaces, and nbsp; one step above `indent`.
 ---@field line_nr string Foreground for ordinary line numbers.
+---@field faded string Foreground for code a diagnostic marks as unused; one step below `comment` in dark and light.
 -- Git signs
 ---@field gsign_add string Foreground for unstaged added-line signs.
 ---@field gsign_change string Foreground for unstaged changed-line signs.
@@ -97,6 +99,7 @@ local function palette(background)
       cyan = '#185b5b',
       orange = '#1d5f5e',
       olive = '#465509',
+      property = '#794f5f',
       -- Bright variants
       bright_green = '#274b24',
       bright_blue = '#335471',
@@ -124,6 +127,7 @@ local function palette(background)
       indent_active = '#a8a49c',
       whitespace = '#c4c0ba',
       line_nr = '#8e8c86',
+      faded = '#807b74',
       -- Git sign column
       gsign_add = '#23831e',
       gsign_change = '#9d6600',
@@ -163,6 +167,7 @@ local function palette(background)
     cyan = '#7dbbba',
     orange = '#70aead',
     olive = '#a9b76c',
+    property = '#c293a4',
     -- Bright variants
     bright_green = '#a0c89d',
     bright_blue = '#8fb1cb',
@@ -190,6 +195,7 @@ local function palette(background)
     indent_active = '#626260',
     whitespace = '#4a4a48',
     line_nr = '#6b6b69',
+    faded = '#86827c',
     -- Git sign column
     gsign_add = '#7ca379',
     gsign_change = '#c3a753',

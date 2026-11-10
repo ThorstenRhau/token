@@ -38,13 +38,36 @@ local function lsp(_p)
 
     -- Built-ins keep their Treesitter colors once a server attaches.
     ['@lsp.typemod.function.defaultLibrary'] = { link = '@function.builtin' },
+    ['@lsp.typemod.method.defaultLibrary'] = { link = '@function.builtin' },
     ['@lsp.typemod.class.defaultLibrary'] = { link = '@type.builtin' },
+    ['@lsp.typemod.struct.defaultLibrary'] = { link = '@type.builtin' },
+    ['@lsp.typemod.interface.defaultLibrary'] = { link = '@type.builtin' },
+    ['@lsp.typemod.type.defaultLibrary'] = { link = '@type.builtin' },
+    ['@lsp.typemod.enum.defaultLibrary'] = { link = '@type.builtin' },
+    ['@lsp.typemod.enumMember.defaultLibrary'] = { link = '@constant.builtin' },
+    ['@lsp.typemod.variable.defaultLibrary'] = { link = '@variable.builtin' },
+    -- gopls sends `nil`, `true`, `false` and `iota` as library variables.
+    ['@lsp.typemod.variable.defaultLibrary.go'] = { link = '@constant.builtin' },
 
-    -- Some servers, such as emmylua_ls, mark every name that is never
-    -- reassigned as readonly. Parameters are never constants, and Lua
-    -- locals would otherwise mostly render in the constant color.
+    -- rust-analyzer marks the placeholders inside format strings.
+    ['@lsp.type.formatSpecifier'] = { link = '@string.escape' },
+
+    -- Some servers, such as emmylua_ls and vtsls, mark every name that is
+    -- never reassigned as readonly. Parameters are never constants, a
+    -- readonly field is still a field, and Lua locals and TypeScript `const`
+    -- bindings would otherwise mostly render in the constant color.
     ['@lsp.typemod.parameter.readonly'] = { link = '@variable.parameter' },
+    ['@lsp.typemod.property.readonly'] = { link = '@property' },
     ['@lsp.typemod.variable.readonly.lua'] = { link = '@variable' },
+    ['@lsp.typemod.variable.readonly.javascript'] = { link = '@variable' },
+    ['@lsp.typemod.variable.readonly.javascriptreact'] = { link = '@variable' },
+    ['@lsp.typemod.variable.readonly.typescript'] = { link = '@variable' },
+    ['@lsp.typemod.variable.readonly.typescriptreact'] = { link = '@variable' },
+
+    -- emmylua_ls sends `nil`, `true` and `false` as readonly keywords and
+    -- `and`, `or` and `not` as keywords with an `operator.logical` modifier.
+    ['@lsp.typemod.keyword.readonly.lua'] = { link = '@constant.builtin' },
+    ['@lsp.typemod.keyword.operator.logical'] = { link = '@keyword.operator' },
 
     -- Tombi TOML extensions
     ['@lsp.type.table.toml'] = { link = '@property' },

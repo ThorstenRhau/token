@@ -124,6 +124,14 @@
       }
     },
     {
+      "name": "Word operator",
+      "scope": "keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new",
+      "settings": {
+        "foreground": "#46515D",
+        "fontStyle": "bold"
+      }
+    },
+    {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "settings": {
@@ -153,6 +161,14 @@
       "settings": {
         "foreground": "#3D5902",
         "fontStyle": ""
+      }
+    },
+    {
+      "name": "Docstring",
+      "scope": "string.quoted.docstring, string.quoted.docstring punctuation.definition.string",
+      "settings": {
+        "foreground": "#5A6571",
+        "fontStyle": "italic"
       }
     },
     {
@@ -271,7 +287,7 @@
       "name": "Property",
       "scope": "variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key",
       "settings": {
-        "foreground": "#283039",
+        "foreground": "#7C4C5F",
         "fontStyle": ""
       }
     },
@@ -574,7 +590,7 @@
       "underline": false
     },
     "property.readonly": {
-      "foreground": "#3D5902",
+      "foreground": "#7C4C5F",
       "bold": false,
       "italic": false,
       "underline": false
@@ -601,6 +617,30 @@
       "underline": false
     },
     "variable.readonly:lua": {
+      "foreground": "#283039",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascript": {
+      "foreground": "#283039",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascriptreact": {
+      "foreground": "#283039",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescript": {
+      "foreground": "#283039",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescriptreact": {
       "foreground": "#283039",
       "bold": false,
       "italic": false,

@@ -7,6 +7,7 @@ local function flint_roles(p)
       comment = { fg = p.comment },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
+      property = { fg = p.property },
       definition = { fg = p.accent },
       call = { fg = p.accent },
       control = { fg = p.accent2 },

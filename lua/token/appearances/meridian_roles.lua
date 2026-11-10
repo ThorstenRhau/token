@@ -13,7 +13,7 @@ local function meridian_roles(p, is_dark)
       comment = { fg = p.comment },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
-      property = { fg = p.orange },
+      property = { fg = p.property },
       definition = { fg = p.purple },
       call = { fg = p.purple },
       control = { fg = p.blue },

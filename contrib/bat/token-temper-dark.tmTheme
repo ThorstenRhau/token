@@ -82,6 +82,19 @@
     </dict>
     <dict>
       <key>name</key>
+      <string>Word operator</string>
+      <key>scope</key>
+      <string>keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#AFB6BC</string>
+        <key>fontStyle</key>
+        <string>bold</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
       <string>Function definition</string>
       <key>scope</key>
       <string>entity.name.function, meta.function.definition entity.name</string>
@@ -130,6 +143,19 @@
         <string>#5CC1B3</string>
         <key>fontStyle</key>
         <string></string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Docstring</string>
+      <key>scope</key>
+      <string>string.quoted.docstring, string.quoted.docstring punctuation.definition.string</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#9AA4AE</string>
+        <key>fontStyle</key>
+        <string>italic</string>
       </dict>
     </dict>
     <dict>
@@ -322,7 +348,7 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#C3C8CC</string>
+        <string>#C59AB2</string>
         <key>fontStyle</key>
         <string></string>
       </dict>

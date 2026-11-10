@@ -31,7 +31,7 @@ local function diagnostics(p)
     DiagnosticFloatingOk = { link = 'DiagnosticOk' },
 
     DiagnosticDeprecated = { strikethrough = true },
-    DiagnosticUnnecessary = { fg = p.fg3 },
+    DiagnosticUnnecessary = { fg = p.faded },
 
     DiagnosticVirtualTextOk = { fg = p.green, bg = p.diff_add },
     DiagnosticSignOk = { link = 'DiagnosticOk' },

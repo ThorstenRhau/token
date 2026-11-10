@@ -124,6 +124,14 @@
       }
     },
     {
+      "name": "Word operator",
+      "scope": "keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new",
+      "settings": {
+        "foreground": "#AFB6BC",
+        "fontStyle": "bold"
+      }
+    },
+    {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "settings": {
@@ -153,6 +161,14 @@
       "settings": {
         "foreground": "#A9B98C",
         "fontStyle": ""
+      }
+    },
+    {
+      "name": "Docstring",
+      "scope": "string.quoted.docstring, string.quoted.docstring punctuation.definition.string",
+      "settings": {
+        "foreground": "#9AA4AE",
+        "fontStyle": "italic"
       }
     },
     {
@@ -271,7 +287,7 @@
       "name": "Property",
       "scope": "variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key",
       "settings": {
-        "foreground": "#C3C8CC",
+        "foreground": "#C59AB2",
         "fontStyle": ""
       }
     },
@@ -574,7 +590,7 @@
       "underline": false
     },
     "property.readonly": {
-      "foreground": "#A9B98C",
+      "foreground": "#C59AB2",
       "bold": false,
       "italic": false,
       "underline": false
@@ -601,6 +617,30 @@
       "underline": false
     },
     "variable.readonly:lua": {
+      "foreground": "#C3C8CC",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascript": {
+      "foreground": "#C3C8CC",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascriptreact": {
+      "foreground": "#C3C8CC",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescript": {
+      "foreground": "#C3C8CC",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescriptreact": {
       "foreground": "#C3C8CC",
       "bold": false,
       "italic": false,

@@ -9,8 +9,8 @@ authoritative by concern:
   compilation, plugin, and contrib contract.
 - [`AGENTS.md`](../AGENTS.md) defines repository-specific contributor rules,
   source-of-truth boundaries, validation, and commit conventions.
-- [`architecture.md`](architecture.md) describes the current implementation
-  and the relationships between its runtime and generated outputs.
+- [`architecture.md`](architecture.md) describes the current implementation and
+  the relationships between its runtime and generated outputs.
 - Code, tests, and deterministic checks named by those documents anchor claims
   about implemented behavior.
 
@@ -18,24 +18,27 @@ authoritative by concern:
 
 - [Architecture](architecture.md): appearance registration, runtime theme
   assembly, compiled caches, generated contrib themes, and validation coverage.
-- [LSP semantic tokens](lsp-semantic-tokens.md): how Neovim, VS Code and
-  Eglot apply semantic tokens, observed server conventions, current mappings,
-  and how to check a new server.
+- [LSP semantic tokens](lsp-semantic-tokens.md): how Neovim, VS Code and Eglot
+  apply semantic tokens, observed server conventions, current mappings, and how
+  to check a new server.
 
 ## Decision history
 
 - [ADR-0001](decisions/0001-lsp-readonly-modifier.md): keep `readonly` as
   constant, with parameter and Lua exceptions.
+- [ADR-0002](decisions/0002-lsp-readonly-typescript-and-properties.md):
+  extend the readonly exceptions to properties and TypeScript, and keep
+  `@lsp.type.variable` linked.
 
 Add a numbered record under `docs/decisions/` only for accepted, non-obvious
-rationale that cannot be represented as current architecture, a project rule,
-or an enforced invariant.
+rationale that cannot be represented as current architecture, a project rule, or
+an enforced invariant.
 
 ## Active work
 
 Active and proposed work belongs in the
-[GitHub issue tracker](https://github.com/ThorstenRhau/token/issues), not in this
-index or local TODO documents.
+[GitHub issue tracker](https://github.com/ThorstenRhau/token/issues), not in
+this index or local TODO documents.
 
 ## Release and operational evidence
 

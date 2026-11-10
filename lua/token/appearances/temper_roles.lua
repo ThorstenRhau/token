@@ -8,6 +8,7 @@ local function temper_roles(p)
       note = { fg = p.fg1 },
       variable = { fg = p.fg0 },
       parameter = { fg = p.fg1 },
+      property = { fg = p.property },
       definition = { fg = p.accent },
       call = { fg = p.accent },
       control = { fg = p.accent2 },

@@ -124,6 +124,14 @@
       }
     },
     {
+      "name": "Word operator",
+      "scope": "keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new",
+      "settings": {
+        "foreground": "#46535f",
+        "fontStyle": "bold"
+      }
+    },
+    {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "settings": {
@@ -153,6 +161,14 @@
       "settings": {
         "foreground": "#005f2f",
         "fontStyle": ""
+      }
+    },
+    {
+      "name": "Docstring",
+      "scope": "string.quoted.docstring, string.quoted.docstring punctuation.definition.string",
+      "settings": {
+        "foreground": "#6c645b",
+        "fontStyle": "italic"
       }
     },
     {
@@ -609,6 +625,30 @@
       "underline": false
     },
     "variable.readonly:lua": {
+      "foreground": "#28323a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascript": {
+      "foreground": "#28323a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascriptreact": {
+      "foreground": "#28323a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescript": {
+      "foreground": "#28323a",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescriptreact": {
       "foreground": "#28323a",
       "bold": false,
       "italic": false,

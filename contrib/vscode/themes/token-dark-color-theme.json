@@ -124,6 +124,14 @@
       }
     },
     {
+      "name": "Word operator",
+      "scope": "keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new",
+      "settings": {
+        "foreground": "#b3aea5",
+        "fontStyle": "bold"
+      }
+    },
+    {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "settings": {
@@ -153,6 +161,14 @@
       "settings": {
         "foreground": "#8fb78c",
         "fontStyle": ""
+      }
+    },
+    {
+      "name": "Docstring",
+      "scope": "string.quoted.docstring, string.quoted.docstring punctuation.definition.string",
+      "settings": {
+        "foreground": "#a19c94",
+        "fontStyle": "italic"
       }
     },
     {
@@ -319,7 +335,7 @@
       "name": "Property",
       "scope": "variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key",
       "settings": {
-        "foreground": "#c3c0b8",
+        "foreground": "#c293a4",
         "fontStyle": ""
       }
     },
@@ -622,7 +638,7 @@
       "underline": false
     },
     "property.readonly": {
-      "foreground": "#b195ca",
+      "foreground": "#c293a4",
       "bold": false,
       "italic": false,
       "underline": false
@@ -649,6 +665,30 @@
       "underline": false
     },
     "variable.readonly:lua": {
+      "foreground": "#c3c0b8",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascript": {
+      "foreground": "#c3c0b8",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:javascriptreact": {
+      "foreground": "#c3c0b8",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescript": {
+      "foreground": "#c3c0b8",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "variable.readonly:typescriptreact": {
       "foreground": "#c3c0b8",
       "bold": false,
       "italic": false,

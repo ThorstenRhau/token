@@ -45,6 +45,12 @@
       "font_style": ""
     },
     {
+      "name": "Word operator",
+      "scope": "keyword.operator.word, keyword.operator.logical.python, keyword.operator.expression, keyword.operator.new",
+      "foreground": "#565141",
+      "font_style": "bold"
+    },
+    {
       "name": "Function definition",
       "scope": "entity.name.function, meta.function.definition entity.name",
       "foreground": "#863716",
@@ -67,6 +73,12 @@
       "scope": "string, punctuation.definition.string",
       "foreground": "#365a33",
       "font_style": ""
+    },
+    {
+      "name": "Docstring",
+      "scope": "string.quoted.docstring, string.quoted.docstring punctuation.definition.string",
+      "foreground": "#6a655d",
+      "font_style": "italic"
     },
     {
       "name": "String escape",
@@ -191,7 +203,7 @@
     {
       "name": "Property",
       "scope": "variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key",
-      "foreground": "#323128",
+      "foreground": "#794f5f",
       "font_style": ""
     },
     {

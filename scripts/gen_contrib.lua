@@ -328,6 +328,19 @@ local declaration_keyword_scopes = table.concat({
   'storage.type.rust',
 }, ', ')
 
+-- Word operators keep the operator color and take the keyword weight, as
+-- `@keyword.operator` does in Neovim.
+local word_operator_scopes = table.concat({
+  'keyword.operator.word',
+  'keyword.operator.logical.python',
+  'keyword.operator.expression',
+  'keyword.operator.new',
+}, ', ')
+
+-- The second selector covers the quotes, which `punctuation.definition.string`
+-- would otherwise leave in the string color.
+local docstring_scopes = 'string.quoted.docstring, string.quoted.docstring punctuation.definition.string'
+
 local function textmate_scope_rules(p, appearance, variant)
   local profile = role_profile(p, variant, appearance)
   local headings = heading_colors(p, profile)
@@ -348,6 +361,7 @@ local function textmate_scope_rules(p, appearance, variant)
       },
       { 'Declaration keyword', declaration_keyword_scopes, r.control.fg, nil },
       { 'Operator', 'keyword.operator, storage.type.function.arrow', r.operator.fg, nil },
+      { 'Word operator', word_operator_scopes, r.operator.fg, nil },
       {
         'Function definition',
         'entity.name.function, meta.function.definition entity.name',
@@ -357,6 +371,7 @@ local function textmate_scope_rules(p, appearance, variant)
       { 'Function call', function_call_scopes, r.call.fg, nil },
       { 'Built-in function', 'support.function', r.builtin.fg, nil },
       { 'String', 'string, punctuation.definition.string', r.literal.fg, nil },
+      { 'Docstring', docstring_scopes, r.comment.fg, nil },
       {
         'Literal',
         r.number and 'constant, constant.language, variable.other.constant'
@@ -461,7 +476,12 @@ local function textmate_scope_rules(p, appearance, variant)
       { 'GitGutter ignored', 'markup.ignored.git_gutter', p.fg3, nil },
     }
     if r.number then
-      table.insert(rules, 9, { 'Number', 'constant.numeric, constant.language.boolean', number.fg, nil })
+      for index, rule in ipairs(rules) do
+        if rule[1] == 'Literal' then
+          table.insert(rules, index, { 'Number', 'constant.numeric, constant.language.boolean', number.fg, nil })
+          break
+        end
+      end
     end
     return rules
   end
@@ -470,6 +490,7 @@ local function textmate_scope_rules(p, appearance, variant)
     { 'Keyword', 'keyword, keyword.control, keyword.other', p.accent2, nil },
     { 'Storage', 'storage, storage.modifier', p.accent2, nil },
     { 'Operator', 'keyword.operator, storage.type.function.arrow', p.fg1, nil },
+    { 'Word operator', word_operator_scopes, p.fg1, nil },
     {
       'Function definition',
       'entity.name.function, meta.function.definition entity.name',
@@ -479,6 +500,7 @@ local function textmate_scope_rules(p, appearance, variant)
     { 'Function call', function_call_scopes, p.accent, nil },
     { 'Built-in function', 'support.function', p.accent, nil },
     { 'String', 'string, punctuation.definition.string', p.green, nil },
+    { 'Docstring', docstring_scopes, p.comment, nil },
     { 'String escape', 'constant.character.escape', p.purple, nil },
     { 'Boolean', 'constant.language.boolean', p.orange, nil },
     { 'Number', 'constant.numeric', p.orange, nil },
@@ -507,7 +529,7 @@ local function textmate_scope_rules(p, appearance, variant)
     {
       'Property',
       'variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key',
-      p.fg0,
+      p.property,
       nil,
     },
     { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.comment, nil },
@@ -1815,13 +1837,17 @@ local function gen_vscode_theme(p, variant, term, appearance)
     { 'number', p.orange },
     { 'enumMember', p.purple },
     { 'variable.readonly', p.purple },
-    { 'property.readonly', p.purple },
+    { 'property.readonly', p.property },
     { 'parameter', p.fg1 },
     { '*.deprecated', json_object({ { 'strikethrough', true } }) },
     { '*.readonly', json_object({ { 'foreground', p.purple } }) },
     -- Outrank `*.readonly`, as Neovim does. See docs/lsp-semantic-tokens.md.
     { 'parameter.readonly', p.fg1 },
     { 'variable.readonly:lua', p.fg0 },
+    { 'variable.readonly:javascript', p.fg0 },
+    { 'variable.readonly:javascriptreact', p.fg0 },
+    { 'variable.readonly:typescript', p.fg0 },
+    { 'variable.readonly:typescriptreact', p.fg0 },
     { '*.async', json_object({ { 'italic', true } }) },
     { '*.static', json_object({ { 'italic', true } }) },
     { '*.abstract', json_object({ { 'italic', true } }) },
@@ -1854,6 +1880,10 @@ local function gen_vscode_theme(p, variant, term, appearance)
       { '*.readonly', json_object({ { 'foreground', r.literal.fg } }) },
       { 'parameter.readonly', r.parameter.fg },
       { 'variable.readonly:lua', r.variable.fg },
+      { 'variable.readonly:javascript', r.variable.fg },
+      { 'variable.readonly:javascriptreact', r.variable.fg },
+      { 'variable.readonly:typescript', r.variable.fg },
+      { 'variable.readonly:typescriptreact', r.variable.fg },
       { '*.async', json_object({ { 'italic', true } }) },
       { '*.static', json_object({ { 'italic', true } }) },
       { '*.abstract', json_object({ { 'italic', true } }) },
@@ -2105,7 +2135,7 @@ local function obsidian_theme_block(p, variant, appearance)
     '  --code-important: ' .. p.red .. ';',
     '  --code-keyword: ' .. (profile and profile.syntax.control.fg or p.accent2) .. ';',
     '  --code-operator: ' .. p.fg1 .. ';',
-    '  --code-property: ' .. (profile and (profile.syntax.property or profile.syntax.variable).fg or p.fg0) .. ';',
+    '  --code-property: ' .. (profile and (profile.syntax.property or profile.syntax.variable).fg or p.property) .. ';',
     '  --code-punctuation: ' .. p.comment .. ';',
     '  --code-string: ' .. code_literal .. ';',
     '  --code-tag: ' .. code_tag .. ';',
