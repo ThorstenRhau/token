@@ -10,7 +10,7 @@ local function editor(p)
     FloatTitle = { fg = p.accent, bg = p.bg0, bold = true },
     FloatFooter = { fg = p.fg2, bg = p.bg0 },
 
-    Cursor = { fg = p.bg3, bg = p.fg0 },
+    Cursor = { fg = p.bg3, bg = p.accent },
     lCursor = { link = 'Cursor' },
     CursorIM = { link = 'Cursor' },
     CursorLine = { bg = p.bg4 },
