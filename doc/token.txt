@@ -31,7 +31,8 @@ and each one has a dark and a light variant:
 
 Token Ultra uses copper definitions, ochre control flow and teal literals.
 Token Meridian puts the syntax colors of the Circadia colorscheme's Warm
-Parchment and Dark Classic themes on Token Ultra's surfaces. Token Melange
+Parchment and Dark Classic themes (MIT License) on Token Ultra's surfaces.
+Token Melange
 adapts the Melange colorscheme by Sergio Alejandro Vargas (MIT License):
 warm orange, gold and coral for control flow, functions and operators, and
 cool blue, magenta and cyan for strings, numbers and types. Classic Token

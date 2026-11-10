@@ -37,9 +37,10 @@ typography.
 ### Token Meridian
 
 Circadia Warm Parchment and Dark Classic semantic colors on Token Ultra's
-surfaces, with Token Ultra's red and yellow for errors and warnings so they
-stay distinct from info and hint. Palette and token-role inspiration:
-[Circadia 2.0](https://github.com/tanmaymanojgandhi/circadia).
+surfaces. Errors and warnings use Token Ultra's red and yellow, so they stay
+distinct from info and hint. Palette and token roles come from
+[Circadia 2.0](https://github.com/tanmaymanojgandhi/circadia), used under the
+MIT License.
 
 |                                                     Dark                                                     |                                                      Light                                                      |
 | :----------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
@@ -457,6 +458,11 @@ column. The skins use the
 ## License
 
 BSD 3-Clause
+
+Token Meridian's palette is adapted from
+[Circadia 2.0](https://github.com/tanmaymanojgandhi/circadia), Copyright (c)
+2026 Circadia contributors, under the MIT License. The full notice is in
+[`lua/token/palettes/meridian.lua`](lua/token/palettes/meridian.lua).
 
 Token Melange's palette is adapted from
 [Melange](https://github.com/savq/melange-nvim), Copyright (c) 2021 Sergio
