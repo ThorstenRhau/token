@@ -1469,6 +1469,7 @@ local palette_anchors = {
       fg0 = '#C3C8CC',
       accent = '#5CC1B3',
       accent2 = '#E7CDFF',
+      bright_yellow = '#F8D28A',
       bright_purple = '#C69AE7',
       bright_cyan = '#72D1C3',
       indent = '#31383F',
@@ -1589,7 +1590,7 @@ for _, background in ipairs({ 'dark', 'light' }) do
   for name, loader in pairs(palette_loaders) do
     local palette = require(loader)(background)
     equal(sorted_keys(palette), sorted_keys(classic), name .. ' palette keys for ' .. background)
-    equal(vim.tbl_count(palette), 54, name .. ' palette key count for ' .. background)
+    equal(vim.tbl_count(palette), 55, name .. ' palette key count for ' .. background)
     for key, color in pairs(palette) do
       truthy(color:match('^#%x%x%x%x%x%x$'), 'invalid ' .. name .. ' color ' .. key .. ' for ' .. background)
     end
@@ -1602,6 +1603,17 @@ for _, background in ipairs({ 'dark', 'light' }) do
       local terminal = require('token.terminal').colors(palette, true, name)
       truthy(luminance(terminal[13]) > luminance(terminal[5]), name .. ' ANSI bright purple is not brighter')
       truthy(luminance(terminal[14]) > luminance(terminal[6]), name .. ' ANSI bright cyan is not brighter')
+    end
+
+    -- ANSI 11 is a yellow of its own. Dark keeps the warm `accent2` value, except
+    -- Temper, whose `accent2` is purple. Light `accent2` is too dark to read as yellow.
+    local ansi = require('token.terminal').colors(palette, background == 'dark', name)
+    equal(ansi[11], palette.bright_yellow, name .. ' ANSI bright yellow for ' .. background)
+    if background == 'dark' and name ~= 'token-temper' then
+      equal(palette.bright_yellow, palette.accent2, name .. ' dark bright yellow changed')
+    else
+      truthy(palette.bright_yellow ~= palette.accent2, name .. ' bright yellow equals accent2 for ' .. background)
+      truthy(palette.bright_yellow ~= palette.olive, name .. ' bright yellow equals olive for ' .. background)
     end
   end
 
@@ -2429,7 +2441,7 @@ equal(ultra_terminal, {
   [8] = ultra_palette.fg3,
   [9] = ultra_palette.accent,
   [10] = ultra_palette.bright_green,
-  [11] = ultra_palette.accent2,
+  [11] = ultra_palette.bright_yellow,
   [12] = ultra_palette.bright_blue,
   [13] = ultra_palette.bright_purple,
   [14] = ultra_palette.bright_cyan,
@@ -2463,7 +2475,7 @@ equal(require('token.terminal').colors(ultra_light_palette, false, 'token-ultra'
   [8] = ultra_light_palette.fg2,
   [9] = ultra_light_palette.accent,
   [10] = ultra_light_palette.bright_green,
-  [11] = ultra_light_palette.accent2,
+  [11] = ultra_light_palette.bright_yellow,
   [12] = ultra_light_palette.bright_blue,
   [13] = ultra_light_palette.bright_purple,
   [14] = ultra_light_palette.bright_cyan,
@@ -2514,7 +2526,7 @@ equal(require('token.terminal').colors(meridian_light_palette, false, 'token-mer
   [8] = '#524b42',
   [9] = '#ae5158',
   [10] = '#005f2f',
-  [11] = '#843900',
+  [11] = '#7c660e',
   [12] = '#0048b3',
   [13] = '#832882',
   [14] = '#095b62',

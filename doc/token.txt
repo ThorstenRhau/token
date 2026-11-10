@@ -205,7 +205,7 @@ colors ~
       Hues            `blue`, `green`, `red`, `yellow`, `purple`, `cyan`,
                       `orange`, `olive`
       Terminal        `bright_green`, `bright_blue`, `bright_purple`,
-                      `bright_cyan`
+                      `bright_cyan`, `bright_yellow`
       Diff            `diff_add`, `diff_del`, `diff_add_inline`,
                       `diff_del_inline`, `diff_add_strong`,
                       `diff_del_strong`, `diff_change`, `diff_text`

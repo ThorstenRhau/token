@@ -32,6 +32,7 @@
 ---@field bright_blue string Bright ANSI blue used for terminal color 12.
 ---@field bright_purple string Bright ANSI purple used for terminal color 13.
 ---@field bright_cyan string Bright ANSI cyan used for terminal color 14.
+---@field bright_yellow string Bright ANSI yellow used for terminal color 11; in light a yellow just darker than `yellow`.
 -- Diff backgrounds
 ---@field diff_add string Background for added lines and addition previews.
 ---@field diff_del string Background for deleted lines and deletion previews.
@@ -105,6 +106,7 @@ local function palette(background)
       bright_blue = '#335471',
       bright_purple = '#6b5488',
       bright_cyan = '#387272',
+      bright_yellow = '#74680d',
       -- Diff backgrounds
       diff_add = '#daf6d5',
       diff_del = '#ffdada',
@@ -173,6 +175,7 @@ local function palette(background)
     bright_blue = '#8fb1cb',
     bright_purple = '#bea5d4',
     bright_cyan = '#88c0c0',
+    bright_yellow = '#f7c699',
     -- Diff backgrounds
     diff_add = '#1e3524',
     diff_del = '#3c2024',

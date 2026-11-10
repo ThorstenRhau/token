@@ -21,7 +21,7 @@ function M.colors(p, is_dark, colorscheme)
     [8] = is_dark and p.fg3 or p.fg2,
     [9] = p.accent,
     [10] = p.bright_green,
-    [11] = p.accent2,
+    [11] = p.bright_yellow,
     [12] = p.bright_blue,
     [13] = p.bright_purple,
     [14] = p.bright_cyan,
