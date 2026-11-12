@@ -383,6 +383,14 @@ require('hlchunk').setup({
 
 ## Contrib themes
 
+Token also ships generated themes for 27 other tools: terminals
+(`Apple Terminal`, `Blink Shell`, `Ghostty`, `iTerm2`, `kitty`,
+`Windows Terminal`), editors and IDEs (`Emacs`, `GtkSourceView`,
+`Sublime Text`, `VS Code`, `Xcode`), command-line tools (`bat`, `Carapace`,
+`delta`, `fish`, `fzf`, `lazygit`, `ripgrep`, `Starship`, `tmux`, `tuicr`,
+`Zsh`), and apps and agents (`ChatGPT desktop`, `Herdr`, `Hermes Agent`,
+`Obsidian`, `Pi`).
+
 Token ships themes for other tools and apps. They're generated from the same
 appearance palettes and semantic typography as the Neovim colorscheme. After
 you change a palette or the typography, run `make contrib` to rebuild them.
