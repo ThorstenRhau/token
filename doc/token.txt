@@ -334,6 +334,16 @@ blink.indent at Token's groups: >lua
       },
     })
 <
+                                                               *token-fzf-lua*
+fzf-lua ~
+fzf-lua uses fzf's own colors unless you set `fzf_colors = true`, and its
+treesitter pickers, such as `global` and `blines`, show matches as reversed
+blocks. To color fzf and its matches from Token's `FzfLuaFzf*` groups: >lua
+    require('fzf-lua').setup({
+      fzf_colors = true,
+      winopts = { treesitter = { fzf_colors = false } },
+    })
+<
                                                                *token-hlchunk*
 hlchunk.nvim ~
 hlchunk sets its own highlight groups during setup and on every |ColorScheme|
