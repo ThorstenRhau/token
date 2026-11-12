@@ -1,19 +1,21 @@
 # token
 
-Token is a Neovim 0.12+ colorscheme with six appearances: Token Ultra, Token
-Meridian, Token Melange, classic Token, Token Flint, and Token Temper. Each has
-a dark and a light variant. One optional `setup()` call configures every
-appearance.
+Token is a Neovim 0.12+ colorscheme, written in Lua, with six appearances: Token
+Ultra, Token Meridian, Token Melange, classic Token, Token Flint, and Token
+Temper. Each has a dark and a light variant. One optional `setup()` call
+configures every appearance.
 
 Token also generates themes for Ghostty, fish, delta, tmux and other tools from
 the same palettes, so your terminal and tools match the editor.
 
 ## Features
 
-- Token Ultra, Token Meridian, Token Melange, classic Token, Token Flint, and Token Temper appearances, each with dark and light variants
+- Token Ultra, Token Meridian, Token Melange, classic Token, Token Flint, and
+  Token Temper appearances, each with dark and light variants
 - Treesitter capture groups for syntax highlighting
 - LSP semantic token highlights
-- Shared semantic typography: bold control flow, definitions and headings, italic comments and quotes, underlined links
+- Shared semantic typography: bold control flow, definitions and headings,
+  italic comments and quotes, underlined links
 - LSP diagnostic signs, virtual text, and underlines
 - Diff highlights for buffers and signs
 - Legacy syntax groups for filetypes without Treesitter
@@ -51,9 +53,9 @@ MIT License.
 Melange's warm surfaces and its split between warm control flow and cool data:
 orange keywords, gold functions and coral operators against blue strings,
 magenta numbers and cyan types. Token keeps Melange's hues and adjusts their
-lightness to match the contrast of the other appearances. Palette and syntax roles come from
-[Melange](https://github.com/savq/melange-nvim) by Sergio Alejandro Vargas,
-used under the MIT License.
+lightness to match the contrast of the other appearances. Palette and syntax
+roles come from [Melange](https://github.com/savq/melange-nvim) by Sergio
+Alejandro Vargas, used under the MIT License.
 
 |                                                         Dark                                                          |                                                          Light                                                           |
 | :-------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------: |
@@ -61,8 +63,8 @@ used under the MIT License.
 
 ### Token (classic)
 
-Coral functions, tan keywords, green strings, blue types and purple constants
-on warm gray surfaces. The light variant uses rust and brown for functions and
+Coral functions, tan keywords, green strings, blue types and purple constants on
+warm gray surfaces. The light variant uses rust and brown for functions and
 keywords.
 
 |                                                 Dark                                                  |                                                  Light                                                   |
@@ -80,8 +82,8 @@ green under the shared Token semantic typography.
 
 ### Token Temper
 
-Teal definitions, calls and literals, purple control flow, and neutral grays
-for everything else, on cool-gray surfaces.
+Teal definitions, calls and literals, purple control flow, and neutral grays for
+everything else, on cool-gray surfaces.
 
 |                                                        Dark                                                        |                                                         Light                                                         |
 | :----------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: |
@@ -135,8 +137,8 @@ to an option with a tag such as `:help token-config-styles`.
 
 ### Completion for options
 
-Token describes its options with LuaCATS annotations, so lua-language-server
-and EmmyLua can complete option names and check values in your config. Options
+Token describes its options with LuaCATS annotations, so lua-language-server and
+EmmyLua can complete option names and check values in your config. Options
 passed straight to `setup()` already have a type. Annotate a table you build
 elsewhere, such as a lazy.nvim `opts` table, with `---@type token.Config`.
 
@@ -239,23 +241,22 @@ before `conditionals` and `loops`, `constants` before `booleans`, and
 `variables` before `properties`.
 
 Color overrides apply in this order: `all`, the current background, then
-`on_colors`. Existing and new palette keys must hold `#RRGGBB` values.
-Highlight entries are complete `nvim_set_hl` definitions, and a variant entry
-replaces the entry with the same name from `all`. `on_highlights` runs after
-that and can change existing definitions.
+`on_colors`. Existing and new palette keys must hold `#RRGGBB` values. Highlight
+entries are complete `nvim_set_hl` definitions, and a variant entry replaces the
+entry with the same name from `all`. `on_highlights` runs after that and can
+change existing definitions.
 
 Both callbacks change their arguments in place. They receive `dark` or `light`
 as the background, followed by the active colorscheme name: `token-ultra`,
 `token-meridian`, `token-melange`, `token`, `token-flint`, or `token-temper`.
 Callbacks that leave out the last argument still work.
 
-`transparent` clears Token's base surfaces and keeps the cursor-line,
-selection, search, diff, diagnostic, and accent backgrounds. Highlight
-overrides and callbacks can bring back single backgrounds.
+`transparent` clears Token's base surfaces and keeps the cursor-line, selection,
+search, diff, diagnostic, and accent backgrounds. Highlight overrides and
+callbacks can bring back single backgrounds.
 
-`dim_inactive` sets `NormalNC` and the matching groups of enabled plugins to
-the `fg1` and `bg1` palette colors. With `transparent`, only the foreground
-changes.
+`dim_inactive` sets `NormalNC` and the matching groups of enabled plugins to the
+`fg1` and `bg1` palette colors. With `transparent`, only the foreground changes.
 
 The global `attributes` switches apply last, including to plugin and callback
 output. The Lualine theme follows `bold`. A group that links to a group outside
@@ -269,8 +270,8 @@ with an error that starts with `token:`.
 Token links the standard LSP semantic token types and modifiers to its
 Treesitter groups, so they get the same colors and styles in every appearance.
 Some language servers add their own token types and modifiers, such as `self`
-parameters in Python or dates in TOML. Token links these to the closest
-existing group.
+parameters in Python or dates in TOML. Token links these to the closest existing
+group.
 
 ## Compilation
 
@@ -297,8 +298,8 @@ must rerun `:TokenCompile`:
   `on_colors` and `on_highlights` read. Token cannot see those changes.
 
 With lazy.nvim, add `build = ':TokenCompile'` to the plugin spec so updates
-recompile automatically. With vim.pack, restart Neovim after
-`vim.pack.update()` and then run `:TokenCompile`.
+recompile automatically. With vim.pack, restart Neovim after `vim.pack.update()`
+and then run `:TokenCompile`.
 
 Token detects changes to `setup()` options and callback bodies. It then ignores
 the cache and builds the highlights at runtime until you run `:TokenCompile`
@@ -323,9 +324,8 @@ its current highlights until the colorscheme loads again.
 
 By default Token loads only its core groups. Turn on an integration by its key,
 or set `plugins = { all = true }` to load all of them. A `true` or `false` for a
-single plugin overrides `all`. The keys below match the
-module filenames. Lualine isn't in this list: its theme loads when Lualine asks
-for it.
+single plugin overrides `all`. The keys below match the module filenames.
+Lualine isn't in this list: its theme loads when Lualine asks for it.
 
 `blink`, `blink_indent`, `claudecode`, `cmp`, `dap_ui`, `diffview`, `flash`,
 `fugitive`, `fzf`, `gitsigns`, `hlchunk`, `ibl`, `lazy`, `markview`, `mason`,
@@ -359,8 +359,8 @@ require('blink.indent').setup({
 })
 ```
 
-hlchunk sets its own highlight groups during setup and on `ColorScheme`. Turn
-on Token's `plugins.hlchunk` (or `plugins.all`), and load the colorscheme before
+hlchunk sets its own highlight groups during setup and on `ColorScheme`. Turn on
+Token's `plugins.hlchunk` (or `plugins.all`), and load the colorscheme before
 you set up hlchunk. Style callbacks keep Token's colors when you switch
 appearances or backgrounds. Turn on only the modules you want:
 
@@ -385,24 +385,26 @@ require('hlchunk').setup({
 
 Token also ships generated themes for 27 other tools: terminals
 (`Apple Terminal`, `Blink Shell`, `Ghostty`, `iTerm2`, `kitty`,
-`Windows Terminal`), editors and IDEs (`Emacs`, `GtkSourceView`,
-`Sublime Text`, `VS Code`, `Xcode`), command-line tools (`bat`, `Carapace`,
-`delta`, `fish`, `fzf`, `lazygit`, `ripgrep`, `Starship`, `tmux`, `tuicr`,
-`Zsh`), and apps and agents (`ChatGPT desktop`, `Herdr`, `Hermes Agent`,
-`Obsidian`, `Pi`).
+`Windows Terminal`), editors and IDEs (`Emacs`, `GtkSourceView`, `Sublime Text`,
+`VS Code`, `Xcode`), command-line tools (`bat`, `Carapace`, `delta`, `fish`,
+`fzf`, `lazygit`, `ripgrep`, `Starship`, `tmux`, `tuicr`, `Zsh`), and apps and
+agents (`ChatGPT desktop`, `Herdr`, `Hermes Agent`, `Obsidian`, `Pi`).
+
+<details>
+<summary>Click to expand contrib details</summary>
 
 Token ships themes for other tools and apps. They're generated from the same
-appearance palettes and semantic typography as the Neovim colorscheme. After
-you change a palette or the typography, run `make contrib` to rebuild them.
+appearance palettes and semantic typography as the Neovim colorscheme. After you
+change a palette or the typography, run `make contrib` to rebuild them.
 
 The Herdr themes blend `overlay0` and `accent` toward the terminal background,
-so pane frames are quieter. In light mode they also separate active and
-inactive panes more. Herdr uses the same two colors for secondary UI details
-and accent highlights. Only the Herdr themes change. The palettes and the other
-themes keep their original colors.
+so pane frames are quieter. In light mode they also separate active and inactive
+panes more. Herdr uses the same two colors for secondary UI details and accent
+highlights. Only the Herdr themes change. The palettes and the other themes keep
+their original colors.
 
-Every tool has a file for each appearance. In the paths below, `<appearance>`
-is `token`, `token-flint`, `token-temper`, `token-ultra`, `token-meridian`, or
+Every tool has a file for each appearance. In the paths below, `<appearance>` is
+`token`, `token-flint`, `token-temper`, `token-ultra`, `token-meridian`, or
 `token-melange`.
 
 | Tool                                                                                 | Files                                                                                  | Usage                                                                                                                                                     |
@@ -429,7 +431,7 @@ is `token`, `token-flint`, `token-temper`, `token-ultra`, `token-meridian`, or
 | [Starship](https://starship.rs/)                                                     | `contrib/starship/<appearance>-{dark,light}.toml`                                      | Append the file and set `palette` to its name, such as `token-dark`                                                                                       |
 | [Sublime Text](https://www.sublimetext.com/)                                         | `contrib/sublime/<appearance>-{dark,light}.sublime-color-scheme`                       | Copy to `Packages/User/` and select the scheme                                                                                                            |
 | [tmux](https://github.com/tmux/tmux)                                                 | `contrib/tmux/<appearance>-{dark,light}.conf`                                          | Source the selected file from `tmux.conf`                                                                                                                 |
-| [tuicr](https://github.com/agavra/tuicr)                                             | `contrib/tuicr/<appearance>-{dark,light}.{toml,tmTheme}`                               | Copy both files to `~/.config/tuicr/themes/`, then set `theme_dark` and `theme_light` to their names                                                     |
+| [tuicr](https://github.com/agavra/tuicr)                                             | `contrib/tuicr/<appearance>-{dark,light}.{toml,tmTheme}`                               | Copy both files to `~/.config/tuicr/themes/`, then set `theme_dark` and `theme_light` to their names                                                      |
 | [VS Code](https://code.visualstudio.com/)                                            | `contrib/vscode/`                                                                      | Run `scripts/install_vscode_theme.sh`, then select any Token appearance                                                                                   |
 | [Windows Terminal](https://github.com/microsoft/terminal)                            | `contrib/windows-terminal/<appearance>.json`                                           | Copy the selected schemes into settings or fragments                                                                                                      |
 | [Xcode](https://developer.apple.com/xcode/)                                          | `contrib/xcode/<appearance>-{dark,light}.xccolortheme`                                 | Copy to `~/Library/Developer/Xcode/UserData/FontAndColorThemes/` and select the visible name                                                              |
@@ -447,35 +449,7 @@ those names.
 In Pi, syntax and Markdown colors follow the appearance's role profile when it
 has one. Pi has a single heading color, which takes the first heading role.
 Appearances without a profile keep the default palette mappings.
-
-### Hermes Agent
-
-From the Token checkout, copy the generated skins:
-
-```sh
-mkdir -p "${HERMES_HOME:-$HOME/.hermes}/skins"
-cp contrib/hermes/*.yaml "${HERMES_HOME:-$HOME/.hermes}/skins/"
-```
-
-Repeat the copy command after updating Token to refresh installed skins.
-
-Select `/skin token-ultra-dark` in Hermes. To persist the selection, merge this
-into `${HERMES_HOME:-$HOME/.hermes}/config.yaml` under the existing `display` key:
-
-```yaml
-display:
-  skin: token-ultra-dark
-```
-
-Select the matching Token appearance in your terminal, and use a
-[Nerd Fonts 3 font](https://www.nerdfonts.com/) for the feather, tool icons, and
-circle-slice spinner frames. Hermes doesn't switch between dark and light on
-its own, so pick the skin yourself. For example, use `/skin token-ultra-light`
-with a light terminal background.
-
-The skins set colors, Nerd Font icons and the spinner. Hermes keeps its own
-name, messages, startup logo and artwork. The skins use the
-[Hermes skin API](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/skin_engine.py).
+</details>
 
 ## License
 
