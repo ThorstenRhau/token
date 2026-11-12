@@ -674,6 +674,78 @@ for _, appearance in ipairs(appearances) do
   end
 end
 
+-- tuicr rejects a local theme that lacks any of these keys (tuicr 0.28,
+-- LOCAL_THEME_KEYS minus the optional selection_marker).
+local tuicr_keys = {
+  'bg_highlight',
+  'border_focused',
+  'border_unfocused',
+  'branch_name',
+  'comment_issue',
+  'comment_note',
+  'comment_praise',
+  'comment_suggestion',
+  'cursor_color',
+  'cursor_line_bg',
+  'diff_add',
+  'diff_add_bg',
+  'diff_context',
+  'diff_del',
+  'diff_del_bg',
+  'diff_hunk_header',
+  'expanded_context_fg',
+  'fg_dim',
+  'fg_primary',
+  'fg_secondary',
+  'file_added',
+  'file_deleted',
+  'file_modified',
+  'file_renamed',
+  'help_indicator',
+  'message_error_bg',
+  'message_error_fg',
+  'message_info_bg',
+  'message_info_fg',
+  'message_warning_bg',
+  'message_warning_fg',
+  'mode_bg',
+  'mode_fg',
+  'panel_bg',
+  'pending',
+  'reviewed',
+  'status_bar_bg',
+  'syntax_add_bg',
+  'syntax_del_bg',
+  'syntax_theme',
+  'update_badge_bg',
+  'update_badge_fg',
+}
+
+for _, appearance in ipairs(appearances) do
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local name = appearance.slug .. '-' .. variant
+    local label = 'tuicr ' .. name
+    local values = {}
+    for line in read_text('contrib/tuicr/' .. name .. '.toml'):gmatch('[^\r\n]+') do
+      local key, value = line:match('^([%w_]+) = "(.-)"$')
+      if key then
+        values[key] = value
+      end
+    end
+    equal(sorted_keys(values), tuicr_keys, label .. ' key inventory')
+    equal(values.syntax_theme, name .. '.tmTheme', label .. ' syntax theme')
+    values.syntax_theme = nil
+    for key, value in pairs(values) do
+      truthy(value:match('^#%x%x%x%x%x%x$'), label .. ' ' .. key .. ' is #RRGGBB')
+    end
+    equal(
+      read_text('contrib/tuicr/' .. name .. '.tmTheme'),
+      read_text('contrib/bat/' .. name .. '.tmTheme'),
+      label .. ' syntax theme matches bat'
+    )
+  end
+end
+
 local function fish_sections(content)
   local sections = {}
   local current
