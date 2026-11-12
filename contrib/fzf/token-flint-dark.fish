@@ -4,8 +4,8 @@
 set -gx FZF_DEFAULT_OPTS (string join " " -- \
   $FZF_DEFAULT_OPTS \
   --border \
-  '--color=fg:#C3C8CC,bg:#272C33,hl:#EB9E83' \
-  '--color=fg+:#C3C8CC,bg+:#3A414A,hl+:#EB9E83' \
-  '--color=border:#858F9B,header:#88ACC4,gutter:#272C33' \
-  '--color=spinner:#F8D28A,info:#9AA4AE' \
-  '--color=pointer:#EB9E83,marker:#A9B98C,prompt:#EB9E83')
+  '--color=fg:#c3c8cc,bg:#272c33,hl:#eb9e83' \
+  '--color=fg+:#c3c8cc,bg+:#3a414a,hl+:#eb9e83' \
+  '--color=border:#858f9b,header:#88acc4,gutter:#272c33' \
+  '--color=spinner:#f8d28a,info:#9aa4ae' \
+  '--color=pointer:#eb9e83,marker:#a9b98c,prompt:#eb9e83')

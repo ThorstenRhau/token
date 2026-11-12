@@ -1,1 +1,1 @@
-codex-theme-v1:{"codeThemeId": "codex","theme": {"accent": "#EB9E83","contrast": 60,"fonts": {"code": null,"ui": null},"ink": "#C3C8CC","opaqueWindows": false,"semanticColors": {"diffAdded": "#95A578","diffRemoved": "#D2787D","skill": "#E09478"},"surface": "#272C33"},"variant": "dark"}
+codex-theme-v1:{"codeThemeId": "codex","theme": {"accent": "#eb9e83","contrast": 60,"fonts": {"code": null,"ui": null},"ink": "#c3c8cc","opaqueWindows": false,"semanticColors": {"diffAdded": "#95a578","diffRemoved": "#d2787d","skill": "#e09478"},"surface": "#272c33"},"variant": "dark"}

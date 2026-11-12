@@ -3,10 +3,10 @@
 
 export _FZF_THEME_OPTS="\
 --border \
---color=fg:#C3C8CC,bg:#272C33,hl:#5CC1B3 \
---color=fg+:#C3C8CC,bg+:#3A414A,hl+:#5CC1B3 \
---color=border:#858F9B,header:#53B4CE,gutter:#272C33 \
---color=spinner:#E7CDFF,info:#9AA4AE \
---color=pointer:#5CC1B3,marker:#7FC291,prompt:#5CC1B3
+--color=fg:#c3c8cc,bg:#272c33,hl:#5cc1b3 \
+--color=fg+:#c3c8cc,bg+:#3a414a,hl+:#5cc1b3 \
+--color=border:#858f9b,header:#53b4ce,gutter:#272c33 \
+--color=spinner:#e7cdff,info:#9aa4ae \
+--color=pointer:#5cc1b3,marker:#7fc291,prompt:#5cc1b3
 "
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+${FZF_DEFAULT_OPTS} }${_FZF_THEME_OPTS}"
