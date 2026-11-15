@@ -133,7 +133,8 @@ defaults and deep-merges the options you pass. It does not reload a colorscheme
 that is already active.
 
 The full reference ships with the plugin. Run `:help token` in Neovim, or jump
-to an option with a tag such as `:help token-config-styles`.
+to an option with a tag such as `:help token-config-styles`. You can also read
+it on GitHub in [`doc/token.txt`](doc/token.txt).
 
 ### Completion for options
 

@@ -1,5 +1,7 @@
 *token.txt*  Token colorscheme for Neovim
 
+                                      Type |gO| to see the table of contents.
+
 ==============================================================================
 CONTENTS                                                      *token-contents*
 
