@@ -46,8 +46,8 @@ this index or local TODO documents.
   installation and `:TokenCompile`.
 - [`Makefile`](../Makefile) defines the canonical formatting, lint, test,
   benchmark, generation, and verification targets.
-- [GitHub releases](https://github.com/ThorstenRhau/token/releases) retain
-  published release evidence.
+- Git tags (`vX.Y.Z`) mark releases; there are no GitHub Releases. vim.pack
+  and lazy.nvim can install a tagged version.
 
 ## Maintenance
 
