@@ -65,8 +65,7 @@ appearances, or commands change.
   tests, and generated-contrib verification. The pre-commit hook runs it.
 - Use `make test` for a focused runtime/generator check and `make benchmark`
   only for performance-sensitive work.
-- `make lint` runs selene with `selene.toml` and `neovim.yaml`. `.luacheckrc`
-  only serves editor luacheck integrations and is not part of `make check`.
+- `make lint` runs selene with `selene.toml` and `neovim.yaml`.
 - After changes that affect formatting or generated themes, run `make all` to
   format, lint, and regenerate, then run `make check`. `make format`,
   `make contrib`, and `make all` mutate tracked files and are not allowed in
