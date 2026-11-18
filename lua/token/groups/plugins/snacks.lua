@@ -5,7 +5,6 @@ local function snacks(p)
     -- snacks.nvim (core window)
     SnacksNormal = { fg = p.fg0, bg = p.bg1 },
     SnacksNormalNC = { fg = p.fg0, bg = p.bg1 },
-    SnacksBackdrop = { bg = p.bg0 },
     SnacksTitle = { fg = p.accent, bold = true },
     SnacksFooter = { link = 'FloatFooter' },
     SnacksFooterDesc = { fg = p.blue },
@@ -75,7 +74,6 @@ local function snacks(p)
     -- Painted as a full-width band around the file name.
     SnacksDiffHeader = { fg = p.blue, bg = p.diag_info, bold = true },
     SnacksDiffLabel = { fg = p.fg2 },
-    SnacksHunkHeader = { fg = p.cyan, bg = p.diff_change },
 
     -- snacks.nvim (picker ui)
     SnacksPickerMatch = { fg = p.accent, bold = true },
@@ -226,7 +224,6 @@ local function snacks(p)
     SnacksIndent6 = { link = 'SnacksIndent' },
     SnacksIndent7 = { link = 'SnacksIndent' },
     SnacksIndent8 = { link = 'SnacksIndent' },
-    SnacksIndentBlank = { fg = p.indent },
     SnacksIndentScope = { fg = p.indent_active },
     SnacksIndentChunk = { fg = p.indent_active },
 
@@ -242,7 +239,6 @@ local function snacks(p)
     SnacksGhPurple = { fg = p.purple },
     SnacksGhGray = { fg = p.fg2 },
     SnacksGhRed = { fg = p.red },
-    SnacksGhNumber = { fg = p.accent2 },
     SnacksGhBranch = { fg = p.accent },
     SnacksGhLabel = { fg = p.blue },
     SnacksGhDelim = { fg = p.fg3 },
