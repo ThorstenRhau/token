@@ -24,43 +24,21 @@ local function build(colorscheme)
     return config.attributes.bold and value or nil
   end
 
-  return {
-    normal = {
-      a = { fg = p.bg3, bg = mode.normal, gui = gui('bold') },
-      b = { fg = p.fg1, bg = surface(p.bg4) },
-      c = { fg = p.fg1, bg = surface(p.bg2) },
-    },
-    insert = {
-      a = { fg = p.bg3, bg = mode.insert, gui = gui('bold') },
-      b = { fg = p.fg1, bg = surface(p.bg4) },
-      c = { fg = p.fg1, bg = surface(p.bg2) },
-    },
-    visual = {
-      a = { fg = p.bg3, bg = mode.visual, gui = gui('bold') },
-      b = { fg = p.fg1, bg = surface(p.bg4) },
-      c = { fg = p.fg1, bg = surface(p.bg2) },
-    },
-    replace = {
-      a = { fg = p.bg3, bg = mode.replace, gui = gui('bold') },
-      b = { fg = p.fg1, bg = surface(p.bg4) },
-      c = { fg = p.fg1, bg = surface(p.bg2) },
-    },
-    command = {
-      a = { fg = p.bg3, bg = mode.command, gui = gui('bold') },
-      b = { fg = p.fg1, bg = surface(p.bg4) },
-      c = { fg = p.fg1, bg = surface(p.bg2) },
-    },
-    terminal = {
-      a = { fg = p.bg3, bg = mode.terminal, gui = gui('bold') },
-      b = { fg = p.fg1, bg = surface(p.bg4) },
-      c = { fg = p.fg1, bg = surface(p.bg2) },
-    },
+  local theme = {
     inactive = {
       a = { fg = mode.inactive, bg = surface(p.bg1), gui = gui('bold') },
       b = { fg = mode.inactive, bg = surface(p.bg1) },
       c = { fg = mode.inactive, bg = surface(p.bg1) },
     },
   }
+  for _, name in ipairs({ 'normal', 'insert', 'visual', 'replace', 'command', 'terminal' }) do
+    theme[name] = {
+      a = { fg = p.bg3, bg = mode[name], gui = gui('bold') },
+      b = { fg = p.fg1, bg = surface(p.bg4) },
+      c = { fg = p.fg1, bg = surface(p.bg2) },
+    }
+  end
+  return theme
 end
 
 return build
