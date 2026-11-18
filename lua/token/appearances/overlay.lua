@@ -140,19 +140,6 @@ local function overlay(p, roles)
     ['@markup.raw'] = copy(r.literal),
     ['@markup.raw.block'] = copy(r.literal),
     ['@markup.list'] = copy(r.control),
-    ['@lsp.type.class'] = { link = '@type' },
-    ['@lsp.type.decorator'] = { link = '@attribute' },
-    ['@lsp.type.enum'] = { link = '@type' },
-    ['@lsp.type.enumMember'] = { link = '@constant' },
-    ['@lsp.type.event'] = { link = '@type' },
-    ['@lsp.type.function'] = { link = '@function.call' },
-    ['@lsp.type.interface'] = { link = '@type' },
-    ['@lsp.type.macro'] = { link = '@function.macro' },
-    ['@lsp.type.method'] = { link = '@function.method.call' },
-    ['@lsp.type.namespace'] = { link = '@module' },
-    ['@lsp.type.struct'] = { link = '@type' },
-    ['@lsp.type.type'] = { link = '@type' },
-    ['@lsp.type.typeParameter'] = { link = '@type' },
   }
 
   for _, token_type in ipairs({
