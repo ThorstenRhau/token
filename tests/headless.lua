@@ -1796,6 +1796,21 @@ for _, appearance in ipairs(require('token.appearance').all()) do
   end
 end
 
+-- Inline code in both markdown plugins uses the same foreground as treesitter raw text.
+token.setup({ plugins = { markview = true, render_markdown = true } })
+for _, appearance in ipairs(require('token.appearance').all()) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    for _, group in ipairs({ 'MarkviewInlineCode', 'RenderMarkdownCodeInline' }) do
+      equal(
+        hl(group).fg,
+        hl('@markup.raw').fg,
+        group .. ' follows @markup.raw in ' .. appearance.name .. ' ' .. background
+      )
+    end
+  end
+end
+
 -- Snacks picker chrome shares the body background while the preview keeps the float surface.
 token.setup({ plugins = { snacks = true, render_markdown = true } })
 for _, appearance in ipairs(require('token.appearance').all()) do

@@ -161,6 +161,10 @@ local function overlay(p, roles)
     groups[name] = value
   end
 
+  -- Inline code follows `@markup.raw`, so the plugins match treesitter.
+  groups.RenderMarkdownCodeInline = { fg = r.literal.fg, bg = p.bg2 }
+  groups.MarkviewInlineCode = { fg = r.literal.fg, bg = p.bg2 }
+
   for level, color in ipairs(roles.headings) do
     groups['RenderMarkdownH' .. level] = { fg = color, bold = true }
     groups['RenderMarkdownH' .. level .. 'Bg'] = { fg = color, bg = p.bg4, bold = true }
