@@ -6,9 +6,6 @@ repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 source_dir="${repo_root}/contrib/vscode/"
 extensions_dir="${TOKEN_VSCODE_EXTENSIONS_DIR:-${HOME}/.vscode/extensions}"
 extension_id='thorstenrhau.token-vscode-themes'
-extension_version='0.0.0'
-extension_key="${extension_id}-${extension_version}"
-install_dir="${extensions_dir}/${extension_key}"
 obsolete_file="${extensions_dir}/.obsolete"
 metadata_file="${extensions_dir}/extensions.json"
 
@@ -26,6 +23,15 @@ if ! command -v rsync >/dev/null 2>&1; then
   printf 'rsync is required to install the VS Code theme.\n' >&2
   exit 1
 fi
+
+# The generator writes the extension version into package.json; read it from there.
+if ! extension_version="$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["version"])' "${source_dir}/package.json")" \
+  || [[ -z "${extension_version}" ]]; then
+  printf 'Could not read the extension version from %s/package.json.\n' "${source_dir}" >&2
+  exit 1
+fi
+extension_key="${extension_id}-${extension_version}"
+install_dir="${extensions_dir}/${extension_key}"
 
 if [[ -L "${install_dir}" ]]; then
   printf 'Refusing to replace symlinked VS Code extension directory: %s\n' "${install_dir}" >&2
