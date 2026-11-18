@@ -703,7 +703,7 @@ end
 local function gen_gtksourceview(p, variant, _term, appearance)
   local id = appearance.slug .. '-' .. variant
   local name = variant_name(appearance, variant)
-  local description = appearance.name == 'token' and 'Token ' .. variant .. ' - warm, muted theme'
+  local description = appearance.gtk_description and appearance.gtk_description:format(variant)
     or appearance.display_name .. ' ' .. variant .. ' theme'
   local profile = role_profile(p, variant, appearance)
   local headings = heading_colors(p, profile)
@@ -2190,7 +2190,7 @@ local function gen_obsidian_theme(dark, light, appearance)
     '',
   }, '\n')
 
-  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/' .. appearance.slug .. '/'
+  local prefix = appearance.obsidian_dir or 'contrib/obsidian/' .. appearance.slug .. '/'
   return { path = prefix .. 'theme.css', content = content }
 end
 
@@ -2203,7 +2203,7 @@ local function gen_obsidian_manifest(appearance)
     { 'authorUrl', 'https://github.com/ThorstenRhau' },
   })
 
-  local prefix = appearance.name == 'token' and 'contrib/obsidian/' or 'contrib/obsidian/' .. appearance.slug .. '/'
+  local prefix = appearance.obsidian_dir or 'contrib/obsidian/' .. appearance.slug .. '/'
   return { path = prefix .. 'manifest.json', content = table.concat({ json_encode(manifest), '' }, '\n') }
 end
 

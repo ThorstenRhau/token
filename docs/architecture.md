@@ -11,7 +11,10 @@ outputs so they can be verified together.
 ordering authority for appearances. Each entry selects a palette module and
 identifiers used by runtime caches and generated files. An appearance may also
 select a semantic role profile, which applies the shared highlight overlay.
-Every `colors/*.lua` entry point delegates its registered name to
+The classic entry also sets the optional generator fields `gtk_description`
+and `obsidian_dir`, which override the slug-based defaults of the GtkSourceView
+description and the Obsidian output folder. Every `colors/*.lua` entry point
+delegates its registered name to
 [`require('token').load()`](../lua/token/init.lua).
 
 The selected appearance chooses the color grammar. `vim.o.background` chooses

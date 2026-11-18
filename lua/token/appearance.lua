@@ -1,3 +1,6 @@
+---Optional generator fields: `gtk_description` is a format string that takes
+---the variant (default: display name, variant and 'theme'); `obsidian_dir` is
+---the Obsidian output folder (default: `contrib/obsidian/<slug>/`).
 local appearances = {
   token = {
     name = 'token',
@@ -5,6 +8,8 @@ local appearances = {
     slug = 'token',
     cache_prefix = '',
     palette = 'token.palette',
+    gtk_description = 'Token %s - warm, muted theme',
+    obsidian_dir = 'contrib/obsidian/',
   },
   ['token-flint'] = {
     name = 'token-flint',
