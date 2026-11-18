@@ -2,7 +2,6 @@
 # Source this file from your .zshrc to append token colors to FZF_DEFAULT_OPTS.
 
 export _FZF_THEME_OPTS="\
---border \
 --color=fg:#c9c0b1,bg:#272724,hl:#e89a49 \
 --color=fg+:#c9c0b1,bg+:#3c3b36,hl+:#e89a49 \
 --color=border:#91887d,header:#7cc1dc,gutter:#272724 \

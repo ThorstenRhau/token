@@ -3,7 +3,6 @@
 
 set -gx FZF_DEFAULT_OPTS (string join " " -- \
   $FZF_DEFAULT_OPTS \
-  --border \
   '--color=fg:#c3c8cc,bg:#272c33,hl:#5cc1b3' \
   '--color=fg+:#c3c8cc,bg+:#3a414a,hl+:#5cc1b3' \
   '--color=border:#858f9b,header:#53b4ce,gutter:#272c33' \
