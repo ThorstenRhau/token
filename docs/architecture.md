@@ -52,6 +52,12 @@ modules under [`lua/token/palettes/`](../lua/token/palettes/). The runtime
 validates that every required semantic key exists and every palette value is a
 `#RRGGBB` string.
 
+Each palette module starts with its own guard that errors unless `background`
+is `dark` or `light`. The copies are deliberate: `theme.lua`,
+`scripts/gen_contrib.lua` and `tests/headless.lua` call the modules directly,
+so a guard in one caller would leave the others unprotected. Do not merge them
+into a single caller during simplification.
+
 [`lua/token/typography.lua`](../lua/token/typography.lua) owns shared semantic
 attributes and format-specific role mappings, so every appearance renders the
 same typography. Appearance role modules under
