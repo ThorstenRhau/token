@@ -93,9 +93,11 @@ zstyle ':completion:*:warnings' format '%F{#c88b8f}-- no matches --%f'
 zstyle ':fzf-tab:*' fzf-flags \
   '--color=fg:#c9beb2,bg:#292522,hl:#cda44f' \
   '--color=fg+:#c9beb2,bg+:#403a36,hl+:#cda44f' \
-  '--color=border:#988573,header:#a2a9d0,gutter:#292522' \
-  '--color=spinner:#fcc493,info:#af997d' \
-  '--color=pointer:#cda44f,marker:#84b894,prompt:#cda44f'
+  '--color=gutter:#292522,query:#c9beb2,info:#af997d' \
+  '--color=border:#988573,separator:#988573,scrollbar:#988573' \
+  '--color=label:#cda44f,prompt:#cda44f,pointer:#cda44f' \
+  '--color=marker:#84b894,spinner:#cda44f,header:#af997d' \
+  '--color=footer:#af997d'
 zstyle ':fzf-tab:*' default-color $'\033[38;2;201;190;178m'
 zstyle ':fzf-tab:*' group-colors $'\033[38;2;162;169;208m' $'\033[38;2;132;184;148m' $'\033[38;2;252;196;147m' $'\033[38;2;213;158;198m' $'\033[38;2;134;174;177m' $'\033[38;2;205;164;79m' $'\033[38;2;193;154;71m' $'\033[38;2;200;139;143m'
 

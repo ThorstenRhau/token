@@ -371,6 +371,23 @@ require('fzf-lua').setup({
 })
 ```
 
+fzf-lua does not map `alt-bg`, so striped rows are opt-in. Token's
+`FzfLuaFzfAltBg` group holds the stripe color (the same `bg4` as the
+`_FZF_THEME_STRIPE_OPTS` variable in the shell files). To stripe rows and the
+gutter with it (fzf-lua sets `--highlight-line` by default, which makes the
+stripe cover the whole row):
+
+```lua
+require('fzf-lua').setup({
+  fzf_colors = {
+    true,
+    ['alt-bg'] = { 'bg', 'FzfLuaFzfAltBg' },
+    ['alt-gutter'] = { 'bg', 'FzfLuaFzfAltBg' },
+  },
+  winopts = { treesitter = { fzf_colors = false } },
+})
+```
+
 hlchunk sets its own highlight groups during setup and on `ColorScheme`. Turn on
 Token's `plugins.hlchunk` (or `plugins.all`), and load the colorscheme before
 you set up hlchunk. Style callbacks keep Token's colors when you switch
@@ -429,7 +446,7 @@ Every tool has a file for each appearance. In the paths below, `<appearance>` is
 | [delta](https://github.com/dandavison/delta)                                         | `contrib/delta/<appearance>.gitconfig`                                                 | Install the matching bat theme first, then include one file and select its dark or light feature                                                          |
 | [Emacs](https://www.gnu.org/software/emacs/)                                         | `contrib/emacs/<appearance>-{dark,light}-theme.el`                                     | Copy to the themes directory and load the selected theme name                                                                                             |
 | [fish](https://fishshell.com/)                                                       | `contrib/fish/<appearance>.theme`                                                      | Copy to the fish themes directory and choose the matching appearance                                                                                      |
-| [fzf](https://github.com/junegunn/fzf)                                               | `contrib/fzf/<appearance>-{dark,light}.{fish,zsh}`                                     | Source the matching shell file (colors only; set `--border` yourself for a border)                                                                        |
+| [fzf](https://github.com/junegunn/fzf)                                               | `contrib/fzf/<appearance>-{dark,light}.{fish,zsh}`                                     | Source the matching shell file. It sets every color name fzf 0.75 supports (colors only; set `--border` yourself for a border). Striped rows are opt-in: the file also defines `_FZF_THEME_STRIPE_OPTS` (`alt-bg`, `alt-gutter`) without applying it, so append it to `FZF_DEFAULT_OPTS` together with `--highlight-line` to turn stripes on (without it the stripe only covers the item text)                                                                        |
 | [Ghostty](https://ghostty.org/)                                                      | `contrib/ghostty/<appearance>-{dark,light}`                                            | Copy to the Ghostty themes directory and select the matching pair                                                                                         |
 | [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview)                        | `contrib/gtksourceview/<appearance>-{dark,light}.xml`                                  | Copy to the GtkSourceView styles directory and select the scheme                                                                                          |
 | [Herdr](https://herdr.dev/)                                                          | `contrib/herdr/<appearance>.toml`                                                      | With Herdr 0.9.0+, replace existing theme tables in `config.toml` with the selected fragment, run `herdr config check`, then `herdr server reload-config` |

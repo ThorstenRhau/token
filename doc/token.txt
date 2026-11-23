@@ -346,6 +346,20 @@ blocks. To color fzf and its matches from Token's `FzfLuaFzf*` groups: >lua
       winopts = { treesitter = { fzf_colors = false } },
     })
 <
+fzf-lua does not map `alt-bg`, so striped rows are opt-in. Token's
+`FzfLuaFzfAltBg` group holds the stripe color, the same `bg4` as the
+`_FZF_THEME_STRIPE_OPTS` variable in the shell files. To stripe rows and the
+gutter with it (fzf-lua sets `--highlight-line` by default, which makes the
+stripe cover the whole row): >lua
+    require('fzf-lua').setup({
+      fzf_colors = {
+        true,
+        ['alt-bg'] = { 'bg', 'FzfLuaFzfAltBg' },
+        ['alt-gutter'] = { 'bg', 'FzfLuaFzfAltBg' },
+      },
+      winopts = { treesitter = { fzf_colors = false } },
+    })
+<
                                                                *token-hlchunk*
 hlchunk.nvim ~
 hlchunk sets its own highlight groups during setup and on every |ColorScheme|

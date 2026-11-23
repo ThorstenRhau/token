@@ -805,6 +805,76 @@ for _, appearance in ipairs(require('token.appearance').all()) do
   end
 end
 
+-- fzf colors: the stripe options are opt-in and stay out of the applied colors.
+for _, appearance in ipairs(appearances) do
+  local palette_fn = require(appearance.palette)
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local palette = palette_fn(variant)
+    local label = appearance.name .. ' ' .. variant
+    local stripe = '--color=alt-bg:' .. palette.bg4 .. ',alt-gutter:' .. palette.bg4
+    local base = 'contrib/fzf/' .. appearance.slug .. '-' .. variant
+    local zsh = read_text(base .. '.zsh')
+    local fish = read_text(base .. '.fish')
+    truthy(zsh:find('_FZF_THEME_STRIPE_OPTS="' .. stripe .. '"', 1, true), 'zsh stripe options for ' .. label)
+    truthy(fish:find("set -g _FZF_THEME_STRIPE_OPTS '" .. stripe .. "'", 1, true), 'fish stripe options for ' .. label)
+    for name, content in pairs({ zsh = zsh, fish = fish }) do
+      equal(select(2, content:gsub('alt%-bg:', '')), 1, 'alt-bg appears once in fzf ' .. name .. ' for ' .. label)
+      equal(
+        select(2, content:gsub('alt%-gutter:', '')),
+        1,
+        'alt-gutter appears once in fzf ' .. name .. ' for ' .. label
+      )
+      truthy(content:find('query:' .. palette.fg0, 1, true), 'fzf query color in ' .. name .. ' for ' .. label)
+      truthy(content:find('footer:' .. palette.fg2, 1, true), 'fzf footer color in ' .. name .. ' for ' .. label)
+    end
+    local applied = zsh:match('_FZF_THEME_OPTS="\\\n(.-)\n"')
+    truthy(applied and not applied:find('alt-', 1, true), 'applied fzf zsh colors exclude stripes for ' .. label)
+    local tab = read_text('contrib/zsh/' .. appearance.slug .. '-' .. variant .. '.zsh')
+    truthy(tab:find('footer:' .. palette.fg2, 1, true), 'fzf-tab footer color for ' .. label)
+    truthy(not tab:find('alt-', 1, true), 'fzf-tab flags exclude stripes for ' .. label)
+  end
+  load('dark', appearance.name)
+  token.setup({ plugins = { fzf = true } })
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    equal(
+      hl('FzfLuaFzfAltBg').bg,
+      tonumber(palette_fn(background).bg4:sub(2), 16),
+      'FzfLuaFzfAltBg uses bg4 for ' .. appearance.name .. ' ' .. background
+    )
+    -- The shell colors match the FzfLuaFzf* groups that fzf-lua maps.
+    local fzf_groups = {
+      fg = { 'FzfLuaFzfNormal', 'fg' },
+      bg = { 'FzfLuaFzfNormal', 'bg' },
+      hl = { 'FzfLuaFzfMatch', 'fg' },
+      ['fg+'] = { 'FzfLuaFzfNormal', 'fg' },
+      ['bg+'] = { 'FzfLuaFzfCursorLine', 'bg' },
+      ['hl+'] = { 'FzfLuaFzfMatch', 'fg' },
+      info = { 'FzfLuaFzfInfo', 'fg' },
+      border = { 'FzfLuaFzfBorder', 'fg' },
+      gutter = { 'FzfLuaFzfGutter', 'bg' },
+      query = { 'FzfLuaFzfQuery', 'fg' },
+      prompt = { 'FzfLuaFzfPrompt', 'fg' },
+      pointer = { 'FzfLuaFzfPointer', 'fg' },
+      marker = { 'FzfLuaFzfMarker', 'fg' },
+      spinner = { 'FzfLuaFzfSpinner', 'fg' },
+      header = { 'FzfLuaFzfHeader', 'fg' },
+      separator = { 'FzfLuaFzfSeparator', 'fg' },
+      scrollbar = { 'FzfLuaFzfScrollbar', 'fg' },
+    }
+    local shell = read_text('contrib/fzf/' .. appearance.slug .. '-' .. background .. '.zsh')
+    for name, group in pairs(fzf_groups) do
+      local color = shell:match('[ ,=]' .. name:gsub('%p', '%%%0') .. ':(#%x+)')
+      equal(
+        color,
+        string.format('#%06x', hl(group[1])[group[2]]),
+        'fzf ' .. name .. ' matches ' .. group[1] .. ' for ' .. appearance.name .. ' ' .. background
+      )
+    end
+  end
+end
+token.setup()
+
 local vscode_package = vim.json.decode(read_text('contrib/vscode/package.json'))
 equal(#vscode_package.contributes.themes, 12, 'VS Code package does not inventory twelve themes')
 equal(vscode_package.contributes.themes[3].label, 'Token Flint Dark', 'VS Code Flint dark label')
