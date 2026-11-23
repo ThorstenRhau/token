@@ -388,6 +388,31 @@ require('fzf-lua').setup({
 })
 ```
 
+Two kinds of picker ignore these global settings, so set them per picker. The
+`command_history`, `search_history` and `highlights` pickers have their own
+`fzf_colors` default, which replaces the global one and keeps reversed
+matches. A picker whose `winopts` is a function, such as `blines`,
+`grep_curbuf` and `git.blame` in the `ivy` profile, drops the global
+`winopts.treesitter.fzf_colors = false`, because fzf-lua merges the result
+onto its own defaults. Return the setting from that function. The same applies
+to the striped table form above.
+
+```lua
+require('fzf-lua').setup({
+  command_history = { fzf_colors = true },
+  search_history = { fzf_colors = true },
+  highlights = { fzf_colors = true },
+  blines = {
+    winopts = function()
+      return {
+        split = ('botright %snew +set\\ nobl'):format(math.ceil(vim.o.lines / 3)),
+        treesitter = { fzf_colors = false },
+      }
+    end,
+  },
+})
+```
+
 hlchunk sets its own highlight groups during setup and on `ColorScheme`. Turn on
 Token's `plugins.hlchunk` (or `plugins.all`), and load the colorscheme before
 you set up hlchunk. Style callbacks keep Token's colors when you switch
