@@ -1029,7 +1029,7 @@ local fzf_colors = {
   { 'bg+', 'sel' },
   { 'hl+', 'accent' },
   { 'gutter', 'bg3' },
-  { 'query', 'fg0' },
+  { 'query', 'fg0', 'regular' },
   { 'info', 'fg2' },
   { 'border', 'fg3' },
   { 'separator', 'fg3' },
@@ -1052,13 +1052,14 @@ local fzf_stripe_colors = {
   { 'alt-gutter', 'bg4' },
 }
 
--- One '--color=a:#x,b:#y,...' argument for each run of per_line entries.
+-- One '--color=a:#x,b:#y,...' argument for each run of per_line entries. An
+-- optional third field adds an attribute, as in 'query:#x:regular'.
 local function fzf_color_args(p, entries, per_line)
   local args = {}
   for i = 1, #entries, per_line do
     local parts = {}
     for j = i, math.min(i + per_line - 1, #entries) do
-      parts[#parts + 1] = entries[j][1] .. ':' .. p[entries[j][2]]
+      parts[#parts + 1] = entries[j][1] .. ':' .. p[entries[j][2]] .. (entries[j][3] and ':' .. entries[j][3] or '')
     end
     args[#args + 1] = '--color=' .. table.concat(parts, ',')
   end

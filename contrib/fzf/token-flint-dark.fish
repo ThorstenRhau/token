@@ -10,7 +10,7 @@ set -gx FZF_DEFAULT_OPTS (string join " " -- \
   $FZF_DEFAULT_OPTS \
   '--color=fg:#c3c8cc,bg:#272c33,hl:#eb9e83' \
   '--color=fg+:#c3c8cc,bg+:#3a414a,hl+:#eb9e83' \
-  '--color=gutter:#272c33,query:#c3c8cc,info:#9aa4ae' \
+  '--color=gutter:#272c33,query:#c3c8cc:regular,info:#9aa4ae' \
   '--color=border:#858f9b,separator:#858f9b,scrollbar:#858f9b' \
   '--color=label:#eb9e83,prompt:#eb9e83,pointer:#eb9e83' \
   '--color=marker:#a9b98c,spinner:#eb9e83,header:#9aa4ae' \

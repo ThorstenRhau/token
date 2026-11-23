@@ -824,13 +824,17 @@ for _, appearance in ipairs(appearances) do
         1,
         'alt-gutter appears once in fzf ' .. name .. ' for ' .. label
       )
-      truthy(content:find('query:' .. palette.fg0, 1, true), 'fzf query color in ' .. name .. ' for ' .. label)
+      truthy(
+        content:find('query:' .. palette.fg0 .. ':regular', 1, true),
+        'fzf query color and regular weight in ' .. name .. ' for ' .. label
+      )
       truthy(content:find('footer:' .. palette.fg2, 1, true), 'fzf footer color in ' .. name .. ' for ' .. label)
     end
     local applied = zsh:match('_FZF_THEME_OPTS="\\\n(.-)\n"')
     truthy(applied and not applied:find('alt-', 1, true), 'applied fzf zsh colors exclude stripes for ' .. label)
     local tab = read_text('contrib/zsh/' .. appearance.slug .. '-' .. variant .. '.zsh')
     truthy(tab:find('footer:' .. palette.fg2, 1, true), 'fzf-tab footer color for ' .. label)
+    truthy(tab:find('query:' .. palette.fg0 .. ':regular', 1, true), 'fzf-tab query regular weight for ' .. label)
     truthy(not tab:find('alt-', 1, true), 'fzf-tab flags exclude stripes for ' .. label)
   end
   load('dark', appearance.name)

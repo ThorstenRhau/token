@@ -93,7 +93,7 @@ zstyle ':completion:*:warnings' format '%F{#dd8384}-- no matches --%f'
 zstyle ':fzf-tab:*' fzf-flags \
   '--color=fg:#c9c0b1,bg:#272724,hl:#e89a49' \
   '--color=fg+:#c9c0b1,bg+:#3c3b36,hl+:#e89a49' \
-  '--color=gutter:#272724,query:#c9c0b1,info:#a69c91' \
+  '--color=gutter:#272724,query:#c9c0b1:regular,info:#a69c91' \
   '--color=border:#91887d,separator:#91887d,scrollbar:#91887d' \
   '--color=label:#e89a49,prompt:#e89a49,pointer:#e89a49' \
   '--color=marker:#8cbb62,spinner:#e89a49,header:#a69c91' \

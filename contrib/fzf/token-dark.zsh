@@ -9,7 +9,7 @@ export _FZF_THEME_STRIPE_OPTS="--color=alt-bg:#2f2f2d,alt-gutter:#2f2f2d"
 export _FZF_THEME_OPTS="\
 --color=fg:#c3c0b8,bg:#262624,hl:#f4906f \
 --color=fg+:#c3c0b8,bg+:#3a3a37,hl+:#f4906f \
---color=gutter:#262624,query:#c3c0b8,info:#a19c94 \
+--color=gutter:#262624,query:#c3c0b8:regular,info:#a19c94 \
 --color=border:#8a8884,separator:#8a8884,scrollbar:#8a8884 \
 --color=label:#f4906f,prompt:#f4906f,pointer:#f4906f \
 --color=marker:#8fb78c,spinner:#f4906f,header:#a19c94 \
